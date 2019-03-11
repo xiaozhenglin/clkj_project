@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>  
+	<!-- 所有路径都采用绝对路径 -->
+	
+	    
+    <!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n</pattern>
+		</encoder>
+	</appender>
+    
+    <!-- 控制台每日日志文件 -->
+    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>D:\\changlan\\adminplat\\console-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>365</maxHistory> 
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+    
+    <!-- 单个记录报警的日志文件 -->
+    <appender name="alarmServiceAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>D:\\changlan\\adminplat\\alarmService-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>365</maxHistory> 
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    
+    <!--需要将日志单独输出的包路径-->
+    <logger name="com.changlan.alarm.service.impl" level = "INFO">
+        <appender-ref ref="alarmServiceAppender"/>
+    </logger>
+    
+    <root level="INFO">
+        <appender-ref ref="STDOUT"></appender-ref>
+        <appender-ref ref="dailyRollingFileAppender"></appender-ref>
+    </root>
+   
+    
+</configuration>     
