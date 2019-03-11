@@ -26,10 +26,14 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import io.netty.channel.EventLoop;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,16 +51,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     protected static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
     
     
-//    @Override
-//	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//		super.channelRead(ctx, msg);
-//		if(msg.toString().substring(0,4).equalsIgnoreCase("CLKJ")) {
-//			System.out.println("->>>>>>>>>>>"+msg); 
-//		}else  {
-//	        System.out.println("->>>>>>" +msg.toString() + "长度"+msg.toString().length()); 
-//		}
-//	}
-
+    
 	/**
      * 读取消息通道
      *
@@ -67,15 +62,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext context, String s) throws Exception {
         Channel channel = context.channel();
-     
         if(s.substring(0,4).equalsIgnoreCase("CLKJ")) {
         	//设置注册包
             Map<Object, Channel> channelMap = NettyServer.channelMap;
             channelMap.put(s, channel);
             NettyServer.channelMap = channelMap;
         	logger.info("第一步接受注册包 [" + channel.remoteAddress() + "]:"+ s + " 长度 "+s.length()+"\n");
-//        	SimplePoint simplePoint = new SimplePoint(s, PointStatus.CONNECT);
-//			SpringUtil.getApplicationContext().publishEvent(new PointRegistPackageEvent(simplePoint));
+        	changePointStatus(s,PointStatus.CONNECT);
         }else {
             //保存返回值信息 并 解锁
         	logger.info("接受数据 [" + channel.remoteAddress() + "]: " + s + " 长度 "+s.length()+"\n");
@@ -87,15 +80,22 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     			//开启解析事件
     			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,registPackage,s));
     		}
+         	changePointStatus(registPackage,PointStatus.DATA_CAN_IN);
         }
+        context.flush(); //加的部分
+    }
+    
+    private void changePointStatus(String resitPackage,PointStatus status) {
+    	SimplePoint simplePoint = new SimplePoint(resitPackage,status);
+		SpringUtil.getApplicationContext().publishEvent(new PointRegistPackageEvent(simplePoint));
     }
 
-    private String getRegistPackageByChannel(Channel channel) {
+    private String getRegistPackageByChannel(Channel channelId) {
       Map<Object, Channel> channelMap = NettyServer.channelMap;
       Iterator<Entry<Object, Channel>> iterator = channelMap.entrySet().iterator();
       while(iterator.hasNext()) {
       	Entry<Object, Channel> next = iterator.next(); 
-      	if(next.getValue()==channel ) {
+      	if(next.getValue()== channelId ) {
       		return next.getKey().toString();
       	}
       }
@@ -133,21 +133,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 ch.writeAndFlush("[" + channel.remoteAddress() + "] leaving");
             }
         }
+        //断开连接的时候修改状态
+    	String registPackage = getRegistPackageByChannel(channel); 
+        changePointStatus(registPackage,PointStatus.OUT_CONNECT);
         group.remove(channel);
-//        
-//		SimplePoint simplePoint = new SimplePoint(null, PointStatus.OUT_CONNECT);
-//		SpringUtil.getApplicationContext().publishEvent(new PointRegistPackageEvent(simplePoint));
-        
-        //断开连接的时候删除掉该通道
-//        Map<Object, Channel> channelMap = NettyServer.channelMap;
-//        Iterator<Entry<Object, Channel>> iterator = channelMap.entrySet().iterator();
-//        while(iterator.hasNext()) {
-//        	Entry<Object, Channel> next = iterator.next(); 
-//        	if(next.getValue()==channel ) {
-//        		channelMap.remove(next.getKey(),next.getValue());
-//        	}
-//        }
-//        NettyServer.channelMap = channelMap;
     }
 
     /**
@@ -167,24 +156,36 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         }
     }
 
-    //使用过程中断线重新启动
+    //使用过程中断线 为正常断线，不是断电、断网导致的
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         final EventLoop eventLoop = ctx.channel().eventLoop();
         Channel channel = ctx.channel();
-        if(!channel.isActive()) {
-        	  eventLoop.schedule(new Runnable() {
-                  @Override
-                  public void run() {
-                      new NettyServer().run();
-                      logger.info("重启");
-                  }
-              }, 1L, TimeUnit.SECONDS);
-        }
-        super.channelInactive(ctx);
+        String registPackage = getRegistPackageByChannel(channel); 
+        changePointStatus(registPackage,PointStatus.OUT_CONNECT);
+        logger.info("[" + channel.remoteAddress() + "]"+channel+" channelInactive ");
     }
+    
 
-    /**
+    //断电、断网导致的，  pipeline.addLast(new IdleStateHandler(10, 0, 0,TimeUnit.SECONDS));
+    //10秒内未收到心跳包则 判定客户端断开连接
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		Channel channel = ctx.channel();
+		if(evt instanceof IdleStateEvent) {
+			IdleState state = ((IdleStateEvent) evt).state();
+			if(state == IdleState.READER_IDLE ) {
+				//关闭通道
+				String registPackage = getRegistPackageByChannel(channel); 
+	            changePointStatus(registPackage,PointStatus.OUT_CONNECT);
+	            logger.info("[" + channel.remoteAddress() + "]"+channel+" 客户端 断电、断网导致的");
+	            channel.close();
+			}
+		}
+		super.userEventTriggered(ctx, evt);
+	}
+
+	/**
      * 异常捕获
      *
      * @param ctx
@@ -193,15 +194,19 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) throws Exception {
-        Channel channel = ctx.channel();
-        logger.info("[" + channel.remoteAddress() + "]" + e);
-        //只要有异常就全部抛出
+    	Channel channel = ctx.channel();
+    	System.out.println(channel.id());
+    	if(!channel.isActive()) {
+    		String registPackage = getRegistPackageByChannel(channel); 
+            changePointStatus(registPackage,PointStatus.OUT_CONNECT);
+    	}
+    	logger.info("[" + channel.remoteAddress() + "]" + e);
+    	ctx.close(); //加的部分
+    	//只要有异常就全部抛出
         throw new Exception(e) ; 
-//        System.out.println();
-//        ctx.close().sync();
     }
 
     
-}
+}	
 
     

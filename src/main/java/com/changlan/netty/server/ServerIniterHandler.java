@@ -1,5 +1,7 @@
 package com.changlan.netty.server;
 
+import java.util.concurrent.TimeUnit;
+
 import com.changlan.netty.MyDecoder;
 
 import io.netty.channel.ChannelInitializer;
@@ -7,6 +9,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 
 
 /**
@@ -29,5 +32,8 @@ public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("encode", new StringEncoder());
         //聊天服务通道处理
         pipeline.addLast("chat", new ServerHandler());
+        
+        //添加心跳检测客户端是否连接
+        pipeline.addLast(new IdleStateHandler(10, 0, 0,TimeUnit.SECONDS));
     }
 }
