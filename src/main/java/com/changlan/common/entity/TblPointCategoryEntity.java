@@ -40,8 +40,6 @@ public class TblPointCategoryEntity implements java.io.Serializable {
     @Column(name = "PONT_CATAGORY_NAME"   )
     private String pontCatagoryName;
 
-    @Column(name = "LINE_ID"   )
-    private Integer lineId; 
     /**
      * 获取pointCatgoryId
      * 
@@ -78,13 +76,6 @@ public class TblPointCategoryEntity implements java.io.Serializable {
         this.pontCatagoryName = pontCatagoryName;
     }
 
-	public Integer getLineId() {
-		return lineId;
-	}
-
-	public void setLineId(Integer lineId) {
-		this.lineId = lineId;
-	}
     
     
 }
