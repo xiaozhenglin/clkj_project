@@ -35,5 +35,6 @@ public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
         
         //添加心跳检测客户端是否连接
         pipeline.addLast(new IdleStateHandler(10, 0, 0,TimeUnit.SECONDS));
+        pipeline.addLast(new ServerHandler());
     }
 }

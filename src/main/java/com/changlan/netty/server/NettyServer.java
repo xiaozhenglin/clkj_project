@@ -51,7 +51,6 @@ public class NettyServer extends Thread{
         //BACKLOG用于构造服务端套接字ServerSocket对象，
         // 标识当服务器请求处理线程全满时，用于临时存放已完成三次握手的请求的队列的最大长度
         bootstrap.option(ChannelOption.SO_BACKLOG, 2048);
-        bootstrap.option(ChannelOption.TCP_NODELAY,true); //添加部分
         //是否启用心跳保活机制
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         try {
