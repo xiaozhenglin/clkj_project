@@ -33,7 +33,7 @@ public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
         //聊天服务通道处理
         pipeline.addLast("chat", new ServerHandler());
         
-        //添加心跳检测客户端是否连接
+        //添加心跳检测客户端是否连接   重点部分，绝对不能删掉
         pipeline.addLast(new IdleStateHandler(10, 0, 0,TimeUnit.SECONDS));
         pipeline.addLast(new ServerHandler());
     }

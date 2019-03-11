@@ -91,15 +91,15 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     private String getRegistPackageByChannel(Channel channelId) {
-      Map<Object, Channel> channelMap = NettyServer.channelMap;
-      Iterator<Entry<Object, Channel>> iterator = channelMap.entrySet().iterator();
-      while(iterator.hasNext()) {
-      	Entry<Object, Channel> next = iterator.next(); 
-      	if(next.getValue()== channelId ) {
-      		return next.getKey().toString();
-      	}
-      }
-      return null;
+       Map<Object, Channel> channelMap = NettyServer.channelMap;
+       Iterator<Entry<Object, Channel>> iterator = channelMap.entrySet().iterator();
+       while(iterator.hasNext()) {
+        	Entry<Object, Channel> next = iterator.next(); 
+      	    if(next.getValue()== channelId ) {
+      		   return next.getKey().toString();
+      	    }
+       }
+       return null;
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = ctx.channel();
         for (Channel ch : group) {
             if (ch == channel) {
-                ch.writeAndFlush("[" + channel.remoteAddress() + "] coming");
+                ch.writeAndFlush("[" + channel.remoteAddress() + "] coming handlerAdded");
             }
         }
         group.add(channel);
@@ -167,8 +167,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
     
 
-    //断电、断网导致的，  pipeline.addLast(new IdleStateHandler(10, 0, 0,TimeUnit.SECONDS));
-    //10秒内未收到心跳包则 判定客户端断开连接
+    //断电、断网导致的
+    //10秒内未收到心跳包则 判定客户端断开连接 不能删掉
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		Channel channel = ctx.channel();
@@ -195,7 +195,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) throws Exception {
     	Channel channel = ctx.channel();
-    	System.out.println(channel.id());
     	if(!channel.isActive()) {
     		String registPackage = getRegistPackageByChannel(channel); 
             changePointStatus(registPackage,PointStatus.OUT_CONNECT);
