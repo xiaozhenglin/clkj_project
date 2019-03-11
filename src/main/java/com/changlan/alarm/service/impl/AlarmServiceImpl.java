@@ -118,6 +118,23 @@ public class AlarmServiceImpl implements IAlarmService{
 						update(data,alarmDataId);
 					}
 					break;
+				case 5:
+					// 负载 指标id 6 和电流a指标值进行比较
+					for(TblPoinDataEntity pointDataEntity : pointDatas) {
+						if(pointDataEntity.getIndicatorId() == rule.getComparison() ) {
+							BigDecimal comparisonVlue = new BigDecimal(pointDataEntity.getValue());
+							if(comparisonVlue.intValue() != 0 ) {
+								//除法取整数值
+								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
+								canculateAlarm(canculateVlue,data,rule,pointDataEntity.getPointDataId());
+							}else {
+								Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, rule.getComparison());
+								data.setIsAlarm(1); 
+								update(data,alarmDataId);
+							}
+						}
+					}
+					break;
 				default:
 					break;
 				}
@@ -125,7 +142,6 @@ public class AlarmServiceImpl implements IAlarmService{
 		}
 		logger.info("-----》报警规则计算结束");
 	}
-
 
 
 	private void canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
