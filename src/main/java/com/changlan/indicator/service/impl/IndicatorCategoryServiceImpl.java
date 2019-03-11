@@ -46,12 +46,12 @@ public class IndicatorCategoryServiceImpl implements IIndicatorCategoryService{
 	}
 
 	@Override
-	public List<Object> getAll(Integer id) {
+	public List<TblIndicatorCategoriesEntity> getAll(Integer id) {
 		Map map = new HashMap();
 		if(id!=null) {
 			map.put("categoryId", new ParamMatcher(id));
 		}
-		List<Object> all  = crudService.findByMoreFiled(TblIndicatorCategoriesEntity.class, map, true);
+		List<TblIndicatorCategoriesEntity> all  = crudService.findByMoreFiled(TblIndicatorCategoriesEntity.class, map, true);
 		return all;
 	}
 

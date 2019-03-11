@@ -47,7 +47,7 @@ public class IndicatorCategoryController extends BaseController{
 
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  companyGropList(Integer id) {
-		List<Object> list = indicatorCategoryService.getAll(id);
+		List<TblIndicatorCategoriesEntity> list = indicatorCategoryService.getAll(id);
 		return success(list);
 	}
 }

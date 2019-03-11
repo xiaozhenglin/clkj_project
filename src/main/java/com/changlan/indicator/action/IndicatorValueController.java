@@ -24,10 +24,10 @@ import com.changlan.point.pojo.PoinErrorType;
 public class IndicatorValueController extends  BaseController{
 
 	@Autowired
-	ICrudService crudService;
+	private ICrudService crudService;
 	
 	@Autowired
-	IIndicatoryValueService  indicatorValueService;
+	private IIndicatoryValueService  indicatorValueService;
 	
 	//修改或者保存
 	@RequestMapping("/save")

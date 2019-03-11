@@ -8,6 +8,6 @@ public interface IIndicatorCategoryService {
 
 	Boolean existCatergoryName(TblIndicatorCategoriesEntity entity);
 
-	List<Object> getAll(Integer id);    
+	List<TblIndicatorCategoriesEntity> getAll(Integer id);     
 
 }

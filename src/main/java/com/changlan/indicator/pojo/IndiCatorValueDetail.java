@@ -22,9 +22,9 @@ public class IndiCatorValueDetail  {
 	
 	private TblIndicatorCategoriesEntity getCategory(TblIndicatorValueEntity entity) {
 		IIndicatorCategoryService categoryService = SpringUtil.getBean(IIndicatorCategoryService.class);
-		List<Object> all = categoryService.getAll(entity.getCategoryId()); 
+		List<TblIndicatorCategoriesEntity> all = categoryService.getAll(entity.getCategoryId()); 
 		if(!ListUtil.isEmpty(all)) {
-			return (TblIndicatorCategoriesEntity)all.get(0); 
+			return all.get(0); 
 		}
 		return null;
 	}

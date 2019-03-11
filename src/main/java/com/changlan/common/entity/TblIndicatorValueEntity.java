@@ -48,13 +48,6 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
     @Column(name = "CATEGORY_ID"    )
     private Integer categoryId;
 
-    /** alarmUrles */
-    @Column(name = "ALARM_URLES"   )
-    private String alarmUrles;
-
-    /** analysisRuleId */
-    @Column(name = "ANALYSIS_RULE_ID"    )
-    private Integer analysisRuleId;
 
     /**
      * 获取indicatorId
@@ -118,39 +111,4 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
 		this.categoryId = categoryId;
 	}
 
-	/**
-     * 获取alarmUrles
-     * 
-     * @return alarmUrles
-     */
-    public String getAlarmUrles() {
-        return this.alarmUrles;
-    }
-
-    /**
-     * 设置alarmUrles
-     * 
-     * @param alarmUrles
-     */
-    public void setAlarmUrles(String alarmUrles) {
-        this.alarmUrles = alarmUrles;
-    }
-
-    /**
-     * 获取analysisRuleId
-     * 
-     * @return analysisRuleId
-     */
-    public Integer getAnalysisRuleId() {
-        return this.analysisRuleId;
-    }
-
-    /**
-     * 设置analysisRuleId
-     * 
-     * @param analysisRuleId
-     */
-    public void setAnalysisRuleId(Integer analysisRuleId) {
-        this.analysisRuleId = analysisRuleId;
-    }
 }

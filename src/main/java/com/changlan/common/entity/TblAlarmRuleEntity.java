@@ -69,6 +69,9 @@ public class TblAlarmRuleEntity implements java.io.Serializable {
     
     @Column(name = "POINT_ID"   )
     private Integer pointId;
+    
+    @Column(name = "COMPARISON"   )
+    private Integer comparison;  //用于负载的对比指标用
 
 	public Integer getAlarmRuleId() {
 		return alarmRuleId;
@@ -164,6 +167,14 @@ public class TblAlarmRuleEntity implements java.io.Serializable {
 
 	public void setPointId(Integer pointId) {
 		this.pointId = pointId;
+	}
+
+	public Integer getComparison() {
+		return comparison;
+	}
+
+	public void setComparison(Integer comparison) {
+		this.comparison = comparison;
 	}
 
 	
