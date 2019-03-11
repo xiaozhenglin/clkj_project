@@ -123,14 +123,14 @@ public class AlarmServiceImpl implements IAlarmService{
 					for(TblPoinDataEntity pointDataEntity : pointDatas) {
 						if(pointDataEntity.getIndicatorId() == rule.getComparison() ) {
 							BigDecimal comparisonVlue = new BigDecimal(pointDataEntity.getValue());
-							if(comparisonVlue.intValue() != 0 ) {
-								//除法取整数值
-								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
-								canculateAlarm(canculateVlue,data,rule,pointDataEntity.getPointDataId());
-							}else {
+							if(comparisonVlue.intValue() == 0 ) {
 								Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, rule.getComparison());
 								data.setIsAlarm(1); 
 								update(data,alarmDataId);
+							}else {
+								//除法取整数值
+								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
+								canculateAlarm(canculateVlue,data,rule,pointDataEntity.getPointDataId());
 							}
 						}
 					}
