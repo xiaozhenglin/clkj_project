@@ -23,7 +23,7 @@ import com.changlan.point.service.ICompanyInfoService;
 @RequestMapping("/admin/command/category")
 public class CommandCategoryController extends BaseController{
 	@Autowired
-	ICrudService crudService;
+	private ICrudService crudService;
 	
 	@Autowired
 	private ICommandCategoryService commandCategoryService;

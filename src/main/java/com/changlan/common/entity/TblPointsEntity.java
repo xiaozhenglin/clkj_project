@@ -61,14 +61,6 @@ public class TblPointsEntity implements java.io.Serializable {
     @Column(name = "LONG_LATI"  )
     private String longLati;
 
-    /** catogrys */
-    @Column(name = "CATOGRYS"   )
-    private String catogrys;
-
-    /** contorlCOMMANDs */
-    @Column(name = "CONTORL_COMMANDS"   )
-    private String contorlCommands;
-
     /** indicators */
     @Column(name = "INDICATORS"   )
     private String indicators;
@@ -185,33 +177,6 @@ public class TblPointsEntity implements java.io.Serializable {
     public void setLongLati(String longLati) {
         this.longLati = longLati;
     }
-
-    /**
-     * 获取catogrys
-     * 
-     * @return catogrys
-     */
-    public String getCatogrys() {
-        return this.catogrys;
-    }
-
-    /**
-     * 设置catogrys
-     * 
-     * @param catogrys
-     */
-    public void setCatogrys(String catogrys) {
-        this.catogrys = catogrys;
-    }
-
-
-    public String getContorlCommands() {
-		return contorlCommands;
-	}
-
-	public void setContorlCommands(String contorlCommands) {
-		this.contorlCommands = contorlCommands;
-	}
 
 	/**
      * 获取indicators

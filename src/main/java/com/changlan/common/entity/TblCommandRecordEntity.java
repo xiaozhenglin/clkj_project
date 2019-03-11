@@ -56,10 +56,6 @@ public class TblCommandRecordEntity implements java.io.Serializable {
     @Column(name = "BACK_CONTENT"   )
     private String backContent;
 
-    /** direction */
-    @Column(name = "DIRECTION"    )
-    private Integer direction;
-
     /** sendCOMMANDId */
     @Column(name = "SEND_COMMAND_ID"    )
     private Integer sendCommandId;
@@ -115,14 +111,6 @@ public class TblCommandRecordEntity implements java.io.Serializable {
 
 	public void setBackContent(String backContent) {
 		this.backContent = backContent;
-	}
-
-	public Integer getDirection() {
-		return direction;
-	}
-
-	public void setDirection(Integer direction) {
-		this.direction = direction;
 	}
 
 	public Integer getSendCommandId() {

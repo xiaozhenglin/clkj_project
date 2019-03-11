@@ -63,7 +63,6 @@ public class NettyController extends BaseController{
 		entity.setPointId(pointId); 
 		entity.setPointRegistPackage(registPackage);
 		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
-		entity.setDirection(1); 
 		entity.setSendCommandId(commanId); 
 		entity.setCommandContent(message);
 		entity.setRecordTime(new Date()); 
