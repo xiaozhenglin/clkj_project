@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
@@ -44,7 +45,7 @@ public class CompanyGroupController extends BaseController{
 
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  companyGropList(TblCompanyGroupEntity group) {
-		List list = companyGroupService.getAllGroup(group);
+		List<TblCompanyGroupEntity> list = companyGroupService.getAllGroup(group);
 		return success(list);
 	}
 	

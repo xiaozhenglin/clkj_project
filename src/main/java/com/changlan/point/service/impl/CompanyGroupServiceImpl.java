@@ -14,6 +14,7 @@ import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.service.ICompanyGropService;
 
@@ -47,16 +48,16 @@ public class CompanyGroupServiceImpl implements ICompanyGropService{
 	}
 
 	@Override
-	public List getAllGroup(TblCompanyGroupEntity group) {
-		List<Object> all = null;
+	public List<TblCompanyGroupEntity> getAllGroup(TblCompanyGroupEntity group) {
+		List<TblCompanyGroupEntity> all = null;
 		Map map = new HashMap();
 		if(group.getGroupId() != null) {
 			map.put("groupId", new ParamMatcher(group.getGroupId()));
 		}
-		if(group.getName() != null) {
+		if(StringUtil.isNotEmpty(group.getName())) {
 			map.put("name", new ParamMatcher(group.getName()));
 		}
-		all = crudService.findByMoreFiled(TblCompanyEntity.class, map, true);
+		all = crudService.findByMoreFiled(TblCompanyGroupEntity.class, map, true);
 		//封装公司信息和公司组信息
 		return all;
 	}
