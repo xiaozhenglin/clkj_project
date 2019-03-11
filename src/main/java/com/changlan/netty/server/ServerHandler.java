@@ -130,7 +130,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = ctx.channel();
         for (Channel ch : group) {
             if (ch == channel) {
-                ch.writeAndFlush("[" + channel.remoteAddress() + "] leaving");
+                logger.info("[" + channel.remoteAddress() + "] leaving" + "handlerRemoved");
             }
         }
         //断开连接的时候修改状态
@@ -150,9 +150,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = ctx.channel();
         boolean active = channel.isActive();
         if (active) {
-            System.out.println("[" + channel.remoteAddress() + "] is online");
+        	 logger.info("[" + channel.remoteAddress() + "] is online channelActive");
         } else {
-            System.out.println("[" + channel.remoteAddress() + "] is offline");
+        	 logger.info("[" + channel.remoteAddress() + "] is offline channelActive");
         }
     }
 
@@ -163,7 +163,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
         changePointStatus(registPackage,PointStatus.OUT_CONNECT);
-        logger.info("[" + channel.remoteAddress() + "]"+channel+" channelInactive ");
+        logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive ");
     }
     
 
