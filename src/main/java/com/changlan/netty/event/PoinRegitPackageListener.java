@@ -30,26 +30,28 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 			PointStatus currentStatus = source.getStatus();
 			if(entity !=null && agoStatus == null) {
 				changeStatus(entity,currentStatus);
+				return;
 			}
 			
 			if(agoStatus == PointStatus.OUT_CONNECT && currentStatus != PointStatus.OUT_CONNECT) {
 				changeStatus(entity,currentStatus);
+				return;
 			}
 			
 			if(agoStatus == PointStatus.CONNECT && currentStatus!=PointStatus.CONNECT ) {
 				changeStatus(entity,currentStatus);
+				return;
 			}
 			
 			if(agoStatus == PointStatus.DATA_CAN_IN && (currentStatus==PointStatus.DATA_CAN_NOT_IN ||currentStatus==PointStatus.OUT_CONNECT )) {
 				changeStatus(entity,currentStatus);
+				return;
 			}
 			
 			if(agoStatus == PointStatus.DATA_CAN_NOT_IN && (currentStatus!=PointStatus.CONNECT)) {
 				changeStatus(entity,currentStatus);
 			}
 		}
-	
-
 	
 		
 	}
