@@ -13,6 +13,9 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.changlan.command.dao.ICommandRecordDao;
@@ -115,9 +118,32 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		entity.setCategroryId(indicator.getCategoryId());
 		crudService.save(entity, true);
 		return entity;
-		
 	}
 
+	@Override
+	public Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent,
+			Pageable page) {
+		Map map = new HashMap();
+		if(!StringUtil.isEmpty(registPackage)) {
+			map.put("pointRegistPackage", new ParamMatcher(registPackage)); 
+		}
+		if(!StringUtil.isEmpty(backContent)) {
+			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
+		}
+		if(recordId != null) {
+			map.put("commandRecordId", new ParamMatcher(recordId));
+		} 
+		Page all = crudService.findByMoreFiledAndPage(TblCommandRecordEntity.class, map, true,page);
+		
+		List<CommandRecordDetail> result = new ArrayList<CommandRecordDetail>(); 
+		for(Object o : all) {
+			TblCommandRecordEntity record = (TblCommandRecordEntity)o;
+			TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(record.getSendCommandId(), TblPointSendCommandEntity.class, true);
+			CommandRecordDetail detail = new CommandRecordDetail(record,commandDefault);
+			result.add(detail);
+		}
+		return new PageImpl<CommandRecordDetail>(result, page, all.getTotalElements());
+	}
 	
 	
 

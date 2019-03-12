@@ -23,7 +23,7 @@ public class PageUtil<Class> {
 
     /** 得到对象 */
     @SuppressWarnings("unchecked")
-	public static PageUtil listToPage(List data,int pageNum,int pageSize) {
+	public static PageUtil listToPage(List data,int pageNum,int pageSize,int totalElements) {
     	PageUtil page = new PageUtil();
     	page.setNumber(pageNum);
     	page.setSize(pageSize);
@@ -32,7 +32,7 @@ public class PageUtil<Class> {
         	return page;
         }
         page.setContent(convertData(data,pageNum,pageSize));
-        page.setTotalElements(data.size());
+        page.setTotalElements(totalElements);
         page.setTotalPages((page.getTotalElements() + pageSize - 1) / pageSize );
         return page;
     }

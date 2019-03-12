@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class CommandRecordController extends BaseController{
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(Integer recordId,String registPackage,String backContent) {
-		List<CommandRecordDetail> result = commandRecordService.getList(recordId, registPackage, backContent); 
+		Page<CommandRecordDetail> result = commandRecordService.getPage(recordId, registPackage, backContent,getPage()); 
 		return success(result);
 	}
 	

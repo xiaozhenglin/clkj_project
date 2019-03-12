@@ -15,6 +15,7 @@ import com.changlan.common.util.StringUtil;
 public class CommandProtolDetail implements Serializable{
 	private TblCommandProtocolEntity protocol; //一个协议值
 	private TblCommandCategoryEntity category; //对应一个协议类别
+	private TblIndicatorValueEntity indicators;//对应一个指标
 	
 	public CommandProtolDetail() {
 		super();
@@ -23,6 +24,7 @@ public class CommandProtolDetail implements Serializable{
 	public CommandProtolDetail(TblCommandProtocolEntity entity) { 
 		this.protocol = entity;
 		this.category = getCategory(entity.getCommandCatagoryId());
+		this.indicators = getIndicator(entity.getIndicatorId());
 	}
 
 	private TblCommandCategoryEntity getCategory(Integer commandCatagoryId) {
@@ -31,9 +33,9 @@ public class CommandProtolDetail implements Serializable{
 	}
 
 	//根据指标id 获取指标信息
-	private static TblIndicatorValueEntity getIndicator(String indicator) {
+	private  TblIndicatorValueEntity getIndicator(Integer indicator) {
 		ICrudService crudService = SpringUtil.getICrudService(); 
-		TblIndicatorValueEntity entity = (TblIndicatorValueEntity)crudService.get(Integer.parseInt(indicator), TblIndicatorValueEntity.class, true); 
+		TblIndicatorValueEntity entity = (TblIndicatorValueEntity)crudService.get(indicator, TblIndicatorValueEntity.class, true); 
 		return entity;
 	}
 
@@ -45,22 +47,23 @@ public class CommandProtolDetail implements Serializable{
 		this.protocol = protocol;
 	}
 
-//	public List<String> getCodes() {
-//		return codes;
-//	}
-//
-//	public void setCodes(List<String> codes) {
-//		this.codes = codes;
-//	}
+	public TblCommandCategoryEntity getCategory() {
+		return category;
+	}
 
-//	public List<TblIndicatorValueEntity> getIndicators() {
-//		return indicators;
-//	}
-//
-//	public void setIndicators(List<TblIndicatorValueEntity> indicators) {
-//		this.indicators = indicators;
-//	}
+	public void setCategory(TblCommandCategoryEntity category) {
+		this.category = category;
+	}
 
+	public TblIndicatorValueEntity getIndicators() {
+		return indicators;
+	}
+
+	public void setIndicators(TblIndicatorValueEntity indicators) {
+		this.indicators = indicators;
+	}
+
+	
 
 	
 }
