@@ -20,8 +20,6 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 	@Transactional
 	public void onApplicationEvent(PointRegistPackageEvent event) {
 		SimplePoint source = (SimplePoint)event.getSource(); 
-		System.out.println();
-		
 		if(StringUtil.isNotEmpty(source.getRegistPackage())) {
 			//修改监控点当前状态
 			IPointDefineService service = SpringUtil.getBean(IPointDefineService.class);

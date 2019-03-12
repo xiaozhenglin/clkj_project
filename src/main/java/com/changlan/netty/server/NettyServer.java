@@ -29,7 +29,6 @@ public class NettyServer extends Thread{
     /**
      * 端口
      */
-    private int port;
     public static Map<Object,Channel> channelMap = new ConcurrentHashMap<Object, Channel>(); 
 
     public NettyServer() {
@@ -67,6 +66,14 @@ public class NettyServer extends Thread{
             workerGroup.shutdownGracefully();
         }
     }
+
+	public static Map<Object, Channel> getChannelMap() {
+		return channelMap;
+	}
+
+	public static void setChannelMap(Map<Object, Channel> channelMap) {
+		NettyServer.channelMap = channelMap;
+	}
 
 	
 

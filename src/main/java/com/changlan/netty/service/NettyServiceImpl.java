@@ -122,7 +122,7 @@ public class NettyServiceImpl implements INettyService{
     	List<CommandRecordDetail> recordDetails = recordService.getList(commandRecordId,registPackage,receiveMessage);
     	if(!ListUtil.isEmpty(recordDetails)) {
     		//解析后保存入库的数据
-    		logger.info("第四步：获取操作记录返回的内容 commandRecordId：" + recordDetails.get(0).getRecord().getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
+    		logger.info("第四步：commandRecordId：" + recordDetails.get(0).getRecord().getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
 //    		try {
     			//解析是否报警，报警出错不能让保存的指标值回退

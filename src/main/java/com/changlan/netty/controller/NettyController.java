@@ -51,6 +51,7 @@ public class NettyController extends BaseController{
 		return false;
 	}
 	
+	//主动发送，有定时任务被动发送
 	@RequestMapping("/send/message")
 	@Transactional
 	public ResponseEntity<Object>  sendMessage(String registPackage ,Integer commanId,String message ) throws Exception { 
