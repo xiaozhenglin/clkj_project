@@ -34,21 +34,14 @@ public class AdminplatApplication implements ApplicationRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdminplatApplication.class, args);
-		Logger log = LoggerFactory.getLogger(Object.class);
-		log.debug("==============================================debug");
-		log.info("==============================================info");
-		log.error("==============================================error");
-		log.warn("==============================================warn");
 	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		new NettyServer().start(); //启动netty服务器
-		INettyService nettyService = SpringUtil.getBean(INettyService.class); 
+		Thread.sleep(2000);
+ 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
 		nettyService.task();
-		// 启动循环指令发送
-		MyTask task =  new MyTask();
-		task.run();
 	}
 
 }

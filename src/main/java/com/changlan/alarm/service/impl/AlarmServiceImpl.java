@@ -56,7 +56,7 @@ public class AlarmServiceImpl implements IAlarmService{
 	@Override
 	@Transactional
 	public void anylysisPointData(List<TblPoinDataEntity> pointDatas) {
-		logger.info("第五步-----》报警规则计算开始");
+//		logger.info("第五步-----》报警规则计算开始");
 		//指标类别,  指标id|指标值    指标值的区间比较用
 		Map<Integer,List<SimpleIndicator>> map = new HashMap();
 		for(TblPoinDataEntity data : pointDatas ) {
@@ -143,7 +143,7 @@ public class AlarmServiceImpl implements IAlarmService{
 				}
 			}
 		}
-		logger.info("-----》报警规则计算结束");
+//		logger.info("-----》报警规则计算结束");
 	}
 
 

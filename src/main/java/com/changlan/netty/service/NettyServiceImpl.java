@@ -106,7 +106,7 @@ public class NettyServiceImpl implements INettyService{
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
 			// 
-			if(!canSendRecord.isEmpty()) {
+			if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
 				//清除防止死锁
 				canSendRecord.remove(registPackage);
 		    	NettyController.setMap(canSendRecord); 
@@ -126,9 +126,9 @@ public class NettyServiceImpl implements INettyService{
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
 //    		try {
     			//解析是否报警，报警出错不能让保存的指标值回退
-    			logger.info("第五步-----》报警规则计算开始");
+//    			logger.info("第五步-----》报警规则计算开始");
     			alarmService.anylysisPointData(pointData);
-    			logger.info("-----》报警规则计算结束");
+//    			logger.info("-----》报警规则计算结束");
 //			} catch (Exception e) {
 //				logger.info("-----》报警规则计算错误"+e.getMessage());
 //			}
@@ -137,6 +137,7 @@ public class NettyServiceImpl implements INettyService{
 
 	@Override
 	public void task() {
+		logger.info("===>>执行定时发送指令任务"); 
 		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
 		for(CommandDefaultDetail data : commandList) {
 			try {
@@ -144,14 +145,14 @@ public class NettyServiceImpl implements INettyService{
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			} 
+			}
 			TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
 			Integer intervalTime = commandDefault.getIntervalTime();
 			MyTask task = new MyTask(commandDefault);
 			Timer timer = new Timer();
-			timer.schedule(task, intervalTime*1000); 
+			//循环执行定时器
+			timer.schedule(task, 0, intervalTime*1000);
 		}
 	}
-
 	
 }

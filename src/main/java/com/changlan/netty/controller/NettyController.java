@@ -71,8 +71,9 @@ public class NettyController extends BaseController{
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
 		}
 		logger.info("第二步发送指令 注册包：registPackage：" + registPackage + "指令内容："+message + "操作记录commandRecordId " + update.getCommandRecordId());
-		map.put(registPackage, update.getCommandRecordId());
 		nettyService.sendMessage(registPackage, message); 
+		//消息发成功才加锁
+		map.put(registPackage, update.getCommandRecordId());
 		return success(update);
 	}
 

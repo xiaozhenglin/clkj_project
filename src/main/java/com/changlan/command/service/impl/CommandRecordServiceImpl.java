@@ -38,11 +38,12 @@ import com.changlan.common.util.AnalysisDataUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.netty.controller.NettyController;
 
 @Service
 public class CommandRecordServiceImpl implements ICommandRecordService{
 	
-	private static Logger log = LoggerFactory.getLogger(CommandRecordServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(CommandRecordServiceImpl.class);
 	@Autowired
 	ICrudService crudService;
 	
@@ -74,7 +75,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 
 	@Override
-	public CommandRecordDetail getOneResult(String registPackage, String receiveMessage) {
+	public CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage) {
 		TblCommandRecordEntity record = commandRecordDao.getOneRecordOrderByTime(registPackage,receiveMessage);
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(record.getSendCommandId(), TblPointSendCommandEntity.class, true);
 		CommandRecordDetail detail = new CommandRecordDetail(record, commandDefault);
@@ -142,6 +143,26 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			result.add(detail);
 		}
 		return new PageImpl<CommandRecordDetail>(result, page, all.getTotalElements());
+	}
+
+	@Override
+	@Transactional
+	public void update(TblPointSendCommandEntity commandDefault) {
+		//保存用户操作指令
+		TblCommandRecordEntity entity = new TblCommandRecordEntity();
+		entity.setPointRegistPackage(commandDefault.getRegist());
+		entity.setAdminUserId(null);
+		entity.setSendCommandId(commandDefault.getSendCommandId()); 
+		entity.setCommandContent(commandDefault.getCommandContent());
+		entity.setRecordTime(new Date()); 
+		//将记录id保存到会话，当有返回消息时保存起来
+		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+		logger.info("第二步发送指令 注册包：registPackage：" + commandDefault.getRegist() + "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
+		if(update != null) {
+			Map<String, Integer> map = NettyController.getMap(); 
+			map.put(commandDefault.getRegist(), update.getCommandRecordId());
+			NettyController.setMap(map); 
+		}
 	}
 	
 	
