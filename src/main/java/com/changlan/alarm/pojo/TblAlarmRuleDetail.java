@@ -11,14 +11,14 @@ public class TblAlarmRuleDetail {
 	private TblAlarmRuleEntity alarmRule;
 	private TBLAlarmCategoryEntity alarmCategory;
 	private TblIndicatorValueEntity indicator;
-	private TblPointsEntity pointData;
+	private TblPointsEntity point;
 	
 	
 	public TblAlarmRuleDetail(TblAlarmRuleEntity alarmRule) {
 		ICrudService crudService = SpringUtil.getICrudService(); 
 		this.alarmRule = alarmRule;
 		this.alarmCategory = (TBLAlarmCategoryEntity)crudService.get(alarmRule.getAlarmCategoryId(), TBLAlarmCategoryEntity.class, true);
-		this.pointData = (TblPointsEntity)crudService.get(alarmRule.getPointId(), TblPointsEntity.class, true);
+		this.point = (TblPointsEntity)crudService.get(alarmRule.getPointId(), TblPointsEntity.class, true);
 		this.indicator = (TblIndicatorValueEntity)crudService.get(alarmRule.getAlarmCategoryId(), TblIndicatorValueEntity.class, true);
 	}
 	
@@ -46,12 +46,15 @@ public class TblAlarmRuleDetail {
 	public void setAlarmCategory(TBLAlarmCategoryEntity alarmCategory) {
 		this.alarmCategory = alarmCategory;
 	}
-	public TblPointsEntity getPointData() {
-		return pointData;
+
+
+	public TblPointsEntity getPoint() {
+		return point;
 	}
-	public void setPointData(TblPointsEntity pointData) {
-		this.pointData = pointData;
+
+
+	public void setPoint(TblPointsEntity point) {
+		this.point = point;
 	}
-	
 	
 }

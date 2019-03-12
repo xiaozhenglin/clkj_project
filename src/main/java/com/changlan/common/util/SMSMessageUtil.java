@@ -10,6 +10,7 @@ public class SMSMessageUtil {
 	public static final String key = "3b78dbe257924cb38d14";
 	
 	public static void sendMessage(String smsMob, String smsText) { 
+		//电话号码用逗号分隔,可以一次性发送多个
 		SmsParams params = new 	SmsParams("a1445023633", key, smsMob, smsText);
 		ResponseEntity<Object> postForEntity = RestUtil.postForEntity(smsUrl, params, Object.class);
 		Object body = postForEntity.getBody(); 

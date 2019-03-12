@@ -42,7 +42,7 @@ public class DaoUtil {
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)param.get(list.get(i));
         	Object value = matcher.getValue(); 
-        	nativeQuery.setParameter(i+1, value);
+        	nativeQuery.setParameter(list.get(i), value);
         }
         
         return nativeQuery;

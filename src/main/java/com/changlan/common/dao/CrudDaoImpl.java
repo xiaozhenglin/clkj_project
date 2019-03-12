@@ -196,13 +196,13 @@ public class CrudDaoImpl implements ICrudDao{
         	MatcheType type = matcher.getType(); 
         	switch (type) {
 			case EQUALS:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = :"+list.get(i); 
 				break;
 			case EXIST:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST :"+list.get(i); 
 				break;
 			case LIKE:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' ? '%'  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :"+list.get(i) + " '%'  ";
 				break;
 			default:
 				break;

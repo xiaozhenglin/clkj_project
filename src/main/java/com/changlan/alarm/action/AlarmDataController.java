@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.PageUtil;
 
 @RestController
 @RequestMapping("/admin/alarm/data")
@@ -30,8 +32,8 @@ public class AlarmDataController extends  BaseController{
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TblPointAlamDataEntity entity) {  
-		List<TblPointAlamDataEntity> list = alarmDataService.getList(entity);
-		return success(list);
+		Page<TblAlarmDataDetail> page = alarmDataService.getPage(entity,getPage());
+		return success(page);
 	}
 	
 	@RequestMapping("/info")

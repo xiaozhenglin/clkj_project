@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PageUtil {
+public class PageUtil<Class> {
 	/**原集合*/
     private List content;
  

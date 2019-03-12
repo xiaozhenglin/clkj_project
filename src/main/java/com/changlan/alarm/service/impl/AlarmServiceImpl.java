@@ -197,11 +197,7 @@ public class AlarmServiceImpl implements IAlarmService{
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
 		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
 		String content = "监控点"+point.getPointName() + "的指标"+indicatorId+"报警";
-		List<String> stringToList = StringUtil.stringToList(point.getPhones());
-		for(String phone : stringToList ) {
-			SMSMessageUtil.sendMessage(phone,content);
-		}
-		
+		SMSMessageUtil.sendMessage(point.getPhones(),content);
 	}
 
 
