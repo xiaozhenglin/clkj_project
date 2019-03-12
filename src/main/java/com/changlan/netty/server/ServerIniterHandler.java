@@ -2,7 +2,7 @@ package com.changlan.netty.server;
 
 import java.util.concurrent.TimeUnit;
 
-import com.changlan.netty.MyDecoder;
+import com.changlan.netty.pojo.MyDecoder;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

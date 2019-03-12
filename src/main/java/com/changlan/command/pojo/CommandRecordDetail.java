@@ -6,22 +6,16 @@ import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.point.service.IPointDefineService;
 
 public class CommandRecordDetail extends CommandDefaultDetail{
 	
 	private TblCommandRecordEntity record; //一条记录
-	private TblPointsEntity  point ;  //一个监控点
 	
 	public CommandRecordDetail(TblCommandRecordEntity record,TblPointSendCommandEntity commandDefault) {
 		super(commandDefault);
 		this.record = record;
-		this.point = getPoint(record.getPointId()); 
-	}
-
-	public static  TblPointsEntity getPoint(Integer pointId) {
-		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
-		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-		return point;
+//		this.point = getPoint(record.getPointRegistPackage()); 
 	}
 
 	public CommandRecordDetail() {
@@ -36,12 +30,4 @@ public class CommandRecordDetail extends CommandDefaultDetail{
 		this.record = record;
 	}
 
-	public TblPointsEntity getPoint() {
-		return point;
-	}
-
-	public void setPoint(TblPointsEntity point) {
-		this.point = point;
-	}
-	
 }

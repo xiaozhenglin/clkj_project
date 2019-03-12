@@ -2,6 +2,7 @@ package com.changlan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.changlan.command.service.impl.CommandRecordServiceImpl;
-import com.changlan.netty.NettyConfiguration;
+import com.changlan.common.util.SpringUtil;
+import com.changlan.netty.pojo.MyTask;
+import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
+import com.changlan.netty.service.INettyService;
 
 
 @SpringBootApplication
@@ -39,7 +43,12 @@ public class AdminplatApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		new NettyServer().start();
+		new NettyServer().start(); //启动netty服务器
+		INettyService nettyService = SpringUtil.getBean(INettyService.class); 
+		nettyService.task();
+		// 启动循环指令发送
+		MyTask task =  new MyTask();
+		task.run();
 	}
 
 }

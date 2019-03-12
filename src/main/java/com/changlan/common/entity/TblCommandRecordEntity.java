@@ -44,10 +44,6 @@ public class TblCommandRecordEntity implements java.io.Serializable {
     @Column(name = "ADMIN_USER_ID"    )
     private String adminUserId;
 
-    /** pointId */
-    @Column(name = "POINT_ID"    )
-    private Integer pointId;
-
     /** commandContent */
     @Column(name = "COMMAND_CONTENT"   )
     private String commandContent;
@@ -87,14 +83,6 @@ public class TblCommandRecordEntity implements java.io.Serializable {
 
 	public void setAdminUserId(String adminUserId) {
 		this.adminUserId = adminUserId;
-	}
-
-	public Integer getPointId() {
-		return pointId;
-	}
-
-	public void setPointId(Integer pointId) {
-		this.pointId = pointId;
 	}
 
 	public String getCommandContent() {

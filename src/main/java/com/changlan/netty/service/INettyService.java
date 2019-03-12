@@ -10,5 +10,8 @@ public interface INettyService {
 	Integer saveReturnMessage(String registPackage,String message) throws Exception; 
 
 	//解析返回指令
-	void analysisData(Integer commandRecordId, String registPackage, String receiveMessage);  
+	void analysisData(Integer commandRecordId, String registPackage, String receiveMessage);
+
+	//定时发送指令任务
+	void task();   
 }

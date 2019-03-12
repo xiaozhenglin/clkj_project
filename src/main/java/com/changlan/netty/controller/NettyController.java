@@ -43,24 +43,22 @@ public class NettyController extends BaseController{
     protected static final Logger logger = LoggerFactory.getLogger(NettyController.class);
 
 	
-	public boolean canSendRecord(String registPackage) {
-		Integer flage = map.get(registPackage); 
-		if(flage==null ) {
-			return true ;
+	public static boolean canSendRecord(String registPackage) {
+		Integer waitReceiveMsgRecord = map.get(registPackage); 
+		if(waitReceiveMsgRecord==null ) {
+			return true ; 
 		}
 		return false;
 	}
 	
 	@RequestMapping("/send/message")
 	@Transactional
-	public ResponseEntity<Object>  functionList(Integer pointId,String registPackage ,Integer commanId,String message ) throws Exception { 
-//		if(!canSendRecord(ip)) {
-//			throw new MyDefineException(PoinErrorType.LOCK_IP_SEND_RECORD);
-//		}
-		nettyService.sendMessage(registPackage, message); 
+	public ResponseEntity<Object>  sendMessage(String registPackage ,Integer commanId,String message ) throws Exception { 
+		if(!canSendRecord(registPackage)) {
+			throw new MyDefineException(PoinErrorType.LOCK_IP_SEND_RECORD);
+		}
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		entity.setPointId(pointId); 
 		entity.setPointRegistPackage(registPackage);
 		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
 		entity.setSendCommandId(commanId); 
@@ -74,6 +72,7 @@ public class NettyController extends BaseController{
 		}
 		logger.info("第二步发送指令 注册包：registPackage：" + registPackage + "指令内容："+message + "操作记录commandRecordId " + update.getCommandRecordId());
 		map.put(registPackage, update.getCommandRecordId());
+		nettyService.sendMessage(registPackage, message); 
 		return success(update);
 	}
 

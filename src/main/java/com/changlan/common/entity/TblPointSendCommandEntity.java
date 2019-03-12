@@ -54,7 +54,12 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     
     @Column(name = "PROTOCOL_ID"  )
     private String protocolId;
-
+    
+    @Column(name = "INTERVAL_TIME"  )
+    private Integer intervalTime;
+    
+    @Column(name = "REGIST"  )
+    private String regist;
 
 	public Integer getSendCommandId() {
 		return sendCommandId;
@@ -102,6 +107,22 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 
 	public void setProtocolId(String protocolId) {
 		this.protocolId = protocolId;
+	}
+
+	public Integer getIntervalTime() {
+		return intervalTime;
+	}
+
+	public void setIntervalTime(Integer intervalTime) {
+		this.intervalTime = intervalTime;
+	}
+
+	public String getRegist() {
+		return regist;
+	}
+
+	public void setRegist(String regist) {
+		this.regist = regist;
 	}
 
 	

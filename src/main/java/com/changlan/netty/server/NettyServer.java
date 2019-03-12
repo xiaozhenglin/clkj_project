@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.changlan.netty.NettyConfiguration;
+import com.changlan.netty.pojo.NettyConfiguration;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

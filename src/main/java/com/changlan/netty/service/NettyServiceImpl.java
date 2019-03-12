@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
 
 import javax.transaction.Transactional;
 
@@ -15,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.changlan.alarm.service.IAlarmService;
+import com.changlan.command.pojo.CommandDefaultDetail;
 import com.changlan.command.pojo.CommandRecordDetail;
+import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
+import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
@@ -29,6 +33,7 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.service.IIndicatoryValueService;
 import com.changlan.netty.controller.NettyController;
+import com.changlan.netty.pojo.MyTask;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.point.pojo.PoinErrorType;
 
@@ -46,6 +51,10 @@ public class NettyServiceImpl implements INettyService{
 	
 	@Autowired
 	IAlarmService alarmService;
+	
+	@Autowired
+	ICommandDefaultService commandDefaultService;
+	
 	
 	protected static final Logger logger = LoggerFactory.getLogger(NettyServiceImpl.class);
 
@@ -97,11 +106,11 @@ public class NettyServiceImpl implements INettyService{
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
 			// 
-//			if(!canSendRecord.isEmpty()) {
-//				//清除防止死锁
-//				canSendRecord.remove(registPackage);
-//		    	NettyController.setMap(canSendRecord); 
-//			}
+			if(!canSendRecord.isEmpty()) {
+				//清除防止死锁
+				canSendRecord.remove(registPackage);
+		    	NettyController.setMap(canSendRecord); 
+			}
 		}
 		return null;
 	}
@@ -124,6 +133,24 @@ public class NettyServiceImpl implements INettyService{
 //				logger.info("-----》报警规则计算错误"+e.getMessage());
 //			}
     	}
+	}
+
+	@Override
+	public void task() {
+		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
+		for(CommandDefaultDetail data : commandList) {
+			try {
+				//每个数据延时0.2秒按顺序开启定时任务
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 
+			TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
+			Integer intervalTime = commandDefault.getIntervalTime();
+			MyTask task = new MyTask(commandDefault);
+			Timer timer = new Timer();
+			timer.schedule(task, intervalTime*1000); 
+		}
 	}
 
 	
