@@ -12,7 +12,7 @@ public interface IAlarmService {
 	//解析指标值信息	
 	void anylysisPointData(List<TblPoinDataEntity> pointData);
 
-	
-	
+
+	void sendSMSMessage(Integer pointId, Integer indicatorId);
 
 }

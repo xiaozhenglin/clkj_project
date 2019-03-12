@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.aspectj.bridge.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.BigDecimalUtil;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.SMSMessageUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
@@ -190,15 +193,16 @@ public class AlarmServiceImpl implements IAlarmService{
 	}
 
 
-	
-	private void sendSMSMessage(Integer pointId, Integer indicatorId) {
-		// TODO Auto-generated method stub
+	@Override
+	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
+		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
+		String content = "监控点"+point.getPointName() + "的指标"+indicatorId+"报警";
+		List<String> stringToList = StringUtil.stringToList(point.getPhones());
+		for(String phone : stringToList ) {
+			SMSMessageUtil.sendMessage(phone,content);
+		}
 		
 	}
-
-
-
-
 
 
 
