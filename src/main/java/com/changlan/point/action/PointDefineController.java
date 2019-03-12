@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,7 +49,7 @@ public class PointDefineController extends BaseController{
 	
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(TblPointsEntity entity) {
-		List<PointInfoDetail> list = pointDefineService.getAll(entity); 
+		Page<PointInfoDetail> list = pointDefineService.getPage(entity,getPage()); 
 		return success(list);
 	}
 	

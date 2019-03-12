@@ -2,6 +2,9 @@ package com.changlan.point.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.point.pojo.PointInfoDetail;
 
@@ -12,4 +15,6 @@ public interface IPointDefineService {
 	Boolean existPointpName(TblPointsEntity entity);  
 	
 	TblPointsEntity getByRegistPackage(String registPackage);
+
+	Page<PointInfoDetail> getPage(TblPointsEntity entity, Pageable pageable);  
 }

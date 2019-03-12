@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.changlan.common.entity.TblCompanyEntity;
@@ -80,6 +83,30 @@ public class PointDefineServiceImpl implements IPointDefineService{
 			return null;
 		}
 		return (TblPointsEntity)findByMoreFiled.get(0);  
+	}
+
+	@Override
+	public Page<PointInfoDetail> getPage(TblPointsEntity point, Pageable pageable) {
+
+		Map map = new HashMap();
+		if(point.getPointId() != null) {
+			map.put("pointId", new ParamMatcher(point.getPointId()));
+		}
+		if(point.getLineId()!=null) {
+			map.put("lineId", new ParamMatcher(point.getLineId()));
+		}
+		Page<TblPointsEntity> all = crudService.findByMoreFiledAndPage(TblPointsEntity.class, map, true,pageable);
+		
+		List<PointInfoDetail> list = new ArrayList<PointInfoDetail>();
+		//封装公司信息和公司组信息
+		for(Object o : all) {
+			TblPointsEntity entity = (TblPointsEntity)o;
+			TblLinesEntity line = (TblLinesEntity)crudService.get(entity.getLineId(), TblLinesEntity.class, true);
+			PointInfoDetail detail = new PointInfoDetail(entity,line);
+			list.add(detail);
+		}
+		
+		return new PageImpl<PointInfoDetail>(list, pageable, all.getTotalElements()); 
 	}
 
 }

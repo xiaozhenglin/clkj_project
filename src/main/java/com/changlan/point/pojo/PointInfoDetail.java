@@ -12,22 +12,24 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.point.service.IPointCategoryService;
 
-public class PointInfoDetail extends LineDetail{
+public class PointInfoDetail {
 
 	private TblPointsEntity point; //一个监控点
 	private TblPointCategoryEntity category;  //当前监控点所属类别
+	private TblLinesEntity line; //所属线路
 	
 	public PointInfoDetail() {
 		super();
 	}
 	
 	public PointInfoDetail(TblPointsEntity entity,TblLinesEntity line) { 
-		super(line);
+//		super(line);
 		this.point = entity;
 		List<TblPointCategoryEntity> all = getCategory(entity);
 		if(!ListUtil.isEmpty(all)) {
 			this.category = (TblPointCategoryEntity)all.get(0);
 		}
+		this.line = line;
 	}
 	//当前监控点所属类别
 	private List<TblPointCategoryEntity> getCategory(TblPointsEntity entity) {
@@ -52,6 +54,14 @@ public class PointInfoDetail extends LineDetail{
 
 	public void setCategory(TblPointCategoryEntity category) {
 		this.category = category;
+	}
+
+	public TblLinesEntity getLine() {
+		return line;
+	}
+
+	public void setLine(TblLinesEntity line) {
+		this.line = line;
 	}
 
 	
