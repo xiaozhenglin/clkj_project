@@ -98,12 +98,18 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
     		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
         		return null;
         	}
-    		//解析数据
-    		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
-    		if(!ListUtil.isEmpty(data)) {
-    			//一个监控点的具体指标的值
-    			TblPoinDataEntity saveData = saveData(data.get(0).toString(),point,protocol); 
-    			result.add(saveData);
+    		String backContent = record.getBackContent();
+    		String sendAddressCode = backContent.substring(4,2);
+    		String addressCode = protocol.getAddressCode(); 
+    		//地址码匹配
+    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(sendAddressCode)) ) {
+    			//解析数据
+        		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+        		if(!ListUtil.isEmpty(data)) {
+        			//一个监控点的具体指标的值
+        			TblPoinDataEntity saveData = saveData(data.get(0).toString(),point,protocol); 
+        			result.add(saveData);
+        		}
     		}
     	}
 		return result;

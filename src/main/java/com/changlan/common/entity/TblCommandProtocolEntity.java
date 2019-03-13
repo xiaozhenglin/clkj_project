@@ -89,7 +89,7 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
     private Integer indicatorId;
     
     @Column(name = "ADDRESS_CODE"  )
-    private Integer addressCode;
+    private String addressCode;
     
     
 	public Integer getProtocolId() {
@@ -221,11 +221,11 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 		this.indicatorId = indicatorId;
 	}
 
-	public Integer getAddressCode() {
+	public String getAddressCode() {
 		return addressCode;
 	}
 
-	public void setAddressCode(Integer addressCode) {
+	public void setAddressCode(String addressCode) {
 		this.addressCode = addressCode;
 	}
 
