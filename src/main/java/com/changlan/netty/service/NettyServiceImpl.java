@@ -114,24 +114,29 @@ public class NettyServiceImpl implements INettyService{
 		}
 		return null;
 	}
+	
+	//记录id是否重新发送
+	public static Map<Integer,Boolean> map = new HashMap();
 
 	//解析返回的数据
 	@Override
-	public void analysisData(Integer commandRecordId, String registPackage, String receiveMessage) {
+	public void analysisData(Integer commandRecordId, String registPackage, String receiveMessage) throws Exception { 
     	//找到解析具体的类别-》解析协议-》保存数据
     	List<CommandRecordDetail> recordDetails = recordService.getList(commandRecordId,registPackage,receiveMessage);
     	if(!ListUtil.isEmpty(recordDetails)) {
+    		TblCommandRecordEntity record = recordDetails.get(0).getRecord();
     		//解析后保存入库的数据
-    		logger.info("第四步：commandRecordId：" + recordDetails.get(0).getRecord().getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
+    		logger.info("第四步：commandRecordId：" + record.getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
-//    		try {
-    			//解析是否报警，报警出错不能让保存的指标值回退
-    			logger.info("解析数据完成-----》报警规则计算开始");
-    			alarmService.anylysisPointData(pointData);
-    			logger.info("-----》报警规则计算结束");
-//			} catch (Exception e) {
-//				logger.info("-----》报警规则计算错误"+e.getMessage());
-//			}
+			//解析是否报警
+			logger.info("解析数据完成-----》报警规则计算开始");
+			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
+			//重试发送指令确认报警
+			if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
+				sendMessage(registPackage,record.getCommandContent());
+				map.put(record.getCommandRecordId(), true);
+			}
+			logger.info("-----》报警规则计算结束");
     	}
 	}
 

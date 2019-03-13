@@ -55,9 +55,10 @@ public class AlarmServiceImpl implements IAlarmService{
 	
 	@Override
 	@Transactional
-	public void anylysisPointData(List<TblPoinDataEntity> pointDatas) {
+	public Boolean anylysisPointData(List<TblPoinDataEntity> pointDatas) {
 //		logger.info("第五步-----》报警规则计算开始");
 		//指标类别,  指标id|指标值    指标值的区间比较用
+		Boolean haveAlarm = false;
 		Map<Integer,List<SimpleIndicator>> map = new HashMap();
 		for(TblPoinDataEntity data : pointDatas ) {
 			SimpleIndicator simpleIndicator = new SimpleIndicator(data.getIndicatorId(), data.getValue(),data.getPointDataId());
@@ -83,7 +84,7 @@ public class AlarmServiceImpl implements IAlarmService{
 				case 1:
 					// a
 					int intValue = value.intValue();
-					canculateAlarm(intValue,data,rule,data.getPointDataId());
+					haveAlarm = canculateAlarm(intValue,data,rule,data.getPointDataId());
 					break;
 				case 2:
 					//找到相同类别的其它指标的值，分别进行比较
@@ -95,7 +96,7 @@ public class AlarmServiceImpl implements IAlarmService{
 							BigDecimal subtract = value.subtract(indicatorValue); 
 							//|a-b|
 							int abs = subtract.abs().intValue(); 
-							canculateAlarm(abs,data,rule,simple.getPointDataId());
+							haveAlarm = canculateAlarm(abs,data,rule,simple.getPointDataId());
 						}
 					}
 					break;
@@ -108,7 +109,7 @@ public class AlarmServiceImpl implements IAlarmService{
 						BigDecimal subtract = value.subtract(penultimateValue); 
 						//|a-b|
 						int abs = subtract.abs().intValue(); 
-						canculateAlarm(abs,data,rule,thePenultimateData.getPointDataId());
+						haveAlarm = canculateAlarm(abs,data,rule,thePenultimateData.getPointDataId());
 					}
 					break;
 				case 4:
@@ -116,6 +117,7 @@ public class AlarmServiceImpl implements IAlarmService{
 					Integer abnomal = rule.getAbnomal();
 					Integer normal = rule.getNormal(); 
 					if(value.intValue() == abnomal) {
+						haveAlarm = true;
 						Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, data.getPointDataId());
 						data.setIsEarlyWarning(1); 
 						update(data,alarmDataId);
@@ -130,10 +132,11 @@ public class AlarmServiceImpl implements IAlarmService{
 								Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, rule.getComparison());
 								data.setIsAlarm(1); 
 								update(data,alarmDataId);
+								haveAlarm = true;
 							}else {
 								//除法取整数值
 								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
-								canculateAlarm(canculateVlue*100,data,rule,pointDataEntity.getPointDataId());
+								haveAlarm = canculateAlarm(canculateVlue*100,data,rule,pointDataEntity.getPointDataId());
 							}
 						}
 					}
@@ -143,11 +146,13 @@ public class AlarmServiceImpl implements IAlarmService{
 				}
 			}
 		}
+		return haveAlarm;
 //		logger.info("-----》报警规则计算结束");
 	}
 
 
-	private void canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
+	private Boolean canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
+		Boolean haveAlarm = false;
 		Integer topAlarm = rule.getTopAlarm();
 		Integer lowerAlarm = rule.getLowerAlarm();
 		Integer topLimit = rule.getTopLimit(); 
@@ -158,6 +163,7 @@ public class AlarmServiceImpl implements IAlarmService{
 			Integer alarmDataId = saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			data.setIsAlarm(1); 
 			update(data,alarmDataId);
+			haveAlarm =  true;
 		}
 		if( (intValue> topLimit && intValue<=topAlarm) || (intValue<lowerLimit && intValue>= lowerAlarm) ) {
 			//预警
@@ -165,6 +171,7 @@ public class AlarmServiceImpl implements IAlarmService{
 			data.setIsEarlyWarning(1); 
 			update(data,alarmDataId);
 		}
+		return haveAlarm;
 	}
 
 

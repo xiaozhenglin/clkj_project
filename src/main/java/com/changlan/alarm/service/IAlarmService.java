@@ -10,7 +10,7 @@ import com.changlan.common.entity.TblPointAlamDataEntity;
 public interface IAlarmService {
 	
 	//解析指标值信息	
-	void anylysisPointData(List<TblPoinDataEntity> pointData);
+	Boolean anylysisPointData(List<TblPoinDataEntity> pointData); 
 
 
 	void sendSMSMessage(Integer pointId, Integer indicatorId);

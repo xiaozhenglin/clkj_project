@@ -15,7 +15,11 @@ public class CommandCallBackListener implements ApplicationListener<CommandCallB
 		String registPackage = event.getRegistPackage(); 
 		String receiveMessage = event.getReceiveMessage(); 
 		INettyService nettyService = SpringUtil.getBean(INettyService.class);
-		nettyService.analysisData(commandRecordId,registPackage,receiveMessage);
+		try {
+			nettyService.analysisData(commandRecordId,registPackage,receiveMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
