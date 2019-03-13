@@ -71,7 +71,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         	String registPackage = getRegistPackageByChannel(channel); 
     		INettyService nettyService = SpringUtil.getBean(INettyService.class);
     		Integer commandRecordId = nettyService.saveReturnMessage(registPackage,s);  
-    		logger.info("第三步：保存返回数据 "+s+ "到操作记录的commandRecordId："+commandRecordId);
+    		logger.info("第三步：[" + channel.remoteAddress() + "]保存返回数据 "+s+ "到操作记录的commandRecordId："+commandRecordId);
     		if(commandRecordId!=null) {
     			//开启解析事件
     			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,registPackage,s));

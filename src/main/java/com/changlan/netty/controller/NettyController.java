@@ -57,6 +57,13 @@ public class NettyController extends BaseController{
 	@RequestMapping("/send/message")
 	@Transactional
 	public ResponseEntity<Object>  sendMessage(Integer pointId ,Integer commanId,String message ) throws Exception { 
+		String registPackage = saveRecord(pointId,commanId,message);
+		nettyService.sendMessage(registPackage, message); 
+		return success(true);
+	}
+
+	
+	private String saveRecord(Integer pointId, Integer commanId, String message)  throws Exception { 
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId, null); 
 		String registPackage = pointDefine.getPointRegistPackage();
 		if(!canSendRecord(registPackage)) {
@@ -78,11 +85,10 @@ public class NettyController extends BaseController{
 		logger.info("第二步发送指令 注册包：registPackage：" + registPackage + "指令内容："+message + "操作记录commandRecordId " + update.getCommandRecordId());
 		//加锁
 		map.put(registPackage, update.getCommandRecordId());
-		nettyService.sendMessage(registPackage, message); 
-		return success(update);
+		return registPackage;
 	}
 
-	
+
 	public static  boolean canSendRecord(String registPackage) {
 		if( map==null || StringUtil.isEmpty(registPackage)) {
 			return true;

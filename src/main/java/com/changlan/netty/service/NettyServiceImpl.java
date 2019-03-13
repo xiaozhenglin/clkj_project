@@ -1,6 +1,7 @@
 package com.changlan.netty.service;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.pojo.MyTask;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.point.pojo.PoinErrorType;
+import com.changlan.user.pojo.LoginUser;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -99,6 +101,11 @@ public class NettyServiceImpl implements INettyService{
 	    		entity.setBackContent(receiveMessage);
 	    		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
 	    	}
+	    	if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
+				//清除防止死锁
+				canSendRecord.remove(registPackage);
+		    	NettyController.setMap(canSendRecord); 
+			}
 	    	return commandRecordId;
 		} catch (Exception e) {
 			logger.error(this.getClass() + "==" + e.getMessage()); 
@@ -132,15 +139,48 @@ public class NettyServiceImpl implements INettyService{
     			logger.info("解析数据完成-----》报警规则计算开始");
     			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
     			//重试发送指令确认报警
-    			if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
-    				sendMessage(registPackage,record.getCommandContent());
-    				map.put(record.getCommandRecordId(), true);
-    			}
-    			logger.info("-----》报警规则计算结束");
+//    			resend(record,registPackage,haveAlarm);
     		}
     	}
 	}
 
+	private void resend(TblCommandRecordEntity record, String registPackage, Boolean haveAlarm) { 
+		if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
+			try {
+				saveRecord(record,registPackage);
+				sendMessage(registPackage,record.getCommandContent());
+			} catch (Exception e) {
+				logger.info(e.getMessage());
+			}
+			map.put(record.getCommandRecordId(), true);
+		}
+		logger.info("-----》报警规则计算结束");
+	}
+
+	private String saveRecord(TblCommandRecordEntity record,String registPackage)  throws Exception { 
+		if(!NettyController.canSendRecord(registPackage)) {
+			throw new MyDefineException(PoinErrorType.LOCK_IP_SEND_RECORD);
+		}
+		//保存用户操作指令
+		TblCommandRecordEntity entity = new TblCommandRecordEntity();
+		entity.setPointId(record.getPointId()); 
+		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
+		entity.setSendCommandId(record.getSendCommandId()); 
+		entity.setCommandContent(record.getCommandContent());
+		entity.setRecordTime(new Date()); 
+		//将记录id保存到会话，当有返回消息时保存起来
+		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+		if(update == null) {
+			logger.info("第二步注册包：registPackage：" + registPackage + "指令内容："+record.getCommandContent() + "发送失败" );
+			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
+		}
+		logger.info("第二步发送指令 注册包：registPackage：" + registPackage + "指令内容："+record.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
+		//加锁
+		NettyController.map.put(registPackage, update.getCommandRecordId());
+		return registPackage;
+	}
+	
+	
 	@Override
 	public void task() {
 		logger.info("===>>执行定时发送指令任务"); 

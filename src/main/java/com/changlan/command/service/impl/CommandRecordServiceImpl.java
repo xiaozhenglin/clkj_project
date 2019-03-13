@@ -60,9 +60,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		List<CommandRecordDetail> result = new ArrayList<CommandRecordDetail>(); 
 		List<Object> all = new ArrayList<Object>();
 		Map map = new HashMap();
-		if(!StringUtil.isEmpty(backContent)) {
-			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
-		}
+//		if(!StringUtil.isEmpty(backContent)) {
+//			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
+//		}
 		if(recordId != null) {
 			map.put("commandRecordId", new ParamMatcher(recordId));
 		} 
@@ -100,7 +100,6 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         	}
     		String backContent = record.getBackContent();
     		String sendAddressCode = backContent.substring(4,4+2);
-    		System.out.println(sendAddressCode);
     		String addressCode = protocol.getAddressCode(); 
     		//地址码匹配
     		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(sendAddressCode)) ) {
