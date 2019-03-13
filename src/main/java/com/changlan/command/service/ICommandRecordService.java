@@ -15,6 +15,7 @@ public interface ICommandRecordService {
 
 	CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage);
 
+	//解析数据
 	List<TblPoinDataEntity> anylysisData(CommandRecordDetail commandRecordDetail);
 
 	Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent, Pageable page);

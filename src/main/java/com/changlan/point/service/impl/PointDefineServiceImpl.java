@@ -19,6 +19,7 @@ import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.ICompanyGropService;
@@ -75,19 +76,7 @@ public class PointDefineServiceImpl implements IPointDefineService{
 	}
 
 	@Override
-	public TblPointsEntity getByRegistPackage(String registPackage) {
-		Map map = new HashMap();
-		map.put("pointRegistPackage", new ParamMatcher(registPackage));
-		List findByMoreFiled = crudService.findByMoreFiled(TblPointsEntity.class, map, true); 
-		if(ListUtil.isEmpty(findByMoreFiled)) {
-			return null;
-		}
-		return (TblPointsEntity)findByMoreFiled.get(0);  
-	}
-
-	@Override
 	public Page<PointInfoDetail> getPage(TblPointsEntity point, Pageable pageable) {
-
 		Map map = new HashMap();
 		if(point.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(point.getPointId()));
@@ -105,8 +94,23 @@ public class PointDefineServiceImpl implements IPointDefineService{
 			PointInfoDetail detail = new PointInfoDetail(entity,line);
 			list.add(detail);
 		}
-		
 		return new PageImpl<PointInfoDetail>(list, pageable, all.getTotalElements()); 
+	}
+
+	@Override
+	public TblPointsEntity getByRegistPackageOrId(Integer pointId, String registPackage) {
+		Map map = new HashMap();
+		if(pointId != null) {
+			map.put("pointId", new ParamMatcher(pointId));
+		}
+		if(StringUtil.isNotEmpty(registPackage)) { 
+			map.put("pointRegistPackage", new ParamMatcher(registPackage));
+		}
+		List findByMoreFiled = crudService.findByMoreFiled(TblPointsEntity.class, map, true); 
+		if(ListUtil.isEmpty(findByMoreFiled)) {
+			return null;
+		}
+		return (TblPointsEntity)findByMoreFiled.get(0);  
 	}
 
 }

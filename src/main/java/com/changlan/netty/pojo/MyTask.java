@@ -17,12 +17,14 @@ import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.pojo.PoinErrorType;
+import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
 @Component
@@ -43,11 +45,14 @@ public class MyTask extends TimerTask {
 	@Override
 	public void run() {
 		System.out.println("运行定时器"); 
-		if(NettyController.canSendRecord(commandDefault.getRegist())) {
+		Integer pointId = commandDefault.getPointId(); 
+		IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
+		TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
+		if(NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
 			//一次发一条。加锁操作
 			INettyService nettyService = SpringUtil.getBean(INettyService.class);
 			try {
-				nettyService.sendMessage(commandDefault.getRegist(),commandDefault.getCommandContent());
+				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			} catch (Exception e) {
 				logger.info(e+"");
 			} 

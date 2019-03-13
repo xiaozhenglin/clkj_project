@@ -60,8 +60,8 @@ public class TblCommandRecordEntity implements java.io.Serializable {
     @Column(name = "POINT_NAME"  )
     private String pointName;
     
-    @Column(name = "POINT_REGIST_PACKAGE"  )
-    private String pointRegistPackage;
+    @Column(name = "POINT_ID"  )
+    private Integer pointId;
     
     @Column(name = "COMMAND_CATAGORY_ID"  )
     private Integer commandCatagoryId;
@@ -117,12 +117,12 @@ public class TblCommandRecordEntity implements java.io.Serializable {
 		this.pointName = pointName;
 	}
 
-	public String getPointRegistPackage() {
-		return pointRegistPackage;
+	public Integer getPointId() {
+		return pointId;
 	}
 
-	public void setPointRegistPackage(String pointRegistPackage) {
-		this.pointRegistPackage = pointRegistPackage;
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
 	}
 
 	public Integer getCommandCatagoryId() {

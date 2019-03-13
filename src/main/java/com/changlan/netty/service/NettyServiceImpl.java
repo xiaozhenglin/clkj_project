@@ -126,9 +126,9 @@ public class NettyServiceImpl implements INettyService{
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
 //    		try {
     			//解析是否报警，报警出错不能让保存的指标值回退
-//    			logger.info("第五步-----》报警规则计算开始");
+    			logger.info("解析数据完成-----》报警规则计算开始");
     			alarmService.anylysisPointData(pointData);
-//    			logger.info("-----》报警规则计算结束");
+    			logger.info("-----》报警规则计算结束");
 //			} catch (Exception e) {
 //				logger.info("-----》报警规则计算错误"+e.getMessage());
 //			}
@@ -148,10 +148,12 @@ public class NettyServiceImpl implements INettyService{
 			}
 			TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
 			Integer intervalTime = commandDefault.getIntervalTime();
-			MyTask task = new MyTask(commandDefault);
-			Timer timer = new Timer();
-			//循环执行定时器
-			timer.schedule(task, 0, intervalTime*1000);
+			if(intervalTime!=null) {
+				MyTask task = new MyTask(commandDefault);
+				Timer timer = new Timer();
+				//循环执行定时器
+				timer.schedule(task, 0, intervalTime*1000);
+			}
 		}
 	}
 	

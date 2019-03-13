@@ -82,8 +82,8 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
     @Column(name = "CANCULATE_RESULT_EXPLAIN"  )
     private String canculateResultExplain;
     
-    @Column(name = "POINT_REGIST_PACKAGE" )
-    private String pointRegistPackage;
+    @Column(name = "POINT_ID" )
+    private Integer pointId;
     
     @Column(name = "INDICATOR_ID"  )
     private Integer indicatorId;
@@ -176,8 +176,6 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 		this.canculateResultExplain = canculateResultExplain;
 	}
 
-	
-
 //	public List<String> getCodePositions() {
 //		List<String> list= new ArrayList<String>();
 //		//7-1,11-2
@@ -203,16 +201,16 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 //		return list;
 //	}
 
-	public String getPointRegistPackage() {
-		return pointRegistPackage;
-	}
-
-	public void setPointRegistPackage(String pointRegistPackage) {
-		this.pointRegistPackage = pointRegistPackage;
-	}
-
 	public Integer getIndicatorId() {
 		return indicatorId;
+	}
+
+	public Integer getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
 	}
 
 	public void setIndicatorId(Integer indicatorId) {

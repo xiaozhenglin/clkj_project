@@ -14,7 +14,7 @@ public interface IPointDefineService {
 
 	Boolean existPointpName(TblPointsEntity entity);  
 	
-	TblPointsEntity getByRegistPackage(String registPackage);
+	TblPointsEntity getByRegistPackageOrId(Integer pointId,String registPackage);
 
-	Page<PointInfoDetail> getPage(TblPointsEntity entity, Pageable pageable);  
+	Page<PointInfoDetail> getPage(TblPointsEntity entity, Pageable pageable);
 }

@@ -39,16 +39,21 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
+import com.changlan.point.service.IPointDefineService;
 
 @Service
 public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	private static Logger logger = LoggerFactory.getLogger(CommandRecordServiceImpl.class);
-	@Autowired
-	ICrudService crudService;
 	
 	@Autowired
-	ICommandRecordDao commandRecordDao;
+	private ICrudService crudService;
+	
+	@Autowired
+	private ICommandRecordDao commandRecordDao;
+	
+	@Autowired
+	private IPointDefineService pointDefineService;
 
 	@Override
 	public List<CommandRecordDetail> getList(Integer recordId, String registPackage, String backContent) {
@@ -93,7 +98,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	List<TblCommandProtocolEntity> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
 		//逻辑：获取返回内容-》 获取其中匹配的解析协议 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
     	for(TblCommandProtocolEntity protocol : currentDataProtocol) {
-    		if(protocol == null || !protocol.getPointRegistPackage().equalsIgnoreCase(record.getPointRegistPackage())) {
+    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
         		return null;
         	}
     		//解析数据
@@ -150,19 +155,26 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	public void update(TblPointSendCommandEntity commandDefault) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		entity.setPointRegistPackage(commandDefault.getRegist());
+		entity.setPointId(commandDefault.getPointId()); 
 		entity.setAdminUserId(null);
 		entity.setSendCommandId(commandDefault.getSendCommandId()); 
 		entity.setCommandContent(commandDefault.getCommandContent());
 		entity.setRecordTime(new Date()); 
 		//将记录id保存到会话，当有返回消息时保存起来
 		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
-		logger.info("第二步发送指令 注册包：registPackage：" + commandDefault.getRegist() + "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
+		String registPackage = getRegistPackage(entity.getPointId());
+		logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
 		if(update != null) {
 			Map<String, Integer> map = NettyController.getMap(); 
-			map.put(commandDefault.getRegist(), update.getCommandRecordId());
+			map.put(registPackage, update.getCommandRecordId());
 			NettyController.setMap(map); 
 		}
+	}
+
+	private String getRegistPackage(Integer pointId) {
+		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId,null);
+		String pointRegistPackage = pointDefine.getPointRegistPackage(); 
+		return pointRegistPackage;
 	}
 	
 	

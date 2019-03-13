@@ -83,7 +83,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     
     private void setPackageChannel(String registPackage, Channel channel) {
     	  Map<Object, Channel> channelMap = NettyServer.channelMap;
-    	  channelMap.put(registPackage, channel);
+    	  channelMap.put(registPackage, channel); 
     	  NettyServer.setChannelMap(channelMap);
     	  logger.info("第一步接受注册包 [" + channel.remoteAddress() + "]:"+ registPackage + " 长度 "+registPackage.length()+"\n");
 	}
@@ -198,10 +198,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) throws Exception {
     	Channel channel = ctx.channel();
-    	if(!channel.isActive()) {
-    		String registPackage = getRegistPackageByChannel(channel); 
-        	changePointStatus(channel,PointStatus.OUT_CONNECT);
-    	}
+		String registPackage = getRegistPackageByChannel(channel); 
+    	changePointStatus(channel,PointStatus.OUT_CONNECT);
     	logger.info("[" + channel.remoteAddress() + "]" + e);
     	ctx.close(); //加的部分
     	//只要有异常就全部抛出

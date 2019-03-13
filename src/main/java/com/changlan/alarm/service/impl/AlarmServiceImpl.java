@@ -133,7 +133,7 @@ public class AlarmServiceImpl implements IAlarmService{
 							}else {
 								//除法取整数值
 								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
-								canculateAlarm(canculateVlue,data,rule,pointDataEntity.getPointDataId());
+								canculateAlarm(canculateVlue*100,data,rule,pointDataEntity.getPointDataId());
 							}
 						}
 					}

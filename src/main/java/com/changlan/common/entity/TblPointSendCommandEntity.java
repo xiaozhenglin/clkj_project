@@ -58,8 +58,12 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     @Column(name = "INTERVAL_TIME"  )
     private Integer intervalTime;
     
-    @Column(name = "REGIST"  )
-    private String regist;
+    @Column(name = "POINT_ID"  )
+    private Integer pointId;
+    
+    @Column(name = "INDICATOR_CATEGORY"  )
+    private Integer indicatorCategory;
+    
 
 	public Integer getSendCommandId() {
 		return sendCommandId;
@@ -117,14 +121,23 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 		this.intervalTime = intervalTime;
 	}
 
-	public String getRegist() {
-		return regist;
+	public Integer getPointId() {
+		return pointId;
 	}
 
-	public void setRegist(String regist) {
-		this.regist = regist;
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
 	}
 
+	public Integer getIndicatorCategory() {
+		return indicatorCategory;
+	}
+
+	public void setIndicatorCategory(Integer indicatorCategory) {
+		this.indicatorCategory = indicatorCategory;
+	}
+
+	
 	
 
   

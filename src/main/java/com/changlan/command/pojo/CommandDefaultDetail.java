@@ -26,7 +26,7 @@ public class CommandDefaultDetail {
 		this.commandDefault =commandDefault;
 		this.currentDataProtocol = getDataProtocol(commandDefault);
 		this.category = getCategory(commandDefault.getCommandCatagoryId());
-		this.point = getPoint(commandDefault.getRegist());
+		this.point = getPoint(commandDefault.getPointId());
 	}
 	
 	private TblCommandCategoryEntity getCategory(Integer commandCatagoryId) {
@@ -47,9 +47,9 @@ public class CommandDefaultDetail {
 		return list;
 	}
 	
-	private TblPointsEntity getPoint(String registPackage) {
+	private TblPointsEntity getPoint(Integer pointId) {
 		IPointDefineService pointDefineService = SpringUtil.getBean(IPointDefineService.class);
-		TblPointsEntity byRegistPackage = pointDefineService.getByRegistPackage(registPackage); 
+		TblPointsEntity byRegistPackage = pointDefineService.getByRegistPackageOrId(pointId, null);
 		return byRegistPackage;
 	}
 

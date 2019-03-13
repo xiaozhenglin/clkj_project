@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
@@ -26,6 +27,7 @@ import com.changlan.netty.server.ServerHandler;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.constrant.PointConstrant;
 import com.changlan.point.pojo.PoinErrorType;
+import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
 @RestController
@@ -37,6 +39,9 @@ public class NettyController extends BaseController{
 	
 	@Autowired
 	INettyService nettyService;
+	
+	@Autowired
+	IPointDefineService pointDefineService;
 	
 	public static Map<String,Integer> map = new HashMap<String,Integer>();
 	
@@ -54,13 +59,15 @@ public class NettyController extends BaseController{
 	//主动发送，有定时任务被动发送
 	@RequestMapping("/send/message")
 	@Transactional
-	public ResponseEntity<Object>  sendMessage(String registPackage ,Integer commanId,String message ) throws Exception { 
+	public ResponseEntity<Object>  sendMessage(Integer pointId ,Integer commanId,String message ) throws Exception { 
+		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId, null); 
+		String registPackage = pointDefine.getPointRegistPackage();
 		if(!canSendRecord(registPackage)) {
 			throw new MyDefineException(PoinErrorType.LOCK_IP_SEND_RECORD);
 		}
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		entity.setPointRegistPackage(registPackage);
+		entity.setPointId(pointId); 
 		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
 		entity.setSendCommandId(commanId); 
 		entity.setCommandContent(message);
