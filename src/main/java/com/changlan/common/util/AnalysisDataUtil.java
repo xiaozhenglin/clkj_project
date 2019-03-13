@@ -60,12 +60,13 @@ public class AnalysisDataUtil {
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
+		Integer dataByte = protocol.getDataByte(); 
 		//解析数据
 		//下标值为位置数减去1   6
 		Integer begin = beginByte-1;
 		if(begin<backContent.length()) {
-			//0769  6-10
-			String channelValue = backContent.substring(begin, begin+4); 
+			//0769  7-11
+			String channelValue = backContent.substring(begin, dataByte); 
 			//1897
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
 			//1897

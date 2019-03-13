@@ -91,7 +91,6 @@ public class NettyServiceImpl implements INettyService{
 	    	Map map = new HashMap();
 	    	//
 	    	Integer commandRecordId = canSendRecord.get(registPackage);  
-			map.put("pointRegistPackage", new ParamMatcher(registPackage));
 			map.put("commandRecordId", new ParamMatcher(commandRecordId));
 	     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
 	     	//正常只有一个
@@ -102,7 +101,7 @@ public class NettyServiceImpl implements INettyService{
 	    	}
 	    	return commandRecordId;
 		} catch (Exception e) {
-			logger.info(e.getMessage()); 
+			logger.error(this.getClass() + "==" + e.getMessage()); 
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
 			// 
@@ -128,15 +127,17 @@ public class NettyServiceImpl implements INettyService{
     		//解析后保存入库的数据
     		logger.info("第四步：commandRecordId：" + record.getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
-			//解析是否报警
-			logger.info("解析数据完成-----》报警规则计算开始");
-			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
-			//重试发送指令确认报警
-			if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
-				sendMessage(registPackage,record.getCommandContent());
-				map.put(record.getCommandRecordId(), true);
-			}
-			logger.info("-----》报警规则计算结束");
+    		if(!ListUtil.isEmpty(pointData)) {
+    			//解析是否报警
+    			logger.info("解析数据完成-----》报警规则计算开始");
+    			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
+    			//重试发送指令确认报警
+    			if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
+    				sendMessage(registPackage,record.getCommandContent());
+    				map.put(record.getCommandRecordId(), true);
+    			}
+    			logger.info("-----》报警规则计算结束");
+    		}
     	}
 	}
 

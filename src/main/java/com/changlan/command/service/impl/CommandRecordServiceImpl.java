@@ -99,7 +99,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         		return null;
         	}
     		String backContent = record.getBackContent();
-    		String sendAddressCode = backContent.substring(4,2);
+    		String sendAddressCode = backContent.substring(4,4+2);
+    		System.out.println(sendAddressCode);
     		String addressCode = protocol.getAddressCode(); 
     		//地址码匹配
     		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(sendAddressCode)) ) {
@@ -132,9 +133,6 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	public Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent,
 			Pageable page) {
 		Map map = new HashMap();
-		if(!StringUtil.isEmpty(registPackage)) {
-			map.put("pointRegistPackage", new ParamMatcher(registPackage)); 
-		}
 		if(!StringUtil.isEmpty(backContent)) {
 			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
 		}
