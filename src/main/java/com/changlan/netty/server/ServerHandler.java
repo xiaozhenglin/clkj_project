@@ -139,7 +139,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             }
         }
         //断开连接的时候修改状态
-    	changePointStatus(channel,PointStatus.CONNECT);
+    	changePointStatus(channel,PointStatus.OUT_CONNECT);
         group.remove(channel);
     }
 

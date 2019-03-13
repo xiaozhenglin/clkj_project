@@ -60,9 +60,6 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		List<CommandRecordDetail> result = new ArrayList<CommandRecordDetail>(); 
 		List<Object> all = new ArrayList<Object>();
 		Map map = new HashMap();
-		if(!StringUtil.isEmpty(registPackage)) {
-			map.put("pointRegistPackage", new ParamMatcher(registPackage)); 
-		}
 		if(!StringUtil.isEmpty(backContent)) {
 			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
 		}
