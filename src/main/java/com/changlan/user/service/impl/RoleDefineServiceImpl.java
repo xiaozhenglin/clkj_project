@@ -22,7 +22,7 @@ public class RoleDefineServiceImpl implements IRoleDefineService{
 	ICrudService crudService ;
 
 	@Override
-	public Boolean existGroupName(TBLRoleDefineEntity role) {
+	public Boolean existRoleName(TBLRoleDefineEntity role) {
 		Map map = new HashMap();
 		map.put("roleName", new ParamMatcher(role.getRoleName()));
 		List<TBLRoleDefineEntity> list = crudService.findByMoreFiled(TBLRoleDefineEntity.class, map, true); 

@@ -4,6 +4,6 @@ import com.changlan.common.entity.TBLRoleDefineEntity;
 
 public interface IRoleDefineService {
 
-	Boolean existGroupName(TBLRoleDefineEntity role); 
+	Boolean existRoleName(TBLRoleDefineEntity role); 
 
 }

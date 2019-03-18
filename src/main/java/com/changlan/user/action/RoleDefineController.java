@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +43,9 @@ public class RoleDefineController extends BaseController{
 	} 
 	
 	@RequestMapping("/save")
+	@Transactional
 	public ResponseEntity<Object>  save(TBLRoleDefineEntity role) throws Exception {  
-		Boolean exist = roleDefineService.existGroupName(role);
+		Boolean exist = roleDefineService.existRoleName(role);
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.COMPANY_GROUP_NAME_EXIST.getCode(), PoinErrorType.COMPANY_GROUP_NAME_EXIST.getName(), false, null);
 		}

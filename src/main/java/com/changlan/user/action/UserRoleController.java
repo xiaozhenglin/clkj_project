@@ -3,6 +3,8 @@ package com.changlan.user.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +48,7 @@ public class UserRoleController extends BaseController{
 	} 
 	
 	@RequestMapping("/save")
+	@Transactional
 	public ResponseEntity<Object>  save(TBLUserRoleEntity role) throws Exception {  
 		//只有系统管理员能够修改或添加用户的角色
 		TblAdminUserEntity adminUser = super.userIsLogin();
