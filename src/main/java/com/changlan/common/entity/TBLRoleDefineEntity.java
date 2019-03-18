@@ -15,6 +15,7 @@ public class TBLRoleDefineEntity {
     @Column(name = "ROLE_ID", unique = true )
     private Integer roleId;
 
+    @Column(name = "ROLE_NAME", unique = true )
 	private String  roleName;
 
 	public Integer getRoleId() {

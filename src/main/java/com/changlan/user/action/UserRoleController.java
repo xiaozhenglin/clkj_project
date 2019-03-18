@@ -49,8 +49,7 @@ public class UserRoleController extends BaseController{
 	public ResponseEntity<Object>  save(TBLUserRoleEntity role) throws Exception {  
 		//只有系统管理员能够修改或添加用户的角色
 		TblAdminUserEntity adminUser = super.userIsLogin();
-		UserDetail detail = new UserDetail(adminUser);
-		if(detail!=null && detail.getRoleDefine().getRoleId() == 1) {
+		if(isSuperAdminUser(adminUser.getAdminUserId())) {
 			//检查是否已经存在
 			Boolean existRole = userRoleService.existRole(role); 
 			if(existRole) {
@@ -60,8 +59,9 @@ public class UserRoleController extends BaseController{
 			if(update==null){
 				throw new MyDefineException(UserErrorType.SAVE_ERROR);
 			}
+			return success(update);
 		}
-		return success("保存成功");
+		return success(null);
 	} 
 	
 }

@@ -13,6 +13,7 @@ import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.user.pojo.UserDetail;
 import com.changlan.user.pojo.UserRoleDetail;
 import com.changlan.user.service.IUserInfoService;
@@ -29,7 +30,7 @@ public class UserInfoServiceImpl implements IUserInfoService{
 		map.put("name", new ParamMatcher(user.getName()));
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
 		String userId = user.getAdminUserId(); 
-		if(userId == null) {
+		if(StringUtil.isEmpty(userId)) {
 			//添加
 			if(!ListUtil.isEmpty(list)) {
 				return true;
@@ -37,7 +38,7 @@ public class UserInfoServiceImpl implements IUserInfoService{
 		}else {
 			//修改
 			for(TblAdminUserEntity adminUser : list) {
-				if(adminUser != null &&  userId.equals(adminUser.getAdminUserId()) ) {
+				if(adminUser != null &&  !userId.equalsIgnoreCase(adminUser.getAdminUserId()) ) {
 					return true;
 				}
 			}

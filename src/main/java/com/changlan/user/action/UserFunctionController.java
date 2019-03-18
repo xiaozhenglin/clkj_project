@@ -22,6 +22,7 @@ import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.pojo.UserFunctionInfo;
 import com.changlan.user.service.IUserFunctionService;
+import com.changlan.user.service.IUserRoleService;
 import com.changlan.user.vo.UserFunctionInfoVO;
 
 @RestController
@@ -34,11 +35,15 @@ public class UserFunctionController extends BaseController{
 	@Autowired
 	ICrudService crudService;
 	
+	@Autowired
+	IUserRoleService roleService;
+	
+	
 	@RequestMapping("/func/list")
 	public ResponseEntity<Object>  userFunctionlist() throws Exception {  
 		TblAdminUserEntity user = super.userIsLogin();
 		List<UserFunctionInfoVO> useFunctionVOList = new ArrayList<UserFunctionInfoVO>();
-		if(user.getAdminUserId().equals("230cc2e6779b4a8a9edf57054c02ce11")) {
+		if(isSuperAdminUser(user.getAdminUserId())) { 
 			//如果是管理员，就查出所有的
 			List<UserFunctionInfo> findALLPersions = userFunctionService.findALLPersions(); 
 			for(UserFunctionInfo userFunctionInfo : findALLPersions) {
@@ -58,7 +63,7 @@ public class UserFunctionController extends BaseController{
 	@RequestMapping("/func/save")
 	public ResponseEntity<Object>  userAddFunction(String funcIds,String adminUserId) throws Exception {  
 		TblAdminUserEntity user = super.userIsLogin();
-		if(user.getAdminUserId().equals("230cc2e6779b4a8a9edf57054c02ce11")) {
+		if(isSuperAdminUser(user.getAdminUserId())) { 
 			List<String> functionIds = StringUtil.stringToList(funcIds, ","); 
 			Boolean save = userFunctionService.merge(adminUserId,functionIds);
 			if(!save) {
@@ -68,4 +73,7 @@ public class UserFunctionController extends BaseController{
 		}
 		throw new MyDefineException(UserErrorType.ONLY_SUPER_SAVE_OTHER.getCode(), UserErrorType.ONLY_SUPER_SAVE_OTHER.getMsg(), false, null);
 	} 
+	
+	
+
 }

@@ -52,27 +52,24 @@ public class UserInfoController extends BaseController{
 		if(exist){
 			throw new MyDefineException(UserErrorType.USER_NAME_EXIST.getCode(), UserErrorType.USER_NAME_EXIST.getMsg(), false, null);
 		}
-		
 		//只有系统管理员可以添加用户
-		UserRoleDetail detail = userRoleService.getOne(adminUser.getAdminUserId()); 
-		if(detail!=null && detail.getRoleDefine().getRoleId() == 1) {
+		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
 			user.setAdminUserId(UUIDUtil.getUUID());
 			TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(user, true); 
 			if(save == null) {
 				throw new MyDefineException(UserErrorType.SAVE_ERROR.getCode(), UserErrorType.SAVE_ERROR.getMsg(), false, null);
 			}
-			return success(UserModuleConst.editSuccess);
+			return success(true);
 		}
 		throw new MyDefineException(UserErrorType.ONLY_SUPER_SAVE_OTHER.getCode(), UserErrorType.ONLY_SUPER_SAVE_OTHER.getMsg(), false, null);
 	} 
 	
-
 	@RequestMapping("/edit")
 	@Transactional
 	public ResponseEntity<Object>  edit(TblAdminUserEntity updateUser) throws Exception{
 		//只允许修改自己的信息,包括管理员
 		TblAdminUserEntity user = super.userIsLogin();
-		if(updateUser !=null && StringUtil.isNotEmpty(updateUser.getAdminUserId()) && user.getAdminUserId() == updateUser.getAdminUserId() ) {
+		if(updateUser !=null && StringUtil.isNotEmpty(updateUser.getAdminUserId()) && user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId())) {
 			Boolean exist = userInfoService.existName(updateUser);
 			if(exist){
 				throw new MyDefineException(UserErrorType.USER_NAME_EXIST.getCode(), UserErrorType.USER_NAME_EXIST.getMsg(), false, null);
@@ -81,9 +78,8 @@ public class UserInfoController extends BaseController{
 			if(save == null) {
 				throw new MyDefineException(UserErrorType.EDIT_ERROR.getCode(), UserErrorType.EDIT_ERROR.getMsg(), false, null);
 			}
-			return success(UserModuleConst.editSuccess);
+			return success(true);
 		}
-		
 		throw new MyDefineException(UserErrorType.CANNOT_EDIT_OTHER.getCode(), UserErrorType.CANNOT_EDIT_OTHER.getMsg(), false, null);
 	}
 	
