@@ -40,6 +40,7 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
 import com.changlan.point.service.IPointDefineService;
+import com.changlan.user.pojo.LoginUser;
 
 @Service
 public class CommandRecordServiceImpl implements ICommandRecordService{
@@ -152,23 +153,25 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 
 	@Override
 	@Transactional
-	public void update(TblPointSendCommandEntity commandDefault) {
+	public TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); 
-		entity.setAdminUserId(null);
+		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
 		entity.setSendCommandId(commandDefault.getSendCommandId()); 
 		entity.setCommandContent(commandDefault.getCommandContent());
 		entity.setRecordTime(new Date()); 
 		//将记录id保存到会话，当有返回消息时保存起来
 		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
-		String registPackage = getRegistPackage(entity.getPointId());
+//		String registPackage = getRegistPackage(entity.getPointId());
 		logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
 		if(update != null) {
+			//加锁,一个监控点同时只能发送一个指令，接受指令就会解锁
 			Map<String, Integer> map = NettyController.getMap(); 
 			map.put(registPackage, update.getCommandRecordId());
 			NettyController.setMap(map); 
 		}
+		return update;
 	}
 
 	private String getRegistPackage(Integer pointId) {

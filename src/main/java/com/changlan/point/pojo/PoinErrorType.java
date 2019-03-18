@@ -7,7 +7,7 @@ public enum PoinErrorType {
 	NAME_EXIST("P005","名称重复"),
 	SAVE_EROOR("P003","保存或修改信息失败"),
 	CHANNEL_IS_NOT_ACTIVE("N001","发送失败,设备未连接或 监控点注册包无效或者 netty通道不可用"),
-	LOCK_IP_SEND_RECORD("N002","当前ip设备暂不能发送指令,等待上次接受返回值");
+	LOCK_POINT_SEND_RECORD("N002","当前设备暂不能发送指令,等待上次接受返回值");
 	
 	private String code;
 	private String name;

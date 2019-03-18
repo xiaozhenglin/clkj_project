@@ -20,6 +20,7 @@ public interface ICommandRecordService {
 
 	Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent, Pageable page);
 
-	void update(TblPointSendCommandEntity commandDefault);  
+	//保存发送记录
+	TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage);   
 	
 }

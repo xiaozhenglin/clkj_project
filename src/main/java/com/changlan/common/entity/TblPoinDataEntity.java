@@ -14,10 +14,14 @@ import javax.persistence.GenerationType;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.changlan.alarm.pojo.AlarmDownType;
 
 /**
  * TBL_POIN_DATA
@@ -78,7 +82,13 @@ public class TblPoinDataEntity implements java.io.Serializable {
 
     @Column(name = "ALARM_DATA_ID"    )
     private String alarmDataId;
+
+    @Column(name = "ALARM_DOWN_RECORD"    )
+    private Integer alarmDownRecord;
     
+    @Column(name = "ALARM_DOWN" )
+    @Enumerated(EnumType.STRING)
+    private AlarmDownType alarmDown;
     
     /**
      * 获取pointDataId
@@ -274,6 +284,22 @@ public class TblPoinDataEntity implements java.io.Serializable {
 
 	public void setAlarmDataId(String alarmDataId) {
 		this.alarmDataId = alarmDataId;
+	}
+
+	public Integer getAlarmDownRecord() {
+		return alarmDownRecord;
+	}
+
+	public void setAlarmDownRecord(Integer alarmDownRecord) {
+		this.alarmDownRecord = alarmDownRecord;
+	}
+
+	public AlarmDownType getAlarmDown() {
+		return alarmDown;
+	}
+
+	public void setAlarmDown(AlarmDownType alarmDown) {
+		this.alarmDown = alarmDown;
 	}
     
     

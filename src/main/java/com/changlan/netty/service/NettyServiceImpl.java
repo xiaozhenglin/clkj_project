@@ -144,42 +144,19 @@ public class NettyServiceImpl implements INettyService{
     	}
 	}
 
-	private void resend(TblCommandRecordEntity record, String registPackage, Boolean haveAlarm) { 
-		if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
-			try {
-				saveRecord(record,registPackage);
-				sendMessage(registPackage,record.getCommandContent());
-			} catch (Exception e) {
-				logger.info(e.getMessage());
-			}
-			map.put(record.getCommandRecordId(), true);
-		}
-		logger.info("-----》报警规则计算结束");
-	}
+//	private void resend(TblCommandRecordEntity record, String registPackage, Boolean haveAlarm) { 
+//		if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
+//			try {
+//				saveRecord(record,registPackage);
+//				sendMessage(registPackage,record.getCommandContent());
+//			} catch (Exception e) {
+//				logger.info(e.getMessage());
+//			}
+//			map.put(record.getCommandRecordId(), true);
+//		}
+//		logger.info("-----》报警规则计算结束");
+//	}
 
-	private String saveRecord(TblCommandRecordEntity record,String registPackage)  throws Exception { 
-		if(!NettyController.canSendRecord(registPackage)) {
-			throw new MyDefineException(PoinErrorType.LOCK_IP_SEND_RECORD);
-		}
-		//保存用户操作指令
-		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		entity.setPointId(record.getPointId()); 
-		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
-		entity.setSendCommandId(record.getSendCommandId()); 
-		entity.setCommandContent(record.getCommandContent());
-		entity.setRecordTime(new Date()); 
-		//将记录id保存到会话，当有返回消息时保存起来
-		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
-		if(update == null) {
-			logger.info("第二步注册包：registPackage：" + registPackage + "指令内容："+record.getCommandContent() + "发送失败" );
-			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
-		}
-		logger.info("第二步发送指令 注册包：registPackage：" + registPackage + "指令内容："+record.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
-		//加锁
-		NettyController.map.put(registPackage, update.getCommandRecordId());
-		return registPackage;
-	}
-	
 	
 	@Override
 	public void task() {

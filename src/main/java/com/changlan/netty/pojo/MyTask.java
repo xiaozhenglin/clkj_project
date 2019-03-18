@@ -18,7 +18,6 @@ import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
-import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.controller.NettyController;
@@ -44,25 +43,27 @@ public class MyTask extends TimerTask {
 
 	@Override
 	public void run() {
-		System.out.println("运行定时器"); 
+		logger.info("运行定时器"); 
 		Integer pointId = commandDefault.getPointId(); 
 		IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
 		TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
 		if(NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
 			//一次发一条。加锁操作
+			afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
 			INettyService nettyService = SpringUtil.getBean(INettyService.class);
 			try {
 				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			} catch (Exception e) {
-				logger.info(e+"");
+				logger.info("");
 			} 
-			afterSaveToRecord(commandDefault);
+		}else {
+			logger.info("一个监控点只能同时发送一条指令");
 		}
 	}
 	
-	private void afterSaveToRecord(TblPointSendCommandEntity commandDefault) {
+	private void afterSaveToRecord(TblPointSendCommandEntity commandDefault,String pointRegistPackage) {
 		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
-		recordService.update(commandDefault);
+		recordService.update(commandDefault,pointRegistPackage);
 	}
 
 	
