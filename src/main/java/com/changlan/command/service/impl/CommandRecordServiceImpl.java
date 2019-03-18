@@ -100,10 +100,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         		return null;
         	}
     		String backContent = record.getBackContent();
-    		String sendAddressCode = backContent.substring(4,4+2);
+    		String reciveAddressCode = backContent.substring(0,0+2);
     		String addressCode = protocol.getAddressCode(); 
     		//地址码匹配
-    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(sendAddressCode)) ) {
+    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode)) ) {
     			//解析数据
         		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
         		if(!ListUtil.isEmpty(data)) {
