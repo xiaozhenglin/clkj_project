@@ -1,6 +1,8 @@
 package com.changlan.user.vo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
@@ -37,6 +39,5 @@ public class UserFunctionInfoVO {
 	public void setFunctions(List<TblFunInfoEntity> functions) {
 		this.functions = functions;
 	}
-	
 	
 }

@@ -157,7 +157,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); 
-		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
+//		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
 		entity.setSendCommandId(commandDefault.getSendCommandId()); 
 		entity.setCommandContent(commandDefault.getCommandContent());
 		entity.setRecordTime(new Date()); 

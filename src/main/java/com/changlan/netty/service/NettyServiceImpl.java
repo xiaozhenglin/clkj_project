@@ -111,7 +111,6 @@ public class NettyServiceImpl implements INettyService{
 			logger.error(this.getClass() + "==" + e.getMessage()); 
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
-			// 
 			if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
 				//清除防止死锁
 				canSendRecord.remove(registPackage);
@@ -138,6 +137,7 @@ public class NettyServiceImpl implements INettyService{
     			//解析是否报警
     			logger.info("解析数据完成-----》报警规则计算开始");
     			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
+    			logger.info("-----》》》根据报警规则计算结束");
     			//重试发送指令确认报警
 //    			resend(record,registPackage,haveAlarm);
     		}
