@@ -88,7 +88,7 @@ public class CrudDaoImpl implements ICrudDao{
 	public PageImpl getAllByPage(Class clazz, Pageable page) {
 		EntityManager em = getEntityManage();
 		em.clear();
-		String sqlString = "select * from "+getTableNameByClass(clazz);
+		String sqlString = "select * from "+getTableNameByClass(clazz) + " ";
 		PageImpl queryPage = (PageImpl) util.queryPage(sqlString, null, clazz, page);
 		return queryPage;
 	}
@@ -249,6 +249,7 @@ public class CrudDaoImpl implements ICrudDao{
 	@Override
 	public Boolean deleteBysql(String sql) {
 		EntityManager em = getEntityManage();
+		em.flush();
 		em.clear(); 
 		int executeUpdate = em.createNativeQuery(sql).executeUpdate();
 		return executeUpdate>0?true:false;
