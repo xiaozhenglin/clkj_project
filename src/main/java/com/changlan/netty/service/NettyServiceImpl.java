@@ -71,6 +71,7 @@ public class NettyServiceImpl implements INettyService{
  			String key = next.getKey().toString();
  			if(key.equals(registPackage)) {
  				Channel channel = next.getValue();
+ 				//channel为一个接口，如果断线，这个接口获取的状态会随之改变。
  				if(channel.isActive()) {
  					ByteBuf buf = Unpooled.buffer(300);
  					byte[] bytes =  StringUtil.hexStringToBytes(message);
