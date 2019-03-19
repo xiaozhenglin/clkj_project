@@ -133,11 +133,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        for (Channel ch : group) {
-            if (ch == channel) {
-                logger.info("[" + channel.remoteAddress() + "] leaving" + "handlerRemoved");
-            }
-        }
+        logger.info("[" + channel.remoteAddress() + "] leavinghandlerRemoved");
         //断开连接的时候修改状态
     	changePointStatus(channel,PointStatus.OUT_CONNECT);
         group.remove(channel);
@@ -160,19 +156,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         }
     }
 
-    //使用过程中断线 为正常断线，不是断电、断网导致的
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         final EventLoop eventLoop = ctx.channel().eventLoop();
         Channel  channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
-        changePointStatus(channel,PointStatus.OUT_CONNECT);
+        changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
         logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +registPackage );
     }
 
 
-	//断电、断网导致的
-    //10秒内未收到心跳包则 判定客户端断开连接 不能删掉
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		Channel channel = ctx.channel();
@@ -182,7 +175,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 				//关闭通道
 				String registPackage = getRegistPackageByChannel(channel); 
 	        	changePointStatus(channel,PointStatus.OUT_CONNECT);
-	            logger.info("[" + channel.remoteAddress() + "]"+channel+" 客户端 断电、断网导致的&" +registPackage );
+	            logger.info("[" + channel.remoteAddress() + "]"+channel+" 心跳监测 未收到回复 &" +registPackage );
 			}
 		}
 		super.userEventTriggered(ctx, evt);
@@ -198,12 +191,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) throws Exception {
     	Channel channel = ctx.channel();
-		String registPackage = getRegistPackageByChannel(channel); 
-    	changePointStatus(channel,PointStatus.OUT_CONNECT);
     	logger.info("[" + channel.remoteAddress() + "]" + e);
-    	ctx.close(); //加的部分
+//    	System.out.println(e.getMessage());  //远程主机强迫关闭了一个现有的连接。
+//    	ctx.close(); //加的部分
     	//只要有异常就全部抛出
-        throw new Exception(e) ; 
+        throw new Exception(e); 
     }
 
     
