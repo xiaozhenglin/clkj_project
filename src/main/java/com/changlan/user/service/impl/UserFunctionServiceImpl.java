@@ -74,7 +74,7 @@ public class UserFunctionServiceImpl implements IUserFunctionService{
 	}
 	
 	private void removeOld(String adminUserId) {
-		crudService.deleteBySql("DELETE FROM TBL_USER_FUNCTION WHERE ADMIN_USER_ID = " +adminUserId , true);
+		crudService.deleteBySql("DELETE FROM TBL_USER_FUNCTION WHERE ADMIN_USER_ID = '" +adminUserId + "'" , true);
 	}
 
 

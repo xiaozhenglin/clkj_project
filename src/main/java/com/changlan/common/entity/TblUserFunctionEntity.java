@@ -37,11 +37,11 @@ public class TblUserFunctionEntity implements java.io.Serializable {
     private Integer userFunId;
 
     /** adminUserId */
-    @Column(name = "ADMIN_USER_ID"    )
+    @Column(name = "ADMIN_USER_ID"  )
     private String adminUserId;
 
     /** funcId */
-    @Column(name = "FUNC_ID"    )
+    @Column(name = "FUNC_ID" )
     private Integer funcId;
 
     /**
