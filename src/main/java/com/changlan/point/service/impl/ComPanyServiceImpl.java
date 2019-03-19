@@ -36,9 +36,6 @@ public class ComPanyServiceImpl implements ICompanyInfoService{
 		if(company.getCompanyId()!=null) {
 			map.put("companyId", new ParamMatcher(company.getCompanyId()));
 		}
-		if(company.getLineIds()!=null) {
-			map.put("lineIds", new ParamMatcher(company.getLineIds()));
-		}
 		all = crudService.findByMoreFiled(TblCompanyEntity.class, map, true);
 		//封装公司信息和公司组信息
 		for(Object o : all) {

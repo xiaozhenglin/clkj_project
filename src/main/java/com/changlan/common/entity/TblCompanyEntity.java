@@ -44,13 +44,13 @@ public class TblCompanyEntity implements java.io.Serializable {
     @Column(name = "GROUP_NAME"   )
     private String groupName;
 
-    /** lineIds */
-    @Column(name = "LINE_IDS"   )
-    private String lineIds;
-
     /** groupId */
     @Column(name = "GROUP_ID"    )
     private Integer groupId;
+    
+    @Column(name = "PARENT"    )
+    private Integer parent;
+     
 
     /**
      * 获取companyId
@@ -99,24 +99,6 @@ public class TblCompanyEntity implements java.io.Serializable {
     }
 
     /**
-     * 获取lineIds
-     * 
-     * @return lineIds
-     */
-    public String getLineIds() {
-        return this.lineIds;
-    }
-
-    /**
-     * 设置lineIds
-     * 
-     * @param lineIds
-     */
-    public void setLineIds(String lineIds) {
-        this.lineIds = lineIds;
-    }
-
-    /**
      * 获取groupId
      * 
      * @return groupId
@@ -133,4 +115,14 @@ public class TblCompanyEntity implements java.io.Serializable {
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
+
+	public Integer getParent() {
+		return parent;
+	}
+
+	public void setParent(Integer parent) {
+		this.parent = parent;
+	}
+    
+    
 }
