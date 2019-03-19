@@ -1,10 +1,12 @@
 server: 
   port: 8081
   
-upload_file_url: D:/uploads
-not_require_user_authority_url: /admin/user/login,/admin/user/logout
-
 netty_server_port: 1111
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg
+  
+upload_image: 
+  zipPath: D:/uploads/zip  #需要事先创建好文件目录
+  uploadPath:  D:/uploads/notzip
   
 spring:
   datasource:
@@ -23,6 +25,9 @@ spring:
     suffix: .html
     mode: HTML5
     encoding: UTF-8
+  http:
+    multipart:
+      max-file-size: 10MB
 
 
 
