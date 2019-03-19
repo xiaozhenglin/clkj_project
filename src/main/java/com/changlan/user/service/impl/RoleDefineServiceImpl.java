@@ -27,7 +27,7 @@ public class RoleDefineServiceImpl implements IRoleDefineService{
 		map.put("roleName", new ParamMatcher(role.getRoleName()));
 		List<TBLRoleDefineEntity> list = crudService.findByMoreFiled(TBLRoleDefineEntity.class, map, true); 
 		Integer roleId = role.getRoleId();
-		if(roleId!=null) {
+		if(roleId==null) {
 			//添加
 			if(!ListUtil.isEmpty(list)) {
 				return true;
@@ -35,7 +35,7 @@ public class RoleDefineServiceImpl implements IRoleDefineService{
 		}else {
 			//修改
 			for(TBLRoleDefineEntity roleDefine : list) {
-				if(roleId != null &&  role.getRoleId()!=roleId ) {
+				if(roleId != null &&  roleDefine.getRoleId()!=roleId ) {
 					return true;
 				}
 			}
