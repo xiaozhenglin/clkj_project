@@ -1,9 +1,7 @@
 package com.changlan.user.action;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,7 +15,6 @@ import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.MyDefineException;
-import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.user.pojo.UserDetail;
 import com.changlan.user.pojo.UserErrorType;
@@ -57,12 +54,26 @@ public class UserRoleController extends BaseController{
 		TblAdminUserEntity adminUser = super.userIsLogin();
 		if(isSuperAdminUser(adminUser.getAdminUserId())) {
 			//检查是否已经存在
-			Map map = new HashMap();
-			map.put("userId", new ParamMatcher(role.getUserId()));
-			List<TBLUserRoleEntity> list = crudService.findByMoreFiled(TBLUserRoleEntity.class, map, true); 
-			TBLUserRoleEntity tblUserRoleEntity = list.get(0); 
-			tblUserRoleEntity.setRoleID(role.getRoleID()); 
-			Object update = crudService.update(tblUserRoleEntity, true); 
+			Boolean existRole = userRoleService.existRole(role); 
+			if(existRole) {
+				throw new MyDefineException(UserErrorType.USER_ROLE_EXIST);
+			}
+			Object update = crudService.update(role, true); 
+			if(update==null){
+				throw new MyDefineException(UserErrorType.SAVE_ERROR);
+			}
+			return success(update);
+		}
+		return success(null);
+	} 
+	
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TBLUserRoleEntity role) throws Exception {  
+		//只有系统管理员能够修改或添加用户的角色
+		TblAdminUserEntity adminUser = super.userIsLogin();
+		if(isSuperAdminUser(adminUser.getAdminUserId())) {
+			Object update = crudService.delete(role, true); 
 			if(update==null){
 				throw new MyDefineException(UserErrorType.SAVE_ERROR);
 			}
