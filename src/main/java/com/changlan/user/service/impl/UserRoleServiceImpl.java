@@ -41,7 +41,6 @@ public class UserRoleServiceImpl implements IUserRoleService{
 	public Boolean existRole(TBLUserRoleEntity role) {
 		Map map = new HashMap();
 		map.put("userId", new ParamMatcher(role.getUserId()));
-		map.put("roleID", new ParamMatcher(role.getRoleID())); 
 		List<TBLUserRoleEntity> list = crudService.findByMoreFiled(TBLUserRoleEntity.class, map, true); 
 		if(ListUtil.isEmpty(list)) {
 			return false;

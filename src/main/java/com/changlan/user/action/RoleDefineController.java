@@ -47,11 +47,11 @@ public class RoleDefineController extends BaseController{
 	public ResponseEntity<Object>  save(TBLRoleDefineEntity role) throws Exception {  
 		Boolean exist = roleDefineService.existRoleName(role);
 		if(exist) {
-			throw new MyDefineException(PoinErrorType.COMPANY_GROUP_NAME_EXIST.getCode(), PoinErrorType.COMPANY_GROUP_NAME_EXIST.getName(), false, null);
+			throw new MyDefineException(UserErrorType.NAME_EXIST);
 		}
 		TBLRoleDefineEntity update = (TBLRoleDefineEntity)crudService.update(role, true); 
 		if(update == null) {
-			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
+			throw new MyDefineException(UserErrorType.SAVE_ERROR);
 		}
 		return success(update);
 	} 
