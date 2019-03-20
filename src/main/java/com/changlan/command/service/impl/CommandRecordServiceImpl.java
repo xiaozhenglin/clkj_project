@@ -118,6 +118,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 
 	private TblPoinDataEntity saveData(String value, TblPointsEntity point, TblCommandProtocolEntity protocol) {
 		TblPoinDataEntity entity = new TblPoinDataEntity(); 
+		entity.setPointId(point.getPointId()); 
 		entity.setPointName(point.getPointName());
 		entity.setIndicatorId(protocol.getIndicatorId());  
 		entity.setValue(value); 

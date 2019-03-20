@@ -38,7 +38,7 @@ public class LineDetail extends CompanyDetail{
 		if(!ListUtil.isEmpty(companyList)) { 
 			CompanyDetail companyDetail = companyList.get(0); 
 			super.setCompany(companyDetail.getCompany()); 
-			super.setGroupInfo(companyDetail.getGroupInfo()); 
+//			super.setGroupInfo(companyDetail.getGroupInfo()); 
 		}
 	}
 

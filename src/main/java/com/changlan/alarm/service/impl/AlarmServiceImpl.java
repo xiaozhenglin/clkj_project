@@ -183,6 +183,7 @@ public class AlarmServiceImpl implements IAlarmService{
 
 	private Integer saveToAlarmDataBase(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule, Integer constractDataId) {
 		TblPointAlamDataEntity entity = new TblPointAlamDataEntity(); 
+		entity.setPointId(data.getPointId()); 
 		entity.setAlarmDate(new Date());
 		entity.setAlarmRuleId(rule.getAlarmRuleId());
 		entity.setIndicatorId(data.getIndicatorId());

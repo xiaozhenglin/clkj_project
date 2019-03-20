@@ -19,6 +19,7 @@ import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.IPointDataService;
@@ -72,7 +73,7 @@ public class PointDataServiceImpl implements IPointDataService{
 		if(data.getIndicatorId()!=null) {
 			map.put("indicatorId", new ParamMatcher(data.getIndicatorId()));
 		}
-		if(data.getPointName() != null) {
+		if(StringUtil.isNotEmpty(data.getPointName())) {
 			map.put("pointName", new ParamMatcher(MatcheType.LIKE,data.getPointName()));
 		}
 		if(data.getPointDataId()!=null) {
