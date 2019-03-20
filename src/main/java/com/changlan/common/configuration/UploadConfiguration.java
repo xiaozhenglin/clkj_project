@@ -9,21 +9,9 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class UploadConfiguration {
 
-	public static String zipPath;
-
 	public static String uploadPath;
 
-
-	@Value("${upload_image.zipPath}")
-	public  void setZipPath(String zipPath) {
-		UploadConfiguration.zipPath = zipPath;
-	}
-	
-	public static String getZipPath() {
-		return zipPath;
-	}
-
-	@Value("${upload_image.uploadPath}")
+	@Value("${upload_image.path}")
 	public  void setUploadPath(String uploadPath) {
 		UploadConfiguration.uploadPath = uploadPath;
 	}

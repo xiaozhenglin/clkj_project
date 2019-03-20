@@ -5,14 +5,12 @@ netty_server_port: 1111
 not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg
   
 upload_image: 
-  zipPath: D:/uploads/zip  #需要事先创建好文件目录
-  uploadPath:  D:/uploads/notzip
+  path: D:/uploads  #需要事先创建好文件目录
   
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://192.168.10.252:3306/clgs?useUnicode=true&characterEncoding=UTF-8
-    url: jdbc:mysql://192.168.1.199:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 
     tomcat:
