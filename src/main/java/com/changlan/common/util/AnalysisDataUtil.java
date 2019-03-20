@@ -41,13 +41,16 @@ public class AnalysisDataUtil {
 		Integer commandCatagoryId = protocol.getCommandCatagoryId(); 
 		switch (commandCatagoryId) {
 		case 1:
+			//模拟量输入信号采集
 			return firstAnalysis(backContent,protocol);
 		case 2:
+			//数字量输入信号采集
 			return secondAnalysis(backContent,protocol);
 		case 3:
-			//第三种类别 为发送指令不需要解析
+			//数字量输出控制指令（单个）
 			break;
 		case 4:
+			//数字量输出状态采集
 			return secondAnalysis(backContent,protocol);
 		default:
 			break;
@@ -60,7 +63,7 @@ public class AnalysisDataUtil {
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
-		Integer dataByte = protocol.getDataByte(); 
+		Integer dataByte = protocol.getDataByte(); //结束位置
 		//解析数据
 		//下标值为位置数减去1   6
 		Integer begin = beginByte-1;

@@ -29,15 +29,16 @@ public class MyExceptionHandler {
  
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResponseEntity<Object> hander(Exception e){
+    public ResponseEntity<Object> hander(Exception e){ 
+    	BaseResult baseReult  = null;
     	if(e instanceof MyDefineException) {
     		//使用自定的返回值进行返回
-    		BaseResult baseReult  = new BaseResult((MyDefineException)e);
-    		return new ResponseEntity<Object>(baseReult,HttpStatus.OK);
+    		baseReult = new BaseResult((MyDefineException)e);
+    	}else {
+    		baseReult = new BaseResult("0000",e.getMessage(),false,e); 
     	}
-		return new ResponseEntity<Object>(e,HttpStatus.OK);
+    	return new ResponseEntity<Object>(baseReult,HttpStatus.OK);
     }
-    
     
 //    @ExceptionHandler(value = {Throwable.class})
 //    public ResponseEntity<Object> hander2(Throwable e){

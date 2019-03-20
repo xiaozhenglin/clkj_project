@@ -82,11 +82,12 @@ public class AlarmServiceImpl implements IAlarmService{
 				Integer alarmCategoryId = rule.getAlarmCategoryId(); 
 				switch (alarmCategoryId) {
 				case 1:
-					// a
+					//固定
 					int intValue = value.intValue();
 					haveAlarm = canculateAlarm(intValue,data,rule,data.getPointDataId());
 					break;
 				case 2:
+					//区间变化
 					//找到相同类别的其它指标的值，分别进行比较
 					List<SimpleIndicator> simpleIndicator = map.get(data.getCategroryId()); 
 					for(SimpleIndicator simple : simpleIndicator) {
@@ -101,6 +102,7 @@ public class AlarmServiceImpl implements IAlarmService{
 					}
 					break;
 				case 3:
+					//历史变化值
 					//获取相同指标的上次历史的值进行一次比较
 					TblPoinDataEntity thePenultimateData = pointDataDao.getThePenultimateData(rule.getPointId(), rule.getIndicatorValueId());
 					if(thePenultimateData!=null) {
@@ -113,6 +115,7 @@ public class AlarmServiceImpl implements IAlarmService{
 					}
 					break;
 				case 4:
+					//状态值 核心为规则中的abnomal 和nomal 值做对比
 					//线圈状态类别
 					Integer abnomal = rule.getAbnomal();
 					Integer normal = rule.getNormal(); 
@@ -124,6 +127,7 @@ public class AlarmServiceImpl implements IAlarmService{
 					}
 					break;
 				case 5:
+					//负载百分比  核心为规则中的comparsion 对比指标
 					// 负载 指标id 6 和电流a指标值进行比较
 					for(TblPoinDataEntity pointDataEntity : pointDatas) {
 						if(pointDataEntity.getIndicatorId() == rule.getComparison() ) {
@@ -157,6 +161,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		Integer lowerAlarm = rule.getLowerAlarm();
 		Integer topLimit = rule.getTopLimit(); 
 		Integer lowerLimit = rule.getLowerLimit(); 
+		// 低于最低限 高于最高限度
 		if(intValue< lowerAlarm || intValue>topAlarm) {
 			//报警
 			sendSMSMessage(data.getPointId(),data.getIndicatorId());
@@ -165,6 +170,7 @@ public class AlarmServiceImpl implements IAlarmService{
 			update(data,alarmDataId);
 			haveAlarm =  true;
 		}
+		// 处于预警值和报警值之间
 		if( (intValue> topLimit && intValue<=topAlarm) || (intValue<lowerLimit && intValue>= lowerAlarm) ) {
 			//预警
 			Integer alarmDataId =  saveToAlarmDataBase(intValue, data, rule, constractDataId);
