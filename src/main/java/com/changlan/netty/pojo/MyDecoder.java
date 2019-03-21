@@ -20,14 +20,13 @@ public class MyDecoder extends ByteToMessageDecoder {
        //字节数组转字符串
        String str = new String(b);
        System.out.println("接收内容"+str);
-//       System.out.println(str);
        //进入的数据解码后丢到接受消息方法中去
-       if(StringUtil.isNotEmpty(str)&& str.length() >4) {
+       if(StringUtil.isNotEmpty(str)) {
     	   if(str.indexOf("CLKJ")>-1) {
                out.add(str);
+           } else {
+        	   out.add(bytesToHexString(b));
            }
-       }else {
-    	   out.add(bytesToHexString(b));
        }
    }
    

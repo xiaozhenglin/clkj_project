@@ -62,7 +62,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext context, String s) throws Exception {
         Channel channel = context.channel();
-        logger.info("接收内容"+s);
+        logger.info("channelRead接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
         	 if(s.indexOf("CLKJ")>-1) {
              	//设置注册包

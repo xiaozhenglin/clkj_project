@@ -79,7 +79,7 @@ public class NettyServiceImpl implements INettyService{
  					sendSuccess =  true ; 
  				}
  			}
- 		}
+ 		}	
  		if(!sendSuccess) {
  			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
  		}
@@ -162,6 +162,11 @@ public class NettyServiceImpl implements INettyService{
 	@Override
 	public void task() {
 		logger.info("===>>执行定时发送指令任务"); 
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
 		for(CommandDefaultDetail data : commandList) {
 			try {

@@ -18,6 +18,7 @@ import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.controller.NettyController;
@@ -54,7 +55,8 @@ public class MyTask extends TimerTask {
 			try {
 				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			} catch (Exception e) {
-				logger.info("");
+				MyDefineException myException = (MyDefineException)e;
+				logger.info("发送指令出错"+myException.getMessage());
 			} 
 		}else {
 			logger.info("一个监控点只能同时发送一条指令");
