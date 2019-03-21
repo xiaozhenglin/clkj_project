@@ -9,10 +9,10 @@ upload_image:
   
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/ceshi?useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://218.76.55.185:3306/ceshi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&validationQuery=SELECT 1
     #url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
-    username: root
+    username: xiaozl
     password: Sql@2008
     #password: 
     tomcat:
@@ -28,6 +28,12 @@ spring:
   http:
     multipart:
       max-file-size: 10MB
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy:  org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
 
 
 
