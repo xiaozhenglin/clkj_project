@@ -53,7 +53,7 @@ public class CrudDaoImpl implements ICrudDao{
 	//根据类名获取注解表名称
 	private String getTableNameByClass(Class clazz) {
 		Table annotation = (Table) clazz.getAnnotation(Table.class); 
-		return annotation.name();
+		return annotation.name().toUpperCase();
 	}
 	
 	//根据属性名获取注解列名称
@@ -62,7 +62,7 @@ public class CrudDaoImpl implements ICrudDao{
 		try {
 			declaredField = clazz.getDeclaredField(fieldName);
 			Column column=declaredField.getAnnotation(Column.class);
-			return column.name();
+			return column.name().toUpperCase();
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,8 @@ package com.changlan.netty.pojo;
 
 import java.util.List;
 
+import com.changlan.common.util.StringUtil;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -19,10 +21,12 @@ public class MyDecoder extends ByteToMessageDecoder {
        String str = new String(b);
 //       System.out.println(str);
        //进入的数据解码后丢到接受消息方法中去
-       if(str.substring(0,4).equalsIgnoreCase("clkj")) {
-           out.add(str);
-       }else {
-    	   out.add(bytesToHexString(b));
+       if(StringUtil.isNotEmpty(str)) {
+    	   if(str.substring(0,4).equalsIgnoreCase("clkj")) {
+               out.add(str);
+           }else {
+        	   out.add(bytesToHexString(b));
+           }
        }
    }
    
