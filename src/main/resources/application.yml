@@ -10,9 +10,11 @@ upload_image:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/ceshi?useUnicode=true&characterEncoding=UTF-8
+    #url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: 
+    password: Sql@2008
+    #password: 
     tomcat:
       max-active: 500
       max-idle: 10

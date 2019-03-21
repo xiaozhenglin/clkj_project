@@ -62,21 +62,23 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext context, String s) throws Exception {
         Channel channel = context.channel();
-        if(s.substring(0,4).equalsIgnoreCase("CLKJ")) {
-        	//设置注册包
-        	setPackageChannel(s,channel);
-        	changePointStatus(channel,PointStatus.CONNECT);
-        }else {
-            //保存返回值信息 并 解锁
-        	String registPackage = getRegistPackageByChannel(channel); 
-    		INettyService nettyService = SpringUtil.getBean(INettyService.class);
-    		Integer commandRecordId = nettyService.saveReturnMessage(registPackage,s);  
-    		logger.info("第三步：[" + channel.remoteAddress() + "]保存返回数据 "+s+ "到操作记录的commandRecordId："+commandRecordId);
-    		if(commandRecordId!=null) {
-    			//开启解析事件
-    			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,registPackage,s));
-    		}
-        	changePointStatus(channel,PointStatus.DATA_CAN_IN);
+        if(StringUtil.isNotEmpty(s)) {
+        	 if(s.substring(0,4).equalsIgnoreCase("CLKJ")) {
+             	//设置注册包
+             	setPackageChannel(s,channel);
+             	changePointStatus(channel,PointStatus.CONNECT);
+             }else {
+                 //保存返回值信息 并 解锁
+             	String registPackage = getRegistPackageByChannel(channel); 
+         		INettyService nettyService = SpringUtil.getBean(INettyService.class);
+         		Integer commandRecordId = nettyService.saveReturnMessage(registPackage,s);  
+         		logger.info("第三步：[" + channel.remoteAddress() + "]保存返回数据 "+s+ "到操作记录的commandRecordId："+commandRecordId);
+         		if(commandRecordId!=null) {
+         			//开启解析事件
+         			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,registPackage,s));
+         		}
+             	changePointStatus(channel,PointStatus.DATA_CAN_IN);
+             }
         }
         context.flush(); //加的部分
     }
