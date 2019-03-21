@@ -123,7 +123,7 @@ public class AlarmServiceImpl implements IAlarmService{
 						haveAlarm = true;
 						Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, data.getPointDataId());
 						data.setIsEarlyWarning(1); 
-						update(data,alarmDataId);
+						savaAlarmData(data,alarmDataId);
 					}
 					break;
 				case 5:
@@ -135,7 +135,7 @@ public class AlarmServiceImpl implements IAlarmService{
 							if(comparisonVlue.intValue() == 0 ) {
 								Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, rule.getComparison());
 								data.setIsAlarm(1); 
-								update(data,alarmDataId);
+								savaAlarmData(data,alarmDataId);
 								haveAlarm = true;
 							}else {
 								//除法取整数值
@@ -167,7 +167,7 @@ public class AlarmServiceImpl implements IAlarmService{
 			sendSMSMessage(data.getPointId(),data.getIndicatorId());
 			Integer alarmDataId = saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			data.setIsAlarm(1); 
-			update(data,alarmDataId);
+			savaAlarmData(data,alarmDataId);
 			haveAlarm =  true;
 		}
 		// 处于预警值和报警值之间
@@ -175,9 +175,30 @@ public class AlarmServiceImpl implements IAlarmService{
 			//预警
 			Integer alarmDataId =  saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			data.setIsEarlyWarning(1); 
-			update(data,alarmDataId);
+			saveEarlyAlarmData(data,alarmDataId);
 		}
 		return haveAlarm;
+	}
+
+
+	private void saveEarlyAlarmData(TblPoinDataEntity data, Integer alarmDataId) {
+		String alarmDataIds = data.getElarlyAlamDataId();
+		if(StringUtil.isEmpty(alarmDataIds)) {
+			data.setElarlyAlamDataId(alarmDataId.toString());
+		}else {
+			data.setElarlyAlamDataId(alarmDataIds+","+alarmDataId.toString());
+		}
+		TblPoinDataEntity update = pointDataService.update(data);
+	}
+
+	private void savaAlarmData(TblPoinDataEntity data, Integer alarmDataId) {
+		String alarmDataIds = data.getAlarmDataId();
+		if(StringUtil.isEmpty(alarmDataIds)) {
+			data.setAlarmDataId(alarmDataId.toString());
+		}else {
+			data.setAlarmDataId(alarmDataIds+","+alarmDataId.toString());
+		}
+		TblPoinDataEntity update = pointDataService.update(data);
 	}
 
 
@@ -196,22 +217,11 @@ public class AlarmServiceImpl implements IAlarmService{
 		return update.getAlarmId();
 	}
 
-	private void update(TblPoinDataEntity data, Integer alarmDataId) { 
-		String alarmDataIds = data.getAlarmDataId();
-		if(StringUtil.isEmpty(alarmDataIds)) {
-			data.setAlarmDataId(alarmDataId.toString());
-		}else {
-			data.setAlarmDataId(alarmDataIds+","+alarmDataId.toString());
-		}
-		TblPoinDataEntity update = pointDataService.update(data);
-	}
-
-
 	@Override
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
-		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-		String content = "监控点"+point.getPointName() + "的指标"+indicatorId+"报警";
-		SMSMessageUtil.sendMessage(point.getPhones(),content);
+//		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
+//		String content = "监控点"+point.getPointName() + "的指标"+indicatorId+"报警";
+//		SMSMessageUtil.sendMessage(point.getPhones(),content);
 	}
 
 

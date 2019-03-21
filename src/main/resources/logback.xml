@@ -24,22 +24,22 @@
     </appender>
     
     <!-- 单个记录报警的日志文件 -->
-    <appender name="alarmServiceAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+ <!--    <appender name="alarmServiceAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>D:\\changlan\\adminplat\\alarmService-%d{yyyy-MM-dd}.log</FileNamePattern>
             <maxHistory>365</maxHistory> 
         </rollingPolicy>
         <encoder>
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{55} - %msg %n</Pattern>
-            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset> 此处设置字符集
         </encoder>
-    </appender>
+    </appender> -->
 
     
     <!--需要将日志单独输出的包路径-->
-    <logger name="com.changlan.alarm.service.impl" level = "INFO">
+  <!--   <logger name="com.changlan.alarm.service.impl" level = "INFO">
         <appender-ref ref="alarmServiceAppender"/>
-    </logger>
+    </logger> -->
     
     <root level="INFO">
         <appender-ref ref="STDOUT"></appender-ref>
