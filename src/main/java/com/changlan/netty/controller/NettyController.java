@@ -84,7 +84,7 @@ public class NettyController extends BaseController{
 		Long lastRecordTime = commandRecordDetail.getRecord().getRecordTime().getTime();
 		Long now = new Date().getTime();
 		long seconds =  ((now-lastRecordTime)/1000);
-		if(seconds>=3) {
+		if(seconds>=7) {
 			return true;
 		}
 	
