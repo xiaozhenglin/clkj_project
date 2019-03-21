@@ -24,6 +24,9 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 			//修改监控点当前状态
 			IPointDefineService service = SpringUtil.getBean(IPointDefineService.class);
 			TblPointsEntity entity = service.getByRegistPackageOrId(null, source.getRegistPackage());
+			if(entity==null) {
+				return ;
+			}
 			PointStatus agoStatus = entity.getStatus();
 			PointStatus currentStatus = source.getStatus();
 			if(entity !=null && agoStatus == null) {

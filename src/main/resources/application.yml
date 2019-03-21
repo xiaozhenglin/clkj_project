@@ -1,5 +1,5 @@
 server: 
-  port: 8081
+  port: 8082
   
 netty_server_port: 1111
 not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg

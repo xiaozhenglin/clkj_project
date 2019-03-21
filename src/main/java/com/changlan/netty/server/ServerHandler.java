@@ -62,8 +62,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext context, String s) throws Exception {
         Channel channel = context.channel();
-        if(StringUtil.isNotEmpty(s)) {
-        	 if(s.substring(0,4).equalsIgnoreCase("CLKJ")) {
+        logger.info("接收内容"+s);
+        if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
+        	 if(s.indexOf("CLKJ")>-1) {
              	//设置注册包
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);
