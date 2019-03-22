@@ -33,19 +33,20 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>  -->
-		<!-- <dependency>
+		
+		<!-- 本地数据库使用 -->
+		 <dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
-			
-		</dependency> -->
+		 </dependency> 
 		
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-		<dependency>
+		<!-- 测试环境数据库打包 -->
+	<!-- 	<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>8.0.15</version>
-		</dependency>
+		</dependency> -->
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

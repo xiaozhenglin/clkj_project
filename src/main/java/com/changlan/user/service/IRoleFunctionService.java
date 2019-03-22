@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.changlan.user.pojo.RoleFunctionDetail;
 
 public interface IRoleFunctionService {
+	List<RoleFunctionDetail> getByRole(Integer roleId);
 
 	Page<RoleFunctionDetail> roleFunction(Pageable page);
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
 import com.changlan.common.pojo.BaseResult;
@@ -25,8 +26,12 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.user.config.UserAuthorityUrlConfig;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
+import com.changlan.user.pojo.RoleFunctionDetail;
 import com.changlan.user.pojo.UserFunctionInfo;
+import com.changlan.user.pojo.UserRoleDetail;
+import com.changlan.user.service.IRoleFunctionService;
 import com.changlan.user.service.IUserFunctionService;
+import com.changlan.user.service.IUserRoleService;
 
 
 @Component
@@ -68,6 +73,7 @@ public class OriginFilter implements Filter {
 
     private boolean HaveAuthorityToCome(TblAdminUserEntity user,String requestUrl) {
     	IUserFunctionService service = SpringUtil.getBean(IUserFunctionService.class); 
+//    	byRole(user,requestUrl);
     	UserFunctionInfo findAll = service.findOne(user);  
     	List<TblFunInfoEntity> functions = findAll.getFunctions();
     	for(TblFunInfoEntity functionInfo : functions) {
@@ -75,6 +81,21 @@ public class OriginFilter implements Filter {
     			return true;
     		}
     	}
+		return false;
+	}
+
+	private boolean byRole(TblAdminUserEntity user, String requestUrl) {
+		IUserRoleService userRoleService = SpringUtil.getBean(IUserRoleService.class);
+		UserRoleDetail one = userRoleService.getOne(user.getAdminUserId()); 
+		TBLUserRoleEntity userRole = one.getUserRole(); 
+		IRoleFunctionService rolefunc = SpringUtil.getBean(IRoleFunctionService.class);
+		List<RoleFunctionDetail> all = rolefunc.getByRole(userRole.getRoleID()); 
+		for(RoleFunctionDetail detail : all) {
+			TblFunInfoEntity functionInfo = detail.getFuntion(); 
+			if(functionInfo.getAddress().indexOf(requestUrl)>-1) {
+    			return true;
+    		}
+		}
 		return false;
 	}
 

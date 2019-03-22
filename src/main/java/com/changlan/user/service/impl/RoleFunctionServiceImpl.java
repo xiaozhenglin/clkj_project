@@ -58,4 +58,16 @@ public class RoleFunctionServiceImpl implements IRoleFunctionService {
 		crudService.deleteBySql("DELETE FROM  TBL_ROLR_FUNC  WHERE ROLE_ID = " +role , true);
 	}
 
+	@Override
+	public List<RoleFunctionDetail> getByRole(Integer roleId) {
+		TblRoleFunctionEntity roleFunction = (TblRoleFunctionEntity)crudService.getAll(TblRoleFunctionEntity.class, true);
+		List<RoleFunctionDetail> list = new ArrayList();
+		for(Object o : list) {
+			TblRoleFunctionEntity entity = (TblRoleFunctionEntity)o;
+			RoleFunctionDetail detail = new RoleFunctionDetail(entity);
+			list.add(detail);
+		}
+		return list;
+	}
+
 }
