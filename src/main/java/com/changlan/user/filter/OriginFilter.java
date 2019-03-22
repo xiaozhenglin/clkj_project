@@ -1,6 +1,7 @@
 package com.changlan.user.filter;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -21,7 +22,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
+import com.changlan.common.entity.TblUserOperationEntity;
 import com.changlan.common.pojo.BaseResult;
+import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.user.config.UserAuthorityUrlConfig;
 import com.changlan.user.constrant.UserModuleConst;
@@ -31,6 +34,7 @@ import com.changlan.user.pojo.UserFunctionInfo;
 import com.changlan.user.pojo.UserRoleDetail;
 import com.changlan.user.service.IRoleFunctionService;
 import com.changlan.user.service.IUserFunctionService;
+import com.changlan.user.service.IUserOpertaionService;
 import com.changlan.user.service.IUserRoleService;
 
 
@@ -60,7 +64,9 @@ public class OriginFilter implements Filter {
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.userSessionAttributeName); 
     		if(user != null && HaveAuthorityToCome(user,requestURI)) {
-            	 //用户登录了而且用户有权限
+    			//用户登录了而且用户有权限
+    			//记录用户操作
+    			 saveToUserOperation(user,requestURI,request.getRemoteHost());
         		 chain.doFilter(request,response);
              }else {
             	 throw new ServletException("请检查地址是否正确,用户没有登录或者用户没有访问权限");
@@ -71,7 +77,13 @@ public class OriginFilter implements Filter {
         }
     }
 
-    private boolean HaveAuthorityToCome(TblAdminUserEntity user,String requestUrl) {
+    private void saveToUserOperation(TblAdminUserEntity user, String requestURI, String fromIp) {
+    	 IUserOpertaionService service = SpringUtil.getBean(IUserOpertaionService.class);
+		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI);
+		 service.save(userOperation);
+	}
+
+	private boolean HaveAuthorityToCome(TblAdminUserEntity user,String requestUrl) {
     	IUserFunctionService service = SpringUtil.getBean(IUserFunctionService.class); 
 //    	byRole(user,requestUrl);
     	UserFunctionInfo findAll = service.findOne(user);  

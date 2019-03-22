@@ -27,10 +27,26 @@ public class TblUserOperationEntity implements Serializable{
 	private String fromIp;
 	
     @Column(name = "USER_ID" )
-	private Integer userId	;
+	private String userId	;
 	
     @Column(name = "INTEFACE_ADDRESS")
 	private String intefaceAddress;
+    
+    
+	public TblUserOperationEntity(Integer userOperationId, Date recordTime, String fromIp, String userId,
+			String intefaceAddress) {
+		super();
+		this.userOperationId = userOperationId;
+		this.recordTime = recordTime;
+		this.fromIp = fromIp;
+		this.userId = userId;
+		this.intefaceAddress = intefaceAddress;
+	}
+	
+	public TblUserOperationEntity() {
+		super();
+	}
+
 
 	public Integer getUserOperationId() {
 		return userOperationId;
@@ -56,11 +72,11 @@ public class TblUserOperationEntity implements Serializable{
 		this.fromIp = fromIp;
 	}
 
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
