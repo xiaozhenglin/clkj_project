@@ -91,6 +91,9 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
     @Column(name = "ADDRESS_CODE"  )
     private String addressCode;
     
+    @Column(name = "NOT_NEGATIVE"  )
+    private Integer notNegative;
+    
     
 	public Integer getProtocolId() {
 		return protocolId;
@@ -227,6 +230,14 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 
 	public void setAddressCode(String addressCode) {
 		this.addressCode = addressCode;
+	}
+
+	public Integer getNotNegative() {
+		return notNegative;
+	}
+
+	public void setNotNegative(Integer notNegative) {
+		this.notNegative = notNegative;
 	}
 
   

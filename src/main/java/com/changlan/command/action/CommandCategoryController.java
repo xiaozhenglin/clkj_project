@@ -28,19 +28,19 @@ public class CommandCategoryController extends BaseController{
 	@Autowired
 	private ICommandCategoryService commandCategoryService;
 	
-	@RequestMapping("/save")
-	@Transactional
-	public ResponseEntity<Object>  save(TblCommandCategoryEntity category) throws MyDefineException {
-		Boolean existName = commandCategoryService.existName(category); 
-		if(existName) {
-			throw new MyDefineException(PoinErrorType.NAME_EXIST);
-		}
-		TblCommandCategoryEntity entity = commandCategoryService.save(category); 
-		if(entity ==null) {
-			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
-		}
-		return success(entity);
-	}
+//	@RequestMapping("/save")
+//	@Transactional
+//	public ResponseEntity<Object>  save(TblCommandCategoryEntity category) throws MyDefineException {
+//		Boolean existName = commandCategoryService.existName(category); 
+//		if(existName) {
+//			throw new MyDefineException(PoinErrorType.NAME_EXIST);
+//		}
+//		TblCommandCategoryEntity entity = commandCategoryService.save(category); 
+//		if(entity ==null) {
+//			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
+//		}
+//		return success(entity);
+//	}
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  lineList(Integer id) {

@@ -106,8 +106,15 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
     		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode)) ) {
     			//解析数据
         		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
-        		if(!ListUtil.isEmpty(data)) {
+        		if(!ListUtil.isEmpty(data) ) {
         			//一个监控点的具体指标的值
+        			BigDecimal bigDecimal = data.get(0);
+        			int compareTo = bigDecimal.compareTo(BigDecimal.ZERO); 
+        			//是否不是负值
+        			Integer notNegative = protocol.getNotNegative(); 
+        			if(notNegative!=null && notNegative>=1&& compareTo == -1) {
+        				bigDecimal = BigDecimal.ZERO;
+        			}
         			TblPoinDataEntity saveData = saveData(data.get(0).toString(),point,protocol); 
         			result.add(saveData);
         		}

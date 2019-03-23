@@ -29,7 +29,6 @@ public class AnalysisDataUtil {
 	
     public static ScriptEngine jse = new ScriptEngineManager().getEngineByName("JavaScript");    
 	
-    
 	/**
 	 * @param 需要解析的指令内容
 	 * @param 解析协议
@@ -52,11 +51,15 @@ public class AnalysisDataUtil {
 		case 4:
 			//数字量输出状态采集
 			return secondAnalysis(backContent,protocol);
+		case 5: 
+			//温度采集
+			return temperature(backContent,protocol);
 		default:
 			break;
 		}
 		return null;
 	}
+
 
 	private static List<BigDecimal> firstAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
@@ -103,6 +106,37 @@ public class AnalysisDataUtil {
 		return list;
 	}
 	
+	private static List<BigDecimal> temperature(String backContent, TblCommandProtocolEntity protocol) {
+		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
+		Integer beginByte = protocol.getBeginByte(); //开始位置
+		Integer dataByte = protocol.getDataByte(); //结束位置
+		//解析数据
+		//下标值为位置数减去1   6
+		Integer begin = beginByte-1;
+		if(begin<backContent.length()) {
+			//0769  7-11
+			String channelValue = backContent.substring(begin, dataByte); 
+			//1897
+			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
+			//1897
+			int value = new BigDecimal(decimalConvert).intValue(); 
+			
+			Object ca = null;
+			if(value == 65535) {
+				return null;
+			}
+			if(value>10000 && value !=65535) {
+				ca = canculate(value,"-(%d-10000)/10");
+			}
+			if(value<10000) {
+				ca = canculate(value,"(%d)/10");
+			}
+			BigDecimal canculate = new BigDecimal(ca.toString()); 
+			list.add(canculate);
+		}
+		return list;
+	}
 
 	private static  Object canculate(int value, String str)  { 
 		//(%d*20)/4095
