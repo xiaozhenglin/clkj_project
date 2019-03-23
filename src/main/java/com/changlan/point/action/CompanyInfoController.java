@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
@@ -29,8 +31,20 @@ public class CompanyInfoController extends BaseController{
 	private ICompanyInfoService companyInfoService;
 	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  lineList(TblCompanyEntity company) {
+	public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
 		List<CompanyDetail> list = companyInfoService.companyList(company);
+		//根据用户权限二次筛选
+		TblAdminUserEntity user = userIsLogin();
+		String companyIdS = user.getCompanyId(); 
+		if(StringUtil.isNotEmpty(companyIdS)) {
+			List<String> stringToList = StringUtil.stringToList(companyIdS); 
+			for(CompanyDetail detail : list) {
+				Integer companyId = detail.getCompany().getCompanyId(); 
+				if(!stringToList.contains(companyId)) {
+					list.remove(list.indexOf(detail)); 
+				}
+			}
+		}
 		return success(list);
 	}
 	

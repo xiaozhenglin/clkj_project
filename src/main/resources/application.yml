@@ -2,7 +2,7 @@ server:
   port: 8082
   
 netty_server_port: 1111
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico
   
 upload_image: 
   path: D:/uploads  #需要事先创建好文件目录

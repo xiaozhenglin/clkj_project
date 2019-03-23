@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
+import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ILineService;
@@ -44,8 +47,21 @@ public class CompanyLineController extends BaseController{
 	}
 	
 	@RequestMapping("/list") 
-	public ResponseEntity<Object>  lineList(TblLinesEntity line) {
+	public ResponseEntity<Object>  lineList(TblLinesEntity line) throws Exception {
 		List<LineDetail> list = lineService.getAll(line); 
+		//根据用户权限二次筛选
+		TblAdminUserEntity user = userIsLogin();
+		String lineIdS = user.getLineId(); 
+		if(StringUtil.isNotEmpty(lineIdS)) {
+			List<String> stringToList = StringUtil.stringToList(lineIdS); 
+			for(LineDetail detail : list) {
+				Integer lineId = detail.getLine().getLineId();
+				//包含可查看范围
+				if(!stringToList.contains(lineId)) {
+					list.remove(list.indexOf(detail)); 
+				}
+			}
+		}
 		return success(list);
 	}
 	
