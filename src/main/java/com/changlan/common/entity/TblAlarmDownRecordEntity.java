@@ -1,6 +1,7 @@
 package com.changlan.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
     private String reason;
     
     @Column(name = "RECORD_TIME" )
-    private String recordTime;
+    private Date recordTime;
     
     @Column(name = "RECORD_USER"   )
     private String recordUser;
@@ -39,11 +40,11 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
 		this.reason = reason;
 	}
 
-	public String getRecordTime() {
+	public Date getRecordTime() {
 		return recordTime;
 	}
 
-	public void setRecordTime(String recordTime) {
+	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
 	}
 

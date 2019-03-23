@@ -79,6 +79,9 @@ public class TblPoinDataEntity implements java.io.Serializable {
     
     @Column(name = "PROTOCOL_ID"    )
     private Integer protocolId;
+    
+    @Column(name = "ELARLY_ALAM_DATA_ID"    )
+    private String elarlyAlamDataId;
 
     @Column(name = "ALARM_DATA_ID"    )
     private String alarmDataId;
@@ -89,9 +92,7 @@ public class TblPoinDataEntity implements java.io.Serializable {
     @Column(name = "ALARM_DOWN" )
     @Enumerated(EnumType.STRING)
     private AlarmDownType alarmDown;
-    
-    @Column(name = "ELARLY_ALAM_DATA_ID"    )
-    private String elarlyAlamDataId;
+
     
     /**
      * 获取pointDataId
