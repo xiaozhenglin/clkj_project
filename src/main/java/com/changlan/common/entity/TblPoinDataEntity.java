@@ -90,8 +90,8 @@ public class TblPoinDataEntity implements java.io.Serializable {
     private Integer alarmDownRecord;
     
     @Column(name = "ALARM_DOWN" )
-    @Enumerated(EnumType.STRING)
-    private AlarmDownType alarmDown;
+//    @Enumerated(EnumType.STRING)
+    private String alarmDown;
 
     
     /**
@@ -298,11 +298,11 @@ public class TblPoinDataEntity implements java.io.Serializable {
 		this.alarmDownRecord = alarmDownRecord;
 	}
 
-	public AlarmDownType getAlarmDown() {
+	public String getAlarmDown() {
 		return alarmDown;
 	}
 
-	public void setAlarmDown(AlarmDownType alarmDown) {
+	public void setAlarmDown(String alarmDown) {
 		this.alarmDown = alarmDown;
 	}
 

@@ -27,13 +27,17 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 			if(entity==null) {
 				return ;
 			}
-			PointStatus agoStatus = entity.getStatus();
 			PointStatus currentStatus = source.getStatus();
+			PointStatus agoStatus = null;
+			if(StringUtil.isEmpty(entity.getStatus())) {
+				changeStatus(entity,currentStatus);
+			}else {
+				agoStatus = PointStatus.valueOf(entity.getStatus());
+			}
 			if(entity !=null && agoStatus == null) {
 				changeStatus(entity,currentStatus);
 				return;
 			}
-			
 			if(agoStatus == PointStatus.OUT_CONNECT && currentStatus != PointStatus.OUT_CONNECT) {
 				changeStatus(entity,currentStatus);
 				return;
@@ -53,12 +57,10 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 				changeStatus(entity,currentStatus);
 			}
 		}
-	
-		
 	}
 
 	private void changeStatus(TblPointsEntity entity, PointStatus status) {
-		entity.setStatus(status); 
+		entity.setStatus(status.toString()); 
 		ICrudService crudService = SpringUtil.getICrudService();
 		crudService.update(entity, true);
 	}

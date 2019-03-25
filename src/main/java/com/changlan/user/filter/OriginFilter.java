@@ -1,8 +1,11 @@
 package com.changlan.user.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -51,16 +54,21 @@ public class OriginFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
     	HttpServletRequest request=(HttpServletRequest)req; 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin", "http://192.168.1.251:3000"); //
+        String host = request.getRemoteHost();
+        HttpSession session = request.getSession(); 
+    	System.out.println("["+host+"]:"+session.getId()); 
+        if(host.equalsIgnoreCase("192.168.1.251") ) {
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //必须要加上端口
+        }
+        if( host.equalsIgnoreCase("192.168.1.199")) {
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
+        }
         response.setHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.setHeader("Access-Control-Max-Age", "5000");
+        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
 //        System.out.println("==========进入过滤器");
-      
     	String requestURI = request.getRequestURI();
-    	HttpSession session = request.getSession(); 
-    	System.out.println(session.getId()); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.userSessionAttributeName); 

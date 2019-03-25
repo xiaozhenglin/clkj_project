@@ -66,8 +66,8 @@ public class TblLinesEntity implements java.io.Serializable {
 
     /** status */
     @Column(name = "STATUS"    )
-    @Enumerated(EnumType.STRING)
-    private LineStatus status;
+//    @Enumerated(EnumType.STRING)
+    private String status;
 
     /** color */
     @Column(name = "COLOR"   )
@@ -203,14 +203,15 @@ public class TblLinesEntity implements java.io.Serializable {
         this.parentName = parentName;
     }
 
-    public LineStatus getStatus() {
-		return status;
-	}
+//    public LineStatus getStatus() {
+//		return status;
+//	}
+//
+//	public void setStatus(LineStatus status) {
+//		this.status = status;
+//	}
 
-	public void setStatus(LineStatus status) {
-		this.status = status;
-	}
-
+    
 	/**
      * 获取color
      * 
@@ -220,7 +221,15 @@ public class TblLinesEntity implements java.io.Serializable {
         return this.color;
     }
 
-    /**
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
      * 设置color
      * 
      * @param color

@@ -46,8 +46,8 @@ public class TblPointsEntity implements java.io.Serializable {
 
     /** status */
     @Column(name = "STATUS"    )
-    @Enumerated(EnumType.STRING)
-    private PointStatus status;
+//    @Enumerated(EnumType.STRING)
+    private String status;
 
     /** image */
     @Column(name = "IMAGE"   )
@@ -116,11 +116,11 @@ public class TblPointsEntity implements java.io.Serializable {
         this.lineId = lineId;
     }
 
-    public PointStatus getStatus() {
+    public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(PointStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

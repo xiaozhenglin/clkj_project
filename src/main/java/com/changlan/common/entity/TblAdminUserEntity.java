@@ -56,9 +56,9 @@ public class TblAdminUserEntity implements java.io.Serializable {
     @Column(name = "PHONE"   )
     private String  phone;	
     
-    @Column(name = "STATUS")
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;	
+    @Column(name = "STATUS",nullable = true)
+//    @Enumerated(EnumType.STRING)
+    private String status;	
    
     @Column(name = "IS_TEMP"   )
     private Integer isTemp;
@@ -201,11 +201,11 @@ public class TblAdminUserEntity implements java.io.Serializable {
 		this.phone = phone;
 	}
 
-	public UserStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(UserStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
