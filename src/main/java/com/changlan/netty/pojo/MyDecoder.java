@@ -2,7 +2,10 @@ package com.changlan.netty.pojo;
 
 import java.util.List;
 
+import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.util.CRC16M;
 import com.changlan.common.util.StringUtil;
+import com.changlan.point.pojo.PoinErrorType;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,18 +23,25 @@ public class MyDecoder extends ByteToMessageDecoder {
        //字节数组转字符串
        String str = new String(b);
        System.out.println("接收内容"+str);
-       //进入的数据解码后丢到接受消息方法中去
+
        if(StringUtil.isNotEmpty(str)) {
     	   if(str.indexOf("CLKJ")>-1) {
+    		   //注册包
                out.add(str);
            } else {
-        	   out.add(bytesToHexString(b));
+               //进入的数据解码后丢到接受消息方法中去
+        	   String bytesToHexString = bytesToHexString(b); 
+        	   byte[] sbuf = CRC16M.getSendBuf(bytesToHexString.substring(0,bytesToHexString.length()-4));
+        	   boolean equalsIgnoreCase = bytesToHexString.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
+        	   if(equalsIgnoreCase){
+        		   out.add(bytesToHexString);
+        	   }else {
+        		   throw new MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); 
+        	   }
            }
        }
    }
    
-   
-
    public String bytesToHexString(byte[] bArray) {
        StringBuffer sb = new StringBuffer(bArray.length);
        String sTemp;
@@ -44,21 +54,21 @@ public class MyDecoder extends ByteToMessageDecoder {
        return sb.toString();
    }
 
-   public static String toHexString1(byte[] b) {
-       StringBuffer buffer = new StringBuffer();
-       for (int i = 0; i < b.length; ++i) {
-           buffer.append(toHexString1(b[i]));
-       }
-       return buffer.toString();
-   }
-
-   public static String toHexString1(byte b) {
-       String s = Integer.toHexString(b & 0xFF);
-       if (s.length() == 1) {
-           return "0" + s;
-       } else {
-           return s;
-       }
-   }
+//   public static String toHexString1(byte[] b) {
+//       StringBuffer buffer = new StringBuffer();
+//       for (int i = 0; i < b.length; ++i) {
+//           buffer.append(toHexString1(b[i]));
+//       }
+//       return buffer.toString();
+//   }
+//
+//   public static String toHexString1(byte b) {
+//       String s = Integer.toHexString(b & 0xFF);
+//       if (s.length() == 1) {
+//           return "0" + s;
+//       } else {
+//           return s;
+//       }
+//   }
 }
 

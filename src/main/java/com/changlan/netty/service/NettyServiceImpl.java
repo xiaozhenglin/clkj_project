@@ -29,6 +29,7 @@ import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.AnalysisDataUtil;
+import com.changlan.common.util.CRC16M;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
@@ -63,6 +64,13 @@ public class NettyServiceImpl implements INettyService{
 	//服务器-》客户端发送数据
 	@Override
 	public void sendMessage(String registPackage, String message) throws Exception { 
+		//对发送消息进行crc校验
+	   byte[] sbuf = CRC16M.getSendBuf(message.substring(0,message.length()-4));
+	   boolean equalsIgnoreCase = message.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
+	   if(!equalsIgnoreCase) {
+		   throw new MyDefineException(PoinErrorType.SEND_CRC_ERROR); 
+	   }
+		
 		//registPackage 对应的通道
  		Iterator<Entry<Object, Channel>> iterator = NettyServer.channelMap.entrySet().iterator();
  		Boolean sendSuccess = false;
