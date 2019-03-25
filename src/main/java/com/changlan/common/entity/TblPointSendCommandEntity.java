@@ -62,7 +62,7 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     private Integer pointId;
     
     @Column(name = "INDICATOR_CATEGORY"  )
-    private Integer indicatorCategory;
+    private Integer indicatorCategory; //指标类别
     
 
 	public Integer getSendCommandId() {

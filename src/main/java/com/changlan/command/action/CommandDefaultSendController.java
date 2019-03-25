@@ -43,8 +43,8 @@ public class CommandDefaultSendController extends BaseController{
 	}
 	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(Integer id) {
-		List<CommandDefaultDetail> list = commandDefaultService.commandList(id);
+	public ResponseEntity<Object>  list(Integer id,Integer indicatorCategory) {
+		List<CommandDefaultDetail> list = commandDefaultService.commandList(id,indicatorCategory);
 		return success(list);
 	}
 	

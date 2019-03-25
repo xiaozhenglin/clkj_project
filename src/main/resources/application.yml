@@ -5,24 +5,30 @@ netty_server_port: 1111
 not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico
   
 upload_image: 
-  path: D:/uploads  #需要事先创建好文件目录
+  path: D:/uploads  #
   
 spring:
   datasource:
-    #driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://218.76.55.185:3306/ceshi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&validationQuery=SELECT 1
-    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    #username: xiaozl
-    #password: Sql@2008
     password: 
     tomcat:
       max-active: 500
       max-idle: 10
       min-idle: 5
       initial-size: 5
-  thymeleaf:
+
+
+#   上传服务器配置
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    #driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://218.76.55.185:3306/ceshi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&validationQuery=SELECT 1
+#    username: xiaozl
+#    password: Sql@2008
+    
+  thymeleaf: 
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML5

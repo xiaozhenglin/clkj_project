@@ -50,12 +50,15 @@ public class CommandDefaultServiceImpl implements ICommandDefaultService {
 	}
 
 	@Override
-	public List<CommandDefaultDetail> commandList(Integer id) {
+	public List<CommandDefaultDetail> commandList(Integer id,Integer indicatorCategory) {
 		List<CommandDefaultDetail> result = new ArrayList<CommandDefaultDetail>();
 		Map map = new HashMap();
 		List<Object> all = new ArrayList<Object>();
 		if(id != null) {
 			map.put("sendCommandId", new ParamMatcher(id));
+		}
+		if(indicatorCategory!=null) {
+			map.put("indicatorCategory", new ParamMatcher(indicatorCategory));
 		}
 		all = crudService.findByMoreFiled(TblPointSendCommandEntity.class, map, true);
 		//封装信息
