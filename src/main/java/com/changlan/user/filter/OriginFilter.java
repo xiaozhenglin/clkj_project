@@ -51,7 +51,8 @@ public class OriginFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
     	HttpServletRequest request=(HttpServletRequest)req; 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://192.168.1.251:3000"); //
+        response.setHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
