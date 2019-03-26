@@ -1,5 +1,6 @@
 package com.changlan.point.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
+import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.IPointDataDao;
@@ -47,6 +49,32 @@ public class PointDataDaoImpl implements IPointDataDao{
 		List<TblPoinDataEntity> resultList = createNativeQuery.getResultList(); 
 		if(!ListUtil.isEmpty(resultList)) {
 			return resultList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public List<TblPoinDataEntity> getTableData(Date begin, Date end, Integer categroryId) {
+		em.clear();
+		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_POIN_DATA A WHERE A.VALUE IS NOT NULL WHERE 1=1 ");
+		Map map = new HashMap();
+		if(categroryId!=null) {
+			sql.append("AND CATEGRORY_ID = :categroryId ");
+			map.put("categroryId", categroryId);
+		}
+		String beginDate = DateUtil.formatDate(begin, "yyyy-MM-dd HH:mm:ss"); 
+		String endDate = DateUtil.formatDate(end, "yyyy-MM-dd HH:mm:ss"); 
+		sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + "AND '"+ endDate + "'" );
+		
+		Query createNativeQuery = em.createNativeQuery(sql.toString(),TblPoinDataEntity.class);
+		Iterator<Entry<String, String>> iterator = map.entrySet().iterator();  
+		while(iterator.hasNext()) {
+			Entry<String, String> next = iterator.next(); 
+			createNativeQuery.setParameter(next.getKey(), next.getValue()); 
+		}
+		List<TblPoinDataEntity> resultList = createNativeQuery.getResultList(); 
+		if(!ListUtil.isEmpty(resultList)) {
+			return resultList;
 		}
 		return null;
 	}

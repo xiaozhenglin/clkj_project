@@ -59,8 +59,9 @@ public class OriginFilter implements Filter {
     	System.out.println("["+host+"]:"+session.getId()); 
         if(host.equalsIgnoreCase("192.168.1.251") ) {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //必须要加上端口
-        }
-        if( host.equalsIgnoreCase("192.168.1.199")) {
+        }else if( host.equalsIgnoreCase("192.168.1.199")) {
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
+        }else {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
         }
         response.setHeader("Access-Control-Allow-Credentials", "true");//加上这句代码

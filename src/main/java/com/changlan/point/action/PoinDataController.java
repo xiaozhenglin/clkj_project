@@ -38,6 +38,13 @@ public class PoinDataController extends BaseController{
 		return success(list);
 	}
 	
+	//数据表 未加权限
+	@RequestMapping("/table") 
+	public ResponseEntity<Object>  table(Date begin,Date end,Integer categroryId) {
+		List list = pointDataService.getTable(begin,end,categroryId); 
+		return success(list);
+	}
+	
 //	@RequestMapping("/update") 
 //	public ResponseEntity<Object>  update(TblPoinDataEntity entity) {
 //		TblPoinDataEntity update = pointDataService.update(entity); 

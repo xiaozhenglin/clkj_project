@@ -62,9 +62,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		List<CommandRecordDetail> result = new ArrayList<CommandRecordDetail>(); 
 		List<Object> all = new ArrayList<Object>();
 		Map map = new HashMap();
-//		if(!StringUtil.isEmpty(backContent)) {
-//			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
-//		}
+		if(!StringUtil.isEmpty(backContent)) {
+			map.put("backContent", new ParamMatcher(backContent));
+		}
 		if(recordId != null) {
 			map.put("commandRecordId", new ParamMatcher(recordId));
 		} 
@@ -117,7 +117,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         			if(notNegative!=null && notNegative>=1&& compareTo == -1) {
         				bigDecimal = BigDecimal.ZERO;
         			}
-        			TblPoinDataEntity saveData = saveData(data.get(0).toString(),point,protocol); 
+        			TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
         			result.add(saveData);
         		}
     		}

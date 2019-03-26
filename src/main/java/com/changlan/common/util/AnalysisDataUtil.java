@@ -72,7 +72,7 @@ public class AnalysisDataUtil {
 		Integer begin = beginByte-1;
 		if(begin<backContent.length()) {
 			//0769  7-11
-			String channelValue = backContent.substring(begin, dataByte); 
+			String channelValue = backContent.substring(begin, dataByte-1); 
 			//1897
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
 			//1897
@@ -114,9 +114,10 @@ public class AnalysisDataUtil {
 		//解析数据
 		//下标值为位置数减去1   6
 		Integer begin = beginByte-1;
+		Integer end = dataByte-1;
 		if(begin<backContent.length()) {
 			//0769  7-11
-			String channelValue = backContent.substring(begin, dataByte); 
+			String channelValue = backContent.substring(begin, end); 
 			//1897
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
 			//1897

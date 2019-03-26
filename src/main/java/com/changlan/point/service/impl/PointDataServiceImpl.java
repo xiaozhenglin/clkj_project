@@ -1,6 +1,7 @@
 package com.changlan.point.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
+import com.changlan.point.dao.IPointDataDao;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.IPointDataService;
@@ -28,6 +30,9 @@ import com.changlan.point.service.IPointDataService;
 public class PointDataServiceImpl implements IPointDataService{
 	@Autowired
 	private ICrudService crudService;
+	
+	@Autowired
+	private IPointDataDao pointDataDao;
 
 	@Override
 	public List<PointDataDetail> getAll(TblPoinDataEntity data) {
@@ -79,6 +84,9 @@ public class PointDataServiceImpl implements IPointDataService{
 		if(data.getPointDataId()!=null) {
 			map.put("pointDataId", new ParamMatcher(data.getPointDataId()));
 		}
+		if(data.getCategroryId()!=null) {
+			map.put("categroryId", new ParamMatcher(data.getCategroryId()));
+		}
 		//按条件筛选后的结果， 再选其中分页条数得到的结果
 		Page datas = crudService.findByMoreFiledAndPage(TblPoinDataEntity.class, map, true, page);
 		
@@ -93,6 +101,12 @@ public class PointDataServiceImpl implements IPointDataService{
 		}
 		
 		return new PageImpl<PointDataDetail>(list, page, datas.getTotalElements());
+	}
+
+	@Override
+	public List getTable(Date begin, Date end, Integer categroryId) {
+		List<TblPoinDataEntity> tableData = pointDataDao.getTableData(begin,end,categroryId); 
+		return tableData;
 	}
 
 }

@@ -23,18 +23,14 @@ public class CommandRecordDaoImpl implements ICommandRecordDao{
 
 	@Override
 	public TblCommandRecordEntity getOneRecordOrderByTime(String registPackage, String receiveMessage) {
+		em.clear();
 		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_COMMAND_RECORD WHERE 1=1 ");
 		Map map = new HashMap();
-		if(!StringUtil.isEmpty(registPackage)) {
-			sql.append("AND POINT_REGIST_PACKAGE = :registPackage ");
-			map.put("registPackage", registPackage);
-		}
 		if(!StringUtil.isEmpty(receiveMessage)) {
 			sql.append("AND BACK_CONTENT = :back ");
 			map.put("back", receiveMessage);
 		}
-		em.clear();
-		sql.append(" ORDER BY RECORD_TIME DESC ");
+		sql.append(" ORDER BY RECORD_TIME DESC LIMIT 1,1");
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),TblCommandRecordEntity.class);
 		Iterator<Entry<String, String>> iterator = map.entrySet().iterator();  
 		while(iterator.hasNext()) {

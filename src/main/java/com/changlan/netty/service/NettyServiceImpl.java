@@ -107,8 +107,13 @@ public class NettyServiceImpl implements INettyService{
 	     	//正常只有一个
 	    	for(Object o : findByMoreFiled) {
 	    		TblCommandRecordEntity entity = (TblCommandRecordEntity)o;
-	    		entity.setBackContent(receiveMessage);
-	    		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+	    		//判断地址码是否一致
+	    		String commandContentAddress = entity.getCommandContent().substring(0,2);
+	    		String receiveMessageAddress = receiveMessage.substring(0,2);
+	    		if(commandContentAddress.equals(receiveMessageAddress)) {
+	    			entity.setBackContent(receiveMessage);
+		    		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+	    		}
 	    	}
 	    	if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
 				//清除防止死锁
@@ -130,7 +135,7 @@ public class NettyServiceImpl implements INettyService{
 	}
 	
 	//记录id是否重新发送
-	public static Map<Integer,Boolean> map = new HashMap();
+//	public static Map<Integer,Boolean> map = new HashMap();
 
 	//解析返回的数据
 	@Override
