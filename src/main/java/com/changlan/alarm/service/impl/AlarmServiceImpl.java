@@ -122,7 +122,7 @@ public class AlarmServiceImpl implements IAlarmService{
 					if(value.intValue() == abnomal) {
 						haveAlarm = true;
 						Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, data.getPointDataId());
-						data.setIsEarlyWarning(1); 
+						data.setIsAlarm(1);
 						savaAlarmData(data,alarmDataId);
 					}
 					break;

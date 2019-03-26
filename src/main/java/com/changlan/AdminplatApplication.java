@@ -39,8 +39,8 @@ public class AdminplatApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		new NettyServer().start(); //启动netty服务器
-// 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
-//		nettyService.task();
+ 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
+		nettyService.task();
 	}
 
 }
