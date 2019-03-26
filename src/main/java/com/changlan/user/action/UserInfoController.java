@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MyDefineException;
@@ -91,5 +92,20 @@ public class UserInfoController extends BaseController{
 	}
 	
 	
+	//未放入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblAdminUserEntity entity) throws Exception { 
+		TblAdminUserEntity adminUser = super.userIsLogin();
+		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
+			
+			TblAdminUserEntity companyEntity = (TblAdminUserEntity)crudService.get(entity.getAdminUserId(),TblAdminUserEntity.class,true);
+			if(companyEntity != null) {
+				Boolean delete = crudService.delete(entity, true);
+				return success(delete);
+			}
+		}
+		return success(false);
+	}
 	
 }

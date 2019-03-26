@@ -56,4 +56,19 @@ public class RoleDefineController extends BaseController{
 		return success(update);
 	} 
 	
+	//未放入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TBLRoleDefineEntity entity) throws Exception { 
+		TblAdminUserEntity adminUser = super.userIsLogin();
+		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
+			TBLRoleDefineEntity companyEntity = (TBLRoleDefineEntity)crudService.get(entity.getRoleId(),TBLRoleDefineEntity.class,true);
+			if(companyEntity != null) {
+				Boolean delete = crudService.delete(entity, true);
+				return success(delete);
+			}
+		}
+		return success(false);
+	}
+	
 }

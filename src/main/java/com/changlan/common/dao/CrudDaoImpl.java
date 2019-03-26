@@ -30,6 +30,7 @@ import org.springframework.stereotype.Repository;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.util.DaoUtil;
+import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.SpringUtil;
 
 
@@ -120,6 +121,11 @@ public class CrudDaoImpl implements ICrudDao{
 			case LIKE:
 	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' ? '%'  ";
 				break;
+			case BETWEEN:
+				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
+				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
+				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				break;
 			default:
 				break;
 			}
@@ -128,8 +134,11 @@ public class CrudDaoImpl implements ICrudDao{
         Query query=em.createNativeQuery(sql, clazz);
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)params.get(list.get(i));
-        	Object value = matcher.getValue(); 
-        	query.setParameter(i+1, value);
+        	Object value = matcher.getValue();
+        	MatcheType type = matcher.getType(); 
+        	if(type!=MatcheType.BETWEEN ) {
+        		query.setParameter(i+1, value);
+        	}
         }
      
         List<Object> listResult= query.getResultList();
@@ -204,6 +213,11 @@ public class CrudDaoImpl implements ICrudDao{
 			case LIKE:
 	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :"+list.get(i) + " '%'  ";
 				break;
+			case BETWEEN:
+				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
+				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
+				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				break;
 			default:
 				break;
 			}
@@ -231,6 +245,11 @@ public class CrudDaoImpl implements ICrudDao{
 			case LIKE:
 	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' ? '%'  ";
 				break;
+			case BETWEEN:
+				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
+				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
+				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				break;
 			default:
 				break;
 			}
@@ -240,7 +259,10 @@ public class CrudDaoImpl implements ICrudDao{
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)params.get(list.get(i));
         	Object value = matcher.getValue(); 
-        	query.setParameter(i+1, value);
+        	MatcheType type = matcher.getType(); 
+        	if(type!=MatcheType.BETWEEN ) {
+        		query.setParameter(i+1, value);
+        	}
         }
         Object result= query.getSingleResult();
         return result;

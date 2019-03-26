@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 
 import javax.persistence.EntityManager;
@@ -42,7 +43,10 @@ public class DaoUtil {
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)param.get(list.get(i));
         	Object value = matcher.getValue(); 
-        	nativeQuery.setParameter(list.get(i), value);
+        	MatcheType type = matcher.getType(); 
+        	if(type!=MatcheType.BETWEEN ) {
+        		nativeQuery.setParameter(list.get(i), value);
+        	}
         }
         
         return nativeQuery;
