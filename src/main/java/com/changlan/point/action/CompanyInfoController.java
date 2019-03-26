@@ -62,4 +62,15 @@ public class CompanyInfoController extends BaseController{
 		return success(update);
 	}
 	
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblCompanyEntity entity) throws MyDefineException { 
+		TblCompanyEntity companyEntity = (TblCompanyEntity)crudService.get(entity.getCompanyId(),TblCompanyEntity.class,true);
+		if(companyEntity == null) {
+			throw new MyDefineException(PoinErrorType.COMPANY_NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
+	
 }

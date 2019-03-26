@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCompanyEntity;
+import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.pojo.MyDefineException;
@@ -49,4 +50,14 @@ public class PointCategoryController extends BaseController {
 		return success(list);
 	}
 	
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblPointCategoryEntity entity) throws MyDefineException { 
+		TblPointCategoryEntity companyEntity = (TblPointCategoryEntity)crudService.get(entity.getPointCatgoryId(),TblPointCategoryEntity.class,true);
+		if(companyEntity == null) {
+			throw new MyDefineException(PoinErrorType.POINT_CATEGORY_NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
 }

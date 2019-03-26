@@ -55,16 +55,16 @@ public class LoginController extends BaseController{
 	
 	private void addUserInfoToSession(TblAdminUserEntity user) {
 		HttpSession session = getSession(); 
-		session.setAttribute(UserModuleConst.userSessionAttributeName,user);
+		session.setAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME,user);
 	}
 
 	@RequestMapping("/logout")
 	public ResponseEntity<Object>  logout(){
 		HttpSession session = getSession(); 
-		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.userSessionAttributeName); 
+		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		if(user!=null) {
 			logger.info("用户登出"+ user.getName());
-			session.removeAttribute(UserModuleConst.userSessionAttributeName); 
+			session.removeAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		}
 		return success(true);
 	}

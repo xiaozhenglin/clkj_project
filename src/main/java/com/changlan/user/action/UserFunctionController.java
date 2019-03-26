@@ -69,7 +69,7 @@ public class UserFunctionController extends BaseController{
 			if(!save) {
 				throw new MyDefineException(UserErrorType.SAVE_ERROR.getCode(), UserErrorType.SAVE_ERROR.getMsg(), false, null);
 			}
-			return success(UserModuleConst.editSuccess);
+			return success(UserModuleConst.EDIT_SUCCESS);
 		}
 		throw new MyDefineException(UserErrorType.ONLY_SUPER_SAVE_OTHER.getCode(), UserErrorType.ONLY_SUPER_SAVE_OTHER.getMsg(), false, null);
 	} 

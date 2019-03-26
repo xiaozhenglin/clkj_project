@@ -53,5 +53,15 @@ public class PointDefineController extends BaseController{
 		return success(list);
 	}
 	
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblPointsEntity entity) throws MyDefineException { 
+		TblPointsEntity companyEntity = (TblPointsEntity)crudService.get(entity.getPointId(),TblPointsEntity.class,true);
+		if(companyEntity == null) {
+			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
 	
 }

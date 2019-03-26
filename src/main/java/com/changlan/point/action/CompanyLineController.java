@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
@@ -63,6 +64,18 @@ public class CompanyLineController extends BaseController{
 			}
 		}
 		return success(list);
+	}
+	
+	
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblLinesEntity entity) throws MyDefineException { 
+		TblLinesEntity companyEntity = (TblLinesEntity)crudService.get(entity.getLineId(),TblLinesEntity.class,true);
+		if(companyEntity == null) {
+			throw new MyDefineException(PoinErrorType.LINE_NOT_EXITS);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
 	}
 	
 	

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.changlan.command.dao.ICommandRecordDao;
 import com.changlan.command.pojo.CommandProtolDetail;
 import com.changlan.command.pojo.CommandRecordDetail;
+import com.changlan.command.pojo.ProtocolInfo;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.action.BaseController;
@@ -93,9 +94,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	TblPointsEntity point = recordDetail.getPoint();
 	  	//记录信息
 	  	TblCommandRecordEntity record = recordDetail.getRecord();
-	  	List<TblCommandProtocolEntity> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
+	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
 		//逻辑：获取返回内容-》 获取其中匹配的解析协议 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
-    	for(TblCommandProtocolEntity protocol : currentDataProtocol) {
+    	for(ProtocolInfo protocolInfo : currentDataProtocol) {
+    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
     		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
         		return null;
         	}

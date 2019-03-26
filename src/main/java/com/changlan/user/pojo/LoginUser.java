@@ -28,7 +28,7 @@ public class LoginUser {
     	ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = requestAttributes.getRequest();
 		HttpSession session = request.getSession(); 
-		TblAdminUserEntity user = (TblAdminUserEntity) session.getAttribute(UserModuleConst.userSessionAttributeName); 
+		TblAdminUserEntity user = (TblAdminUserEntity) session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		return user;
     }
 }

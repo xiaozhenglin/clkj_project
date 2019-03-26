@@ -193,11 +193,20 @@ public class CRC16M {
 	}
 	
 	public static void main(String[] args) {
-		   String cmdStr="01020100A188"; 
-		   byte[] sbuf = CRC16M.getSendBuf(cmdStr.substring(0,cmdStr.length()-4));
-		   boolean equalsIgnoreCase = cmdStr.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
+//		   String cmdStr="010300000006C5C8"; 
+//		   byte[] sbuf = CRC16M.getSendBuf(cmdStr.substring(0,cmdStr.length()-4));
+//		   boolean equalsIgnoreCase = cmdStr.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
+//		   System.out.println(equalsIgnoreCase);
+		   
+		   
+		   String cmdStr2="020300000006C5FB"; 
+		   byte[] sbuf2 = CRC16M.getSendBuf(cmdStr2.substring(0,cmdStr2.length()-4));
+		   String trim = CRC16M.getBufHexStr(sbuf2).trim();
+		   System.out.println(trim);
+		   boolean equalsIgnoreCase = cmdStr2.equalsIgnoreCase(trim); 
 		   System.out.println(equalsIgnoreCase);
-		
+		 
+		   
 	}
 }
 

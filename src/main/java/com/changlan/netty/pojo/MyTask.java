@@ -56,7 +56,7 @@ public class MyTask extends TimerTask {
 				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			} catch (Exception e) {
 				MyDefineException myException = (MyDefineException)e;
-				logger.info("发送指令出错"+myException.getMessage());
+				logger.info("发送指令出错"+myException.getMessage()+":"+e.getMessage());
 			} 
 		}else {
 			logger.info("一个监控点只能同时发送一条指令");

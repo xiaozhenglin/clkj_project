@@ -71,7 +71,7 @@ public class OriginFilter implements Filter {
     	String requestURI = request.getRequestURI();
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
-    		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.userSessionAttributeName); 
+    		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
     		if(user != null && HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作
