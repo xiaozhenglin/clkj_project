@@ -8,14 +8,17 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.service.ICompanyGropService;
 import com.changlan.point.service.ICompanyInfoService;
+import com.changlan.user.pojo.LoginUser;
 
 @Service
 public class ComPanyServiceImpl implements ICompanyInfoService{
@@ -43,6 +46,19 @@ public class ComPanyServiceImpl implements ICompanyInfoService{
 			TblCompanyGroupEntity groupInfo = (TblCompanyGroupEntity) crudService.get(entity.getGroupId(), TblCompanyGroupEntity.class, true);
 			CompanyDetail detail = new CompanyDetail(entity,groupInfo);
 			list.add(detail);
+		}
+		
+		//根据用户权限二次筛选
+		TblAdminUserEntity user = LoginUser.getCurrentUser();
+		String companyIdS = user.getCompanyId(); 
+		if(StringUtil.isNotEmpty(companyIdS)) {
+			List<String> stringToList = StringUtil.stringToList(companyIdS); 
+			for(CompanyDetail detail : list) {
+				Integer companyId = detail.getCompany().getCompanyId(); 
+				if(!stringToList.contains(companyId)) {
+					list.remove(list.indexOf(detail)); 
+				}
+			}
 		}
 		return list;
 	}

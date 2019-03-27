@@ -7,7 +7,7 @@ import com.changlan.common.pojo.SmsParams;
 public class SMSMessageUtil {
 	
 	public static final String smsUrl = "http://utf8.api.smschinese.cn/?";
-	public static final String key = "3b78dbe257924cb38d14";
+	public static final String key = "3b78dbe257924cb38d14"; //用户 后台设置密码
 	
 	public static void sendMessage(String smsMob, String smsText) { 
 		//电话号码用逗号分隔,可以一次性发送多个
@@ -18,7 +18,7 @@ public class SMSMessageUtil {
 	}
 
 	public static void main(String[] args) {
-		sendMessage("18390820674","验证码:123456[长缆电工科技]");
+		sendMessage("13140168310","验证码:123456[长缆电工科技]");
 	}
 	
 }

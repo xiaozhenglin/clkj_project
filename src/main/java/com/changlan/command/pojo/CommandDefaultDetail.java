@@ -6,6 +6,7 @@ import java.util.List;
 import com.changlan.command.service.IProtocolService;
 import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblCommandProtocolEntity;
+import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.service.ICrudService;
@@ -19,6 +20,7 @@ public class CommandDefaultDetail {
 	private TblPointSendCommandEntity commandDefault; //一条默认指令
 	private List<ProtocolInfo> currentDataProtocol;  //当前解析数据的协议
 	private TblPointsEntity  point ;  //一个监控点
+//	private TblIndicatorCategoriesEntity indicatorCategory; //指标类别
 //	private TblCommandCategoryEntity category; // 指令类别
 	
 	public CommandDefaultDetail(TblPointSendCommandEntity commandDefault) {
@@ -27,8 +29,15 @@ public class CommandDefaultDetail {
 		this.currentDataProtocol = getDataProtocol(commandDefault);
 //		this.category = getCategory(commandDefault.getCommandCatagoryId());
 		this.point = getPoint(commandDefault.getPointId());
+//		this.indicatorCategory = getIndicatorCategory(commandDefault.getIndicatorCategory());
 	}
 	
+	private TblIndicatorCategoriesEntity getIndicatorCategory(Integer indicatorCategory) {
+		ICrudService crudService = SpringUtil.getICrudService(); 
+		TblIndicatorCategoriesEntity result = (TblIndicatorCategoriesEntity)crudService.get(indicatorCategory, TblIndicatorCategoriesEntity.class, true);
+		return result;
+	}
+
 	private List<ProtocolInfo> getDataProtocol(TblPointSendCommandEntity commandDefault) {
 		List<ProtocolInfo> list = new ArrayList<ProtocolInfo>();
 		ICrudService crudService = SpringUtil.getICrudService(); 
@@ -111,6 +120,14 @@ public class CommandDefaultDetail {
 	public void setPoint(TblPointsEntity point) {
 		this.point = point;
 	}
+
+//	public TblIndicatorCategoriesEntity getIndicatorCategory() {
+//		return indicatorCategory;
+//	}
+//
+//	public void setIndicatorCategory(TblIndicatorCategoriesEntity indicatorCategory) {
+//		this.indicatorCategory = indicatorCategory;
+//	}
 	
 	
 }

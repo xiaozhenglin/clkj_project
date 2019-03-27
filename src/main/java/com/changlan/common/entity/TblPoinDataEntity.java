@@ -75,7 +75,7 @@ public class TblPoinDataEntity implements java.io.Serializable {
 
     /** pointCatagoryId */
     @Column(name = "POINT_CATAGORY_ID"    )
-    private String pointCatagoryId;
+    private Integer pointCatagoryId;
     
     @Column(name = "PROTOCOL_ID"    )
     private Integer protocolId;
@@ -261,7 +261,7 @@ public class TblPoinDataEntity implements java.io.Serializable {
      * 
      * @return pointCatagoryId
      */
-    public String getPointCatagoryId() {
+    public Integer getPointCatagoryId() {
         return this.pointCatagoryId;
     }
 
@@ -270,7 +270,7 @@ public class TblPoinDataEntity implements java.io.Serializable {
      * 
      * @param pointCatagoryId
      */
-    public void setPointCatagoryId(String pointCatagoryId) {
+    public void setPointCatagoryId(Integer pointCatagoryId) {
         this.pointCatagoryId = pointCatagoryId;
     }
 

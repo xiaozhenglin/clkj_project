@@ -56,7 +56,6 @@ public class RoleDefineController extends BaseController{
 		return success(update);
 	} 
 	
-	//未放入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TBLRoleDefineEntity entity) throws Exception { 
@@ -68,7 +67,7 @@ public class RoleDefineController extends BaseController{
 				return success(delete);
 			}
 		}
-		return success(false);
+		return success("删除失败");
 	}
 	
 }

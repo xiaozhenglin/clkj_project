@@ -4,8 +4,11 @@ package com.changlan.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by DK on 2017/12/1.
@@ -85,6 +88,54 @@ public class DateUtil {
         }  
         return timeStr;  
     }  
+    
+    //区间按月,天,小时,秒来划分
+    public static List<Date> cutDate(Integer dateType, String start, String end) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date dBegin = sdf.parse(start);
+            Date dEnd = sdf.parse(end);
+            return findDates(dateType, dBegin, dEnd);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+    public static List<Date> findDates(Integer dateType, Date dBegin, Date dEnd) throws Exception {
+        List<Date> listDate = new ArrayList();
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(dEnd);
+        while (calEnd.after(calBegin)) {
+            switch (dateType) {
+                case 1:
+                    calBegin.add(Calendar.MONTH, 1);
+                    break;
+                case 2:
+                    calBegin.add(Calendar.DAY_OF_YEAR, 1);
+                    break;
+                case 3:
+                    calBegin.add(Calendar.HOUR, 1);
+                    break;
+                case 4:
+                    calBegin.add(Calendar.SECOND, 1);
+                    break;
+                default:
+                	break;
+            }
+            if (calEnd.after(calBegin)) {
+            	System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calBegin.getTime())); 
+//                listDate.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calBegin.getTime()));
+            	listDate.add(calBegin.getTime());
+            } else {
+//            	System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calEnd.getTime())); 
+//              listDate.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calEnd.getTime()));
+            }
+        }
+        return listDate;
+    }
 
     public static void main(String[] args) {
     	String formatSeconds = formatSeconds(46797148); 

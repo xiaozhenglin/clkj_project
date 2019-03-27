@@ -25,6 +25,7 @@ import com.changlan.command.pojo.ProtocolInfo;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblCommandProtocolEntity;
 import com.changlan.common.entity.TblCommandRecordEntity;
@@ -95,7 +96,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	//记录信息
 	  	TblCommandRecordEntity record = recordDetail.getRecord();
 	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
-		//逻辑：获取返回内容-》 获取其中匹配的解析协议 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
+		//逻辑：获取返回内容 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
     	for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
     		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
@@ -132,9 +133,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		entity.setIndicatorId(protocol.getIndicatorId());  
 		entity.setValue(value); 
 		entity.setRecordTime(new Date()); 
-		entity.setProtocolId(protocol.getProtocolId());  
+		entity.setProtocolId(protocol.getProtocolId());  //数据来源协议id
 		TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
-		entity.setCategroryId(indicator.getCategoryId());
+		entity.setCategroryId(indicator.getCategoryId()); //指标类别
+		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
 		crudService.save(entity, true);
 		return entity;
 	}
@@ -167,7 +169,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); 
-//		entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser(); 
+		if(currentUser!=null) {
+			entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人
+		}
+		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
 		entity.setSendCommandId(commandDefault.getSendCommandId()); 
 		entity.setCommandContent(commandDefault.getCommandContent());
 		entity.setRecordTime(new Date()); 

@@ -22,6 +22,7 @@ import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ILineService;
+import com.changlan.point.vo.CompanyLineVO;
 
 @RestController
 @RequestMapping("/admin/line")
@@ -50,19 +51,6 @@ public class CompanyLineController extends BaseController{
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  lineList(TblLinesEntity line) throws Exception {
 		List<LineDetail> list = lineService.getAll(line); 
-		//根据用户权限二次筛选
-		TblAdminUserEntity user = userIsLogin();
-		String lineIdS = user.getLineId(); 
-		if(StringUtil.isNotEmpty(lineIdS)) {
-			List<String> stringToList = StringUtil.stringToList(lineIdS); 
-			for(LineDetail detail : list) {
-				Integer lineId = detail.getLine().getLineId();
-				//包含可查看范围
-				if(!stringToList.contains(lineId)) {
-					list.remove(list.indexOf(detail)); 
-				}
-			}
-		}
 		return success(list);
 	}
 	

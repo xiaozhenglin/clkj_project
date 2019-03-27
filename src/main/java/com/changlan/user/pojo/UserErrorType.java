@@ -3,7 +3,7 @@ package com.changlan.user.pojo;
 public enum UserErrorType {
 	USER_NOT_LOGIN("A001","用户未登录"),
 	LOGIN_ERROR("A002","登录失败"), 
-	CANNOT_EDIT_OTHER("A003","只允许修改自己的信息,包括管理员"),
+	CANNOT_EDIT_OTHER("A003","只允许超级管理员或者自己修改自己的信息"),
 	ONLY_SUPER_SAVE_OTHER("A004","只允许超级管理员添加或者信息"),
 	NO_AUTHORITY("A005","请检查地址是否正确,用户没有登录或者用户没有访问权限"),
 	USER_NAME_EXIST("A006","用户名已经存在"),
@@ -12,7 +12,7 @@ public enum UserErrorType {
 	PASS_LENGTH("A009","密码长度不能小于8"),
 	USER_ROLE_EXIST("A010","用户角色已经存在"),
 	NAME_EXIST("A011","名称重复"),
-	UPLOAD_ERROR("A012","上传错误"); 
+	UPLOAD_ERROR("A012","上传文件错误"); 
 	
 	private String code;
 	private String msg;

@@ -2,6 +2,7 @@ package com.changlan.user.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class UserInfoController extends BaseController{
 		//只有系统管理员可以添加用户
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
 			user.setAdminUserId(UUIDUtil.getUUID());
+			user.setAddTime(new Date());
 			TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(user, true); 
 			if(save == null) {
 				throw new MyDefineException(UserErrorType.SAVE_ERROR.getCode(), UserErrorType.SAVE_ERROR.getMsg(), false, null);
@@ -70,7 +72,8 @@ public class UserInfoController extends BaseController{
 	public ResponseEntity<Object>  edit(TblAdminUserEntity updateUser) throws Exception{
 		//只允许修改自己的信息,包括管理员
 		TblAdminUserEntity user = super.userIsLogin();
-		if(updateUser !=null && StringUtil.isNotEmpty(updateUser.getAdminUserId()) && user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId())) {
+		if(isSuperAdminUser(user.getAdminUserId()) ||  user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId()) ) { 
+//		if(updateUser !=null && StringUtil.isNotEmpty(updateUser.getAdminUserId()) && user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId())) {
 			Boolean exist = userInfoService.existName(updateUser);
 			if(exist){
 				throw new MyDefineException(UserErrorType.USER_NAME_EXIST.getCode(), UserErrorType.USER_NAME_EXIST.getMsg(), false, null);
@@ -92,20 +95,18 @@ public class UserInfoController extends BaseController{
 	}
 	
 	
-	//未放入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblAdminUserEntity entity) throws Exception { 
 		TblAdminUserEntity adminUser = super.userIsLogin();
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
-			
 			TblAdminUserEntity companyEntity = (TblAdminUserEntity)crudService.get(entity.getAdminUserId(),TblAdminUserEntity.class,true);
 			if(companyEntity != null) {
 				Boolean delete = crudService.delete(entity, true);
 				return success(delete);
 			}
 		}
-		return success(false);
+		return success("删除失败");
 	}
 	
 }

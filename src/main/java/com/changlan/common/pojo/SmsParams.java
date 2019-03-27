@@ -3,8 +3,8 @@ package com.changlan.common.pojo;
 public class SmsParams {
 	private String Uid;
 	private String Key;
-	private String smsMob;
-	private String smsText;
+	private String smsMob; //电话号码用逗号分隔,可以一次性发送多个
+	private String smsText; //发送文字
 	
 	
 	public SmsParams(String uid, String key, String smsMob, String smsText) {

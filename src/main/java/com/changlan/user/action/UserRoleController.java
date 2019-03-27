@@ -16,6 +16,7 @@ import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.user.pojo.UserDetail;
 import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.pojo.UserRoleDetail;
@@ -34,15 +35,14 @@ public class UserRoleController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TBLUserRoleEntity role) throws Exception {  
 		List<UserRoleDetail> result =  new ArrayList<UserRoleDetail>();
-		
 		//只有系统管理员能够修改或添加用户的角色
 		TblAdminUserEntity adminUser = super.userIsLogin();
-		UserDetail detail = new UserDetail(adminUser);
-		if(detail!=null && detail.getRoleDefine().getRoleId() == 1) {
+		if(isSuperAdminUser(adminUser.getAdminUserId())) {  
 			result = userRoleService.getAll(role); 
 		}else {
 			//只能查询自己的用户角色信息
-			result.add(detail);
+			UserRoleDetail all = userRoleService.getOne(adminUser.getAdminUserId()); 
+			result.add(all);
 		}
 		return success(result);
 	} 

@@ -153,22 +153,23 @@ public class NettyServiceImpl implements INettyService{
     			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
     			logger.info("-----》》》根据报警规则计算结束");
     			//重试发送指令确认报警
-//    			resend(record,registPackage,haveAlarm);
+//    			if(haveAlarm ) {
+//    				resend(recordDetails.get(0).getCommandDefault(),registPackage);
+//    			}
     		}
     	}
 	}
 
-//	private void resend(TblCommandRecordEntity record, String registPackage, Boolean haveAlarm) { 
-//		if(haveAlarm && (map== null || map.get(record.getCommandRecordId()) == null)) {
+//	private void resend(TblPointSendCommandEntity commandDefault, String registPackage) { 
+//		if(NettyController.canSendRecord(registPackage)) {
+//			//一次发一条。加锁操作
+//			recordService.update(commandDefault,registPackage);
 //			try {
-//				saveRecord(record,registPackage);
-//				sendMessage(registPackage,record.getCommandContent());
+//				sendMessage(registPackage,commandDefault.getCommandContent());
 //			} catch (Exception e) {
 //				logger.info(e.getMessage());
 //			}
-//			map.put(record.getCommandRecordId(), true);
 //		}
-//		logger.info("-----》报警规则计算结束");
 //	}
 
 	

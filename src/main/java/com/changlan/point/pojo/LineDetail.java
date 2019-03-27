@@ -13,10 +13,11 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.service.ICompanyInfoService;
 
-public class LineDetail extends CompanyDetail{
+public class LineDetail {
 	
 	private TblLinesEntity line;  // 一条线路信息
 	private  List<TblPointCategoryEntity> pointCategorys = new ArrayList<TblPointCategoryEntity>(); //一条线路多个监控类别
+	private TblCompanyEntity company; //所属一个公司信息 get方法去掉，不显示
 	
 	public LineDetail() { 
 		super();
@@ -31,13 +32,16 @@ public class LineDetail extends CompanyDetail{
 			TblPointCategoryEntity category = (TblPointCategoryEntity)crudService.get(Integer.parseInt(str), TblPointCategoryEntity.class, true);
 			this.pointCategorys.add(category);
 		}
+		
+		
+		//获取所属公司信息
 		ICompanyInfoService companyInfoService = SpringUtil.getBean(ICompanyInfoService.class);
 		TblCompanyEntity tblCompanyEntity = new TblCompanyEntity(); 
 		tblCompanyEntity.setCompanyId(line.getCompanyId());
 		List<CompanyDetail> companyList = companyInfoService.companyList(tblCompanyEntity);
 		if(!ListUtil.isEmpty(companyList)) { 
 			CompanyDetail companyDetail = companyList.get(0); 
-			super.setCompany(companyDetail.getCompany()); 
+			this.company = companyDetail.getCompany(); 
 //			super.setGroupInfo(companyDetail.getGroupInfo()); 
 		}
 	}
@@ -57,6 +61,16 @@ public class LineDetail extends CompanyDetail{
 
 	public void setPointCategorys(List<TblPointCategoryEntity> pointCategorys) {
 		this.pointCategorys = pointCategorys;
+	}
+
+
+//	public TblCompanyEntity getCompany() {
+//		return company;
+//	}
+
+
+	public void setCompany(TblCompanyEntity company) {
+		this.company = company;
 	}
 	
 	

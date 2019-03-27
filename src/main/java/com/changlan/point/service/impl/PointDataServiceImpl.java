@@ -20,6 +20,7 @@ import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.IPointDataDao;
 import com.changlan.point.pojo.PointDataDetail;
@@ -104,9 +105,20 @@ public class PointDataServiceImpl implements IPointDataService{
 	}
 
 	@Override
-	public List getTable(Date begin, Date end, Integer categroryId) {
-		List<TblPoinDataEntity> tableData = pointDataDao.getTableData(begin,end,categroryId); 
-		return tableData;
+	public List<PointDataDetail> getTable(Date begin, Date end, Integer categroryId) {
+		List<PointDataDetail> list = new ArrayList<PointDataDetail>();
+		List<TblPoinDataEntity> all = pointDataDao.getTableData(begin,end,categroryId); 
+		//封装信息
+		if(!ListUtil.isEmpty(all)) {
+			for(TblPoinDataEntity o : all) {
+				TblPoinDataEntity entity = (TblPoinDataEntity)o;
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+				PointDataDetail detail = new PointDataDetail(entity, point, line);
+				list.add(detail);
+			}
+		}
+		return list;
 	}
 
 }

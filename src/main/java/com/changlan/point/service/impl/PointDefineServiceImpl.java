@@ -84,6 +84,9 @@ public class PointDefineServiceImpl implements IPointDefineService{
 		if(point.getLineId()!=null) {
 			map.put("lineId", new ParamMatcher(point.getLineId()));
 		}
+		if(point.getPointCatagoryId()!=null) {
+			map.put("pointCatagoryId", new ParamMatcher(point.getPointCatagoryId()));
+		}
 		Page<TblPointsEntity> all = crudService.findByMoreFiledAndPage(TblPointsEntity.class, map, true,pageable);
 		
 		List<PointInfoDetail> list = new ArrayList<PointInfoDetail>();

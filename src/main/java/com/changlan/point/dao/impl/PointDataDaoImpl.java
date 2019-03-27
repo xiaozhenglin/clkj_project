@@ -56,7 +56,7 @@ public class PointDataDaoImpl implements IPointDataDao{
 	@Override
 	public List<TblPoinDataEntity> getTableData(Date begin, Date end, Integer categroryId) {
 		em.clear();
-		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_POIN_DATA A WHERE A.VALUE IS NOT NULL WHERE 1=1 ");
+		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_POIN_DATA A WHERE A.VALUE IS NOT NULL  ");
 		Map map = new HashMap();
 		if(categroryId!=null) {
 			sql.append("AND CATEGRORY_ID = :categroryId ");

@@ -11,6 +11,7 @@ import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 
 public interface ICommandRecordService {
+	//获取发送记录列表
 	List<CommandRecordDetail> getList(Integer recordId,String registPackage,String backContent);
 
 	CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage);

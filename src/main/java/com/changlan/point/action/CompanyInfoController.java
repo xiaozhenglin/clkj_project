@@ -1,5 +1,6 @@
 package com.changlan.point.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
+import com.changlan.point.vo.CompanyLineVO;
 
 @RestController
 @RequestMapping("/admin/company")
@@ -33,19 +35,12 @@ public class CompanyInfoController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
 		List<CompanyDetail> list = companyInfoService.companyList(company);
-		//根据用户权限二次筛选
-		TblAdminUserEntity user = userIsLogin();
-		String companyIdS = user.getCompanyId(); 
-		if(StringUtil.isNotEmpty(companyIdS)) {
-			List<String> stringToList = StringUtil.stringToList(companyIdS); 
-			for(CompanyDetail detail : list) {
-				Integer companyId = detail.getCompany().getCompanyId(); 
-				if(!stringToList.contains(companyId)) {
-					list.remove(list.indexOf(detail)); 
-				}
-			}
+		List<CompanyLineVO> result = new ArrayList<CompanyLineVO>();
+		for(CompanyDetail detail : list) {
+			CompanyLineVO vo = new CompanyLineVO(detail.getCompany());
+			result.add(vo);
 		}
-		return success(list);
+		return success(result);
 	}
 	
 	@RequestMapping("/save")

@@ -17,6 +17,7 @@ import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.DateUtil;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointInfoDetail;
@@ -38,10 +39,11 @@ public class PoinDataController extends BaseController{
 		return success(list);
 	}
 	
-	//数据表 未加权限
 	@RequestMapping("/table") 
-	public ResponseEntity<Object>  table(Date begin,Date end,Integer categroryId) {
-		List list = pointDataService.getTable(begin,end,categroryId); 
+	public ResponseEntity<Object>  table(Long begin,Long end,Integer categroryId) {
+		Date begin2 = new Date(begin);
+		Date end2 = new Date(end);	
+		List<PointDataDetail> list = pointDataService.getTable(begin2,end2,categroryId); 
 		return success(list);
 	}
 	
