@@ -36,8 +36,8 @@ public class CommandRecordController extends BaseController{
 	private ICommandRecordService commandRecordService;
 	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(Integer recordId,String backContent) {
-		Page<CommandRecordDetail> result = commandRecordService.getPage(recordId, null, backContent,getPage()); 
+	public ResponseEntity<Object>  list(TblCommandRecordEntity record) {
+		Page<CommandRecordDetail> result = commandRecordService.getPage(record,getPage()); 
 		return success(result);
 	}
 	

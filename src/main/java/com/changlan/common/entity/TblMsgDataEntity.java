@@ -55,7 +55,7 @@ public class TblMsgDataEntity implements java.io.Serializable {
 
     /** adminUserId */
     @Column(name = "ADMIN_USER_ID"    )
-    private Integer adminUserId;
+    private String adminUserId;
 
     /**
      * 获取msgId
@@ -152,7 +152,7 @@ public class TblMsgDataEntity implements java.io.Serializable {
      * 
      * @return adminUserId
      */
-    public Integer getAdminUserId() {
+    public String getAdminUserId() {
         return this.adminUserId;
     }
 
@@ -161,7 +161,7 @@ public class TblMsgDataEntity implements java.io.Serializable {
      * 
      * @param adminUserId
      */
-    public void setAdminUserId(Integer adminUserId) {
+    public void setAdminUserId(String adminUserId) {
         this.adminUserId = adminUserId;
     }
 }

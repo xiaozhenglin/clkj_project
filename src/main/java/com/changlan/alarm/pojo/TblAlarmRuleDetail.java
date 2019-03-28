@@ -8,10 +8,10 @@ import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 
 public class TblAlarmRuleDetail {
-	private TblAlarmRuleEntity alarmRule;
-	private TBLAlarmCategoryEntity alarmCategory;
-	private TblIndicatorValueEntity indicator;
-	private TblPointsEntity point;
+	private TblAlarmRuleEntity alarmRule; //报警规则
+	private TBLAlarmCategoryEntity alarmCategory; //报警规则类别
+	private TblIndicatorValueEntity indicator;//指标信息
+	private TblPointsEntity point;//监控点信息
 	
 	
 	public TblAlarmRuleDetail(TblAlarmRuleEntity alarmRule) {

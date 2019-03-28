@@ -53,15 +53,21 @@ public class ProtocolServiceImpl implements IProtocolService{
 	}
 
 	@Override
-	public List<CommandProtolDetail> protocolList(Integer id,Integer categoryId) {
+	public List<CommandProtolDetail> protocolList(TblCommandProtocolEntity protocol) {
 		List<CommandProtolDetail> result = new ArrayList<CommandProtolDetail>();
 		List<Object> all = new ArrayList<Object>();
 		Map map = new HashMap();
-		if(categoryId != null) {
-			map.put("commandCatagoryId", new ParamMatcher(categoryId));
+		if(protocol.getCommandCatagoryId() != null) {
+			map.put("commandCatagoryId", new ParamMatcher(protocol.getCommandCatagoryId()));
 		}
-		if(id != null) {
-			map.put("protocolId", new ParamMatcher(id));
+		if(protocol.getProtocolId() != null) {
+			map.put("protocolId", new ParamMatcher(protocol.getProtocolId()));
+		}
+		if(protocol.getPointId()!=null) {
+			map.put("pointId", new ParamMatcher(protocol.getPointId()));
+		}
+		if(protocol.getIndicatorId()!=null) {
+			map.put("indicatorId", new ParamMatcher(protocol.getIndicatorId()));
 		}
 		all = crudService.findByMoreFiled(TblCommandProtocolEntity.class, map, true);
 		//封装信息

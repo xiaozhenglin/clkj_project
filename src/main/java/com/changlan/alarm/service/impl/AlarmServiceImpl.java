@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import com.changlan.alarm.service.IAlarmRuleService;
 import com.changlan.alarm.service.IAlarmService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
+import com.changlan.common.entity.TblIndicatorValueEntity;
+import com.changlan.common.entity.TblMsgDataEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
@@ -35,6 +38,7 @@ import com.changlan.indicator.pojo.SimpleIndicator;
 import com.changlan.indicator.service.IIndicatoryValueService;
 import com.changlan.point.dao.IPointDataDao;
 import com.changlan.point.service.IPointDataService;
+import com.changlan.user.pojo.LoginUser;
 
 @Service
 public class AlarmServiceImpl implements IAlarmService{
@@ -218,10 +222,25 @@ public class AlarmServiceImpl implements IAlarmService{
 	}
 
 	@Override
+	@Transactional
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
+//		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
 //		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-//		String content = "监控点"+point.getPointName() + "的指标"+indicatorId+"报警";
-//		SMSMessageUtil.sendMessage(point.getPhones(),content);
+//		String phones = point.getPhones(); 
+//		if(StringUtil.isNotEmpty(phones)) {
+//			String content = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
+//			SMSMessageUtil.sendMessage(point.getPhones(),content);
+//			//保存入库
+//			TblMsgDataEntity entity = new TblMsgDataEntity();
+//			TblAdminUserEntity currentUser = LoginUser.getCurrentUser(); 
+//			if(currentUser!=null) {
+//				entity.setAdminUserId(currentUser.getAdminUserId());
+//			}
+//			entity.setContent(content);
+//			entity.setPhoneOrEmail(phones);
+//			entity.setSendTime(new Date());
+//			crudService.update(entity, true);
+//		}
 	}
 
 

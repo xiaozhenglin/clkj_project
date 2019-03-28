@@ -50,21 +50,28 @@ public class CommandDefaultServiceImpl implements ICommandDefaultService {
 	}
 
 	@Override
-	public List<CommandDefaultDetail> commandList(Integer id,Integer indicatorCategory) {
+	public List<CommandDefaultDetail> commandList(TblPointSendCommandEntity command) {
 		List<CommandDefaultDetail> result = new ArrayList<CommandDefaultDetail>();
 		Map map = new HashMap();
-		List<Object> all = new ArrayList<Object>();
-		if(id != null) {
-			map.put("sendCommandId", new ParamMatcher(id));
+		if(command !=null) {
+			if(command.getSendCommandId() != null) {
+				map.put("sendCommandId", new ParamMatcher(command.getSendCommandId()));
+			}
+			if(command.getIndicatorCategory()!=null) {
+				map.put("indicatorCategory", new ParamMatcher(command.getIndicatorCategory()));
+			}
+			if(command.getPointId()!=null) {
+				map.put("pointId", new ParamMatcher(command.getPointId()));
+			}
+			if(command.getCommandCatagoryId()!=null) {
+				map.put("commandCatagoryId", new ParamMatcher(command.getCommandCatagoryId()));
+			}
 		}
-		if(indicatorCategory!=null) {
-			map.put("indicatorCategory", new ParamMatcher(indicatorCategory));
-		}
-		all = crudService.findByMoreFiled(TblPointSendCommandEntity.class, map, true);
+		List<Object> all = crudService.findByMoreFiled(TblPointSendCommandEntity.class, map, true);
 		//封装信息
 		for(Object o : all ) {
-			TblPointSendCommandEntity command = (TblPointSendCommandEntity)o;
-			CommandDefaultDetail detail = new CommandDefaultDetail(command);
+			TblPointSendCommandEntity entity = (TblPointSendCommandEntity)o;
+			CommandDefaultDetail detail = new CommandDefaultDetail(entity);
 			result.add(detail);
 		}
 		return result;

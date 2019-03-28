@@ -44,8 +44,8 @@ public class ProtocolController extends BaseController{
 	}
 	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(Integer id,Integer categoryId) {
-		List<CommandProtolDetail> list = protocolService.protocolList(id,categoryId);
+	public ResponseEntity<Object>  list(TblCommandProtocolEntity protocol) {
+		List<CommandProtolDetail> list = protocolService.protocolList(protocol);
 		return success(list);
 	}
 }

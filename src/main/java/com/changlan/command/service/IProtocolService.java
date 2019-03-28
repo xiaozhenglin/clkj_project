@@ -11,6 +11,6 @@ public interface IProtocolService {
 
 	TblCommandProtocolEntity save(TblCommandProtocolEntity entity);
 
-	List<CommandProtolDetail> protocolList(Integer id,Integer categoryId);    
+	List<CommandProtolDetail> protocolList(TblCommandProtocolEntity protocol);    
 
 }

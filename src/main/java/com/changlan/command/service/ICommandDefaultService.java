@@ -11,6 +11,6 @@ public interface ICommandDefaultService {
 
 	TblPointSendCommandEntity save(TblPointSendCommandEntity entity);
 
-	List<CommandDefaultDetail> commandList(Integer id, Integer indicatorCategory);   
+	List<CommandDefaultDetail> commandList(TblPointSendCommandEntity command);   
  
 }

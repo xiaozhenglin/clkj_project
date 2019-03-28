@@ -54,18 +54,22 @@ public class PointDataDaoImpl implements IPointDataDao{
 	}
 
 	@Override
-	public List<TblPoinDataEntity> getTableData(Date begin, Date end, Integer categroryId) {
+	public List<TblPoinDataEntity> getTableData(Date begin, Date end,Integer indicatorId,Integer pointId) {
 		em.clear();
 		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_POIN_DATA A WHERE A.VALUE IS NOT NULL  ");
 		Map map = new HashMap();
-		if(categroryId!=null) {
-			sql.append("AND CATEGRORY_ID = :categroryId ");
-			map.put("categroryId", categroryId);
+		if(indicatorId!=null) {
+			sql.append(" AND INDICATOR_ID = :indicatorId ");
+			map.put("indicatorId", indicatorId);
+		}
+		if(pointId!=null) {
+			sql.append(" AND POINT_ID = :pointId ");
+			map.put("pointId", pointId);
 		}
 		String beginDate = DateUtil.formatDate(begin, "yyyy-MM-dd HH:mm:ss"); 
 		String endDate = DateUtil.formatDate(end, "yyyy-MM-dd HH:mm:ss"); 
-		sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + "AND '"+ endDate + "'" );
-		
+		sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
+		sql.append(" ORDER BY RECORD_TIME DESC ");
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),TblPoinDataEntity.class);
 		Iterator<Entry<String, String>> iterator = map.entrySet().iterator();  
 		while(iterator.hasNext()) {

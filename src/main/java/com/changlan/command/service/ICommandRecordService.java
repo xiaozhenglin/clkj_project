@@ -14,14 +14,16 @@ public interface ICommandRecordService {
 	//获取发送记录列表
 	List<CommandRecordDetail> getList(Integer recordId,String registPackage,String backContent);
 
+	Page<CommandRecordDetail> getPage(TblCommandRecordEntity record,Pageable page);   
+	
 	CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage);
 
 	//解析数据
 	List<TblPoinDataEntity> anylysisData(CommandRecordDetail commandRecordDetail);
 
-	Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent, Pageable page);
-
 	//保存发送记录
-	TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage);   
+	TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage);
+
+
 	
 }

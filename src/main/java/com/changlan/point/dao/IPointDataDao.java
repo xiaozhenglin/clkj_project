@@ -10,5 +10,5 @@ public interface IPointDataDao {
 	TblPoinDataEntity getThePenultimateData(Integer pointId,Integer indicatorId);
 	
 	//获取表格数据
-	List<TblPoinDataEntity> getTableData(Date begin, Date end, Integer categroryId); 
+	List<TblPoinDataEntity> getTableData(Date begin, Date end,Integer indicators, Integer pointId);   
 }

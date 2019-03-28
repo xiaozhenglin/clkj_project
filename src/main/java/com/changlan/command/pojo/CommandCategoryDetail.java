@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.changlan.command.service.IProtocolService;
 import com.changlan.common.entity.TblCommandCategoryEntity;
+import com.changlan.common.entity.TblCommandProtocolEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
@@ -31,7 +32,9 @@ public class CommandCategoryDetail {
 
 	public static  List<CommandProtolDetail> getProtocols(Integer commandCatagoryId) {
 		IProtocolService protocolService = SpringUtil.getBean(IProtocolService.class);
-		List<CommandProtolDetail> protocolList = protocolService.protocolList(null,commandCatagoryId); 
+		TblCommandProtocolEntity protocol = new TblCommandProtocolEntity();
+		protocol.setCommandCatagoryId(commandCatagoryId); 
+		List<CommandProtolDetail> protocolList = protocolService.protocolList(protocol); 
 		return protocolList;
 	}
 

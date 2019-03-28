@@ -62,6 +62,9 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 		if(entity.getAlarmRuleId()!=null) {
 			map.put("alarmRuleId", new ParamMatcher(entity.getAlarmRuleId()));
 		}
+		if(entity.getPointId() !=null) {
+			map.put("pointId", new ParamMatcher(entity.getPointId()));
+		}
 		Page datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true, pageable);
 		
 		List<TblAlarmDataDetail> list = new ArrayList<TblAlarmDataDetail>();

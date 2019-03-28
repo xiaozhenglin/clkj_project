@@ -85,8 +85,13 @@ public class PointDataServiceImpl implements IPointDataService{
 		if(data.getPointDataId()!=null) {
 			map.put("pointDataId", new ParamMatcher(data.getPointDataId()));
 		}
+		//指标类别
 		if(data.getCategroryId()!=null) {
 			map.put("categroryId", new ParamMatcher(data.getCategroryId()));
+		}
+		//监控系统类别
+		if(data.getPointCatagoryId()!=null) {
+			map.put("pointCatagoryId", new ParamMatcher(data.getPointCatagoryId()));
 		}
 		//按条件筛选后的结果， 再选其中分页条数得到的结果
 		Page datas = crudService.findByMoreFiledAndPage(TblPoinDataEntity.class, map, true, page);
@@ -105,20 +110,20 @@ public class PointDataServiceImpl implements IPointDataService{
 	}
 
 	@Override
-	public List<PointDataDetail> getTable(Date begin, Date end, Integer categroryId) {
-		List<PointDataDetail> list = new ArrayList<PointDataDetail>();
-		List<TblPoinDataEntity> all = pointDataDao.getTableData(begin,end,categroryId); 
+	public List<PointDataDetail> getTable(Date begin, Date end, Integer indicator,Integer pointId) {
+		List<PointDataDetail> result = new ArrayList<PointDataDetail>();
+		List<TblPoinDataEntity> list = pointDataDao.getTableData(begin,end,indicator,pointId); 
+		
 		//封装信息
-		if(!ListUtil.isEmpty(all)) {
-			for(TblPoinDataEntity o : all) {
-				TblPoinDataEntity entity = (TblPoinDataEntity)o;
-				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
-				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-				PointDataDetail detail = new PointDataDetail(entity, point, line);
-				list.add(detail);
+		if(!ListUtil.isEmpty(list)) {
+			for(TblPoinDataEntity entity : list) {
+//				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+//				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+				PointDataDetail detail = new PointDataDetail(entity, null, null);
+				result.add(detail);
 			}
 		}
-		return list;
+		return result;
 	}
 
 }

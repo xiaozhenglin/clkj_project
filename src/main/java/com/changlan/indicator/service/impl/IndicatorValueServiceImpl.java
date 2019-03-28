@@ -76,7 +76,7 @@ public class IndicatorValueServiceImpl implements IIndicatoryValueService{
 			map.put("indicatorId", new ParamMatcher(id));
 		}
 		if(categoryId!=null) {
-			map.put("categroryId", new ParamMatcher(MatcheType.LIKE,categoryId));
+			map.put("categoryId", new ParamMatcher(categoryId));
 		}
 		List<Object> all = crudService.findByMoreFiled(TblIndicatorValueEntity.class, map, true);
 		//封装公司信息和公司组信息

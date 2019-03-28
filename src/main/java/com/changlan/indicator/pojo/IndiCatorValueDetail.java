@@ -13,7 +13,7 @@ import com.changlan.indicator.service.IIndicatorCategoryService;
 
 public class IndiCatorValueDetail  {
 	private TblIndicatorCategoriesEntity category ; //一个类别
-	private TblIndicatorValueEntity indicatorValue; 	//一个指标 所属 一个类别
+	private TblIndicatorValueEntity indicatorValue; 	//一个指标
 	
 	public IndiCatorValueDetail(TblIndicatorValueEntity entity) { 
 		this.indicatorValue = entity;

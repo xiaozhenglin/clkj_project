@@ -181,7 +181,7 @@ public class NettyServiceImpl implements INettyService{
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null,null); 
+		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
 		for(CommandDefaultDetail data : commandList) {
 			try {
 				//每个数据延时0.3秒按顺序开启定时任务

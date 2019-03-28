@@ -142,15 +142,25 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 
 	@Override
-	public Page<CommandRecordDetail> getPage(Integer recordId, String registPackage, String backContent,
-			Pageable page) {
+	public Page<CommandRecordDetail> getPage(TblCommandRecordEntity commandRecord,Pageable page) {
 		Map map = new HashMap();
-		if(!StringUtil.isEmpty(backContent)) {
-			map.put("backContent", new ParamMatcher(MatcheType.LIKE,backContent));
+		if(commandRecord!=null) {
+			if(!StringUtil.isEmpty(commandRecord.getBackContent())) {
+				map.put("backContent", new ParamMatcher(MatcheType.LIKE,commandRecord.getBackContent()));
+			}
+			if(commandRecord.getCommandRecordId() != null) {
+				map.put("commandRecordId", new ParamMatcher(commandRecord.getCommandRecordId()));
+			} 
+			if(commandRecord.getPointId() != null) {
+				map.put("pointId", new ParamMatcher(commandRecord.getPointId()));
+			}
+			if(commandRecord.getAdminUserId() != null) {
+				map.put("adminUserId", new ParamMatcher(commandRecord.getAdminUserId()));
+			}
+			if(commandRecord.getCommandCatagoryId() != null) {
+				map.put("commandCatagoryId", new ParamMatcher(commandRecord.getCommandCatagoryId()));
+			}
 		}
-		if(recordId != null) {
-			map.put("commandRecordId", new ParamMatcher(recordId));
-		} 
 		Page all = crudService.findByMoreFiledAndPage(TblCommandRecordEntity.class, map, true,page);
 		
 		List<CommandRecordDetail> result = new ArrayList<CommandRecordDetail>(); 

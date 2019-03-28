@@ -3,6 +3,7 @@ package com.changlan.point.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +21,6 @@ public interface IPointDataService {
 	Page<PointDataDetail> getAll(TblPoinDataEntity entity, Pageable page);
 
 	//检点数据图表形式
-	List<PointDataDetail> getTable(Date begin, Date end, Integer categroryId);    
+	List<PointDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);      
 
 }

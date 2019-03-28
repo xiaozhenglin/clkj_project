@@ -14,5 +14,5 @@ public interface IAlarmService {
 
 
 	void sendSMSMessage(Integer pointId, Integer indicatorId);
-
+	
 }
