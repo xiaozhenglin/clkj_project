@@ -35,10 +35,11 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 		em.clear();
 		String sql ="select devicesettings.deviceId AS deviceId,channelsettings.channel_number AS channel_number,channelsettings.location AS location,realtimedata.amplitude AS amplitude,realtimedata.frequency AS frequency,realtimedata.energy AS energy,realtimedata.updatetime AS updatetime,realtimedata.alarm_amplitude_frequency AS alarm_amplitude_frequency, channelsettings.location_detail,devicesettings.point_id,tbl_points.POINT_NAME "
 				+ " from ((devicesettings join channelsettings on ((channelsettings.deviceSetting_id = devicesettings.id))) join realtimedata on((channelsettings.id = realtimedata.channelSettings_id)))"
-				+ " LEFT JOIN tbl_points on  tbl_points.POINT_ID = devicesettings.point_id "
+				+ " LEFT JOIN TBL_POINTS on  TBL_POINTS.POINT_ID = devicesettings.point_id "
 				+ " WHERE 1=1 ";
 		if(query.getPointId()!=null) {
-			sql +=" AND devicesettings.point_id ="+query.getPointId();
+			//因为是左连接，所以判断监控点名称是空值就不要。
+			sql +=" AND devicesettings.point_id ="+query.getPointId() + " AND TBL_POINTS.POINT_NAME IS NOT NULL ";
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()),PartialDischargeEntity.class);
 		return createNativeQuery.getResultList(); 
@@ -65,9 +66,15 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	}
 
 	@Override
-	public Object channelSettingList() {
+	public Object channelSettingList(PartialDischargeQuery query) {
 		em.clear();
-		String sql = "SELECT channelSettings.id as Id from channelSettings " ;
+		String sql = "SELECT channelSettings.*  from channelSettings INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id " ;
+		if(query.getPointId()!=null) {
+			sql+=" and devicesettings.point_id = "+query.getPointId();
+		}
+		if(query.getChannelSettings_id()!=null) {
+			sql+=" and channelSettings.id = "+query.getChannelSettings_id();
+		}
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),SimpleEntity.class);
 		return createNativeQuery.getResultList();
 	}

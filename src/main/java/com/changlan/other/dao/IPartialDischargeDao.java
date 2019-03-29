@@ -11,6 +11,6 @@ public interface IPartialDischargeDao {
 
 	Object list(PartialDischargeQuery query);  
 	Object table(PartialDischargeQuery query);
-	Object channelSettingList(); 
+	Object channelSettingList(PartialDischargeQuery query);  
 
 }

@@ -27,8 +27,8 @@ public class IPartialDischargeServiceImpl implements IPartialDischargeService{
 	}
 
 	@Override
-	public Object channelSettingList() {
-		Object list = dao.channelSettingList(); 
+	public Object channelSettingList(PartialDischargeQuery query) {
+		Object list = dao.channelSettingList(query); 
 		return list;
 	}
 }

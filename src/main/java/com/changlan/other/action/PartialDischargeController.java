@@ -65,7 +65,7 @@ public class PartialDischargeController extends BaseController{
 	public ResponseEntity<Object>  table(PartialDischargeQuery query) {
 		List<DeviceDataVo> result = new ArrayList<DeviceDataVo>();
 		//找出所有的通道id
-		List<SimpleEntity> channelSettingList = (List<SimpleEntity>)partialDischargeService.channelSettingList(); 
+		List<SimpleEntity> channelSettingList = (List<SimpleEntity>)partialDischargeService.channelSettingList(query); 
 		if(!ListUtil.isEmpty(channelSettingList)) {
 			for(SimpleEntity simple :channelSettingList ) {
 				query.setChannelSettings_id(Integer.parseInt(simple.getId())); 

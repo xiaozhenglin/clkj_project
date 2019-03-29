@@ -9,5 +9,5 @@ public interface IPartialDischargeService {
 
 	Object table(PartialDischargeQuery query); 
 	
-	Object channelSettingList();
+	Object channelSettingList(PartialDischargeQuery query); 
 }
