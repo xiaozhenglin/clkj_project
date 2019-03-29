@@ -101,8 +101,8 @@ public class PointDataServiceImpl implements IPointDataService{
 		for(Object o : datas) {
 			TblPoinDataEntity entity = (TblPoinDataEntity)o;
 			TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
-			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-			PointDataDetail detail = new PointDataDetail(entity, point, line);
+//			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+			PointDataDetail detail = new PointDataDetail(entity, point, null);
 			list.add(detail);
 		}
 		

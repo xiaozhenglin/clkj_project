@@ -22,6 +22,7 @@ import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.indicator.service.IIndicatoryValueService;
+import com.changlan.other.service.IPartialDischargeService;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointDataQuery;
@@ -51,6 +52,9 @@ public class PoinDataController extends BaseController{
 	@Autowired
 	private IPointDefineService pointDefineService;
 	
+	@Autowired
+	IPartialDischargeService partialDischargeService ;
+	
 	//非数据图表使用数据
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(PointQuery query) {
@@ -58,7 +62,7 @@ public class PoinDataController extends BaseController{
 		
 		TblPointsEntity point = new TblPointsEntity();
 		Integer lineId = query.getLineId(); 
-		if(lineId!=null) {
+		if(lineId!=null) { 
 			point.setLineId(lineId);
 		}
 		if(query.getCategroryId()!=null) {
@@ -68,15 +72,19 @@ public class PoinDataController extends BaseController{
 			point.setPointId(query.getPointId()); 
 		}
 		//当前线路下的监控系统      找出所有的监控点
-		List<PointInfoDetail> all = pointDefineService.getAll(point); 
-		for(PointInfoDetail detail : all ) {
-			//监控点的数据列表
+		List<PointInfoDetail> all = pointDefineService.getAll(point);
+		
+		for(PointInfoDetail detail : all) {
+			//每个监控点的数据列表
+			TblPointsEntity point2 = detail.getPoint(); 
 			query.setPointId(detail.getPoint().getPointId()); 
 			Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage()); 
+			
+			
+			
 			PointDataListVo vo= new PointDataListVo(pointDatas);
 			result.add(vo);
 		}
-//		Page<PointDataDetail> list = pointDataService.getAll(query,getPage()); 
 		return success(result);
 	}
 	
@@ -88,6 +96,7 @@ public class PoinDataController extends BaseController{
 		Date end = new Date(query.getEnd());	
 		
 		List<Integer> indicators = getIndicatorList(query.getCategroryId(),query.getIndicatorIds());
+		//遍历 指标
 		for(Integer indicatorId : indicators) {
 			//根据指标id,监控点Id 和 时间 筛选得到的数据
 			List<PointDataDetail> list = pointDataService.getTable(begin,end,indicatorId,query.getPointId()); 

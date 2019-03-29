@@ -1,6 +1,9 @@
 package com.changlan.point.action;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -16,12 +19,14 @@ import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.ILineService;
 import com.changlan.point.service.IPointDefineService;
+import com.changlan.point.vo.PointDefineVO;
 
 @RestController
 @RequestMapping("/admin/point/define")
@@ -48,9 +53,28 @@ public class PointDefineController extends BaseController{
 	}
 	
 	@RequestMapping("/list") 
-	public ResponseEntity<Object>  list(TblPointsEntity entity) {
-		Page<PointInfoDetail> list = pointDefineService.getPage(entity,getPage()); 
-		return success(list);
+	public ResponseEntity<Object>  list(TblPointsEntity point) {
+		
+		
+		Map map = new HashMap();
+		if(point.getPointId() != null) {
+			map.put("pointId", new ParamMatcher(point.getPointId()));
+		}
+		if(point.getLineId()!=null) {
+			map.put("lineId", new ParamMatcher(point.getLineId()));
+		}
+		if(point.getPointCatagoryId()!=null) {
+			map.put("pointCatagoryId", new ParamMatcher(point.getPointCatagoryId()));
+		}
+		Page<TblPointsEntity> all = crudService.findByMoreFiledAndPage(TblPointsEntity.class, map, true,getPage());
+//		Page<PointInfoDetail> list = pointDefineService.getPage(entity,getPage()); 
+		
+//		List result = new ArrayList();
+//		for(PointInfoDetail defineDetail : list) {
+//			PointDefineVO vo = new PointDefineVO(defineDetail);
+//			result.add(vo);
+//		}
+		return success(all);
 	}
 	
 	@RequestMapping("/delete")

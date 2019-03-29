@@ -12,6 +12,8 @@ import com.changlan.point.pojo.PointDataDetail;
 public class PoinDataTableVO {
 
 	private Integer indicatorId; //指标id
+	private String indicatorCode; //指标吗
+	private String indicatorName; //指标名称
 	private List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 
 	public PoinDataTableVO(Integer indicatorId,List<PointDataDetail> dataDetails) {
@@ -20,7 +22,9 @@ public class PoinDataTableVO {
 			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
 			TblPoinDataEntity pointData = dataDetail.getPointData(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
-			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorCode());
+			this.indicatorCode = indicatorValue.getIndicatorCode();
+			this.indicatorName = indicatorValue.getName();
+			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
 			results.add(vo);
 		}
 	}
@@ -43,6 +47,22 @@ public class PoinDataTableVO {
 
 	public void setIndicatorId(Integer indicatorId) {
 		this.indicatorId = indicatorId;
+	}
+
+	public String getIndicatorCode() {
+		return indicatorCode;
+	}
+
+	public void setIndicatorCode(String indicatorCode) {
+		this.indicatorCode = indicatorCode;
+	}
+
+	public String getIndicatorName() {
+		return indicatorName;
+	}
+
+	public void setIndicatorName(String indicatorName) {
+		this.indicatorName = indicatorName;
 	}
 
 

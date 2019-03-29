@@ -82,13 +82,13 @@
 		</dependency>
 		
 		<!-- 引入外部jar包 -->
-       <dependency>
+        <dependency>
 	    	<groupId>out</groupId>
 	    	<artifactId>smslib-3.5.0.jar</artifactId>
-	   		<version>1.0.0</version>
+	    	<version>1.0.0</version> 
 	    	<scope>system</scope>
 	   	 	<systemPath>${project.basedir}/lib/smslib-3.5.0.jar</systemPath>
-	  </dependency>
+	  	</dependency> 
 
         
         

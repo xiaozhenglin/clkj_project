@@ -8,7 +8,7 @@ public class PointDataQuery {
 	
 	private Long begin;
 	private Long end;
-	private Integer categroryId;
+	private Integer categroryId;//指标类别
 	private String indicatorIds;
 	private Integer pointId;
 	

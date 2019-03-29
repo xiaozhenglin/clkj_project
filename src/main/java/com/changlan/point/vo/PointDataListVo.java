@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.point.pojo.PointDataDetail;
 
 public class PointDataListVo {
 
-//	private List<PointDataDetail> pointDatas;
+	private TblPointsEntity point ; //没有加get set方法
 	private Page<PointDataDetail> pointDatas;
 
 //	public PointDataListVo(List<PointDataDetail> pointDatas) {
@@ -20,6 +21,7 @@ public class PointDataListVo {
 	}
 
 	public PointDataListVo(Page<PointDataDetail> pointDatas) {
+//		this.point = point2;
 		this.pointDatas = pointDatas;
 	}
 
