@@ -71,12 +71,11 @@ public class PoinDataController extends BaseController{
 		if(query.getPointId()!=null) {
 			point.setPointId(query.getPointId()); 
 		}
-		//当前线路下的监控系统      找出所有的监控点
+		//当前线路下的监控系统      找出所有的监控点 可以优化不需要查出详情。
 		List<PointInfoDetail> all = pointDefineService.getAll(point);
 		
 		for(PointInfoDetail detail : all) {
 			//每个监控点的数据列表
-			TblPointsEntity point2 = detail.getPoint(); 
 			query.setPointId(detail.getPoint().getPointId()); 
 			Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage()); 
 			
@@ -123,8 +122,8 @@ public class PoinDataController extends BaseController{
 		return list;
 	}
 	
-//	未加入权限表@RequestMapping("/update") 
-//	public ResponseEntity<Object>  update(TblPoinDataEntity entity) {
+//	未加入权限表@RequestMapping("/down") 
+//	public ResponseEntity<Object>  down(TblPoinDataEntity entity) {
 //		TblPoinDataEntity update = pointDataService.update(entity); 
 //		return success(update);
 //	}

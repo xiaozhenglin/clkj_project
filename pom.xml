@@ -84,10 +84,10 @@
 		<!-- 引入外部jar包 -->
         <dependency>
 	    	<groupId>out</groupId>
-	    	<artifactId>smslib-3.5.0.jar</artifactId>
+	    	<artifactId>smslib-3.5.4.jar</artifactId>
 	    	<version>1.0.0</version> 
 	    	<scope>system</scope>
-	   	 	<systemPath>${project.basedir}/lib/smslib-3.5.0.jar</systemPath>
+	   	 	<systemPath>${project.basedir}/lib/smslib-3.5.4.jar</systemPath>
 	  	</dependency> 
 
         

@@ -182,15 +182,15 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	public TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		entity.setPointId(commandDefault.getPointId()); 
+		entity.setPointId(commandDefault.getPointId()); //设置监控点id
 		TblAdminUserEntity currentUser = LoginUser.getCurrentUser(); 
 		if(currentUser!=null) {
 			entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人
 		}
 		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
-		entity.setSendCommandId(commandDefault.getSendCommandId()); 
-		entity.setCommandContent(commandDefault.getCommandContent());
-		entity.setRecordTime(new Date()); 
+		entity.setSendCommandId(commandDefault.getSendCommandId()); //发送的默认指令Id
+		entity.setCommandContent(commandDefault.getCommandContent());//发送内容
+		entity.setRecordTime(new Date()); //记录时间
 		//将记录id保存到会话，当有返回消息时保存起来
 		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
 //		String registPackage = getRegistPackage(entity.getPointId());

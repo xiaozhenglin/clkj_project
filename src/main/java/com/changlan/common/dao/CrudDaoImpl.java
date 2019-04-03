@@ -124,7 +124,7 @@ public class CrudDaoImpl implements ICrudDao{
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
-				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
 				break;
 			default:
 				break;
@@ -216,7 +216,7 @@ public class CrudDaoImpl implements ICrudDao{
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
-				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
 				break;
 			default:
 				break;
@@ -248,7 +248,7 @@ public class CrudDaoImpl implements ICrudDao{
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
-				sql+="AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
 				break;
 			default:
 				break;

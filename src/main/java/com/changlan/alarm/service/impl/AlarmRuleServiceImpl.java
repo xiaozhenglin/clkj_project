@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.changlan.alarm.pojo.TblAlarmRuleDetail;
@@ -69,6 +72,34 @@ public class AlarmRuleServiceImpl implements IAlarmRuleService{
 		TblAlarmRuleEntity alarmRule = (TblAlarmRuleEntity)crudService.get(id, TblAlarmRuleEntity.class, true);
 		TblAlarmRuleDetail detail = new TblAlarmRuleDetail(alarmRule);
 		return detail;
+	}
+
+	@Override
+	public Page<TblAlarmRuleDetail> getPage(TblAlarmRuleEntity entity, Pageable page) {
+		List<TblAlarmRuleDetail> content = new ArrayList<TblAlarmRuleDetail>();
+		Map<String,ParamMatcher> map = new HashMap();
+		if(entity.getAlarmRuleId() != null) {
+			map.put("alarmRuleId", new ParamMatcher(entity.getAlarmRuleId()));
+		}
+		if(entity.getIndicatorValueId()!=null) {
+			map.put("indicatorValueId", new ParamMatcher(entity.getIndicatorValueId()));
+		}
+		if(entity.getPointId()!=null) {
+			map.put("pointId", new ParamMatcher(entity.getPointId()));
+		}
+		if(entity.getIndicatorCategoryId()!=null) {
+			map.put("indicatorCategoryId", new ParamMatcher(entity.getIndicatorCategoryId()));
+		}
+		if(entity.getAlarmCategoryId()!=null) {
+			map.put("alarmCategoryId", new ParamMatcher(entity.getAlarmCategoryId()));
+		}
+		Page<Object> all = crudService.findByMoreFiledAndPage(TblAlarmRuleEntity.class, map, true, page);
+		for(Object o : all) {
+			TblAlarmRuleEntity alarmRule = (TblAlarmRuleEntity)o;
+			TblAlarmRuleDetail detail = new TblAlarmRuleDetail(alarmRule);
+			content.add(detail);
+		}
+		return new PageImpl<TblAlarmRuleDetail>(content, page, all.getTotalElements());
 	}
 	
 }

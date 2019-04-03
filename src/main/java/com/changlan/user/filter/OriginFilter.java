@@ -21,6 +21,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
@@ -42,7 +44,17 @@ import com.changlan.user.service.IUserRoleService;
 
 
 @Component
-public class OriginFilter implements Filter {
+public class OriginFilter   implements Filter {
+	
+//	 @Override
+//	 protected void addCorsMappings(CorsRegistry registry) {
+//	        registry.addMapping("/**")
+//	                .allowedHeaders("*")
+//	                .allowedMethods("*")
+//	                .allowedOrigins("*")
+//	                .allowCredentials(true);
+//	}
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -58,21 +70,31 @@ public class OriginFilter implements Filter {
         HttpSession session = request.getSession(); 
     	System.out.println("["+host+"]:"+session.getId()); 
         if(host.equalsIgnoreCase("192.168.1.251") ) {
-        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //必须要加上端口
+//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //必须要加上端口
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host); //必须要加上端口
         }else if( host.equalsIgnoreCase("192.168.1.199")) {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
         }else {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
         }
-        response.setHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
+        response.addHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
         response.setHeader("Access-Control-Max-Age", "5000");
         response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
-//        System.out.println("==========进入过滤器");
+        response.setCharacterEncoding("UTF-8"); 
+        response.setContentType("application/json");
+     
+        //System.out.println("==========进入过滤器");
     	String requestURI = request.getRequestURI();
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
+    		   
+//            String adminUserId = request.getHeader("token"); 
+//            System.out.println("用户访问接口 用户id:"+adminUserId); 
+//            ICrudService crudService = SpringUtil.getICrudService();
+//            TblAdminUserEntity user = (TblAdminUserEntity)crudService.get(adminUserId, TblAdminUserEntity.class, true);
+            
     		if(user != null && HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作

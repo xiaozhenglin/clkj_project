@@ -47,5 +47,5 @@ public class ProtocolController extends BaseController{
 	public ResponseEntity<Object>  list(TblCommandProtocolEntity protocol) {
 		List<CommandProtolDetail> list = protocolService.protocolList(protocol);
 		return success(list);
-	}
+	} 
 }

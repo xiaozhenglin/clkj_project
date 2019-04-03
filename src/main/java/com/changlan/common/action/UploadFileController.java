@@ -41,5 +41,8 @@ public class UploadFileController extends BaseController{
 		return success(newRealpath);
 	}
 	 
-
+//	public static void main(String[] args) {
+//		File file = new File("D:\\uploads\\notzip\\02ffedfb88f34a1988390349f6ffb91d20190306145009.png");
+//		System.out.println(file.getName());
+//	}
 }

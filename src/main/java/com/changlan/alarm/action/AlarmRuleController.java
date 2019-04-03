@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,15 +48,17 @@ public class AlarmRuleController  extends  BaseController{
 	}
 
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(Integer id,Integer indicatorValueId,Integer pointId) {  
-		List<TblAlarmRuleEntity> list = alarmRuleService.getAll(id,indicatorValueId,pointId);
-		return success(list);
+	public ResponseEntity<Object>  list(TblAlarmRuleEntity entity) {  
+//		List<TblAlarmRuleEntity> list = alarmRuleService.getAll(entity.getAlarmRuleId(),entity.getIndicatorValueId(),entity.getPointId());
+		Page<TblAlarmRuleDetail> result = alarmRuleService.getPage(entity,getPage());
+		return success(result);
 	}
 	
-	@RequestMapping("/info")
-	public ResponseEntity<Object>  info(Integer id) {  
-		TblAlarmRuleDetail list = alarmRuleService.getDetail(id);
-		return success(list);
-	}
+//	未加权限
+//	@RequestMapping("/info")
+//	public ResponseEntity<Object>  info(Integer id) {  
+//		TblAlarmRuleDetail list = alarmRuleService.getDetail(id);
+//		return success(list);
+//	}
 	
 }

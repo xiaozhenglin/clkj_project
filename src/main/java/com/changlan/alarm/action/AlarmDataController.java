@@ -36,9 +36,11 @@ public class AlarmDataController extends  BaseController{
 		return success(page);
 	}
 	
-	@RequestMapping("/info")
-	public ResponseEntity<Object>  list(Integer id) {  
-		TblAlarmDataDetail detail = alarmDataService.getDetail(id);
-		return success(detail);
-	}
+//	未加权限
+//	@RequestMapping("/info")
+//	public ResponseEntity<Object>  list(Integer id) {  
+//		TblAlarmDataDetail detail = alarmDataService.getDetail(id);
+//		return success(detail);
+//	}
+	
 }

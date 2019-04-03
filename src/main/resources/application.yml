@@ -2,7 +2,7 @@ server:
   port: 8082
   
 netty_server_port: 1111
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico,/admin/Partial/Discharge/list
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico
   
 upload_image: 
   path: D:/uploads  #
@@ -22,8 +22,7 @@ spring:
 
 #   上传服务器配置
 #  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    #driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://218.76.55.185:3306/ceshi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&validationQuery=SELECT 1
 #    username: xiaozl
 #    password: Sql@2008
