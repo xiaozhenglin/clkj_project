@@ -6,10 +6,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.changlan.common.entity.TblPointsEntity;
-import com.changlan.common.pojo.PointStatus;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.point.pojo.PointStatus;
 import com.changlan.point.pojo.SimplePoint;
 import com.changlan.point.service.IPointDefineService;
 

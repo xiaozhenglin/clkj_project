@@ -1,7 +1,5 @@
 package com.changlan.point.pojo;
 
-import com.changlan.common.pojo.PointStatus;
-
 public class SimplePoint {
 	private String registPackage;
 	private PointStatus status;

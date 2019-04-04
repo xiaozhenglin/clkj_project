@@ -21,6 +21,7 @@ import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
 import com.changlan.point.vo.CompanyLineVO;
+import com.changlan.point.vo.CompanyVo;
 
 @RestController
 @RequestMapping("/admin/company")
@@ -35,9 +36,9 @@ public class CompanyInfoController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
 		List<CompanyDetail> list = companyInfoService.companyList(company);
-		List<CompanyLineVO> result = new ArrayList<CompanyLineVO>();
+		List<CompanyVo> result = new ArrayList<CompanyVo>();
 		for(CompanyDetail detail : list) {
-			CompanyLineVO vo = new CompanyLineVO(detail.getCompany());
+			CompanyVo vo = new CompanyVo(detail.getCompany());
 			result.add(vo);
 		}
 		return success(result);

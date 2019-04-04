@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.changlan.common.pojo.PointStatus;
 import com.changlan.common.util.SessionUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
@@ -19,6 +18,7 @@ import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.event.CommandCallBackEvent;
 import com.changlan.netty.event.PointRegistPackageEvent;
 import com.changlan.netty.service.INettyService;
+import com.changlan.point.pojo.PointStatus;
 import com.changlan.point.pojo.SimplePoint;
 
 import io.netty.buffer.ByteBuf;

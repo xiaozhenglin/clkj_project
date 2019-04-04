@@ -20,7 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.changlan.common.pojo.PointStatus;
+import com.changlan.point.pojo.PointStatus;
 
 /**
  * TBL_POINTS

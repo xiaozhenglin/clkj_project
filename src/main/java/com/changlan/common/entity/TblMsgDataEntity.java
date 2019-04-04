@@ -51,12 +51,15 @@ public class TblMsgDataEntity implements java.io.Serializable {
 
     /** msgType */
     @Column(name = "MSG_TYPE"    )
-    private Integer msgType;
+    private String msgType;
 
     /** adminUserId */
     @Column(name = "ADMIN_USER_ID"    )
     private String adminUserId;
-
+    
+    @Column(name = "DIRECTION"    )
+    private Integer direction;
+    
     /**
      * 获取msgId
      * 
@@ -134,7 +137,7 @@ public class TblMsgDataEntity implements java.io.Serializable {
      * 
      * @return msgType
      */
-    public Integer getMsgType() {
+    public String getMsgType() {
         return this.msgType;
     }
 
@@ -143,7 +146,7 @@ public class TblMsgDataEntity implements java.io.Serializable {
      * 
      * @param msgType
      */
-    public void setMsgType(Integer msgType) {
+    public void setMsgType(String msgType) {
         this.msgType = msgType;
     }
 
@@ -164,4 +167,14 @@ public class TblMsgDataEntity implements java.io.Serializable {
     public void setAdminUserId(String adminUserId) {
         this.adminUserId = adminUserId;
     }
+
+	public Integer getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Integer direction) {
+		this.direction = direction;
+	}
+    
+    
 }
