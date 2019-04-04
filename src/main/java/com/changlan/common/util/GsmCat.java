@@ -1,16 +1,22 @@
 package com.changlan.common.util;
 
 import org.smslib.*;
+import org.smslib.AGateway.GatewayStatuses;
+import org.smslib.InboundMessage.MessageClasses;
+import org.smslib.Message.MessageTypes;
 import org.smslib.Service.ServiceStatus;
 import org.smslib.helper.CommPortIdentifier;
 import org.smslib.helper.SerialPort;
 import org.smslib.modem.SerialModemGateway;
 import org.springframework.stereotype.Component;
 
+import com.changlan.common.pojo.MyDefineException;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @Auther: Ningsc
@@ -27,14 +33,9 @@ public class GsmCat {
     static String portName = null; //检测到的串口
 //    static int portBaud = 0; //检测到的串口波特率
 
-    /**
-     * 短信发送
-     * @param receivePhones 接收手机号
-     * @param sendContent 发送内容
-     * @return 返回结果
-     */
-    public  boolean sendSMS(String[] receivePhones,String sendContent) throws Exception{
-        portList = CommPortIdentifier.getPortIdentifiers();
+    
+    public Service initService() throws Exception { 
+    	portList = CommPortIdentifier.getPortIdentifiers();
         while (portList.hasMoreElements()) {
         	 portId = (CommPortIdentifier) portList.nextElement();
         	 if(portId!=null) {
@@ -42,47 +43,66 @@ public class GsmCat {
         	 }
         }
         if(portName != null&& portName!=""){
-           OutboundNotification outboundNotification = new OutboundNotification();
-           /*
-            modem.com3:网关ID（即短信猫端口编号）
-            COM3:串口名称（在window中以COMXX表示端口名称，在linux,unix平台下以ttyS0-N或ttyUSB0-N表示端口名称），通过端口检测程序得到可用的端口
-            115200：串口每秒发送数据的bit位数,必须设置正确才可以正常发送短信，可通过程序进行检测。常用的有115200、9600
-            Huawei：短信猫生产厂商，不同的短信猫生产厂商smslib所封装的AT指令接口会不一致，必须设置正确.常见的有Huawei、wavecom等厂商
-            最后一个参数表示设备的型号，可选
-            */
-            SerialModemGateway gateway  = new SerialModemGateway("modem."+portName.toLowerCase(),portName,115200,"Wavecom","");
-            gateway.setInbound(true); //设置true，表示该网关可以接收短信
-            gateway.setOutbound(true); // 设置true，表示该网关可以发送短信
-
             Service service = Service.getInstance();            /**-----创建发送短信的服务（它是单例的）------**/
             ServiceStatus serviceStatus = service.getServiceStatus();
             System.out.println(serviceStatus.toString()); 
             
             if(serviceStatus!=ServiceStatus.STARTED&&serviceStatus!=ServiceStatus.STARTING) {
+            	InboundNotification inboundNotification = new InboundNotification();
+            	CallNotification callNotification = new CallNotification();
+        		GatewayStatusNotification statusNotification = new GatewayStatusNotification();
+        		OrphanedMessageNotification orphanedMessageNotification = new OrphanedMessageNotification();
+                OutboundNotification outboundNotification = new OutboundNotification();
+            	service.setInboundMessageNotification(inboundNotification); //入站消息回调
+        		service.setCallNotification(callNotification); //不清楚
+        		service.setGatewayStatusNotification(statusNotification);//设备状态
+        		service.setOrphanedMessageNotification(orphanedMessageNotification);
+        		
+        		
+                SerialModemGateway gateway  = new SerialModemGateway("modem."+portName.toLowerCase(),portName,115200,"Wavecom","");
+                gateway.setInbound(true); //设置true，表示该网关可以接收短信
+                gateway.setOutbound(true); // 设置true，表示该网关可以发送短信
             	service.addGateway(gateway);/***-----将网关添加到短信猫服务中*-----**/
             	service.startService(); /**-----启动服务------**/
-            	Service.getInstance().setOutboundMessageNotification(outboundNotification); /**-----发送短信成功后的回调函方法-----**/
+            	service.setOutboundMessageNotification(outboundNotification); /**-----发送短信成功后的回调函方法-----**/
             }
-            
-            /**-----发送短信------**/
-            for(int i=0;i<receivePhones.length;i++){
-                if(receivePhones[i] != null && !receivePhones[i].equals("")){
-                    OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
-                    msg.setEncoding(Message.MessageEncodings.ENCUCS2);
-                    boolean sendMessage = service.sendMessage(msg);
-                    System.out.println("是否发送成功"+sendMessage); 
-                   //System.out.println("短信发送内容：----"+sendContent);
-                }
-            }
-            return true;
-//                /**-----关闭服务------**/
-//                service.stopService();
+            return service;
         }else {
-            System.out.println("短信猫的串口没有检测到，请检查！！！");
-            return false;
+        	throw  new  MyDefineException("SMS001", "没有可用端口", false, null);
         }
     }
+    
+    /**
+     * 短信发送
+     * @param receivePhones 接收手机号
+     * @param sendContent 发送内容
+     * @return 返回结果
+     */
+    public  void sendSMS(String[] receivePhones,String sendContent) throws Exception{
+		Service service = initService();
+        /**-----发送短信------**/
+        for(int i=0;i<receivePhones.length;i++){
+            if(receivePhones[i] != null && !receivePhones[i].equals("")){
+                OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
+                msg.setEncoding(Message.MessageEncodings.ENCUCS2);
+                boolean sendMessage = service.sendMessage(msg);
+                System.out.println("是否发送成功"+sendMessage + "内容:"+sendContent); 
+            }
+        }
+//        return true;
+    }
+    
+    public List<InboundMessage> receiveMessage() throws Exception {
+    	Service service = initService();
+    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
+		service.readMessages(msgList, MessageClasses.ALL);
+		for (InboundMessage msg : msgList) {
+			System.out.println("doIt接受文本:"+msg.getText());
+		}
+		return msgList;
+    }
 
+    //出站
     public class OutboundNotification implements IOutboundMessageNotification
     {
         public void process(AGateway gateway, OutboundMessage msg)
@@ -90,19 +110,68 @@ public class GsmCat {
         	System.out.println("回调"+msg.getErrorMessage());
         }
     }
+    
+    public class InboundNotification implements IInboundMessageNotification 
+	{
+		public void process(AGateway gateway, MessageTypes msgType, InboundMessage msg)
+		{
+			if (msgType == MessageTypes.INBOUND) {
+				//入站
+//				System.out.println(">>> New Inbound message detected from Gateway: " + gateway.getGatewayId());
+			}else if (msgType == MessageTypes.STATUSREPORT) {
+				//状态报告
+//				System.out.println(">>> New Inbound Status Report message detected from Gateway: " + gateway.getGatewayId());
+			}
+			System.out.println("InboundNotification 接受文本"+msg.getText());
+			try {
+				//打印后删除  不会重复接收。
+				gateway.deleteMessage(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+	}
 
+    
+    public class CallNotification implements ICallNotification
+	{
+		public void process(AGateway gateway, String callerId)
+		{
+//			System.out.println(">>> New call detected from Gateway: " + gateway.getGatewayId() + " : " + callerId);
+		}
+	}
+
+	public class GatewayStatusNotification implements IGatewayStatusNotification
+	{
+		public void process(AGateway gateway, GatewayStatuses oldStatus, GatewayStatuses newStatus)
+		{
+//			System.out.println(">>> Gateway Status change for " + gateway.getGatewayId() + ", OLD: " + oldStatus + " -> NEW: " + newStatus);
+		}
+	}
+
+	public class OrphanedMessageNotification implements IOrphanedMessageNotification
+	{
+		public boolean process(AGateway gateway, InboundMessage msg)
+		{
+//			System.out.println(">>> Orphaned message part detected from " + gateway.getGatewayId());
+//			System.out.println(msg);
+			// Since we are just testing, return FALSE and keep the orphaned message part.
+			return false;
+		}
+	}
 
     public static void main(String[] args) throws Exception{
-        /**
-           	* 短信发送测试
-         */
         GsmCat obj = new GsmCat();
-        for(int i = 0; i< 2;i++) {
-        	 obj.sendSMS(new String[]{"18390820674"}," 短信猫给你发了一条短息  !");
+        for(int i = 0; i< 1;i++) {
+        	 obj.sendSMS(new String[]{"+8614789966508"}," 短信猫给你发了一条短息1  !"+i);
              Thread.sleep(2000);
-             obj.sendSMS(new String[]{"18390820674"}," 短信猫给你发了一条短息2  !");
+             obj.sendSMS(new String[]{"+8614789966508"}," 短信猫给你发了一条短息2  !"+i);
              Thread.sleep(2000);
-             obj.sendSMS(new String[]{"18390820674"}," 短信猫给你发了一条短息3  !");
+             obj.sendSMS(new String[]{"+8614789966508"}," 短信猫给你发了一条短息3  !" + i);
+        }
+        while(true) {
+        	Thread.sleep(3000);
+         	obj.receiveMessage();
         }
     }
 
