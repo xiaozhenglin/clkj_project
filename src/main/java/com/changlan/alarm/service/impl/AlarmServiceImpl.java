@@ -21,7 +21,6 @@ import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblIndicatorValueEntity;
-import com.changlan.common.entity.TblMsgDataEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;

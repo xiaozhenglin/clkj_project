@@ -40,7 +40,7 @@ public class UserFunctionController extends BaseController{
 	
 	
 	@RequestMapping("/func/list")
-	public ResponseEntity<Object>  userFunctionlist() throws Exception {  
+ 	public ResponseEntity<Object>  userFunctionlist() throws Exception {  
 		TblAdminUserEntity user = super.userIsLogin();
 		List<UserFunctionInfoVO> useFunctionVOList = new ArrayList<UserFunctionInfoVO>();
 		if(isSuperAdminUser(user.getAdminUserId())) { 

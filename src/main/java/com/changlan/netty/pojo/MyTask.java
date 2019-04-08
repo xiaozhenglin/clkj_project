@@ -21,6 +21,7 @@ import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.pojo.PoinErrorType;
@@ -48,7 +49,7 @@ public class MyTask extends TimerTask {
 		Integer pointId = commandDefault.getPointId(); 
 		IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
 		TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
-		if(NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
+		if(StringUtil.isNotEmpty(pointDefine.getPointRegistPackage()) && NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
 			//一次发一条。加锁操作
 			afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
 			INettyService nettyService = SpringUtil.getBean(INettyService.class);
@@ -59,7 +60,7 @@ public class MyTask extends TimerTask {
 				logger.info("定时器发送指令出错"+myException.getMessage()+":"+e.getMessage());
 			} 
 		}else {
-			logger.info("一个监控点只能同时发送一条指令");
+			logger.info("发送失败 》》》》监控点注册包为空 或者 一个监控点只能同时发送一条指令");
 		}
 	}
 	

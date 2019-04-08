@@ -12,7 +12,8 @@ public enum PoinErrorType {
 	SEND_CRC_ERROR("N003","发送的指令不符合CRC校验"),
 	RECEIVE_CRC_ERROR("N004","接受的指令不符合CRC校验"), 
 	POINT_NOT_EXIST("P008","监控点不存在"),
-	POINT_CATEGORY_NOT_EXIST("P009","监控点类别不存在");
+	POINT_CATEGORY_NOT_EXIST("P009","监控点类别不存在"),
+	POINT_REGISTPACKAGE_IS_NULL("P010","监控点注册包为空");
 	
 	private String code;
 	private String name;

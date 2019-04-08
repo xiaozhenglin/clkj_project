@@ -5,7 +5,8 @@ public class SmsParams {
 	private String Key;
 	private String smsMob; //电话号码用逗号分隔,可以一次性发送多个
 	private String smsText; //发送文字
-	
+	private String portName;//串口名称
+	private int portBaud;//波动率
 	
 	public SmsParams(String uid, String key, String smsMob, String smsText) {
 		super();
@@ -16,6 +17,14 @@ public class SmsParams {
 	}
 	
 	
+	public SmsParams(String portName, int portBaud) {
+		super();
+		this.portName = portName;
+		this.portBaud = portBaud;
+	}
+
+
+
 	public SmsParams() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -50,6 +59,26 @@ public class SmsParams {
 	}
 	public void setSmsText(String smsText) {
 		this.smsText = smsText;
+	}
+
+
+	public String getPortName() {
+		return portName;
+	}
+
+
+	public void setPortName(String portName) {
+		this.portName = portName;
+	}
+
+
+	public int getPortBaud() {
+		return portBaud;
+	}
+
+
+	public void setPortBaud(int portBaud) {
+		this.portBaud = portBaud;
 	}
 	
 }

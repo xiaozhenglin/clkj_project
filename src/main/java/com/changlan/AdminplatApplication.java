@@ -27,6 +27,7 @@ import com.changlan.netty.pojo.MyTask;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.service.INettyService;
+import com.changlan.user.service.ISnsCatService;
 
 
 @SpringBootApplication
@@ -43,6 +44,10 @@ public class AdminplatApplication implements ApplicationRunner {
 		new NettyServer().start(); //启动netty服务器
 // 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
 //		nettyService.task();
+		
+		// 初始化短信猫
+		ISnsCatService catService = SpringUtil.getBean(ISnsCatService.class);
+		catService.initSmsCat(); 
 	}
 
 }

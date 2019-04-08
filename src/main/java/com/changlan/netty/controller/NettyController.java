@@ -62,6 +62,9 @@ public class NettyController extends BaseController{
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
+		if(StringUtil.isEmpty(pointDefine.getPointRegistPackage())) {
+			throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
+		}
 		if(!canSendRecord(pointDefine.getPointRegistPackage())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
@@ -71,7 +74,7 @@ public class NettyController extends BaseController{
 	}
 
 	public static  boolean canSendRecord(String registPackage) {
-		if( map==null || StringUtil.isEmpty(registPackage)) {
+		if( map==null ) {
 			return true;
 		}
 		Integer recordId = map.get(registPackage); 
