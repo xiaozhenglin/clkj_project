@@ -155,7 +155,7 @@ public class GsmCat {
 		Service service = initService(list);
         for(int i=0;i<receivePhones.length;i++){
         	
-            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。
+            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。(一定要加)
             if(receivePhones[i] != null && !receivePhones[i].equals("")){
                 OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
                 msg.setEncoding(Message.MessageEncodings.ENCUCS2);
@@ -171,15 +171,15 @@ public class GsmCat {
         }
     }
     
-    public List<InboundMessage> receiveMessage() throws Exception {
-    	Service service = initService(null);
-    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
-		service.readMessages(msgList, MessageClasses.ALL);
-		for (InboundMessage msg : msgList) {
-			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
-		}
-		return msgList;
-    }
+//    public List<InboundMessage> receiveMessage() throws Exception {
+//    	Service service = initService(null);
+//    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
+//		service.readMessages(msgList, MessageClasses.ALL);
+//		for (InboundMessage msg : msgList) {
+//			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
+//		}
+//		return msgList;
+//    }
 
     //出站
     public class OutboundNotification implements IOutboundMessageNotification
@@ -266,6 +266,7 @@ public class GsmCat {
         for(int i = 0; i< 1;i++) {
         	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息1");
         	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息2");
+        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息3");
         }
 //        obj.receiveMessage();
 //        obj.stopService();
