@@ -14,6 +14,7 @@ import com.changlan.command.service.ICommandCategoryService;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandCategoryEntity;
+import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
@@ -46,6 +47,18 @@ public class CommandDefaultSendController extends BaseController{
 	public ResponseEntity<Object>  list(TblPointSendCommandEntity command) {
 		List<CommandDefaultDetail> list = commandDefaultService.commandList(command);
 		return success(list);
+	}
+	
+	//未加入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblPointSendCommandEntity entity) throws MyDefineException { 
+		TblPointSendCommandEntity find = (TblPointSendCommandEntity)crudService.get(entity.getSendCommandId(),TblIndicatorCategoriesEntity.class,true);
+		if(find == null) {
+			throw new MyDefineException(PoinErrorType.NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
 	}
 	
 }

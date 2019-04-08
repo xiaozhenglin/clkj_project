@@ -61,8 +61,8 @@ public class CompanyInfoController extends BaseController{
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblCompanyEntity entity) throws MyDefineException { 
-		TblCompanyEntity companyEntity = (TblCompanyEntity)crudService.get(entity.getCompanyId(),TblCompanyEntity.class,true);
-		if(companyEntity == null) {
+		TblCompanyEntity find = (TblCompanyEntity)crudService.get(entity.getCompanyId(),TblCompanyEntity.class,true);
+		if(find == null) {
 			throw new MyDefineException(PoinErrorType.COMPANY_NOT_EXIST);
 		}
 		Boolean delete = crudService.delete(entity, true);

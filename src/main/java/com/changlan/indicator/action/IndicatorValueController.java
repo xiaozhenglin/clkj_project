@@ -49,5 +49,17 @@ public class IndicatorValueController extends  BaseController{
 		List<IndiCatorValueDetail> list = indicatorValueService.getAll(id,categoryId);
 		return success(list);
 	}
-
+	
+	//未加入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblIndicatorValueEntity entity) throws MyDefineException { 
+		TblIndicatorValueEntity find = (TblIndicatorValueEntity)crudService.get(entity.getIndicatorId(),TblIndicatorValueEntity.class,true);
+		if(find == null) {
+			throw new MyDefineException(PoinErrorType.NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
+	
 }

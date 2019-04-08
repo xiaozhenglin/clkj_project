@@ -15,6 +15,7 @@ import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.IProtocolService;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandProtocolEntity;
+import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
@@ -48,4 +49,17 @@ public class ProtocolController extends BaseController{
 		List<CommandProtolDetail> list = protocolService.protocolList(protocol);
 		return success(list);
 	} 
+	
+	//未加入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblCommandProtocolEntity entity) throws MyDefineException { 
+		TblCommandProtocolEntity find = (TblCommandProtocolEntity)crudService.get(entity.getProtocolId(),TblCommandProtocolEntity.class,true);
+		if(find == null) {
+			throw new MyDefineException(PoinErrorType.NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
+	
 }

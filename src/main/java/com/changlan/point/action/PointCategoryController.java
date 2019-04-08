@@ -53,8 +53,8 @@ public class PointCategoryController extends BaseController {
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblPointCategoryEntity entity) throws MyDefineException { 
-		TblPointCategoryEntity companyEntity = (TblPointCategoryEntity)crudService.get(entity.getPointCatgoryId(),TblPointCategoryEntity.class,true);
-		if(companyEntity == null) {
+		TblPointCategoryEntity find = (TblPointCategoryEntity)crudService.get(entity.getPointCatgoryId(),TblPointCategoryEntity.class,true);
+		if(find == null) {
 			throw new MyDefineException(PoinErrorType.POINT_CATEGORY_NOT_EXIST);
 		}
 		Boolean delete = crudService.delete(entity, true);

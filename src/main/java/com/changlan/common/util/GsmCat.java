@@ -148,12 +148,14 @@ public class GsmCat {
      * @param sendContent 发送内容
      * @return 返回结果
      */
-    public  void sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception{
+    public  void sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
     	System.out.println("准备发送消息给设备》》》》" + param.getPortName()); 
     	List<SmsParams> list = new ArrayList<SmsParams>();
     	list.add(param);
 		Service service = initService(list);
         for(int i=0;i<receivePhones.length;i++){
+        	
+            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。
             if(receivePhones[i] != null && !receivePhones[i].equals("")){
                 OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
                 msg.setEncoding(Message.MessageEncodings.ENCUCS2);
@@ -169,15 +171,15 @@ public class GsmCat {
         }
     }
     
-//    public List<InboundMessage> receiveMessage() throws Exception {
-//    	Service service = initService(null);
-//    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
-//		service.readMessages(msgList, MessageClasses.ALL);
-//		for (InboundMessage msg : msgList) {
-//			System.out.println("doIt接受文本:"+msg.getText());
-//		}
-//		return msgList;
-//    }
+    public List<InboundMessage> receiveMessage() throws Exception {
+    	Service service = initService(null);
+    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
+		service.readMessages(msgList, MessageClasses.ALL);
+		for (InboundMessage msg : msgList) {
+			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
+		}
+		return msgList;
+    }
 
     //出站
     public class OutboundNotification implements IOutboundMessageNotification
@@ -253,24 +255,23 @@ public class GsmCat {
 		return Service.getInstance().getServiceStatus().toString();
 	}
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         GsmCat obj = new GsmCat();
         List<SmsParams> list = new ArrayList<SmsParams>();
         SmsParams param = new SmsParams("COM3", 115200); //设备
-//        SmsParams param2 = new SmsParams("COM1", 115200); //设备一定要先用测试设备调试可用
+
         list.add(param);
-//        list.add(param2);
-        Service initService = obj.initService(list); 
-        System.out.println(getServiceStatus());
+        obj.initService(list);  //添加设备，初始化启动
+//        System.out.println(getServiceStatus());
         for(int i = 0; i< 1;i++) {
-        	 obj.sendSMS(param,new String[]{"+8614789966508","18309820674"}," 短信猫给你发了一条短息1");
-             Thread.sleep(2000);
-             obj.sendSMS(param,new String[]{"+8614789966508","18309820674"}," 短信猫给你发了一条短息2  ");
-             Thread.sleep(3000);
-             obj.sendSMS(param,new String[]{"+8614789966508","18309820674"}," 短信猫给你发了一条短息3  " );
+        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息1");
+        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息2");
         }
 //        obj.receiveMessage();
 //        obj.stopService();
+//      SmsParams param2 = new SmsParams("COM1", 115200); //设备一定要先用测试设备调试可用 
+//      list.add(param2);
+//      obj.initService(list); 
     }
 
 }

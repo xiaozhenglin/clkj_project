@@ -58,8 +58,8 @@ public class CompanyLineController extends BaseController{
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblLinesEntity entity) throws MyDefineException { 
-		TblLinesEntity companyEntity = (TblLinesEntity)crudService.get(entity.getLineId(),TblLinesEntity.class,true);
-		if(companyEntity == null) {
+		TblLinesEntity find = (TblLinesEntity)crudService.get(entity.getLineId(),TblLinesEntity.class,true);
+		if(find == null) {
 			throw new MyDefineException(PoinErrorType.LINE_NOT_EXITS);
 		}
 		Boolean delete = crudService.delete(entity, true);

@@ -14,6 +14,7 @@ import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblIndicatorCategoriesEntity;
+import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.indicator.service.IIndicatorCategoryService;
@@ -50,4 +51,17 @@ public class IndicatorCategoryController extends BaseController{
 		List<TblIndicatorCategoriesEntity> list = indicatorCategoryService.getAll(id);
 		return success(list);
 	}
+	
+	//未加入权限表
+	@RequestMapping("/delete")
+	@Transactional
+	public ResponseEntity<Object>  delete(TblIndicatorCategoriesEntity entity) throws MyDefineException { 
+		TblIndicatorCategoriesEntity find = (TblIndicatorCategoriesEntity)crudService.get(entity.getCategoryId(),TblIndicatorCategoriesEntity.class,true);
+		if(find == null) {
+			throw new MyDefineException(PoinErrorType.NOT_EXIST);
+		}
+		Boolean delete = crudService.delete(entity, true);
+		return success(delete);
+	}
+	
 }
