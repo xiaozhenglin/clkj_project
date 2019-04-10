@@ -79,44 +79,39 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "POINT_REGIST_PACKAGE"    )
     private String pointRegistPackage;
+    
+    @Column(name = "PORT_NAME"    )
+    private String portName;
+    
+    @Column(name = "PORT_BOUND"    )
+    private Integer portBound;
 
-    /**
-     * 获取pointId
-     * 
-     * @return pointId
-     */
-    public Integer getPointId() {
-        return this.pointId;
-    }
+    @Column(name = "SMS_NUMBER"    )
+    private String smsNumber;
 
-    /**
-     * 设置pointId
-     * 
-     * @param pointId
-     */
-    public void setPointId(Integer pointId) {
-        this.pointId = pointId;
-    }
+    @Column(name = "LINE_ORDER"    )
+    private Integer lineOrder;
+    
+    @Column(name = "IS_CORNER"    )
+    private Integer isCorner;
 
-    /**
-     * 获取lineId
-     * 
-     * @return lineId
-     */
-    public Integer getLineId() {
-        return this.lineId;
-    }
+	public Integer getPointId() {
+		return pointId;
+	}
 
-    /**
-     * 设置lineId
-     * 
-     * @param lineId
-     */
-    public void setLineId(Integer lineId) {
-        this.lineId = lineId;
-    }
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
+	}
 
-    public String getStatus() {
+	public Integer getLineId() {
+		return lineId;
+	}
+
+	public void setLineId(Integer lineId) {
+		this.lineId = lineId;
+	}
+
+	public String getStatus() {
 		return status;
 	}
 
@@ -124,131 +119,61 @@ public class TblPointsEntity implements java.io.Serializable {
 		this.status = status;
 	}
 
-	/**
-     * 获取image
-     * 
-     * @return image
-     */
-    public String getImage() {
-        return this.image;
-    }
+	public String getImage() {
+		return image;
+	}
 
-    /**
-     * 设置image
-     * 
-     * @param image
-     */
-    public void setImage(String image) {
-        this.image = image;
-    }
+	public void setImage(String image) {
+		this.image = image;
+	}
 
-    /**
-     * 获取pointAddress
-     * 
-     * @return pointAddress
-     */
-    public String getPointAddress() {
-        return this.pointAddress;
-    }
+	public String getPointAddress() {
+		return pointAddress;
+	}
 
-    /**
-     * 设置pointAddress
-     * 
-     * @param pointAddress
-     */
-    public void setPointAddress(String pointAddress) {
-        this.pointAddress = pointAddress;
-    }
+	public void setPointAddress(String pointAddress) {
+		this.pointAddress = pointAddress;
+	}
 
-    /**
-     * 获取longLati
-     * 
-     * @return longLati
-     */
-    public String getLongLati() {
-        return this.longLati;
-    }
+	public String getLongLati() {
+		return longLati;
+	}
 
-    /**
-     * 设置longLati
-     * 
-     * @param longLati
-     */
-    public void setLongLati(String longLati) {
-        this.longLati = longLati;
-    }
+	public void setLongLati(String longLati) {
+		this.longLati = longLati;
+	}
 
-	/**
-     * 获取indicators
-     * 
-     * @return indicators
-     */
-    public String getIndicators() {
-        return this.indicators;
-    }
+	public String getIndicators() {
+		return indicators;
+	}
 
-    /**
-     * 设置indicators
-     * 
-     * @param indicators
-     */
-    public void setIndicators(String indicators) {
-        this.indicators = indicators;
-    }
+	public void setIndicators(String indicators) {
+		this.indicators = indicators;
+	}
 
-    /**
-     * 获取pointName
-     * 
-     * @return pointName
-     */
-    public String getPointName() {
-        return this.pointName;
-    }
+	public String getPointName() {
+		return pointName;
+	}
 
-    /**
-     * 设置pointName
-     * 
-     * @param pointName
-     */
-    public void setPointName(String pointName) {
-        this.pointName = pointName;
-    }
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
+	}
 
-    /**
-     * 获取phones
-     * 
-     * @return phones
-     */
-    public String getPhones() {
-        return this.phones;
-    }
+	public String getPhones() {
+		return phones;
+	}
 
-    /**
-     * 设置phones
-     * 
-     * @param phones
-     */
-    public void setPhones(String phones) {
-        this.phones = phones;
-    }
+	public void setPhones(String phones) {
+		this.phones = phones;
+	}
 
-    /**
-     * 获取pointCatagoryId
-     * 
-     * @return pointCatagoryId
-     */
-    public Integer getPointCatagoryId() {
-        return this.pointCatagoryId;
-    }
+	public Integer getPointCatagoryId() {
+		return pointCatagoryId;
+	}
 
-    /**
-     * 设置pointCatagoryId
-     * 
-     * @param pointCatagoryId
-     */
-    public void setPointCatagoryId(Integer pointCatagoryId) {
-        this.pointCatagoryId = pointCatagoryId;
-    }
+	public void setPointCatagoryId(Integer pointCatagoryId) {
+		this.pointCatagoryId = pointCatagoryId;
+	}
 
 	public String getPointRegistPackage() {
 		return pointRegistPackage;
@@ -257,6 +182,49 @@ public class TblPointsEntity implements java.io.Serializable {
 	public void setPointRegistPackage(String pointRegistPackage) {
 		this.pointRegistPackage = pointRegistPackage;
 	}
+
+	public String getPortName() {
+		return portName;
+	}
+
+	public void setPortName(String portName) {
+		this.portName = portName;
+	}
+
+	public Integer getPortBound() {
+		return portBound;
+	}
+
+	public void setPortBound(Integer portBound) {
+		this.portBound = portBound;
+	}
+
+	public String getSmsNumber() {
+		return smsNumber;
+	}
+
+	public void setSmsNumber(String smsNumber) {
+		this.smsNumber = smsNumber;
+	}
+
+	public Integer getLineOrder() {
+		return lineOrder;
+	}
+
+	public void setLineOrder(Integer lineOrder) {
+		this.lineOrder = lineOrder;
+	}
+
+	public Integer getIsCorner() {
+		return isCorner;
+	}
+
+	public void setIsCorner(Integer isCorner) {
+		this.isCorner = isCorner;
+	}
+    	
+
+
     
     
 }

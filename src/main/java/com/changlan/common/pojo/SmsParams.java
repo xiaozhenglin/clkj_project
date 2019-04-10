@@ -1,12 +1,13 @@
 package com.changlan.common.pojo;
 
 public class SmsParams {
-	private String Uid;
-	private String Key;
-	private String smsMob; //电话号码用逗号分隔,可以一次性发送多个
+	private String Uid;  //网建用户id
+	private String Key;		//网建用户秘钥
+	private String smsMob;  //电话号码用逗号分隔,可以一次性发送多个
 	private String smsText; //发送文字
-	private String portName;//串口名称
-	private int portBaud;//波动率
+	private String portName; //串口名称
+	private int portBaud; //波动率
+	private Integer pointId; 
 	
 	public SmsParams(String uid, String key, String smsMob, String smsText) {
 		super();
@@ -79,6 +80,16 @@ public class SmsParams {
 
 	public void setPortBaud(int portBaud) {
 		this.portBaud = portBaud;
+	}
+
+
+	public Integer getPointId() {
+		return pointId;
+	}
+
+
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
 	}
 	
 }

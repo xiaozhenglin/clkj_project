@@ -1,17 +1,24 @@
 package com.changlan.user.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import org.smslib.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.changlan.common.entity.TblCommandRecordEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.SmsParams;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.GsmCat;
 import com.changlan.point.service.IPointDefineService;
-import com.changlan.user.service.ISnsCatService;
+import com.changlan.user.pojo.LoginUser;
+import com.changlan.user.service.ISmsCatService;
+import org.springframework.stereotype.Service;
 
-public class SmsCatServiceImpl implements ISnsCatService {
+@Service
+public class SmsCatServiceImpl implements ISmsCatService {
 	
 	@Autowired
 	ICrudService crudService;
@@ -22,37 +29,40 @@ public class SmsCatServiceImpl implements ISnsCatService {
 	@Override
 	public void initSmsCat() {
 //		pointDefineService.getAll(entity);
-//		List<SmsParams> list;
+		List<SmsParams> list = new ArrayList<SmsParams>();
+		SmsParams param = new SmsParams("COM3", 115200);//设备
+		list.add(param);
 		GsmCat cat = GsmCat.getInstance();
 		try {
-			Service initService = cat.initService(null);
+			org.smslib.Service initService = cat.initService(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void canSendMsgOrNot() {
-		// TODO Auto-generated method stub
-		
+	public boolean canSendMsgOrNot(Integer pointId) {
+		return false;
+	}
+	
+
+	@Override
+	public void sendSmsCat(SmsParams param) throws Exception {
+		String phones = param.getSmsMob(); 
+		if(param.getPointId()!=null) {
+			TblPointsEntity point =  (TblPointsEntity)crudService.get(param.getPointId(), TblPointsEntity.class, true);
+			phones = point.getPhones();
+		}
+		GsmCat.sendMsgToOher(param.getSmsMob(),param.getSmsText()); 
 	}
 
 	@Override
-	public void sendSmsCat() {
-		// TODO Auto-generated method stub
-		
+	public Object analysis(String receiveMsg, String fromPhone) {
+		return null;
 	}
 
-	@Override
-	public void updateRecord() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void analysis() {
-		// TODO Auto-generated method stub
-		
-	}
+
+	
 	
 }

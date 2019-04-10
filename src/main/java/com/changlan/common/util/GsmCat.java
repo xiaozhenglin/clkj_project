@@ -12,8 +12,16 @@ import org.springframework.stereotype.Component;
 
 import com.changlan.command.pojo.CommandRecordDetail;
 import com.changlan.command.service.ICommandRecordService;
+import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblMsgDataEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.SmsParams;
+import com.changlan.common.service.ICrudService;
+import com.changlan.point.pojo.PointInfoDetail;
+import com.changlan.point.service.IPointDefineService;
+import com.changlan.user.pojo.LoginUser;
+import com.changlan.user.pojo.MsgType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,41 +42,44 @@ import java.util.Map;
 @Component
 public class GsmCat {
 	
+	public static String serverPortName = "COM3";
+	public static Integer serverPortBound = 115200;
+	
 	public static GsmCat cat = new GsmCat();
 	
 	public static GsmCat getInstance(){
 		return cat ; 
 	}
-
+	
 //    static CommPortIdentifier portId;//单个串口
 //    static Enumeration portList;//串口列表
 ////    static int bauds[] = { 9600, 19200, 57600, 115200 };    //检测端口所支持的波特率
 //    static String portName = null; //检测到的串口
 //    static int portBaud = 0; //检测到的串口波特率
 	
-//	public static Map<Integer,Integer> map = new HashMap<Integer,Integer>(); // 同一个监控点 只能发一条
-//	
-//	public static  boolean canSendRecord(String registPackage) {
-//		if( map==null || StringUtil.isEmpty(registPackage)) {
-//			return true;
-//		}
-//		Integer recordId = map.get(registPackage); 
-//		if(recordId==null ) {
-//			return true ; 
-//		}
-//		//时间计算如果超过3秒还没接收到，就去掉该锁
-//		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
-//		CommandRecordDetail commandRecordDetail = recordService.getList(recordId, registPackage, null).get(0); 
-//		Long lastRecordTime = commandRecordDetail.getRecord().getRecordTime().getTime();
-//		Long now = new Date().getTime();
-//		long seconds =  ((now-lastRecordTime)/1000);
-//		if(seconds>=7) {
-//			return true;
-//		}
-//	
-//		return false;
-//	}
-//	
+	public static Map<Integer,Integer> map = new HashMap<Integer,Integer>(); // 同一个监控点 只能发一条
+	
+	public static  boolean canSendRecord(Integer pointId) {
+		if( map==null || pointId == null) {
+			return true;
+		}
+		Integer recordId = map.get(pointId); 
+		if(recordId==null ) {
+			return true ; 
+		}
+		//时间计算如果超过3秒还没接收到，就去掉该锁
+		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
+		CommandRecordDetail commandRecordDetail = recordService.getList(recordId, null, null).get(0); 
+		Long lastRecordTime = commandRecordDetail.getRecord().getRecordTime().getTime();
+		Long now = new Date().getTime();
+		long seconds =  ((now-lastRecordTime)/1000);
+		if(seconds>=7) {
+			return true;
+		}
+	
+		return false;
+	}
+	
 	
 	
 	
@@ -76,7 +87,7 @@ public class GsmCat {
 	public static Map<String,SerialModemGateway> gateWays = new HashMap();//已经添加的设备对应的 设备id
     
 	//初始化多个串口和对应的波特率
-    public Service initService(List<SmsParams> list) throws Exception { 
+    public static Service initService(List<SmsParams> list) throws Exception { 
 //    	portList = CommPortIdentifier.getPortIdentifiers();
 //        while (portList.hasMoreElements()) {
 //        	 portId = (CommPortIdentifier) portList.nextElement();
@@ -148,7 +159,7 @@ public class GsmCat {
      * @param sendContent 发送内容
      * @return 返回结果
      */
-    public  void sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
+    public static void sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
     	System.out.println("准备发送消息给设备》》》》" + param.getPortName()); 
     	List<SmsParams> list = new ArrayList<SmsParams>();
     	list.add(param);
@@ -171,18 +182,19 @@ public class GsmCat {
         }
     }
     
-//    public List<InboundMessage> receiveMessage() throws Exception {
-//    	Service service = initService(null);
-//    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
-//		service.readMessages(msgList, MessageClasses.ALL);
-//		for (InboundMessage msg : msgList) {
-//			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
-//		}
-//		return msgList;
-//    }
+    public List<InboundMessage> receiveMessage() throws Exception {
+    	Service service = initService(null);
+    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
+		service.readMessages(msgList, MessageClasses.ALL);
+		for (InboundMessage msg : msgList) {
+			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
+//			analysisReceiveMessage(msg.getText(), msg.getOriginator()); 
+		}
+		return msgList;
+    }
 
     //出站
-    public class OutboundNotification implements IOutboundMessageNotification
+    public static class OutboundNotification implements IOutboundMessageNotification
     {
         public void process(AGateway gateway, OutboundMessage msg)
         {
@@ -190,7 +202,7 @@ public class GsmCat {
         }
     }
     
-    public class InboundNotification implements IInboundMessageNotification 
+    public static class InboundNotification implements IInboundMessageNotification 
 	{
 		public void process(AGateway gateway, MessageTypes msgType, InboundMessage msg)
 		{
@@ -203,7 +215,7 @@ public class GsmCat {
 //			}
 			System.out.println("InboundNotification类接受消息》》》》》"+msg.getText());
 			//保存入库
-			
+//			analysisReceiveMessage(msg.getText(), msg.getOriginator()); 
 			try {
 				//打印后删除  不会重复接收。
 				gateway.deleteMessage(msg);
@@ -214,7 +226,7 @@ public class GsmCat {
 	}
 
     
-    public class CallNotification implements ICallNotification
+    public static class CallNotification implements ICallNotification
 	{
 		public void process(AGateway gateway, String callerId)
 		{
@@ -222,7 +234,7 @@ public class GsmCat {
 		}
 	}
 
-	public class GatewayStatusNotification implements IGatewayStatusNotification
+	public static  class GatewayStatusNotification implements IGatewayStatusNotification
 	{
 		public void process(AGateway gateway, GatewayStatuses oldStatus, GatewayStatuses newStatus)
 		{
@@ -230,7 +242,7 @@ public class GsmCat {
 		}
 	}
 
-	public class OrphanedMessageNotification implements IOrphanedMessageNotification
+	public  static class OrphanedMessageNotification implements IOrphanedMessageNotification
 	{
 		public boolean process(AGateway gateway, InboundMessage msg)
 		{
@@ -255,24 +267,82 @@ public class GsmCat {
 		return Service.getInstance().getServiceStatus().toString();
 	}
 
-    public static void main(String[] args) throws Exception {
-        GsmCat obj = new GsmCat();
-        List<SmsParams> list = new ArrayList<SmsParams>();
-        SmsParams param = new SmsParams("COM3", 115200); //设备
+	public static void analysisReceiveMessage(String receiveMsg,String phone) {
+		if(receiveMsg.substring(0,4).equals("*CS,")){ 	
+			String alm=receiveMsg.substring(11,13); //类型
+			String angle=receiveMsg.substring(17,19); //具体的值
+			String result="";
+			IPointDefineService pointDefineService = SpringUtil.getBean(IPointDefineService.class);
+			TblPointsEntity entity = new TblPointsEntity();
+			entity.setSmsNumber(phone.substring(2)); //还没调试 应该要去掉前缀86什么的
+			List<PointInfoDetail> all = pointDefineService.getAll(entity); 
+			if(!ListUtil.isEmpty(all)) {
+				PointInfoDetail pointInfoDetail = all.get(0); 
+				TblPointsEntity point = pointInfoDetail.getPoint(); 
+				String pointName = point.getPointName();
+				if(alm.equals("A2")){
+					result=pointName+"井盖发生异常，倾斜角度为："+angle;
+					//发送短信给其他人
+//					sendMsgToOher(point.getPhones(),result);
+		       	}else if(alm.equals("R1")){
+		       		result=pointName+"井盖恢复正常，当前角度为："+angle;
+//					sendMsgToOher(point,result);
+		       	}else if(alm.equals("T1")){
+					result=pointName+"井盖周期上报，当前角度为："+angle;
+					saveMsgData(point.getSmsNumber(),result,2);
+				}else if(alm.equals("A3")){
+					result=pointName+"井盖电量偏低，请及时更换电池。"+angle;
+//					sendMsgToOher(point,result);
+				}
+			}
+		}
+	}
+	
+	//记录数据
+	public static void saveMsgData(String phones, String content,Integer direction) {
+    	ICrudService crudService = SpringUtil.getICrudService();
+		TblMsgDataEntity msgData = new TblMsgDataEntity();
+		msgData.setSendTime(new Date());
+		msgData.setContent(content);
+		msgData.setDirection(direction);
+		msgData.setMsgType(MsgType.SMS_CAT.toString());
+		msgData.setPhoneOrEmail(phones);
+		crudService.update(msgData, true);
+	}
 
-        list.add(param);
-        obj.initService(list);  //添加设备，初始化启动
-//        System.out.println(getServiceStatus());
-        for(int i = 0; i< 1;i++) {
-        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息1");
-        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息2");
-        	 obj.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息3");
-        }
-//        obj.receiveMessage();
-//        obj.stopService();
-//      SmsParams param2 = new SmsParams("COM1", 115200); //设备一定要先用测试设备调试可用 
-//      list.add(param2);
-//      obj.initService(list); 
+	//通知运维人员
+	public static void sendMsgToOher(String phones, String sendContent) throws Exception { 
+		// 获取需要发送的电话号码
+		if(StringUtil.isNotEmpty(phones)) {
+			//sms 发送消息
+			String[] receivePhones = phones.split(","); 
+			SmsParams param = new SmsParams(serverPortName, serverPortBound);//服务器的串口来发送
+			sendSMS(param, receivePhones, sendContent);
+	    	saveMsgData(phones, sendContent, 1);
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+//        List<SmsParams> list = new ArrayList<SmsParams>();
+//        SmsParams param = new SmsParams(GsmCat.serverPortName, GsmCat.serverPortBound); //设备
+//        list.add(param);
+//        GsmCat.initService(list);  //添加设备，初始化启动
+////        System.out.println(getServiceStatus());
+//        for(int i = 0; i< 1;i++) {
+//        	GsmCat.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息1");
+//        }
+		String receiveMsg= "";
+        GsmCat.analysisReceiveMessage(receiveMsg, "8614789966508");
     }
 
+	public static Map<Integer, Integer> getMap() {
+		return map;
+	}
+
+	public static void setMap(Map<Integer, Integer> map) {
+		GsmCat.map = map;
+	}
+    
+	
+    
 }

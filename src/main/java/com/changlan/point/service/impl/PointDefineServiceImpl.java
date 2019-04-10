@@ -45,6 +45,9 @@ public class PointDefineServiceImpl implements IPointDefineService{
 		if(point.getPointCatagoryId()!=null) {
 			map.put("pointCatagoryId", new ParamMatcher(point.getPointCatagoryId()));
 		}
+		if(StringUtil.isNotEmpty(point.getSmsNumber())) {
+			map.put("smsNumber",  new ParamMatcher(point.getSmsNumber()));
+		}
 		all = crudService.findByMoreFiled(TblPointsEntity.class, map, true);
 		//封装公司信息和公司组信息
 		for(Object o : all) {

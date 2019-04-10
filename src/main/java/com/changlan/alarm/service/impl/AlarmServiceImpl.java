@@ -21,11 +21,13 @@ import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblIndicatorValueEntity;
+import com.changlan.common.entity.TblMsgDataEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.ParamMatcher;
+import com.changlan.common.pojo.SmsParams;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.BigDecimalUtil;
 import com.changlan.common.util.GsmCat;
@@ -178,6 +180,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		// 处于预警值和报警值之间
 		if( (intValue> topLimit && intValue<=topAlarm) || (intValue<lowerLimit && intValue>= lowerAlarm) ) {
 			//预警
+//			sendSMSMessage(data.getPointId(),data.getIndicatorId());
 			Integer alarmDataId =  saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			data.setIsEarlyWarning(1); 
 			saveEarlyAlarmData(data,alarmDataId);
@@ -225,35 +228,15 @@ public class AlarmServiceImpl implements IAlarmService{
 	@Override
 	@Transactional
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
-//		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
-//		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-//		String phones = point.getPhones(); // 获取需要发送的电话号码
-//		if(StringUtil.isNotEmpty(phones)) {
-//			String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
-//			try {
-//				//发送消息
-//				GsmCat obj = new GsmCat();
-//				String[] receivePhones = phones.split(","); 
-//				obj.sendSMS(receivePhones, sendContent);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			} 
-//			//保存入库
-//			TblMsgDataEntity entity = new TblMsgDataEntity();
-//			TblAdminUserEntity currentUser = LoginUser.getCurrentUser(); 
-//			if(currentUser!=null) {
-//				entity.setAdminUserId(currentUser.getAdminUserId());
-//			}
-//			entity.setContent(sendContent);
-//			entity.setPhoneOrEmail(phones); //电话号码
-//			entity.setSendTime(new Date());
-//			entity.setMsgType(MsgType.SMS_CAT.toString());
-//			entity.setDirection(1); 
-//			crudService.update(entity, true);
-//		}
+		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
+		String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
+		try {
+			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-
 
 	
 	
