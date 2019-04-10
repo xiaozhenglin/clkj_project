@@ -35,11 +35,7 @@ import com.changlan.common.util.SpringUtil;
 
 
 
-/**
- * @author shawn
- *
- * @param <T>
- */
+
 @Repository
 public class CrudDaoImpl implements ICrudDao{
 	
