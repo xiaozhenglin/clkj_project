@@ -30,7 +30,7 @@ public class SmsCatServiceImpl implements ISmsCatService {
 	public void initSmsCat() {
 //		pointDefineService.getAll(entity);
 		List<SmsParams> list = new ArrayList<SmsParams>();
-		SmsParams param = new SmsParams("COM3", 115200);//设备
+		SmsParams param = new SmsParams(GsmCat.serverPortName, GsmCat.serverPortBound); //设备
 		list.add(param);
 		GsmCat cat = GsmCat.getInstance();
 		try {
