@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,15 +67,14 @@ public class PointDefineController extends BaseController{
 		if(point.getPointCatagoryId()!=null) {
 			map.put("pointCatagoryId", new ParamMatcher(point.getPointCatagoryId()));
 		}
-		Page<TblPointsEntity> all = crudService.findByMoreFiledAndPage(TblPointsEntity.class, map, true,getPage());
-//		Page<PointInfoDetail> list = pointDefineService.getPage(entity,getPage()); 
-		
-//		List result = new ArrayList();
-//		for(PointInfoDetail defineDetail : list) {
-//			PointDefineVO vo = new PointDefineVO(defineDetail);
-//			result.add(vo);
-//		}
-		return success(all);
+		Page<PointInfoDetail> all = pointDefineService.getPage(point,getPage()); 
+		List result = new ArrayList();
+		for(PointInfoDetail defineDetail : all) {
+			PointDefineVO vo = new PointDefineVO(defineDetail);
+			result.add(vo);
+		}
+
+		return success(new PageImpl(result, getPage(), all.getTotalElements()));
 	}
 	
 	@RequestMapping("/delete")
@@ -84,7 +84,8 @@ public class PointDefineController extends BaseController{
 		if(companyEntity == null) {
 			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
+//		Boolean delete = crudService.delete(entity, true);
+		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_POINTS where POINT_ID="+companyEntity.getPointId(), true);
 		return success(delete);
 	}
 	

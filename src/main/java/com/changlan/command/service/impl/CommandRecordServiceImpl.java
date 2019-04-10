@@ -197,9 +197,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
 		if(update != null) {
 			//加锁,一个监控点同时只能发送一个指令，接受指令就会解锁
-			Map<String, Integer> map = NettyController.getMap(); 
-			map.put(registPackage, update.getCommandRecordId());
-			NettyController.setMap(map); 
+			NettyController.map.put(registPackage, update.getCommandRecordId());
 		}
 		return update;
 	}

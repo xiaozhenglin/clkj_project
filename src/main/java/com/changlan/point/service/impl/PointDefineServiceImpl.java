@@ -99,9 +99,14 @@ public class PointDefineServiceImpl implements IPointDefineService{
 		//封装公司信息和公司组信息
 		for(Object o : all) {
 			TblPointsEntity entity = (TblPointsEntity)o;
-			TblLinesEntity line = (TblLinesEntity)crudService.get(entity.getLineId(), TblLinesEntity.class, true);
-			PointInfoDetail detail = new PointInfoDetail(entity,line);
-			list.add(detail);
+			if(entity.getLineId()!=null) {
+				TblLinesEntity line = (TblLinesEntity)crudService.get(entity.getLineId(), TblLinesEntity.class, true);
+				PointInfoDetail detail = new PointInfoDetail(entity,line);
+				list.add(detail);
+			}else {
+				PointInfoDetail detail = new PointInfoDetail(entity,null);
+				list.add(detail);
+			}
 		}
 		return new PageImpl<PointInfoDetail>(list, pageable, all.getTotalElements()); 
 	}

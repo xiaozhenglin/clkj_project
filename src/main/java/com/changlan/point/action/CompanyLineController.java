@@ -15,13 +15,17 @@ import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
+import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.ILineService;
+import com.changlan.point.service.IPointDefineService;
 import com.changlan.point.vo.CompanyLineVO;
 
 @RestController
@@ -32,6 +36,9 @@ public class CompanyLineController extends BaseController{
 	
 	@Autowired
 	private ILineService lineService;
+	
+	@Autowired
+	private IPointDefineService pointDefineService;
 	
 	//修改或者保存
 	@RequestMapping("/save")
@@ -57,10 +64,16 @@ public class CompanyLineController extends BaseController{
 	
 	@RequestMapping("/delete")
 	@Transactional
-	public ResponseEntity<Object>  delete(TblLinesEntity entity) throws MyDefineException { 
+	public ResponseEntity<Object>  delete(TblLinesEntity entity) throws Exception { 
 		TblLinesEntity find = (TblLinesEntity)crudService.get(entity.getLineId(),TblLinesEntity.class,true);
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.LINE_NOT_EXITS);
+		}
+		TblPointsEntity point = new TblPointsEntity();
+		point.setLineId(find.getLineId()); 
+		List<PointInfoDetail> all = pointDefineService.getAll(point); 
+		if(!ListUtil.isEmpty(all)) {
+			throw new Exception("线路包含了监控点,不能删除");
 		}
 		Boolean delete = crudService.delete(entity, true);
 		return success(delete);

@@ -86,6 +86,7 @@ public class OriginFilter   implements Filter {
      
         //System.out.println("==========进入过滤器");
     	String requestURI = request.getRequestURI();
+    	System.out.println(">>requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 

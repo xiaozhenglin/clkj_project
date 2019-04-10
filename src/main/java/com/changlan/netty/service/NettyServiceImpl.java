@@ -117,8 +117,7 @@ public class NettyServiceImpl implements INettyService{
 	    	}
 	    	if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
 				//清除防止死锁
-				canSendRecord.remove(registPackage);
-		    	NettyController.setMap(canSendRecord); 
+	    		NettyController.map.remove(registPackage);
 			}
 	    	return commandRecordId;
 		} catch (Exception e) {
@@ -127,8 +126,7 @@ public class NettyServiceImpl implements INettyService{
 			//不管有没有保存成功都要移除限制，否则会死锁
 			if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
 				//清除防止死锁
-				canSendRecord.remove(registPackage);
-		    	NettyController.setMap(canSendRecord); 
+				NettyController.map.remove(registPackage);
 			}
 		}
 		return null;

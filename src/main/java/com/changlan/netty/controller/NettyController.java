@@ -95,14 +95,6 @@ public class NettyController extends BaseController{
 	}
 	
 
-	public static Map<String, Integer> getMap() {
-		return map;
-	}
-
-	public static void setMap(Map<String, Integer> map) {
-		NettyController.map = map;
-	}
-
 	
 	
 	
