@@ -137,8 +137,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
 		entity.setCategroryId(indicator.getCategoryId()); //指标类别
 		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
-		entity.setAlarmDataId(("0"));
-		entity.setElarlyAlamDataId("0");
+//		entity.setAlarmDataId(("0"));
+//		entity.setElarlyAlamDataId("0");
 		entity.setIsAlarm(0); 
 		entity.setIsEarlyWarning(0);  
 		crudService.save(entity, true);

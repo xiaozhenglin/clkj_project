@@ -94,6 +94,9 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "IS_CORNER"    )
     private Integer isCorner;
+    
+    @Column(name = "REMOVE_FLAGE"   )
+    private Integer removeFlage;
 
 	public Integer getPointId() {
 		return pointId;
@@ -221,6 +224,14 @@ public class TblPointsEntity implements java.io.Serializable {
 
 	public void setIsCorner(Integer isCorner) {
 		this.isCorner = isCorner;
+	}
+
+	public Integer getRemoveFlage() {
+		return removeFlage;
+	}
+
+	public void setRemoveFlage(Integer removeFlage) {
+		this.removeFlage = removeFlage;
 	}
     	
 

@@ -51,25 +51,28 @@ public class PointDefineVO {
 
 	public PointDefineVO(PointInfoDetail defineDetail) {
 		TblPointsEntity point = defineDetail.getPoint(); 
-		this.pointId = point.getPointId();
-		this.pointName = point.getPointName();
-		this.status = point.getStatus();
-		this.pointAddress = point.getPointAddress();
-		this.longLati = point.getLongLati();
-		this.phones = point.getPhones();
-		this.pointRegistPackage = point.getPointRegistPackage();
-		
-		this.smsNumber = point.getSmsNumber(); //短信猫sms卡号
-		this.lineOrder = point.getLineOrder(); //在线路中的次序
-		this.isCorner =  point.getIsCorner();
+		if(point!=null) {
+			this.pointId = point.getPointId();
+			this.pointName = point.getPointName();
+			this.status = point.getStatus();
+			this.pointAddress = point.getPointAddress();
+			this.longLati = point.getLongLati();
+			this.phones = point.getPhones();
+			this.pointRegistPackage = point.getPointRegistPackage();
+			
+			this.smsNumber = point.getSmsNumber(); //短信猫sms卡号
+			this.lineOrder = point.getLineOrder(); //在线路中的次序
+			this.isCorner =  point.getIsCorner();
+			this.indicators = point.getIndicators(); 
+		}
 		
 		TblPointCategoryEntity category = defineDetail.getCategory();
-		this.pointCatagoryId = category.getPointCatgoryId();
-		this.pointCatagoryName = category.getPontCatagoryName() ;
+		if(category!=null) {
+			this.pointCatagoryId = category.getPointCatgoryId();
+			this.pointCatagoryName = category.getPontCatagoryName() ;
+		}
 		
 		this.indicatorCategorys = defineDetail.getIndicatorCategory();	
-		this.indicators = point.getIndicators();
-		
 		
 		TblLinesEntity line = defineDetail.getLine(); 
 		if(line!=null) {

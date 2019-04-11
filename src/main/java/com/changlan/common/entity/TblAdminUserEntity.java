@@ -76,6 +76,9 @@ public class TblAdminUserEntity implements java.io.Serializable {
     /** copanyId */
     @Column(name = "LINE_ID"   )
     private String lineId;
+    
+    @Column(name = "REMOVE_FLAGE"   )
+    private Integer removeFlage;
 
     public TblAdminUserEntity(TblAdminUserEntity user) {
     	TblAdminUserEntity entity = new TblAdminUserEntity();
@@ -239,6 +242,14 @@ public class TblAdminUserEntity implements java.io.Serializable {
 
 	public void setLineId(String lineId) {
 		this.lineId = lineId;
+	}
+
+	public Integer getRemoveFlage() {
+		return removeFlage;
+	}
+
+	public void setRemoveFlage(Integer removeFlage) {
+		this.removeFlage = removeFlage;
 	}
     
     

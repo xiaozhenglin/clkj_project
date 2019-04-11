@@ -88,12 +88,12 @@ public class OriginFilter   implements Filter {
         response.setCharacterEncoding("UTF-8"); 
         response.setContentType("application/json");
      
-        System.out.println("===进入过滤器 >>>开始校验参数是否合法");
+        System.out.println("过滤器 >>>>>>>开始校验参数是否合法");
         checkParamLegal(req.getParameterMap());
         
         
     	String requestURI = request.getRequestURI();
-    	System.out.println("===过滤器 开始校验权限 >>requestURI"+requestURI); 
+    	System.out.println("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 

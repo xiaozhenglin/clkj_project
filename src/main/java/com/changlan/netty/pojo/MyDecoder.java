@@ -2,6 +2,9 @@ package com.changlan.netty.pojo;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.util.CRC16M;
 import com.changlan.common.util.StringUtil;
@@ -12,7 +15,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 public class MyDecoder extends ByteToMessageDecoder {
-	
+   
+   private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
    @Override
    protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
@@ -22,7 +26,7 @@ public class MyDecoder extends ByteToMessageDecoder {
        buffer.readBytes(b);
        //字节数组转字符串
        String str = new String(b);
-       System.out.println("接收内容"+str);
+       logger.info("MyDecoder类接收内容"+str);
 
        if(StringUtil.isNotEmpty(str)) {
     	   if(str.indexOf("CLKJ")>-1) {

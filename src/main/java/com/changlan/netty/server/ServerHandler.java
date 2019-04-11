@@ -62,7 +62,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext context, String s) throws Exception {
         Channel channel = context.channel();
-        logger.info("channelRead接收内容"+s);
+        logger.info("ServerHandler类channelRead方法接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
         	 if(s.indexOf("CLKJ")>-1) {
              	//设置注册包
@@ -163,7 +163,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel  channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
         changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
-        NettyServer.channelMap.remove(registPackage);
         logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +registPackage );
     }
 

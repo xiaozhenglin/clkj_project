@@ -1,5 +1,7 @@
 package com.changlan.common.util;
 
+import java.math.BigDecimal;
+
 public class CRC16M {
 	static final String HEXES = "0123456789ABCDEF";
 	byte uchCRCHi = (byte) 0xFF;
@@ -199,14 +201,18 @@ public class CRC16M {
 //		   System.out.println(equalsIgnoreCase);
 		   
 		   
-		   String cmdStr2="020300000006C5FB"; 
+		   String cmdStr2="01030C  0333 0332 0332 0334 0335 0336  A8D3"; 
 		   byte[] sbuf2 = CRC16M.getSendBuf(cmdStr2.substring(0,cmdStr2.length()-4));
 		   String trim = CRC16M.getBufHexStr(sbuf2).trim();
 		   System.out.println(trim);
 		   boolean equalsIgnoreCase = cmdStr2.equalsIgnoreCase(trim); 
 		   System.out.println(equalsIgnoreCase);
-		 
 		   
+		   String channelValue = cmdStr2.substring(6, 10); 
+		   //1897
+		   String decimalConvert = StringUtil.decimalConvert(channelValue, 16, 10, null); 
+			//1897
+		   int value = new BigDecimal(decimalConvert).intValue(); 
 	}
 }
 

@@ -68,11 +68,12 @@ public class AnalysisDataUtil {
 		Integer beginByte = protocol.getBeginByte(); //开始位置
 		Integer dataByte = protocol.getDataByte(); //结束位置
 		//解析数据
-		//下标值为位置数减去1   6
+		//下标值为位置数减去1   6   11-1=10
 		Integer begin = beginByte-1;
+		Integer end = dataByte -1;
 		if(begin<backContent.length()) {
 			//0769  7-11
-			String channelValue = backContent.substring(begin, dataByte-1); 
+			String channelValue = backContent.substring(begin, end); 
 			//1897
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
 			//1897

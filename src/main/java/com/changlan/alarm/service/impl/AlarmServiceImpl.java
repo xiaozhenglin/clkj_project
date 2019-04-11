@@ -1,6 +1,7 @@
 package com.changlan.alarm.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,12 +143,13 @@ public class AlarmServiceImpl implements IAlarmService{
 							if(comparisonVlue.intValue() == 0 ) {
 								Integer alarmDataId = saveToAlarmDataBase(value.intValue(), data, rule, rule.getComparison());
 								data.setIsAlarm(1); 
-								savaAlarmData(data,alarmDataId);
+								savaAlarmData(data,alarmDataId); //修改监控点数据表
 								haveAlarm = true;
 							}else {
 								//除法取整数值
-								int canculateVlue = value.divide(comparisonVlue,0,BigDecimal.ROUND_HALF_UP).intValue();
-								haveAlarm = canculateAlarm(canculateVlue*100,data,rule,pointDataEntity.getPointDataId());
+								double canculateVlue = (value.doubleValue())/(comparisonVlue.doubleValue());
+								int s = new Double(canculateVlue*100).intValue();
+								haveAlarm = canculateAlarm(s,data,rule,pointDataEntity.getPointDataId());
 							}
 						}
 					}
@@ -228,14 +230,14 @@ public class AlarmServiceImpl implements IAlarmService{
 	@Override
 	@Transactional
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
-		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
-		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-		String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
-		try {
-			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
+//		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
+//		String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
+//		try {
+//			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	

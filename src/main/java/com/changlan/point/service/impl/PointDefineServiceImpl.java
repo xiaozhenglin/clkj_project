@@ -104,7 +104,7 @@ public class PointDefineServiceImpl implements IPointDefineService{
 				PointInfoDetail detail = new PointInfoDetail(entity,line);
 				list.add(detail);
 			}else {
-				PointInfoDetail detail = new PointInfoDetail(entity,null);
+				PointInfoDetail detail = new PointInfoDetail(entity,new TblLinesEntity());
 				list.add(detail);
 			}
 		}
