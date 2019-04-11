@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,6 +34,7 @@ import com.changlan.common.entity.TblUserOperationEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.user.config.UserAuthorityUrlConfig;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
@@ -84,18 +88,16 @@ public class OriginFilter   implements Filter {
         response.setCharacterEncoding("UTF-8"); 
         response.setContentType("application/json");
      
-        //System.out.println("==========进入过滤器");
+        System.out.println("===进入过滤器 >>>开始校验参数是否合法");
+        checkParamLegal(req.getParameterMap());
+        
+        
     	String requestURI = request.getRequestURI();
-    	System.out.println(">>requestURI"+requestURI); 
+    	System.out.println("===过滤器 开始校验权限 >>requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
     		   
-//            String adminUserId = request.getHeader("token"); 
-//            System.out.println("用户访问接口 用户id:"+adminUserId); 
-//            ICrudService crudService = SpringUtil.getICrudService();
-//            TblAdminUserEntity user = (TblAdminUserEntity)crudService.get(adminUserId, TblAdminUserEntity.class, true);
-            
     		if(user != null && HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作
@@ -150,6 +152,22 @@ public class OriginFilter   implements Filter {
     		return false;
     	}
 		return true;
+	}
+	
+	private void checkParamLegal(Map<String, String[]> parameterMap) throws ServletException {
+		Iterator<Entry<String, String[]>> iterator = parameterMap.entrySet().iterator(); 
+		while(iterator.hasNext()) {
+			Entry<String, String[]> next = iterator.next();
+			String[] value = next.getValue(); 
+			for(int i = 0 ;i <value.length;i++) {
+				if(StringUtil.isIllegalStr(value[i])) {
+					throw new ServletException("请求参数中包含非法字符" + value[i]);
+				}
+				if(StringUtil.isIllegalStrContainSql(value[i])) {
+					throw new ServletException("请求参数中包含sql注入语句" + value[i]);
+				}
+			}
+		}
 	}
 
 	@Override

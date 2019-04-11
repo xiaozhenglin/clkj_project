@@ -174,6 +174,43 @@ public class StringUtil extends StringUtils {
     public static byte charToByte(char c) {  
         return (byte) "0123456789ABCDEF".indexOf(c);  
     }  
+    
+    
+    /**
+     * true表示包含非法字符
+     */
+    public static Boolean isIllegalStr(String sInput) {
+        if (sInput == null || sInput.trim().length() == 0) {
+            return false;
+        }
+        sInput = sInput.trim(); //删除头尾空白符的字符串。
+        String regex = "·！￥……*（）`~!@#$%^*()_-+{}【】|、：；“‘';[]\\,./<>?《》？，。、/*-+";
+        if(regex.indexOf(sInput)>-1) {
+//        	System.out.println("未通过字符串检测");
+        	return true;
+        }
+//        	System.out.println("通过字符串检测");
+        return false;
+    }
+
+    /**
+     * true表示包含sql注入
+     */
+    public static Boolean isIllegalStrContainSql(String sInput) {
+        if (sInput == null || sInput.trim().length() == 0) {
+            return true;
+        }
+        sInput = sInput.toUpperCase();
+        if (sInput.indexOf("DELETE") >= 0 || sInput.indexOf("ASCII") >= 0 || sInput.indexOf("UPDATE") >= 0 || sInput.indexOf("SELECT") >= 0
+                || sInput.indexOf("SUBSTR(") >= 0 || sInput.indexOf("COUNT(") >= 0 || sInput.indexOf("INSERT") >= 0 
+                || sInput.indexOf("DROP") >= 0 || sInput.indexOf("EXECUTE") >= 0 || sInput.indexOf("EXEC") >= 0
+                || sInput.indexOf("TRUNCATE") >= 0 || sInput.indexOf("INTO") >= 0 || sInput.indexOf("DECLARE") >= 0 || sInput.indexOf("MASTER") >= 0) {
+//            System.out.println("该参数存在SQL注入风险：sInput=" + sInput);
+            return true;
+        }
+//        System.out.println("通过sql检测");
+        return false;
+    }
 
     public static void main(String[] args) {
         String s = decimalConvert("0769", 16, 10, null);

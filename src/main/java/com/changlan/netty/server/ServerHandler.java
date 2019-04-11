@@ -85,9 +85,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
     
     private void setPackageChannel(String registPackage, Channel channel) {
-    	  Map<Object, Channel> channelMap = NettyServer.channelMap;
-    	  channelMap.put(registPackage, channel); 
-    	  NettyServer.setChannelMap(channelMap);
+    	  NettyServer.channelMap.put(registPackage, channel); 
     	  logger.info("第一步接受注册包 [" + channel.remoteAddress() + "]:"+ registPackage + " 长度 "+registPackage.length()+"\n");
 	}
     
@@ -165,6 +163,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel  channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
         changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
+        NettyServer.channelMap.remove(registPackage);
         logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +registPackage );
     }
 
