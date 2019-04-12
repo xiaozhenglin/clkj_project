@@ -74,8 +74,8 @@ public class OriginFilter   implements Filter {
         HttpSession session = request.getSession(); 
     	System.out.println("["+host+"]:"+session.getId()); 
         if(host.equalsIgnoreCase("192.168.1.251") ) {
-//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
-        	response.setHeader("Access-Control-Allow-Origin", "http://"+host); //
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
+//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host); //
         }else if( host.equalsIgnoreCase("192.168.1.199")) {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
         }else {

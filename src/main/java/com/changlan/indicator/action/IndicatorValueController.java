@@ -50,7 +50,6 @@ public class IndicatorValueController extends  BaseController{
 		return success(list);
 	}
 	
-	//未加入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblIndicatorValueEntity entity) throws MyDefineException { 
@@ -58,8 +57,8 @@ public class IndicatorValueController extends  BaseController{
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
-		return success(delete);
+		Boolean deleteBySql = crudService.deleteBySql("DELETE FROM TBL_INDICATOR_VALUE WHERE INDICATOR_ID = " +entity.getIndicatorId() , true);
+		return success(deleteBySql);
 	}
 	
 }

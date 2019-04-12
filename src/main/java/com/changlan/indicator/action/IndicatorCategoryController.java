@@ -52,7 +52,6 @@ public class IndicatorCategoryController extends BaseController{
 		return success(list);
 	}
 	
-	//未加入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblIndicatorCategoriesEntity entity) throws MyDefineException { 
@@ -60,7 +59,7 @@ public class IndicatorCategoryController extends BaseController{
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
+		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_INDICATOR_CATEGORIES WHERE CATEGORY_ID = " +entity.getCategoryId() , true);
 		return success(delete);
 	}
 	
