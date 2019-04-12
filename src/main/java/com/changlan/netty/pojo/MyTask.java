@@ -45,32 +45,32 @@ public class MyTask extends TimerTask {
 
 	@Override
 	public void run() {
-		logger.info("运行定时器"); 
-		Integer pointId = commandDefault.getPointId(); 
-		IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
-		TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
-		if(pointDefine==null) {
-			logger.info("发送失败 》》》》监控点为空 ");
-			try {
+		try {
+			logger.info("运行定时器"); 
+			Integer pointId = commandDefault.getPointId(); 
+			IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
+			TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
+			if(pointDefine==null ) {
 				throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
-			} catch (MyDefineException e) {
-				e.printStackTrace();
 			}
+			if( StringUtil.isEmpty(pointDefine.getPointRegistPackage()) ) {
+				throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
+			}
+			//是否能发送
+			if(NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
+				//一次发一条。加锁操作
+				afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
+				INettyService nettyService = SpringUtil.getBean(INettyService.class);
+				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
+			}else {
+				throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
+			}
+		} catch (Exception e) {
+			MyDefineException myException = (MyDefineException)e;
+			logger.info("定时器发送指令出错"+myException.getMsg()+":"+e.getMessage());
+			e.printStackTrace();
 		}
 		
-		if(StringUtil.isNotEmpty(pointDefine.getPointRegistPackage()) && NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
-			//一次发一条。加锁操作
-			afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
-			INettyService nettyService = SpringUtil.getBean(INettyService.class);
-			try {
-				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
-			} catch (Exception e) {
-				MyDefineException myException = (MyDefineException)e;
-				logger.info("定时器发送指令出错"+myException.getMsg()+":"+e.getMessage());
-			} 
-		}else {
-			logger.info("发送失败 》》》》监控点注册包为空 或者 一个监控点只能同时发送一条指令");
-		}
 	}
 	
 	private void afterSaveToRecord(TblPointSendCommandEntity commandDefault,String pointRegistPackage) {

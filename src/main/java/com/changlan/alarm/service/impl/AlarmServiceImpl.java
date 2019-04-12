@@ -27,6 +27,7 @@ import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.pojo.SmsParams;
 import com.changlan.common.service.ICrudService;
@@ -40,6 +41,7 @@ import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.indicator.pojo.SimpleIndicator;
 import com.changlan.indicator.service.IIndicatoryValueService;
 import com.changlan.point.dao.IPointDataDao;
+import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.IPointDataService;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.MsgType;
@@ -230,14 +232,17 @@ public class AlarmServiceImpl implements IAlarmService{
 	@Override
 	@Transactional
 	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
-//		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
-//		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-//		String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
-//		try {
-//			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
+		try {
+			if(point==null) {
+				throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
+			}
+			String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
+			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	

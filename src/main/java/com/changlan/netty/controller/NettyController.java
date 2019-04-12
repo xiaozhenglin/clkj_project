@@ -62,7 +62,10 @@ public class NettyController extends BaseController{
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
-		if(StringUtil.isEmpty(pointDefine.getPointRegistPackage())) {
+		if(pointDefine==null ) {
+			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
+		}
+		if( StringUtil.isEmpty(pointDefine.getPointRegistPackage()) ) {
 			throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
 		}
 		if(!canSendRecord(pointDefine.getPointRegistPackage())) { 

@@ -16,7 +16,6 @@ import com.changlan.alarm.service.IAlarmRuleService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblIndicatorValueEntity;
-import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
