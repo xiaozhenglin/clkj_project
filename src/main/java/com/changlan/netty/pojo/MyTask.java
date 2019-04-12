@@ -49,6 +49,15 @@ public class MyTask extends TimerTask {
 		Integer pointId = commandDefault.getPointId(); 
 		IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
 		TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
+		if(pointDefine==null) {
+			logger.info("发送失败 》》》》监控点为空 ");
+			try {
+				throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
+			} catch (MyDefineException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if(StringUtil.isNotEmpty(pointDefine.getPointRegistPackage()) && NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {
 			//一次发一条。加锁操作
 			afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
@@ -57,7 +66,7 @@ public class MyTask extends TimerTask {
 				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			} catch (Exception e) {
 				MyDefineException myException = (MyDefineException)e;
-				logger.info("定时器发送指令出错"+myException.getMessage()+":"+e.getMessage());
+				logger.info("定时器发送指令出错"+myException.getMsg()+":"+e.getMessage());
 			} 
 		}else {
 			logger.info("发送失败 》》》》监控点注册包为空 或者 一个监控点只能同时发送一条指令");
