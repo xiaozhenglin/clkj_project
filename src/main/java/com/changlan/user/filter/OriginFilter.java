@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -58,7 +60,7 @@ public class OriginFilter   implements Filter {
 //	                .allowedOrigins("*")
 //	                .allowCredentials(true);
 //	}
-
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -72,7 +74,7 @@ public class OriginFilter   implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String host = request.getRemoteHost();
         HttpSession session = request.getSession(); 
-    	System.out.println("["+host+"]:"+session.getId()); 
+        logger.info("["+host+"]:"+session.getId()); 
         if(host.equalsIgnoreCase("192.168.1.251") ) {
         	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
 //        	response.setHeader("Access-Control-Allow-Origin", "http://"+host); //
@@ -88,12 +90,12 @@ public class OriginFilter   implements Filter {
         response.setCharacterEncoding("UTF-8"); 
         response.setContentType("application/json");
      
-        System.out.println("过滤器 >>>>>>>开始校验参数是否合法");
+        logger.info("过滤器 >>>>>>>开始校验参数是否合法");
         checkParamLegal(req.getParameterMap());
         
         
     	String requestURI = request.getRequestURI();
-    	System.out.println("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
+    	logger.info("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 

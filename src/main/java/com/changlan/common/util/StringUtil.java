@@ -10,10 +10,9 @@ import java.util.*;
  * Created by DK on 2017/11/15.
  */
 public class StringUtil extends StringUtils {
-   static String[]
-           sheng = new String[]{"京", "沪", "浙", "苏", "粤", "鲁", "晋", "冀", "豫", "川", "渝", "辽", "吉", "黑", "皖", "鄂", "湘", "赣", "闽", "陕", "甘", "宁", "蒙", "津", "贵", "云", "桂", "琼", "青", "新", "藏", "使", "领", "警", "学", "港", "澳"};
-    static String[]  zimu = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-    static String[] shuzi = new String[]{"0","1","2","3","4","5","6","7","8","9"};
+    static String[]  province  =  new String[]{"京", "沪", "浙", "苏", "粤", "鲁", "晋", "冀", "豫", "川", "渝", "辽", "吉", "黑", "皖", "鄂", "湘", "赣", "闽", "陕", "甘", "宁", "蒙", "津", "贵", "云", "桂", "琼", "青", "新", "藏", "使", "领", "警", "学", "港", "澳"};
+    static String[]  letter = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    static String[]  number = new String[]{"0","1","2","3","4","5","6","7","8","9"};
 
 	public static String listToString(Collection<?> coll) {
 		return listToString(coll,",");
@@ -183,7 +182,7 @@ public class StringUtil extends StringUtils {
         if (sInput == null || sInput.trim().length() == 0) {
             return false;
         }
-        sInput = sInput.trim(); //删除头尾空白符的字符串。
+        sInput = sInput.trim(); //删除头尾空白符。
         String regex = "·！￥……*（）`~!@#$%^*()_-+{}【】|、：；“‘';[]\\,./<>?《》？，。、/*-+";
         if(regex.indexOf(sInput)>-1) {
 //        	System.out.println("未通过字符串检测");
@@ -202,7 +201,7 @@ public class StringUtil extends StringUtils {
         }
         sInput = sInput.toUpperCase();
         if (sInput.indexOf("DELETE") >= 0 || sInput.indexOf("ASCII") >= 0 || sInput.indexOf("UPDATE") >= 0 || sInput.indexOf("SELECT") >= 0
-                || sInput.indexOf("SUBSTR(") >= 0 || sInput.indexOf("COUNT(") >= 0 || sInput.indexOf("INSERT") >= 0 
+                || sInput.indexOf("SUBSTR") >= 0 || sInput.indexOf("COUNT") >= 0 || sInput.indexOf("INSERT") >= 0 
                 || sInput.indexOf("DROP") >= 0 || sInput.indexOf("EXECUTE") >= 0 || sInput.indexOf("EXEC") >= 0
                 || sInput.indexOf("TRUNCATE") >= 0 || sInput.indexOf("INTO") >= 0 || sInput.indexOf("DECLARE") >= 0 || sInput.indexOf("MASTER") >= 0) {
 //            System.out.println("该参数存在SQL注入风险：sInput=" + sInput);
@@ -217,7 +216,7 @@ public class StringUtil extends StringUtils {
         System.out.println(s);
         System.out.println(decimalConvert("123", 16, 10, null));
         
-        //字符串转
+        //字符串转16进制
         byte[] hexStringToBytes = hexStringToBytes("010324C5C8"); 
         for(int i =0 ;i<hexStringToBytes.length;i++) {
         	System.out.println(hexStringToBytes[i]);
