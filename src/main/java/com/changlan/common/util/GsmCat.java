@@ -57,28 +57,29 @@ public class GsmCat {
 //    static String portName = null; //检测到的串口
 //    static int portBaud = 0; //检测到的串口波特率
 	
-	public static Map<Integer,Integer> map = new HashMap<Integer,Integer>(); // 同一个监控点 只能发一条
 	
-	public static  boolean canSendRecord(Integer pointId) {
-		if( map==null || pointId == null) {
-			return true;
-		}
-		Integer recordId = map.get(pointId); 
-		if(recordId==null ) {
-			return true ; 
-		}
-		//时间计算如果超过3秒还没接收到，就去掉该锁
-		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
-		CommandRecordDetail commandRecordDetail = recordService.getList(recordId, null, null).get(0); 
-		Long lastRecordTime = commandRecordDetail.getRecord().getRecordTime().getTime();
-		Long now = new Date().getTime();
-		long seconds =  ((now-lastRecordTime)/1000);
-		if(seconds>=7) {
-			return true;
-		}
-	
-		return false;
-	}
+//	public static Map<Integer,Integer> map = new HashMap<Integer,Integer>(); // 同一个监控点 只能发一条
+//	
+//	public static  boolean canSendRecord(Integer pointId) {
+//		if( map==null || pointId == null) {
+//			return true;
+//		}
+//		Integer recordId = map.get(pointId); 
+//		if(recordId==null ) {
+//			return true ; 
+//		}
+//		//时间计算如果超过3秒还没接收到，就去掉该锁
+//		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
+//		CommandRecordDetail commandRecordDetail = recordService.getList(recordId, null, null).get(0); 
+//		Long lastRecordTime = commandRecordDetail.getRecord().getRecordTime().getTime();
+//		Long now = new Date().getTime();
+//		long seconds =  ((now-lastRecordTime)/1000);
+//		if(seconds>=7) {
+//			return true;
+//		}
+//	
+//		return false;
+//	}
 	
 	
 	
@@ -267,7 +268,7 @@ public class GsmCat {
 		return Service.getInstance().getServiceStatus().toString();
 	}
 
-	public static void analysisReceiveMessage(String receiveMsg,String phone) {
+	public static void analysisReceiveMessage(String receiveMsg,String phone) throws Exception { 
 		if(receiveMsg.substring(0,4).equals("*CS,")){ 	
 			String alm=receiveMsg.substring(11,13); //类型
 			String angle=receiveMsg.substring(17,19); //具体的值
@@ -283,16 +284,16 @@ public class GsmCat {
 				if(alm.equals("A2")){
 					result=pointName+"井盖发生异常，倾斜角度为："+angle;
 					//发送短信给其他人
-//					sendMsgToOher(point.getPhones(),result);
+					sendMsgToOher(point.getPhones(),result);
 		       	}else if(alm.equals("R1")){
 		       		result=pointName+"井盖恢复正常，当前角度为："+angle;
-//					sendMsgToOher(point,result);
+					sendMsgToOher(point.getPhones(),result);
 		       	}else if(alm.equals("T1")){
 					result=pointName+"井盖周期上报，当前角度为："+angle;
 					saveMsgData(point.getSmsNumber(),result,2);
 				}else if(alm.equals("A3")){
 					result=pointName+"井盖电量偏低，请及时更换电池。"+angle;
-//					sendMsgToOher(point,result);
+					sendMsgToOher(point.getPhones(),result);
 				}
 			}
 		}
@@ -335,13 +336,13 @@ public class GsmCat {
         GsmCat.analysisReceiveMessage(receiveMsg, "8614789966508");
     }
 
-	public static Map<Integer, Integer> getMap() {
-		return map;
-	}
-
-	public static void setMap(Map<Integer, Integer> map) {
-		GsmCat.map = map;
-	}
+//	public static Map<Integer, Integer> getMap() {
+//		return map;
+//	}
+//
+//	public static void setMap(Map<Integer, Integer> map) {
+//		GsmCat.map = map;
+//	}
     
 	
     
