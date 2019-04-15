@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-//跨域问题
+/**跨域问题**/
 @Configuration
 public class CORSConfiguration extends WebMvcConfigurerAdapter{
 	
@@ -13,7 +13,8 @@ public class CORSConfiguration extends WebMvcConfigurerAdapter{
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .allowedOrigins("*")
-                .allowedHeaders("*");
+                .allowedHeaders("*")
+                .allowCredentials(true);
         super.addCorsMappings(registry);
     }
     
