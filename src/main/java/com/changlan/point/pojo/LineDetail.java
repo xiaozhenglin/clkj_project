@@ -35,15 +35,15 @@ public class LineDetail {
 		
 		
 		//获取所属公司信息
-		ICompanyInfoService companyInfoService = SpringUtil.getBean(ICompanyInfoService.class);
-		TblCompanyEntity tblCompanyEntity = new TblCompanyEntity(); 
-		tblCompanyEntity.setCompanyId(line.getCompanyId());
-		List<CompanyDetail> companyList = companyInfoService.companyList(tblCompanyEntity);
-		if(!ListUtil.isEmpty(companyList)) { 
-			CompanyDetail companyDetail = companyList.get(0); 
-			this.company = companyDetail.getCompany(); 
+//		ICompanyInfoService companyInfoService = SpringUtil.getBean(ICompanyInfoService.class);
+//		TblCompanyEntity tblCompanyEntity = new TblCompanyEntity(); 
+//		tblCompanyEntity.setCompanyId(line.getCompanyId());
+//		List<CompanyDetail> companyList = companyInfoService.companyList(tblCompanyEntity);
+//		if(!ListUtil.isEmpty(companyList)) { 
+//			CompanyDetail companyDetail = companyList.get(0); 
+//			this.company = companyDetail.getCompany(); 
 //			super.setGroupInfo(companyDetail.getGroupInfo()); 
-		}
+//		}
 	}
 
 

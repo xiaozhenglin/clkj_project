@@ -143,7 +143,7 @@ public class BaseController {
 		IUserRoleService roleService = SpringUtil.getBean(IUserRoleService.class);
 		UserRoleDetail one = roleService.getOne(adminUserId); 
 		TBLRoleDefineEntity roleDefine = one.getRoleDefine();
-		if(roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
+		if(roleDefine!=null && roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
 			return true;
 		}
 		return false;

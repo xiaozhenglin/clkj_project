@@ -58,6 +58,7 @@ public class UserInfoController extends BaseController{
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
 			user.setAdminUserId(UUIDUtil.getUUID());
 			user.setAddTime(new Date());
+			user.setRemoveFlage(0); //设置删除标记为未删除
 			TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(user, true); 
 			if(save == null) {
 				throw new MyDefineException(UserErrorType.SAVE_ERROR.getCode(), UserErrorType.SAVE_ERROR.getMsg(), false, null);
@@ -70,26 +71,25 @@ public class UserInfoController extends BaseController{
 	@RequestMapping("/edit")
 	@Transactional
 	public ResponseEntity<Object>  edit(TblAdminUserEntity updateUser) throws Exception{
-		//只允许修改自己的信息,包括管理员
+		//只允许管理员和用户修改自己的信息
 		TblAdminUserEntity user = super.userIsLogin();
 		if(isSuperAdminUser(user.getAdminUserId()) ||  user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId()) ) { 
-//		if(updateUser !=null && StringUtil.isNotEmpty(updateUser.getAdminUserId()) && user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId())) {
 			Boolean exist = userInfoService.existName(updateUser);
 			if(exist){
-				throw new MyDefineException(UserErrorType.USER_NAME_EXIST.getCode(), UserErrorType.USER_NAME_EXIST.getMsg(), false, null);
+				throw new MyDefineException(UserErrorType.USER_NAME_EXIST);
 			}
 			TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(updateUser, true); 
 			if(save == null) {
-				throw new MyDefineException(UserErrorType.EDIT_ERROR.getCode(), UserErrorType.EDIT_ERROR.getMsg(), false, null);
+				throw new MyDefineException(UserErrorType.EDIT_ERROR);
 			}
 			return success(true);
 		}
-		throw new MyDefineException(UserErrorType.CANNOT_EDIT_OTHER.getCode(), UserErrorType.CANNOT_EDIT_OTHER.getMsg(), false, null);
+		throw new MyDefineException(UserErrorType.CANNOT_EDIT_OTHER);
 	}
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list() throws Exception { 
-		TblAdminUserEntity user = super.userIsLogin();
+		TblAdminUserEntity user = super.userIsLogin(); //登录用户
 		List<UserDetail> userList = userInfoService.userList(user);
 		return success(userList);
 	}
@@ -100,13 +100,14 @@ public class UserInfoController extends BaseController{
 	public ResponseEntity<Object>  delete(TblAdminUserEntity entity) throws Exception { 
 		TblAdminUserEntity adminUser = super.userIsLogin();
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
-			TblAdminUserEntity companyEntity = (TblAdminUserEntity)crudService.get(entity.getAdminUserId(),TblAdminUserEntity.class,true);
-			if(companyEntity != null) {
-				Boolean delete = crudService.delete(entity, true);
-				return success(delete);
+			TblAdminUserEntity find = (TblAdminUserEntity)crudService.get(entity.getAdminUserId(),TblAdminUserEntity.class,true);
+			if(find != null) {
+				find.setRemoveFlage(1);
+				Object update = crudService.update(find, true);
+				return success("移除成功");
 			}
 		}
-		return success("删除失败");
+		return success("移除失败");
 	}
 	
 }

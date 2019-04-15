@@ -42,6 +42,7 @@ public class LoginController extends BaseController{
 		Map map = new HashMap();
 		map.put("name", new ParamMatcher(name));
 		map.put("pass", new ParamMatcher(pass));
+		map.put("removeFlage", new ParamMatcher(0));
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
 		if(ListUtil.isEmpty(list)) {  
 			//没找到抛出异常
@@ -63,8 +64,8 @@ public class LoginController extends BaseController{
 		HttpSession session = getSession(); 
 		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		if(user!=null) {
-			logger.info("用户登出"+ user.getName());
 			session.removeAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
+			logger.info("用户登出"+ user.getName());
 		}
 		return success(true);
 	}

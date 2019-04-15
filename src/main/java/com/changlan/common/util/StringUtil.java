@@ -113,8 +113,8 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 任意进制转换
-     * @param oldData 需要转换的数据
+     * 任意进制转换 
+     * @param oldData 需要转换的数据 仅为数字之间的转换
      * @param oldDecimal  需要转换数据的进制 (注意 此进制只能在 [2,36] 之间)
      * @param nowDecimal  转换后的进制 (注意 此进制只能在 [2,36] 之间)
      * @param nowDataLength 转换后数据的长度 (不足则在前面补0,此字段为null则忽略)
@@ -138,7 +138,7 @@ public class StringUtil extends StringUtils {
     }
     
     
-    
+    //16进制字节数组转字符串。
     public static String bytesToHexString(byte[] bArray) { 
         StringBuffer sb = new StringBuffer(bArray.length);
         String sTemp;
@@ -215,7 +215,14 @@ public class StringUtil extends StringUtils {
     public static void main(String[] args) {
         String s = decimalConvert("0769", 16, 10, null);
         System.out.println(s);
-        System.out.println(decimalConvert(s, 10, 36, 2));
+        System.out.println(decimalConvert("123", 16, 10, null));
+        
+        //字符串转
+        byte[] hexStringToBytes = hexStringToBytes("010324C5C8"); 
+        for(int i =0 ;i<hexStringToBytes.length;i++) {
+        	System.out.println(hexStringToBytes[i]);
+        }
+        System.out.println( bytesToHexString(hexStringToBytes));
     }
     
     

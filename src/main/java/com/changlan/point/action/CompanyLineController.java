@@ -73,11 +73,17 @@ public class CompanyLineController extends BaseController{
 		point.setLineId(find.getLineId()); 
 		List<PointInfoDetail> all = pointDefineService.getAll(point); 
 		if(!ListUtil.isEmpty(all)) {
-			throw new Exception("线路包含了监控点,不能删除");
+			throw new Exception("线路包含了监控点,不能删除");    
 		}
 		Boolean delete = crudService.delete(entity, true);
 		return success(delete);
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 }
