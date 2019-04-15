@@ -52,14 +52,6 @@ import com.changlan.user.service.IUserRoleService;
 @Component
 public class OriginFilter   implements Filter {
 	
-//	 @Override
-//	 protected void addCorsMappings(CorsRegistry registry) {
-//	        registry.addMapping("/**")
-//	                .allowedHeaders("*")
-//	                .allowedMethods("*")
-//	                .allowedOrigins("*")
-//	                .allowCredentials(true);
-//	}
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -74,11 +66,9 @@ public class OriginFilter   implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String host = request.getRemoteHost();
         HttpSession session = request.getSession(); 
-        logger.info("["+host+"]:"+session.getId()); 
+        logger.info("主机["+host+"进入访问]会话:"+session.getId()); 
 //        if(host.equalsIgnoreCase("192.168.1.251") ) {
 //        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
-//        }else if( host.equalsIgnoreCase("192.168.1.199")) {
-//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
 //        }else {
 //        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
 //        }
