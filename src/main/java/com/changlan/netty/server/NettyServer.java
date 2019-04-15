@@ -6,6 +6,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.changlan.netty.pojo.NettyConfiguration;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -26,9 +29,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  * @since:
  */
 public class NettyServer extends Thread{
-    /**
-     * 端口
-     */
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     public static Map<Object,Channel> channelMap = new ConcurrentHashMap<Object, Channel>(); 
 
     public NettyServer() {
@@ -55,7 +58,7 @@ public class NettyServer extends Thread{
         try {
             //绑定服务端口监听
             Channel channel = bootstrap.bind(NettyConfiguration.nettyPort).sync().channel(); 
-            System.out.println("启动服务器端口: " + NettyConfiguration.nettyPort);
+            logger.info("启动服务器端口: " + NettyConfiguration.nettyPort);
             // 这行必须要
             channel.closeFuture().sync();
         } catch (InterruptedException e) {

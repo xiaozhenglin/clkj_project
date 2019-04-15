@@ -75,20 +75,19 @@ public class OriginFilter   implements Filter {
         String host = request.getRemoteHost();
         HttpSession session = request.getSession(); 
         logger.info("["+host+"]:"+session.getId()); 
-        if(host.equalsIgnoreCase("192.168.1.251") ) {
-        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
-//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host); //
-        }else if( host.equalsIgnoreCase("192.168.1.199")) {
-        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
-        }else {
-        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
-        }
-        response.addHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
-        response.setHeader("Access-Control-Max-Age", "5000");
-        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
-        response.setCharacterEncoding("UTF-8"); 
-        response.setContentType("application/json");
+//        if(host.equalsIgnoreCase("192.168.1.251") ) {
+//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
+//        }else if( host.equalsIgnoreCase("192.168.1.199")) {
+//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
+//        }else {
+//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
+//        }
+//        response.addHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
+//        response.setHeader("Access-Control-Max-Age", "5000");
+//        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
+//        response.setCharacterEncoding("UTF-8"); 
+//        response.setContentType("application/json");
      
         logger.info("过滤器 >>>>>>>开始校验参数是否合法");
         checkParamLegal(req.getParameterMap());
@@ -104,13 +103,13 @@ public class OriginFilter   implements Filter {
     			//用户登录了而且用户有权限
     			//记录用户操作
     			 saveToUserOperation(user,requestURI,request.getRemoteHost());
-        		 chain.doFilter(request,response);
+        		 chain.doFilter(req,res);
              }else {
             	 throw new ServletException("请检查地址是否正确,用户没有登录或者用户没有访问权限");
              }
         }else {
         	//不需要验证权限
-        	chain.doFilter(request,response);
+        	chain.doFilter(req,res);
         }
     }
 
