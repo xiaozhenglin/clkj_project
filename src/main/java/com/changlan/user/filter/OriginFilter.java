@@ -66,18 +66,18 @@ public class OriginFilter   implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String host = request.getRemoteHost();
         HttpSession session = request.getSession(); 
-        logger.info("主机["+host+"进入访问]会话:"+session.getId()); 
-//        if(host.equalsIgnoreCase("192.168.1.251") ) {
-//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
-//        }else {
-//        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
-//        }
-//        response.addHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
-//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
-//        response.setHeader("Access-Control-Max-Age", "5000");
-//        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
-//        response.setCharacterEncoding("UTF-8"); 
-//        response.setContentType("application/json");
+        logger.info("主机["+host+"进入会话访问]"+session.getId()); 
+        if(host.equalsIgnoreCase("192.168.1.251") ) {
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":3000"); //
+        }else {
+        	response.setHeader("Access-Control-Allow-Origin", "http://"+host +":8082"); //
+        }
+        response.addHeader("Access-Control-Allow-Credentials", "true");//加上这句代码
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
+        response.setHeader("Access-Control-Max-Age", "5000");
+        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Origin,accept,No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,Authorization,Token");
+        response.setCharacterEncoding("UTF-8"); 
+        response.setContentType("application/json");
      
         logger.info("过滤器 >>>>>>>开始校验参数是否合法");
         checkParamLegal(req.getParameterMap());
