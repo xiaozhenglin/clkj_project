@@ -26,7 +26,13 @@ public class LoginUser {
 //    
     public static  TblAdminUserEntity getCurrentUser() {
     	ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		HttpServletRequest request = requestAttributes.getRequest();
+    	if(requestAttributes==null) {
+			return null;
+		}
+    	HttpServletRequest request = requestAttributes.getRequest();
+		if(request==null) {
+			return null;
+		}
 		HttpSession session = request.getSession(); 
 		TblAdminUserEntity user = (TblAdminUserEntity) session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		return user;

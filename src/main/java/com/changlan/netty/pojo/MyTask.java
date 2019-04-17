@@ -66,9 +66,14 @@ public class MyTask extends TimerTask {
 				throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 			}
 		} catch (Exception e) {
-			MyDefineException myException = (MyDefineException)e;
-			logger.info("定时器发送指令出错"+myException.getMsg()+":"+e.getMessage());
-			e.printStackTrace();
+			if(e instanceof MyDefineException) {
+				MyDefineException myException = (MyDefineException)e;
+				logger.info("定时器发送指令出错"+myException.getMsg()+":"+e.getMessage());
+				e.printStackTrace();
+			}else {
+				logger.info("定时器发送指令出错:"+e.getMessage());
+				e.printStackTrace();
+			}
 		}
 		
 	}
