@@ -97,34 +97,34 @@ public class NettyServiceImpl implements INettyService{
 	@Override
 	@Transactional
 	public Integer saveReturnMessage(String registPackage, String receiveMessage) {
-		Map<String, Integer> canSendRecord = NettyController.map; 
+		Map<String, Integer> registPackageAndRecord = NettyController.map; 
 		try {
-	    	Map map = new HashMap();
 	    	//
-	    	Integer commandRecordId = canSendRecord.get(registPackage);  
-			map.put("commandRecordId", new ParamMatcher(commandRecordId));
-	     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
-	     	//正常只有一个
-	    	for(Object o : findByMoreFiled) {
-	    		TblCommandRecordEntity entity = (TblCommandRecordEntity)o;
-	    		//判断地址码是否一致
-	    		String commandContentAddress = entity.getCommandContent().substring(0,2);
-	    		String receiveMessageAddress = receiveMessage.substring(0,2);
-	    		if(commandContentAddress.equals(receiveMessageAddress)) {
-	    			entity.setBackContent(receiveMessage);
-		    		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
-	    		}
-	    	}
-	    	if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
-				//清除防止死锁
+			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackage) !=null) {
+		    	Map map = new HashMap();
+		    	Integer commandRecordId =registPackageAndRecord.get(registPackage) ;  
+		    	map.put("commandRecordId", new ParamMatcher(commandRecordId));
+		     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
+		     	//正常只有一个
+		    	for(Object o : findByMoreFiled) {
+		    		TblCommandRecordEntity entity = (TblCommandRecordEntity)o;
+		    		//判断地址码是否一致
+		    		String commandContentAddress = entity.getCommandContent().substring(0,2);
+		    		String receiveMessageAddress = receiveMessage.substring(0,2);
+		    		if(commandContentAddress.equals(receiveMessageAddress)) {
+		    			entity.setBackContent(receiveMessage);
+			    		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+		    		}
+		    	}
+		    	//清除防止死锁
 	    		NettyController.map.remove(registPackage);
+	    		return registPackageAndRecord.get(registPackage);
 			}
-	    	return commandRecordId;
 		} catch (Exception e) {
-			logger.error(this.getClass() + "==" + e.getMessage()); 
+			logger.error(this.getClass() + "接受指令保存数据出错==" + e.getMessage()); 
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
-			if(!canSendRecord.isEmpty() && canSendRecord.get(registPackage) !=null ) {
+			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackage) !=null ) {
 				//清除防止死锁
 				NettyController.map.remove(registPackage);
 			}
