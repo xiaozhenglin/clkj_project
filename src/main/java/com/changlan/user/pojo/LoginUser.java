@@ -25,7 +25,7 @@ public class LoginUser {
 //    }
 //    
     public static  TblAdminUserEntity getCurrentUser() {
-    	ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    	ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     	if(requestAttributes==null) {
 			return null;
 		}
