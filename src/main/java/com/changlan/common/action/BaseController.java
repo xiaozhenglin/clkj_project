@@ -27,6 +27,7 @@ import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumen
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.changlan.common.entity.TBLRoleDefineEntity;
+import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MyDefineException;
@@ -141,10 +142,14 @@ public class BaseController {
 	
 	public Boolean isSuperAdminUser(String adminUserId) {
 		IUserRoleService roleService = SpringUtil.getBean(IUserRoleService.class);
-		UserRoleDetail one = roleService.getOne(adminUserId); 
-		TBLRoleDefineEntity roleDefine = one.getRoleDefine();
-		if(roleDefine!=null && roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
-			return true;
+		TBLUserRoleEntity query = new TBLUserRoleEntity();
+		query.setUserId(adminUserId); 
+		List<UserRoleDetail> list = roleService.getAll(query); 
+		for(int i = 0;i<list.size();i++){
+			TBLRoleDefineEntity roleDefine = list.get(i).getRoleDefine(); 
+			if(roleDefine!=null && roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
+				return true;
+			}
 		}
 		return false;
 	}

@@ -17,6 +17,7 @@ import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.user.pojo.UserDetail;
 import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.pojo.UserRoleDetail;
@@ -40,9 +41,12 @@ public class UserRoleController extends BaseController{
 		if(isSuperAdminUser(adminUser.getAdminUserId())) {  
 			result = userRoleService.getAll(role); 
 		}else {
+//			if(role!=null && StringUtil.isNotEmpty(role.getUserId()) && role.getUserId().equalsIgnoreCase(adminUser.getAdminUserId())) {
+//			
+//			}
 			//只能查询自己的用户角色信息
-			UserRoleDetail all = userRoleService.getOne(adminUser.getAdminUserId()); 
-			result.add(all);
+			role.setUserId(adminUser.getAdminUserId()); 
+			result = userRoleService.getAll(role); 
 		}
 		return success(result);
 	} 

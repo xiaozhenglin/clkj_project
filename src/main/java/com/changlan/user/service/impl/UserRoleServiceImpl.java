@@ -14,6 +14,7 @@ import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.user.pojo.UserRoleDetail;
 import com.changlan.user.service.IUserRoleService;
 
@@ -52,16 +53,17 @@ public class UserRoleServiceImpl implements IUserRoleService{
 	@Override
 	public List<UserRoleDetail> getAll(TBLUserRoleEntity role) {
 		List<UserRoleDetail> result  = new ArrayList<UserRoleDetail>();
-		
 		Map map = new HashMap();
-		if(role.getUserId()!=null) {
-			map.put("userId", new ParamMatcher(role.getUserId()));
-		}
-		if(role.getRoleID()!=null) {
-			map.put("roleID", new ParamMatcher(role.getRoleID()));
-		}
-		if(role.getUserRoleId()!=null) {
-			map.put("userRoleId", new ParamMatcher(role.getUserRoleId()));
+		if(role!=null) {
+			if(StringUtil.isNotEmpty(role.getUserId())) {
+				map.put("userId", new ParamMatcher(role.getUserId()));
+			}
+			if(role.getRoleID()!=null) {
+				map.put("roleID", new ParamMatcher(role.getRoleID()));
+			}
+			if(role.getUserRoleId()!=null) {
+				map.put("userRoleId", new ParamMatcher(role.getUserRoleId()));
+			}
 		}
 		List<TBLUserRoleEntity> list = crudService.findByMoreFiled(TBLUserRoleEntity.class, map, true); 
 		if(!ListUtil.isEmpty(list)) {

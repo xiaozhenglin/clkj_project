@@ -8,20 +8,20 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.user.service.IUserGoupService;
 import com.changlan.user.service.IUserRoleService;
 
-public class UserDetail extends UserRoleDetail{
+public class UserDetail {
 	private TblAdminUserEntity user; // 系统用户
 	private TblUserGroupEntity userGroup; //用户所属组信息
 	
 	public UserDetail(TblAdminUserEntity user) {
 		super();
-		this.user = user;
-		IUserRoleService userRoleService = SpringUtil.getBean(IUserRoleService.class);
-		UserRoleDetail all = userRoleService.getOne(user.getAdminUserId()); 
-		if(all !=null ) {
-			super.setRoleDefine(all.getRoleDefine());
-			super.setUserRole(all.getUserRole()); 
-		}
 		this.userGroup = getGroup(user.getUserGroupId());
+		this.user = user;
+//		IUserRoleService userRoleService = SpringUtil.getBean(IUserRoleService.class);
+//		UserRoleDetail all = userRoleService.getOne(user.getAdminUserId()); 
+//		if(all !=null ) {
+//			super.setRoleDefine(all.getRoleDefine());
+//			super.setUserRole(all.getUserRole()); 
+//		}
 	}
 	
 	private TblUserGroupEntity getGroup(Integer userGroupId) {
