@@ -23,20 +23,20 @@ public class UserRoleServiceImpl implements IUserRoleService{
 	@Autowired
 	ICrudService crudService;
 
-	@Override
-	public UserRoleDetail getOne(String adminUserId) {
-		Map map = new HashMap();
-		map.put("userId", new ParamMatcher(adminUserId));
-		List<TBLUserRoleEntity> list = crudService.findByMoreFiled(TBLUserRoleEntity.class, map, true); 
-		if(!ListUtil.isEmpty(list)) {
-			TBLUserRoleEntity UserRoleEntity = list.get(0); 
-			TBLRoleDefineEntity role = (TBLRoleDefineEntity)crudService.get(UserRoleEntity.getRoleID(), TBLRoleDefineEntity.class, true);
-			UserRoleDetail detail = new UserRoleDetail(UserRoleEntity,role);
-			return detail;
-		}
-		
-		return null;
-	}
+//	@Override
+//	public UserRoleDetail getOne(String adminUserId) {
+//		Map map = new HashMap();
+//		map.put("userId", new ParamMatcher(adminUserId));
+//		List<TBLUserRoleEntity> list = crudService.findByMoreFiled(TBLUserRoleEntity.class, map, true); 
+//		if(!ListUtil.isEmpty(list)) {
+//			TBLUserRoleEntity UserRoleEntity = list.get(0); 
+//			TBLRoleDefineEntity role = (TBLRoleDefineEntity)crudService.get(UserRoleEntity.getRoleID(), TBLRoleDefineEntity.class, true);
+//			UserRoleDetail detail = new UserRoleDetail(UserRoleEntity,role);
+//			return detail;
+//		}
+//		
+//		return null;
+//	}
 
 	@Override
 	public Boolean existRole(TBLUserRoleEntity role) {

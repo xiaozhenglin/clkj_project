@@ -29,6 +29,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
@@ -123,18 +124,26 @@ public class OriginFilter   implements Filter {
 	}
 
 	private boolean byRole(TblAdminUserEntity user, String requestUrl) {
-		IUserRoleService userRoleService = SpringUtil.getBean(IUserRoleService.class);
-		UserRoleDetail one = userRoleService.getOne(user.getAdminUserId()); 
-		TBLUserRoleEntity userRole = one.getUserRole(); 
-		IRoleFunctionService rolefunc = SpringUtil.getBean(IRoleFunctionService.class);
-		List<RoleFunctionDetail> all = rolefunc.getByRole(userRole.getRoleID()); 
-		for(RoleFunctionDetail detail : all) {
-			TblFunInfoEntity functionInfo = detail.getFuntion(); 
-			if(functionInfo.getAddress().indexOf(requestUrl)>-1) {
-    			return true;
-    		}
+		IUserRoleService roleService = SpringUtil.getBean(IUserRoleService.class);
+		TBLUserRoleEntity query = new TBLUserRoleEntity();
+		query.setUserId(user.getAdminUserId()); 
+		List<UserRoleDetail> list = roleService.getAll(query); 
+		for(int i = 0;i<list.size();i++){
+			TBLRoleDefineEntity roleDefine = list.get(i).getRoleDefine(); 
+			if(roleDefine!=null && roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
+				return true;
+			}
 		}
 		return false;
+//		IRoleFunctionService rolefunc = SpringUtil.getBean(IRoleFunctionService.class);
+//		List<RoleFunctionDetail> all = rolefunc.getByRole(userRole.getRoleID()); 
+//		for(RoleFunctionDetail detail : all) {
+//			TblFunInfoEntity functionInfo = detail.getFuntion(); 
+//			if(functionInfo.getAddress().indexOf(requestUrl)>-1) {
+//    			return true;
+//    		}
+//		}
+//		return false;
 	}
 
 	private boolean needVerifyUserPermission(String requestURI) { 

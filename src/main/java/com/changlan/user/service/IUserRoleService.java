@@ -7,7 +7,7 @@ import com.changlan.user.pojo.UserRoleDetail;
 
 public interface IUserRoleService {
 	
-	UserRoleDetail getOne(String adminUserId);
+//	UserRoleDetail getOne(String adminUserId);
 
 	Boolean existRole(TBLUserRoleEntity role);
 
