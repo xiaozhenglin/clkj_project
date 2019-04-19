@@ -5,9 +5,10 @@ public class SmsParams {
 	private String Key;		//网建用户秘钥
 	private String smsMob;  //电话号码用逗号分隔,可以一次性发送多个
 	private String smsText; //发送文字
-	private String portName; //串口名称
-	private int portBaud; //波动率
-	private Integer pointId; 
+	
+	private String portName; //串口名称 (短信猫)
+	private int portBaud;    //波动率(短信猫)
+	private Integer pointId; //设备id(短信猫)
 	
 	public SmsParams(String uid, String key, String smsMob, String smsText) {
 		super();
