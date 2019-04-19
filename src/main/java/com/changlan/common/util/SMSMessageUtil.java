@@ -11,6 +11,9 @@ public class SMSMessageUtil {
 	public static final String smsUrl = "http://utf8.api.smschinese.cn/?";
 	public static final String smsNumber = "http://www.smschinese.cn/web_api/SMS/?Action=SMS_Num";
 	
+	/**
+	 * 中国网建发送短信
+	 **/
 	public static void sendMessage(String smsMob, String smsText) { 
 		//电话号码用逗号分隔,可以一次性发送多个
 		SmsParams params = new 	SmsParams(uid, key, smsMob, smsText);
@@ -19,9 +22,10 @@ public class SMSMessageUtil {
 		System.out.println(body.toString()); 
 	}
 	
-	
+	/**
+	 * 中国网建获取短信数量
+	 **/
 	public static Integer getSmsNumber() { 
-		//电话号码用逗号分隔,可以一次性发送多个
 		String url = smsNumber+"&Uid="+uid+"&Key="+key;
 		ResponseEntity<Object> forEntity = RestUtil.getForEntity(url, Object.class); 
 		System.out.println(forEntity.getBody().toString()); 
