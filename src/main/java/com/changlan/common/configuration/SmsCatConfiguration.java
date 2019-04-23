@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class SmsCatConfiguration {
 
-	
 	public static String serverPortName;
 	
 	public static String serverPortBound;
@@ -18,7 +17,7 @@ public class SmsCatConfiguration {
 	}
 
 	@Value("${smscat.serverPortName}")
-	public static void setServerPortName(String serverPortName) {
+	public  void setServerPortName(String serverPortName) {
 		SmsCatConfiguration.serverPortName = serverPortName;
 	}
 
@@ -27,7 +26,7 @@ public class SmsCatConfiguration {
 	}
 
 	@Value("${smscat.serverPortBound}")
-	public static void setServerPortBound(String serverPortBound) {
+	public  void setServerPortBound(String serverPortBound) {
 		SmsCatConfiguration.serverPortBound = serverPortBound;
 	}
 

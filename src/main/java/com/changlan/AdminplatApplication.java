@@ -23,6 +23,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.changlan.command.service.impl.CommandRecordServiceImpl;
+import com.changlan.common.configuration.SmsCatConfiguration;
+import com.changlan.common.configuration.UploadConfiguration;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.pojo.MyTask;
