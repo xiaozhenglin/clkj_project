@@ -6,7 +6,7 @@ import com.changlan.common.pojo.SmsParams;
 
 public interface ISmsCatService {
 	
-	void initSmsCat();
+//	void initSmsCat();
 	
 	boolean canSendMsgOrNot(Integer pointId);
 	

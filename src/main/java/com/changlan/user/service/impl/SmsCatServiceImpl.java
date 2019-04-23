@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.changlan.common.configuration.SmsCatConfiguration;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.SmsParams;
@@ -26,19 +27,18 @@ public class SmsCatServiceImpl implements ISmsCatService {
 	@Autowired
 	IPointDefineService pointDefineService;
 
-	@Override
-	public void initSmsCat() {
-//		pointDefineService.getAll(entity);
-		List<SmsParams> list = new ArrayList<SmsParams>();
-		SmsParams param = new SmsParams(GsmCat.serverPortName, GsmCat.serverPortBound); //设备
-		list.add(param);
-		GsmCat cat = GsmCat.getInstance();
-		try {
-			org.smslib.Service initService = cat.initService(list);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@Override
+//	public void initSmsCat() {
+//		List<SmsParams> list = new ArrayList<SmsParams>();
+//		SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound)); //设备
+//		list.add(param);
+//		GsmCat cat = GsmCat.getInstance();
+//		try {
+//			org.smslib.Service initService = cat.initService(list);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public boolean canSendMsgOrNot(Integer pointId) {

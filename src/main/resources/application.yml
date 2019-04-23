@@ -4,10 +4,14 @@ server:
 netty_server_port: 1111
 not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico,/admin/template/data/receive
   
+  
 upload_image: 
   path: D:/uploads  #
+smscat: 
+  serverPortName: COM3
+  serverPortBound: 115200
   
-spring:
+spring: 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false

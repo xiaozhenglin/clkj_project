@@ -36,7 +36,6 @@ public class UserRoleController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TBLUserRoleEntity role) throws Exception {  
 		List<UserRoleDetail> result =  new ArrayList<UserRoleDetail>();
-		//只有系统管理员能够修改或添加用户的角色
 		TblAdminUserEntity adminUser = super.userIsLogin();
 		if(isSuperAdminUser(adminUser.getAdminUserId())) {  
 			result = userRoleService.getAll(role); 
@@ -81,5 +80,5 @@ public class UserRoleController extends BaseController{
 			return success(delete);
 		}
 		return success(false);
-	} 
+	}        
 }

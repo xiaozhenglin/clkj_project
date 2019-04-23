@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.changlan.command.pojo.CommandRecordDetail;
 import com.changlan.command.service.ICommandRecordService;
+import com.changlan.common.configuration.SmsCatConfiguration;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblMsgDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
@@ -42,8 +43,8 @@ import java.util.Map;
 @Component
 public class GsmCat {
 	
-	public static String serverPortName = "COM3";
-	public static Integer serverPortBound = 115200;
+//	public static String serverPortName = "COM3";
+//	public static Integer serverPortBound = 115200;
 	
 	public static GsmCat cat = new GsmCat();
 	
@@ -82,8 +83,6 @@ public class GsmCat {
 //	}
 	
 	
-	
-	
 	public static List<SmsParams> lastAddGateWay = new ArrayList<SmsParams>(); //已经添加的设备
 	public static Map<String,SerialModemGateway> gateWays = new HashMap();//已经添加的设备对应的 设备id
     
@@ -98,7 +97,7 @@ public class GsmCat {
 //        }
 
     	//先前加入的设备
-    	String lastPort = "";
+    	String lastPort = ""; //端口名称
     	if(!ListUtil.isEmpty(lastAddGateWay)) {
     		for(SmsParams param : lastAddGateWay) {
     			String portName = param.getPortName(); 
@@ -268,14 +267,19 @@ public class GsmCat {
 		return Service.getInstance().getServiceStatus().toString();
 	}
 
-	public static void analysisReceiveMessage(String receiveMsg,String phone) throws Exception { 
+	//解析接受的数据
+	public static void analysisReceiveMessage(String receiveMsg,String smsNumber) throws Exception { 
 		if(receiveMsg.substring(0,4).equals("*CS,")){ 	
 			String alm=receiveMsg.substring(11,13); //类型
 			String angle=receiveMsg.substring(17,19); //具体的值
 			String result="";
 			IPointDefineService pointDefineService = SpringUtil.getBean(IPointDefineService.class);
 			TblPointsEntity entity = new TblPointsEntity();
-			entity.setSmsNumber(phone.substring(2)); //还没调试 应该要去掉前缀86什么的
+			if(smsNumber.substring(0,2).equalsIgnoreCase("86")) {
+				entity.setSmsNumber(smsNumber.substring(2)); //
+			}else {
+				entity.setSmsNumber(smsNumber);
+			}
 			List<PointInfoDetail> all = pointDefineService.getAll(entity); 
 			if(!ListUtil.isEmpty(all)) {
 				PointInfoDetail pointInfoDetail = all.get(0); 
@@ -317,23 +321,15 @@ public class GsmCat {
 		if(StringUtil.isNotEmpty(phones)) {
 			//sms 发送消息
 			String[] receivePhones = phones.split(","); 
-			SmsParams param = new SmsParams(serverPortName, serverPortBound);//服务器的串口来发送
+			SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound));//服务器的串口来发送
 			sendSMS(param, receivePhones, sendContent);
-	    	saveMsgData(phones, sendContent, 1);
+	    	saveMsgData(phones, sendContent, 1);//1为发送，2为接收
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
-//        List<SmsParams> list = new ArrayList<SmsParams>();
-//        SmsParams param = new SmsParams(GsmCat.serverPortName, GsmCat.serverPortBound); //设备
-//        list.add(param);
-//        GsmCat.initService(list);  //添加设备，初始化启动
-////        System.out.println(getServiceStatus());
-//        for(int i = 0; i< 1;i++) {
-//        	GsmCat.sendSMS(param,new String[]{"+8614789966508","18390820674"}," 短信猫给你发了一条短息1");
-//        }
-		String receiveMsg= "";
-        GsmCat.analysisReceiveMessage(receiveMsg, "8614789966508");
+//		String receiveMsg= "";
+//        GsmCat.analysisReceiveMessage(receiveMsg, "8614789966508");
     }
 
 //	public static Map<Integer, Integer> getMap() {
