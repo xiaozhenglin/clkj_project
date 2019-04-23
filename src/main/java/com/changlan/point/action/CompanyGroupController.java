@@ -56,8 +56,8 @@ public class CompanyGroupController extends BaseController{
 	public ResponseEntity<Object>  delete(TblCompanyGroupEntity entity) throws MyDefineException { 
 		TblCompanyGroupEntity companyEntity = (TblCompanyGroupEntity)crudService.get(entity.getGroupId(),TblCompanyGroupEntity.class,true);
 		if(companyEntity != null) {
-			Boolean delete = crudService.delete(entity, true);
-			return success(delete);
+			Boolean deleteBySql = crudService.deleteBySql("DELETE FROM TBL_COMPANY_GROUP WHERE GROUP_ID = " +entity.getGroupId() , true);
+			return success(deleteBySql);
 		}
 		return success(false);
 	}

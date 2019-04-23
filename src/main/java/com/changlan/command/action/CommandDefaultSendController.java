@@ -57,8 +57,9 @@ public class CommandDefaultSendController extends BaseController{
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
-		return success(delete);
+		
+		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_POINT_SEND_COMMAND WHERE SEND_COMMAND_ID ="+entity.getSendCommandId(), true); 
+		return success(isSuccess);
 	}
 	
 }

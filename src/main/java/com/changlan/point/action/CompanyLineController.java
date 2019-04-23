@@ -75,7 +75,7 @@ public class CompanyLineController extends BaseController{
 		if(!ListUtil.isEmpty(all)) {
 			throw new Exception("线路包含了监控点,不能删除");    
 		}
-		Boolean delete = crudService.delete(entity, true);
+		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_LINES WHERE LINE_ID = " +entity.getLineId() , true);
 		return success(delete);
 	}
 	

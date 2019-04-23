@@ -52,7 +52,7 @@ public class UserGroupController extends BaseController{
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
 			TblUserGroupEntity companyEntity = (TblUserGroupEntity)crudService.get(entity.getUserGroupId(),TblUserGroupEntity.class,true);
 			if(companyEntity != null) {
-				Boolean delete = crudService.delete(entity, true);
+				Boolean delete = crudService.deleteBySql("DELETE FROM TBL_USER_GROUP WHERE USER_GROUP_ID = " +entity.getUserGroupId() , true); 
 				return success(delete);
 			}
 		}

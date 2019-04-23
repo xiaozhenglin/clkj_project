@@ -57,7 +57,7 @@ public class PointCategoryController extends BaseController {
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.POINT_CATEGORY_NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
+		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_POINT_CATEGORY WHERE POINT_CATGORY_ID = " +entity.getPointCatgoryId() , true); 
 		return success(delete);
 	}
 }

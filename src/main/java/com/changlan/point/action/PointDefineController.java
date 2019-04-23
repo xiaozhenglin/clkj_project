@@ -84,7 +84,6 @@ public class PointDefineController extends BaseController{
 		if(companyEntity == null) {
 			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
 		}
-//		Boolean delete = crudService.delete(entity, true);
 		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_POINTS where POINT_ID="+companyEntity.getPointId(), true);
 		return success(delete);
 	}

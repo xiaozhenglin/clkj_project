@@ -63,7 +63,7 @@ public class RoleDefineController extends BaseController{
 		if(isSuperAdminUser(adminUser.getAdminUserId())) { 
 			TBLRoleDefineEntity companyEntity = (TBLRoleDefineEntity)crudService.get(entity.getRoleId(),TBLRoleDefineEntity.class,true);
 			if(companyEntity != null) {
-				Boolean delete = crudService.delete(entity, true);
+				Boolean delete = crudService.deleteBySql("DELETE FROM TBL_ROLE_DEFINE WHERE ROLE_ID = " +entity.getRoleId() , true); 
 				return success(delete);
 			}
 		}

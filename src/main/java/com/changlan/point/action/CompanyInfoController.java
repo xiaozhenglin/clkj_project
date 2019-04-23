@@ -65,7 +65,7 @@ public class CompanyInfoController extends BaseController{
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.COMPANY_NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
+		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_COMPANY WHERE COMPANY_ID = " +entity.getCompanyId() , true);
 		return success(delete);
 	}
 	

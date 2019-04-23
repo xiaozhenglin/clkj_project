@@ -58,8 +58,8 @@ public class ProtocolController extends BaseController{
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.NOT_EXIST);
 		}
-		Boolean delete = crudService.delete(entity, true);
-		return success(delete);
+		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_COMMAND_PROTOCOL WHERE PROTOCOL_ID ="+entity.getProtocolId(), true); 
+		return success(isSuccess);
 	}
 	
 }
