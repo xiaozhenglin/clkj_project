@@ -12,7 +12,6 @@ import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.service.ILineService;
 
 public class CompanyVo {
-//	private TblCompanyEntity company;//第一级一个公司
 	
     private Integer companyId;
     private String  title;

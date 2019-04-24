@@ -25,10 +25,10 @@ public class PointDataDetail {
 //		super(point,line);
 		this.point = point;
 		this.pointData = pointData;
-		this.valueDetail = getIndivator(pointData.getIndicatorId());
+		this.valueDetail = getIndicator(pointData.getIndicatorId());
 	}
 
-	private IndiCatorValueDetail getIndivator(Integer indicatorId) {
+	private IndiCatorValueDetail getIndicator(Integer indicatorId) {
 		IIndicatoryValueService service = SpringUtil.getBean(IIndicatoryValueService.class);
 		List<IndiCatorValueDetail> all = service.getAll(indicatorId, null); 
 		if(!ListUtil.isEmpty(all)) {

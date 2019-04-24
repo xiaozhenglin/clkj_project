@@ -37,7 +37,7 @@ public class MyExceptionHandler {
     	}else {
     		baseReult = new BaseResult("0000",e.getMessage(),false,e); 
     	}
-    	System.out.println(baseReult.getCode()+">>>"+baseReult.getMsg()); 
+    	logger.info(baseReult.getCode()+">>>"+baseReult.getMsg()); 
     	return new ResponseEntity<Object>(baseReult,HttpStatus.OK);
     }
     
