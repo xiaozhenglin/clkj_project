@@ -65,12 +65,13 @@ public class NettyController extends BaseController{
     @RequestMapping("/close/sms/cat")
   	public ResponseEntity<Object>  closeCat() throws Exception { 
     	GsmCat instance = GsmCat.getInstance(); 
-    	logger.info(instance.getServiceStatus());
+    	logger.info("短信猫服务器的状态:"+instance.getServiceStatus());
     	if(!instance.getServiceStatus().equalsIgnoreCase("STOPPING") ) {
     		instance.stopService();
     	}
       	return success(true);
   	}
+    
     //未加入权限表 测试发送指令用
     @RequestMapping("/test/message")
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
