@@ -132,7 +132,6 @@ public class GsmCat {
 				              	gateWays.put(portName, gateway);
 							} catch (Exception e) {
 								logger.info("添加网关设备失败"+portName);
-//								throw new Exception("添加网关设备失败"+portName);
 							}
 		    			}
 		    		}
@@ -141,6 +140,7 @@ public class GsmCat {
       	}
         
         if(serviceStatus!=ServiceStatus.STARTED&&serviceStatus!=ServiceStatus.STARTING) {
+        	//配置项
         	InboundNotification inboundNotification = new InboundNotification();
         	CallNotification callNotification = new CallNotification();
     		GatewayStatusNotification statusNotification = new GatewayStatusNotification();
@@ -187,7 +187,7 @@ public class GsmCat {
      * @return 返回结果
      */
     public static boolean sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
-    	logger.info("准备发送消息给设备》》》》" + param.getPortName()); 
+    	logger.info("准备发送消息》》》》使用设备串口" + param.getPortName()); 
     	List<SmsParams> list = new ArrayList<SmsParams>();
     	list.add(param);
 		Service service = initService(list);
