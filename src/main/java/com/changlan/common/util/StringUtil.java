@@ -224,6 +224,11 @@ public class StringUtil extends StringUtils {
             System.out.print(getRandomCode()+","); 
         }
     
+        String str ="1234";
+        String replace = str.replace(" ", "");
+        System.out.println(replace);
+        System.out.println(replace.length());
+        System.out.println(replace.substring(0,4)); 
     }
     
     

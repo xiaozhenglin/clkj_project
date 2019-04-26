@@ -1,5 +1,7 @@
 package com.changlan.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.smslib.*;
 import org.smslib.AGateway.GatewayStatuses;
 import org.smslib.InboundMessage.MessageClasses;
@@ -34,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 /**
  * @Auther: Ningsc
  * @Date: 2018/6/26 16:38
@@ -43,8 +47,7 @@ import java.util.Map;
 @Component
 public class GsmCat {
 	
-//	public static String serverPortName = "COM3";
-//	public static Integer serverPortBound = 115200;
+	public static Logger logger = LoggerFactory.getLogger(GsmCat.class);
 	
 	public static GsmCat cat = new GsmCat();
 	
@@ -87,7 +90,7 @@ public class GsmCat {
 	public static Map<String,SerialModemGateway> gateWays = new HashMap();//已经添加的设备对应的 设备id
     
 	//初始化多个串口和对应的波特率
-    public static Service initService(List<SmsParams> list) throws Exception { 
+    public static Service initService(List<SmsParams> list)  { 
 //    	portList = CommPortIdentifier.getPortIdentifiers();
 //        while (portList.hasMoreElements()) {
 //        	 portId = (CommPortIdentifier) portList.nextElement();
@@ -119,7 +122,7 @@ public class GsmCat {
 		    		if(StringUtil.isEmpty(lastPort) || lastPort.toString().indexOf(portName) <-1) {
 		    			//这里设置只有启动前才能添加设备，启动后不能添加。
 		    			if(serviceStatus!=ServiceStatus.STARTED&&serviceStatus!=ServiceStatus.STARTING) {
-		    				System.out.println("添加设备》》》》》》》"+portName); 
+		    				logger.info("添加设备》》》》》》》"+portName); 
 			                try {
 			            		SerialModemGateway gateway  = new SerialModemGateway("modem."+portName.toLowerCase(),portName,portBaud,"Wavecom","");
 				                gateway.setInbound(true); //设置true，表示该网关可以接收短信
@@ -128,8 +131,8 @@ public class GsmCat {
 				            	lastAddGateWay.add(param);
 				              	gateWays.put(portName, gateway);
 							} catch (Exception e) {
-								System.out.println("添加网关设备失败"+portName);
-								throw new Exception("添加网关设备失败"+portName);
+								logger.info("添加网关设备失败"+portName);
+//								throw new Exception("添加网关设备失败"+portName);
 							}
 		    			}
 		    		}
@@ -148,10 +151,34 @@ public class GsmCat {
     		service.setGatewayStatusNotification(statusNotification);//设备状态
     		service.setOrphanedMessageNotification(orphanedMessageNotification);
         	service.setOutboundMessageNotification(outboundNotification); /**-----发送短信成功后的回调函方法-----**/
-        	service.startService(); /**-----启动服务------**/
+        	try {
+            	service.startService(); /**-----启动服务------**/
+			} catch (Exception e) {
+				logger.info("启动短信猫失败");
+				return null;
+			}
+
         }
         return service;
     }
+    
+    
+	//通知运维人员
+	public static Boolean sendMsgToOher(String phones, String sendContent)  { 
+		// 获取需要发送的电话号码
+		if(StringUtil.isNotEmpty(phones)) {
+			//sms 发送消息
+			String[] receivePhones = phones.split(","); 
+			SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound));//服务器的串口来发送
+			try {
+				boolean sendSMS = sendSMS(param, receivePhones, sendContent); 
+				return sendSMS;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
     
     /**
      * 短信发送
@@ -159,40 +186,32 @@ public class GsmCat {
      * @param sendContent 发送内容
      * @return 返回结果
      */
-    public static void sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
-    	System.out.println("准备发送消息给设备》》》》" + param.getPortName()); 
+    public static boolean sendSMS(SmsParams param,String[] receivePhones,String sendContent) throws Exception {
+    	logger.info("准备发送消息给设备》》》》" + param.getPortName()); 
     	List<SmsParams> list = new ArrayList<SmsParams>();
     	list.add(param);
 		Service service = initService(list);
-        for(int i=0;i<receivePhones.length;i++){
-        	
-            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。(一定要加)
-            if(receivePhones[i] != null && !receivePhones[i].equals("")){
-                OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
-                msg.setEncoding(Message.MessageEncodings.ENCUCS2);
-                
-                SerialModemGateway gateway = gateWays.get(param.getPortName());
-                if(gateway.getStatus()!=GatewayStatuses.STARTED) {
-                	System.out.println(param.getPortName()+"状态不可用"+gateway.getStatus().toString());
-                }else {
-                	boolean sendMessage =  service.sendMessage(msg, gateway.getGatewayId());
-                	System.out.println("是否发送成功: "+sendMessage ); 
-                }
-            }
-        }
+		if(service != null ) {
+			  for(int i=0;i<receivePhones.length;i++){
+	            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。(一定要加)
+	            if(receivePhones[i] != null && !receivePhones[i].equals("")){
+	                OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
+	                msg.setEncoding(Message.MessageEncodings.ENCUCS2);
+	                
+	                SerialModemGateway gateway = gateWays.get(param.getPortName());
+	                if(gateway.getStatus()!=GatewayStatuses.STARTED) {
+	                	logger.info(param.getPortName()+"状态不可用"+gateway.getStatus().toString());
+	                }else {
+	                	boolean result =  service.sendMessage(msg, gateway.getGatewayId());
+	                	logger.info("是否发送成功: "+result ); 
+	                	return result;
+	                }
+	            }
+		     }
+		}
+		return false;
     }
     
-    public List<InboundMessage> receiveMessage() throws Exception {
-    	Service service = initService(null);
-    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
-		service.readMessages(msgList, MessageClasses.ALL);
-		for (InboundMessage msg : msgList) {
-			System.out.println("doIt接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
-//			analysisReceiveMessage(msg.getText(), msg.getOriginator()); 
-		}
-		return msgList;
-    }
-
     //出站
     public static class OutboundNotification implements IOutboundMessageNotification
     {
@@ -202,21 +221,17 @@ public class GsmCat {
         }
     }
     
+    /**
+     * 消息入站
+     * */
     public static class InboundNotification implements IInboundMessageNotification 
 	{
 		public void process(AGateway gateway, MessageTypes msgType, InboundMessage msg)
 		{
-//			if (msgType == MessageTypes.INBOUND) {
-				//入站
-//				System.out.println(">>> New Inbound message detected from Gateway: " + gateway.getGatewayId());
-//			}else if (msgType == MessageTypes.STATUSREPORT) {
-				//状态报告
-//				System.out.println(">>> New Inbound Status Report message detected from Gateway: " + gateway.getGatewayId());
-//			}
-			System.out.println("InboundNotification类接受消息》》》》》"+msg.getText());
+			logger.info("InboundNotification类接受消息》》》》》"+msg.getText());
 			//保存入库
-//			analysisReceiveMessage(msg.getText(), msg.getOriginator()); 
 			try {
+				analysisReceiveMessage(msg.getText().toString(), msg.getOriginator().toString()); 
 				//打印后删除  不会重复接收。
 				gateway.deleteMessage(msg);
 			} catch (Exception e) {
@@ -224,39 +239,24 @@ public class GsmCat {
 			} 
 		}
 	}
-
     
-    public static class CallNotification implements ICallNotification
-	{
-		public void process(AGateway gateway, String callerId)
-		{
-//			System.out.println(">>> New call detected from Gateway: " + gateway.getGatewayId() + " : " + callerId);
+    /**自定义接收消息
+     * */
+    public List<InboundMessage> receiveMessage() throws Exception {
+    	Service service = initService(null);
+    	List<InboundMessage> msgList = new ArrayList<InboundMessage>(); //接受的短信类
+		service.readMessages(msgList, MessageClasses.ALL);
+		for (InboundMessage msg : msgList) {
+			logger.info("receiveMessage接受消息》》"+msg.getText()+"》》来电号码:"+msg.getOriginator());
+			analysisReceiveMessage(msg.getText(), msg.getOriginator()); 
 		}
-	}
+		return msgList;
+    }
 
-	public static  class GatewayStatusNotification implements IGatewayStatusNotification
-	{
-		public void process(AGateway gateway, GatewayStatuses oldStatus, GatewayStatuses newStatus)
-		{
-//			System.out.println(">>> Gateway Status change for " + gateway.getGatewayId() + ", OLD: " + oldStatus + " -> NEW: " + newStatus);
-		}
-	}
-
-	public  static class OrphanedMessageNotification implements IOrphanedMessageNotification
-	{
-		public boolean process(AGateway gateway, InboundMessage msg)
-		{
-//			System.out.println(">>> Orphaned message part detected from " + gateway.getGatewayId());
-//			System.out.println(msg);
-			// Since we are just testing, return FALSE and keep the orphaned message part.
-			return false;
-		}
-	}
-	
 	
 	public void stopService() throws Exception {
 		Service.getInstance().stopService();
-		System.out.println(">>>>>>>>>>关闭服务完成");
+		logger.info(">>>>>>>>>>关闭服务完成");
 	}
 	
 	public static Map<String,SerialModemGateway> getLocalGateWay(){
@@ -267,7 +267,7 @@ public class GsmCat {
 		return Service.getInstance().getServiceStatus().toString();
 	}
 
-	//解析接受的数据
+	/**解析接受的数据*/
 	public static void analysisReceiveMessage(String receiveMsg,String smsNumber) throws Exception { 
 		if(receiveMsg.substring(0,4).equals("*CS,")){ 	
 			String alm=receiveMsg.substring(11,13); //类型
@@ -303,7 +303,8 @@ public class GsmCat {
 		}
 	}
 	
-	//记录数据
+
+	/**记录数据*/
 	public static void saveMsgData(String phones, String content,Integer direction) {
     	ICrudService crudService = SpringUtil.getICrudService();
 		TblMsgDataEntity msgData = new TblMsgDataEntity();
@@ -314,16 +315,28 @@ public class GsmCat {
 		msgData.setPhoneOrEmail(phones);
 		crudService.update(msgData, true);
 	}
+	
+	
+	  
+    public static class CallNotification implements ICallNotification
+	{
+		public void process(AGateway gateway, String callerId)
+		{
+		}
+	}
 
-	//通知运维人员
-	public static void sendMsgToOher(String phones, String sendContent) throws Exception { 
-		// 获取需要发送的电话号码
-		if(StringUtil.isNotEmpty(phones)) {
-			//sms 发送消息
-			String[] receivePhones = phones.split(","); 
-			SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound));//服务器的串口来发送
-			sendSMS(param, receivePhones, sendContent);
-	    	saveMsgData(phones, sendContent, 1);//1为发送，2为接收
+	public static  class GatewayStatusNotification implements IGatewayStatusNotification
+	{
+		public void process(AGateway gateway, GatewayStatuses oldStatus, GatewayStatuses newStatus)
+		{
+		}
+	}
+
+	public  static class OrphanedMessageNotification implements IOrphanedMessageNotification
+	{
+		public boolean process(AGateway gateway, InboundMessage msg)
+		{
+			return false;
 		}
 	}
 
@@ -332,14 +345,6 @@ public class GsmCat {
 //        GsmCat.analysisReceiveMessage(receiveMsg, "8614789966508");
     }
 
-//	public static Map<Integer, Integer> getMap() {
-//		return map;
-//	}
-//
-//	public static void setMap(Map<Integer, Integer> map) {
-//		GsmCat.map = map;
-//	}
-    
 	
     
 }

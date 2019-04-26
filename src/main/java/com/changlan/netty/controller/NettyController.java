@@ -62,29 +62,14 @@ public class NettyController extends BaseController{
     
     //未加入权限表 测试发送指令用
     @RequestMapping("/test/message")
-	public ResponseEntity<Object>  sendMessage(String registOrIp,String msg) throws Exception { 
- 		Iterator<Entry<Object, Channel>> iterator = NettyServer.channelMap.entrySet().iterator();
- 		Boolean sendSuccess = false;
- 		while(iterator.hasNext()) {
- 			Entry<Object, Channel> next = iterator.next(); 
- 			String key = next.getKey().toString();
- 			if(key.equals(registOrIp)) {
- 				Channel channel = next.getValue();
- 				//channel为一个接口，如果断线，这个接口获取的状态会随之改变。
- 				if(channel.isActive()) {
- 					ByteBuf buf = Unpooled.buffer(3000);
- 					byte[] bytes =  StringUtil.hexStringToBytes(msg);
- 					channel.writeAndFlush(buf.writeBytes(bytes)); 
- 					sendSuccess =  true ; 
- 				}
- 			}
- 		}	
-		return success(sendSuccess);
+	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
+    	clientSendMessage(commanId);
+//    	serverSendMessage(commanId);
+    	return success(true);
 	}
 
 	//未加入权限表
 	@RequestMapping("/client/send/message")
-	@Transactional
 	public ResponseEntity<Object>  clientSendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
@@ -105,7 +90,6 @@ public class NettyController extends BaseController{
 
 	//主动发送，有定时任务被动发送
 	@RequestMapping("/server/send/message")
-	@Transactional
 	public ResponseEntity<Object>  serverSendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 

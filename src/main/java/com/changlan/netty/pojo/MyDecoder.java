@@ -26,22 +26,23 @@ public class MyDecoder extends ByteToMessageDecoder {
        buffer.readBytes(b);
        //字节数组转字符串
        String str = new String(b);
-       logger.info("MyDecoder类接收内容"+str);
-
        if(StringUtil.isNotEmpty(str)) {
     	   if(str.indexOf("CLKJ")>-1) {
     		   //注册包
                out.add(str);
+               logger.info("MyDecoder类接收内容"+str);
            } else {
                //进入的数据解码后丢到接受消息方法中去
-        	   String bytesToHexString = bytesToHexString(b); 
-        	   byte[] sbuf = CRC16M.getSendBuf(bytesToHexString.substring(0,bytesToHexString.length()-4));
-        	   boolean equalsIgnoreCase = bytesToHexString.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
-        	   if(equalsIgnoreCase){
-        		   out.add(bytesToHexString);
-        	   }else {
-        		   throw new MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); 
-        	   }
+        	   String bytesToHexString = bytesToHexString(b);
+        	   out.add(bytesToHexString);
+        	   logger.info("MyDecoder类接收内容"+bytesToHexString);
+//        	   byte[] sbuf = CRC16M.getSendBuf(bytesToHexString.substring(0,bytesToHexString.length()-4));
+//        	   boolean equalsIgnoreCase = bytesToHexString.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
+//        	   if(equalsIgnoreCase){
+//        		   out.add(bytesToHexString);
+//        	   }else {
+//        		   throw new MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); 
+//        	   }
            }
        }
    }

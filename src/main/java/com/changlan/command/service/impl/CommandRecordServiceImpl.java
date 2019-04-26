@@ -209,6 +209,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 
 	@Override
+	@Transactional
 	public TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();

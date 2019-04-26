@@ -105,6 +105,7 @@ public class NettyServiceImpl implements INettyService{
 		Channel connectChannel  ;
 		if(ConnectClients.clients.isEmpty() ||   ConnectClients.clients.get(ip)==null) {
 			ModbusClient client = new ModbusClient(ip,502);
+			client.run();
 			ConnectClients.clients.put(ip, client.getConnectChannel());
 			connectChannel = client.getConnectChannel();
 		}else {
@@ -129,12 +130,14 @@ public class NettyServiceImpl implements INettyService{
 	@Override
 	@Transactional
 	public Integer saveReturnMessage(String registPackageOrIp, String receiveMessage) {
+		Integer saveRecordId ;
 		Map<String, Integer> registPackageAndRecord = NettyController.map; 
 		try {
 	    	//
 			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackageOrIp) !=null) {
 		    	Map map = new HashMap();
-		    	Integer commandRecordId =registPackageAndRecord.get(registPackageOrIp) ;  
+		    	Integer commandRecordId =registPackageAndRecord.get(registPackageOrIp) ; 
+		    	saveRecordId = commandRecordId;
 		    	map.put("commandRecordId", new ParamMatcher(commandRecordId));
 		     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
 		     	//正常只有一个
@@ -150,7 +153,7 @@ public class NettyServiceImpl implements INettyService{
 		    	}
 		    	//清除防止死锁
 	    		NettyController.map.remove(registPackageOrIp);
-	    		return registPackageAndRecord.get(registPackageOrIp);
+	    		return saveRecordId;
 			}
 		} catch (Exception e) {
 			logger.error(this.getClass() + "接受指令保存数据出错==" + e.getMessage()); 
