@@ -301,8 +301,8 @@ public class GsmCat {
 					saveMsgData(point.getSmsNumber(),result,2);
 					
 				}else if(alm.equals("A3")){
-					result=pointName+"井盖电量偏低，请及时更换电池。"+angle;
-					saveMsgData(point.getSmsNumber(),result,2);
+					result=pointName+"井盖电量偏低，请及时更换电池。当前角度为："+angle;
+					saveMsgData(point.getSmsNumber(),result,2); 
 					sendMsgToOher(point.getPhones(),result);
 					saveMsgData(point.getPhones(),result,1);
 				}

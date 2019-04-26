@@ -175,14 +175,15 @@ public class AlarmServiceImpl implements IAlarmService{
 		// 低于最低限 高于最高限度
 		if(intValue< lowerAlarm || intValue>topAlarm) {
 			//报警
+			sendSMSMessage(data.getPointId(),data.getIndicatorId(),intValue);
 			Integer alarmDataId = saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			savaAlarmData(data,alarmDataId);
 			haveAlarm =  true;
-			sendSMSMessage(data.getPointId(),data.getIndicatorId());
 		}
 		// 处于预警值和报警值之间
 		if( (intValue> topLimit && intValue<=topAlarm) || (intValue<lowerLimit && intValue>= lowerAlarm) ) {
 			//预警
+//			sendSMSMessage(data.getPointId(),data.getIndicatorId());
 			Integer alarmDataId =  saveToAlarmDataBase(intValue, data, rule, constractDataId);
 			saveEarlyAlarmData(data,alarmDataId);
 		}
@@ -230,24 +231,18 @@ public class AlarmServiceImpl implements IAlarmService{
 
 	@Override
 	@Transactional
-	public void sendSMSMessage(Integer pointId, Integer indicatorId) {
+	public void sendSMSMessage(Integer pointId, Integer indicatorId,int value) {
 		TblIndicatorValueEntity indicatorValue = (TblIndicatorValueEntity)crudService.get(indicatorId, TblIndicatorValueEntity.class, true);
 		TblPointsEntity point = (TblPointsEntity)crudService.get(pointId, TblPointsEntity.class, true);
-		String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警";
-		Boolean sendMsgToOher = false;
 		try {
 			if(point==null) {
 				throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
 			}
-			sendMsgToOher = GsmCat.sendMsgToOher(point.getPhones(),sendContent); 
+			String sendContent = "监控点"+point.getPointName() + "的指标"+indicatorValue.getName()+"报警"+"且值为"+value;
+			GsmCat.sendMsgToOher(point.getPhones(),sendContent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(sendMsgToOher) {
-			//发送成功 保存记录
-			GsmCat.saveMsgData(point.getPhones(), sendContent, 1);//1为发送，2为接收
-		}
-		
 	}
 
 	

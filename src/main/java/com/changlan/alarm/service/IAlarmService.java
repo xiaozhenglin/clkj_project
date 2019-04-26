@@ -13,6 +13,6 @@ public interface IAlarmService {
 	Boolean anylysisPointData(List<TblPoinDataEntity> pointData); 
 
 
-	void sendSMSMessage(Integer pointId, Integer indicatorId);
+	void sendSMSMessage(Integer pointId, Integer indicatorId,int value);
 	
 }
