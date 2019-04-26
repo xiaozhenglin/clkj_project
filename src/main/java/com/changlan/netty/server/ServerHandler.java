@@ -64,7 +64,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = context.channel();
         logger.info("ServerHandler类channelRead方法接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
-        	 if(s.indexOf("CLKJ")>-1) {
+        	 if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1) {
              	//设置注册包
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);

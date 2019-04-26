@@ -21,8 +21,12 @@ public interface ICommandRecordService {
 	//解析数据
 	List<TblPoinDataEntity> anylysisData(CommandRecordDetail commandRecordDetail);
 
-	//保存发送记录
-	TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage);
+	//保存服务器往客户端发送记录
+	TblCommandRecordEntity updateServerRecord(TblPointSendCommandEntity commandDefault,String registPackage);
+
+	//保存客户端往服务器发送记录
+	TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip);
+
 
 
 	

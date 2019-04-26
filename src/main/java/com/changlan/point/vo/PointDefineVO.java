@@ -28,6 +28,7 @@ public class PointDefineVO {
     private String pointRegistPackage;
 //    private String portName;
 //    private Integer portBound;
+    private String ip; // ip地址
     private String smsNumber; //短信猫sms卡号
     private Integer lineOrder; //在线路中的次序
     private Integer isCorner=0;//是否是拐角
@@ -36,7 +37,7 @@ public class PointDefineVO {
     private String  pointCatagoryName; //监控类别名称
     
     private List<TblIndicatorCategoriesEntity>  indicatorCategorys =  new ArrayList();//指标类别
-	private String indicators; //指标类别id  多个以逗号分隔
+//	private String indicators; //指标类别id  多个以逗号分隔
 //	private Integer indicatorCategoryId; //指标类别
 //	private String  indicatorCategoryName;//指标类别名称
 	
@@ -63,7 +64,8 @@ public class PointDefineVO {
 			this.smsNumber = point.getSmsNumber(); //短信猫sms卡号
 			this.lineOrder = point.getLineOrder(); //在线路中的次序
 			this.isCorner =  point.getIsCorner();
-			this.indicators = point.getIndicators(); 
+			this.ip = point.getIp();
+//			this.indicators = point.getIndicators(); 
 		}
 		
 		TblPointCategoryEntity category = defineDetail.getCategory();
@@ -200,14 +202,14 @@ public class PointDefineVO {
 	}
 
 
-	public String getIndicators() {
-		return indicators;
-	}
-
-
-	public void setIndicators(String indicators) {
-		this.indicators = indicators;
-	}
+//	public String getIndicators() {
+//		return indicators;
+//	}
+//
+//
+//	public void setIndicators(String indicators) {
+//		this.indicators = indicators;
+//	}
 
 
 	public String getLineName() {
@@ -257,6 +259,16 @@ public class PointDefineVO {
 
 	public void setIsCorner(Integer isCorner) {
 		this.isCorner = isCorner;
+	}
+
+
+	public String getIp() {
+		return ip;
+	}
+
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 

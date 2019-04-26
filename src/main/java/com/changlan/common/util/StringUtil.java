@@ -94,16 +94,12 @@ public class StringUtil extends StringUtils {
 
     public static  String getRandomCode (){
         String randomCode;
-        int rnd = new Random().nextInt(999998)+1;
+        int rnd = new Random().nextInt(999)+1;
         if(rnd<10) {
-            randomCode = "00000" + rnd;
-        }else if(rnd < 100) {
-            randomCode = "0000" + rnd;
-        }else if(rnd < 1000) {
             randomCode = "000" + rnd;
-        }else if(rnd < 10000) {
+        }else if(rnd < 100) {
             randomCode = "00" + rnd;
-        }else if(rnd < 100000) {
+        }else if(rnd < 1000) {
             randomCode = "0" + rnd;
         }else {
             randomCode = "" + rnd;
@@ -214,7 +210,7 @@ public class StringUtil extends StringUtils {
     public static void main(String[] args) {
         String s = decimalConvert("0769", 16, 10, null);
         System.out.println(s);
-        System.out.println(decimalConvert("123", 16, 10, null));
+        System.out.println(decimalConvert("0021", 16, 10, null));
         
         //字符串转16进制
         byte[] hexStringToBytes = hexStringToBytes("010324C5C8"); 
@@ -222,6 +218,12 @@ public class StringUtil extends StringUtils {
         	System.out.println(hexStringToBytes[i]);
         }
         System.out.println( bytesToHexString(hexStringToBytes));
+        
+        
+        for(int i =0 ;i<hexStringToBytes.length;i++) {
+            System.out.print(getRandomCode()+","); 
+        }
+    
     }
     
     

@@ -2,7 +2,7 @@ server:
   port: 8082
   
 netty_server_port: 1111
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico,/admin/template/data/receive
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/server/test/message
   
   
 upload_image: 

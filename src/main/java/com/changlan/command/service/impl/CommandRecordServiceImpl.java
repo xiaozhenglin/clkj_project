@@ -179,7 +179,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 
 	@Override
 	@Transactional
-	public TblCommandRecordEntity update(TblPointSendCommandEntity commandDefault,String registPackage) {
+	public TblCommandRecordEntity updateServerRecord(TblPointSendCommandEntity commandDefault,String registPackage) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
@@ -206,6 +206,25 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId,null);
 		String pointRegistPackage = pointDefine.getPointRegistPackage(); 
 		return pointRegistPackage;
+	}
+
+	@Override
+	public TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip) {
+		//保存用户操作指令
+		TblCommandRecordEntity entity = new TblCommandRecordEntity();
+		entity.setPointId(commandDefault.getPointId()); //设置监控点id
+		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
+		entity.setSendCommandId(commandDefault.getSendCommandId()); //发送的默认指令Id
+		entity.setCommandContent(commandDefault.getCommandContent());//发送内容
+		entity.setRecordTime(new Date()); //记录时间
+		//将记录id保存到会话，当有返回消息时保存起来
+		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
+		logger.info("第二步发送指令 ip：" +ip+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
+		if(update != null) {
+			//加锁,一个监控点同时只能发送一个指令，接受指令就会解锁
+			NettyController.map.put(ip, update.getCommandRecordId());
+		}
+		return update;
 	}
 	
 	

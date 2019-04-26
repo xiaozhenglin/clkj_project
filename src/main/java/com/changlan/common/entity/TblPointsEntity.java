@@ -63,7 +63,7 @@ public class TblPointsEntity implements java.io.Serializable {
 
     /** indicators */
     @Column(name = "INDICATORS"   )
-    private String indicators;
+    private String indicators;//指标类别多个
 
     /** pointName */
     @Column(name = "POINT_NAME"   )
@@ -71,7 +71,7 @@ public class TblPointsEntity implements java.io.Serializable {
 
     /** phones */
     @Column(name = "PHONES"   )
-    private String phones;
+    private String phones; //运维人员号码
 
     /** pointCatagoryId */
     @Column(name = "POINT_CATAGORY_ID"    )
@@ -87,7 +87,7 @@ public class TblPointsEntity implements java.io.Serializable {
     private Integer portBound;
 
     @Column(name = "SMS_NUMBER"    )
-    private String smsNumber;
+    private String smsNumber; //短信猫卡号
 
     @Column(name = "LINE_ORDER"    )
     private Integer lineOrder;
@@ -97,6 +97,9 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "REMOVE_FLAGE"   )
     private Integer removeFlage;
+    
+    @Column(name = "IP"    )
+    private String ip;
 
 	public Integer getPointId() {
 		return pointId;
@@ -232,6 +235,14 @@ public class TblPointsEntity implements java.io.Serializable {
 
 	public void setRemoveFlage(Integer removeFlage) {
 		this.removeFlage = removeFlage;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
     	
 

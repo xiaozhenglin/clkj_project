@@ -21,13 +21,13 @@ public class CommandDefaultDetail {
 	private List<ProtocolInfo> currentDataProtocol;  //当前解析数据的协议
 	private TblPointsEntity  point ;  //一个监控点
 //	private TblIndicatorCategoriesEntity indicatorCategory; //指标类别
-//	private TblCommandCategoryEntity category; // 指令类别
+	private TblCommandCategoryEntity category; // 指令类别
 	
 	public CommandDefaultDetail(TblPointSendCommandEntity commandDefault) {
 //		super(commandDefault);
 		this.commandDefault =commandDefault;
 		this.currentDataProtocol = getDataProtocol(commandDefault);
-//		this.category = getCategory(commandDefault.getCommandCatagoryId());
+		this.category = getCategory(commandDefault.getCommandCatagoryId());
 		this.point = getPoint(commandDefault.getPointId());
 //		this.indicatorCategory = getIndicatorCategory(commandDefault.getIndicatorCategory());
 	}
@@ -105,13 +105,13 @@ public class CommandDefaultDetail {
 		this.currentDataProtocol = currentDataProtocol;
 	}
 
-//	public TblCommandCategoryEntity getCategory() {
-//		return category;
-//	}
-//
-//	public void setCategory(TblCommandCategoryEntity category) {
-//		this.category = category;
-//	}
+	public TblCommandCategoryEntity getCategory() {
+		return category;
+	}
+
+	public void setCategory(TblCommandCategoryEntity category) {
+		this.category = category;
+	}
 
 	public TblPointsEntity getPoint() {
 		return point;

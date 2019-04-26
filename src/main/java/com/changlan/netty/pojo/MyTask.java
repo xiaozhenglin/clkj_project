@@ -61,7 +61,7 @@ public class MyTask extends TimerTask {
 				//一次发一条。加锁操作
 				afterSaveToRecord(commandDefault,pointDefine.getPointRegistPackage());
 				INettyService nettyService = SpringUtil.getBean(INettyService.class);
-				nettyService.sendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
+				nettyService.serverSendMessage(pointDefine.getPointRegistPackage(),commandDefault.getCommandContent());
 			}else {
 				throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 			}
@@ -80,7 +80,7 @@ public class MyTask extends TimerTask {
 	
 	private void afterSaveToRecord(TblPointSendCommandEntity commandDefault,String pointRegistPackage) {
 		ICommandRecordService recordService = SpringUtil.getBean(ICommandRecordService.class);
-		recordService.update(commandDefault,pointRegistPackage);
+		recordService.updateServerRecord(commandDefault,pointRegistPackage);
 	}
 
 	

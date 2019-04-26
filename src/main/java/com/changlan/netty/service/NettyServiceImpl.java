@@ -21,6 +21,7 @@ import com.changlan.command.pojo.CommandDefaultDetail;
 import com.changlan.command.pojo.CommandRecordDetail;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
+import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
@@ -34,6 +35,8 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.service.IIndicatoryValueService;
+import com.changlan.netty.client.ModbusClient;
+import com.changlan.netty.controller.ConnectClients;
 import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.pojo.MyTask;
 import com.changlan.netty.server.NettyServer;
@@ -63,7 +66,7 @@ public class NettyServiceImpl implements INettyService{
 
 	//服务器-》客户端发送数据
 	@Override
-	public void sendMessage(String registPackage, String message) throws Exception { 
+	public void serverSendMessage(String registPackage, String message) throws Exception { 
 		//对发送消息进行crc校验
 	   byte[] sbuf = CRC16M.getSendBuf(message.substring(0,message.length()-4));
 	   boolean equalsIgnoreCase = message.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
@@ -81,7 +84,7 @@ public class NettyServiceImpl implements INettyService{
  				Channel channel = next.getValue();
  				//channel为一个接口，如果断线，这个接口获取的状态会随之改变。
  				if(channel.isActive()) {
- 					ByteBuf buf = Unpooled.buffer(300);
+ 					ByteBuf buf = Unpooled.buffer(3000);
  					byte[] bytes =  StringUtil.hexStringToBytes(message);
  					channel.writeAndFlush(buf.writeBytes(bytes)); 
  					sendSuccess =  true ; 
@@ -92,6 +95,26 @@ public class NettyServiceImpl implements INettyService{
  			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
  		}
 	}
+	
+	@Override
+	public void clientSendMessage(String ip, String message) throws Exception {
+		//客户端往服务器测温度不需要CRC16校验
+		Boolean sendSuccess = false;
+		if(ConnectClients.clients.isEmpty() ||   ConnectClients.clients.get(ip)==null) {
+			ModbusClient client = new ModbusClient(ip,502);
+			ConnectClients.clients.put(ip, client.getConnectChannel());
+			if(client.getConnectChannel().isActive()) {
+				ByteBuf buf = Unpooled.buffer(3000);
+				byte[] bytes =  StringUtil.hexStringToBytes(message);
+				client.getConnectChannel().writeAndFlush(buf.writeBytes(bytes)); 
+				sendSuccess =  true ; 
+			}
+		}
+ 		if(!sendSuccess) {
+ 			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
+ 		}
+	}
+	
 
 	//客户端-》服务器数据 保存记录
 	@Override
@@ -187,15 +210,20 @@ public class NettyServiceImpl implements INettyService{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
-			Integer intervalTime = commandDefault.getIntervalTime();
-			if(intervalTime!=null) {
-				MyTask task = new MyTask(commandDefault);
-				Timer timer = new Timer();
-				//循环执行定时器
-				timer.schedule(task, 0, intervalTime*1000);
+			TblCommandCategoryEntity category = data.getCategory(); 
+			//温度检测为 本机client向服务器发送 ， 电流电压为本机server向机器发送指令
+			if(category.getCategoryNmae().indexOf("温度")<-1) {
+				TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
+				Integer intervalTime = commandDefault.getIntervalTime();
+				if(intervalTime!=null) {
+					MyTask task = new MyTask(commandDefault);
+					Timer timer = new Timer();
+					//循环执行定时器
+					timer.schedule(task, 0, intervalTime*1000);
+				}
 			}
 		}
 	}
-	
+
+
 }

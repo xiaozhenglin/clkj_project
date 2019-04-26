@@ -28,6 +28,7 @@ import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.server.ServerHandler;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.constrant.PointConstrant;
@@ -35,8 +36,12 @@ import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+
 @RestController
-@RequestMapping("/admin/netty/server")
+@RequestMapping("/admin/netty")
 public class NettyController extends BaseController{
 	
 	@Autowired
@@ -54,25 +59,68 @@ public class NettyController extends BaseController{
 	public static Map<String,Integer> map = new HashMap<String,Integer>();
 	
     private static final Logger logger = LoggerFactory.getLogger(NettyController.class);
+    
+    //未加入权限表 测试发送指令用
+    @RequestMapping("/test/message")
+	public ResponseEntity<Object>  sendMessage(String registOrIp,String msg) throws Exception { 
+ 		Iterator<Entry<Object, Channel>> iterator = NettyServer.channelMap.entrySet().iterator();
+ 		Boolean sendSuccess = false;
+ 		while(iterator.hasNext()) {
+ 			Entry<Object, Channel> next = iterator.next(); 
+ 			String key = next.getKey().toString();
+ 			if(key.equals(registOrIp)) {
+ 				Channel channel = next.getValue();
+ 				//channel为一个接口，如果断线，这个接口获取的状态会随之改变。
+ 				if(channel.isActive()) {
+ 					ByteBuf buf = Unpooled.buffer(3000);
+ 					byte[] bytes =  StringUtil.hexStringToBytes(msg);
+ 					channel.writeAndFlush(buf.writeBytes(bytes)); 
+ 					sendSuccess =  true ; 
+ 				}
+ 			}
+ 		}	
+		return success(sendSuccess);
+	}
 
-
-	//主动发送，有定时任务被动发送
-	@RequestMapping("/send/message")
+	//未加入权限表
+	@RequestMapping("/client/send/message")
 	@Transactional
-	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
+	public ResponseEntity<Object>  clientSendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
 		if(pointDefine==null ) {
 			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
 		}
+		//给机器的ip发送温度采集指令
+		if( StringUtil.isEmpty(pointDefine.getIp()) ) {
+			throw new MyDefineException(PoinErrorType.POINT_IP_IS_NULL);
+		}
+		if(!canSendRecord(pointDefine.getIp())) { 
+			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
+		}
+		TblCommandRecordEntity update = recordService.updateClientRecord(commandDefault,pointDefine.getIp()); 
+		nettyService.clientSendMessage(pointDefine.getIp(), commandDefault.getCommandContent()); 
+		return success(true);
+	}
+
+	//主动发送，有定时任务被动发送
+	@RequestMapping("/server/send/message")
+	@Transactional
+	public ResponseEntity<Object>  serverSendMessage(Integer commanId) throws Exception { 
+		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
+		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
+		if(pointDefine==null ) {
+			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
+		}
+		//通过注册包给设备发送 电流电压的采集指令
 		if( StringUtil.isEmpty(pointDefine.getPointRegistPackage()) ) {
 			throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
 		}
 		if(!canSendRecord(pointDefine.getPointRegistPackage())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
-		TblCommandRecordEntity update = recordService.update(commandDefault,pointDefine.getPointRegistPackage()); 
-		nettyService.sendMessage(pointDefine.getPointRegistPackage(), commandDefault.getCommandContent()); 
+		TblCommandRecordEntity update = recordService.updateServerRecord(commandDefault,pointDefine.getPointRegistPackage()); 
+		nettyService.serverSendMessage(pointDefine.getPointRegistPackage(), commandDefault.getCommandContent()); 
 		return success(true);
 	}
 
@@ -93,7 +141,6 @@ public class NettyController extends BaseController{
 		if(seconds>=7) {
 			return true;
 		}
-	
 		return false;
 	}
 	
