@@ -26,6 +26,7 @@ import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.GsmCat;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.server.NettyServer;
@@ -60,6 +61,16 @@ public class NettyController extends BaseController{
 	
     private static final Logger logger = LoggerFactory.getLogger(NettyController.class);
     
+    //未加入权限表 关闭短信猫的服务
+    @RequestMapping("/close/sms/cat")
+  	public ResponseEntity<Object>  closeCat() throws Exception { 
+    	GsmCat instance = GsmCat.getInstance(); 
+    	logger.info(instance.getServiceStatus());
+    	if(!instance.getServiceStatus().equalsIgnoreCase("STOPPING") ) {
+    		instance.stopService();
+    	}
+      	return success(true);
+  	}
     //未加入权限表 测试发送指令用
     @RequestMapping("/test/message")
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 

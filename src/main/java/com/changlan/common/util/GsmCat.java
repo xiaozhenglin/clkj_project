@@ -169,6 +169,7 @@ public class GsmCat {
 		if(StringUtil.isNotEmpty(phones)) {
 			//sms 发送消息
 			String[] receivePhones = phones.split(","); 
+			//设置短信猫设备
 			SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound));//服务器的串口来发送
 			try {
 				boolean sendSMS = sendSMS(param, receivePhones, sendContent); 
@@ -192,7 +193,7 @@ public class GsmCat {
     	list.add(param);
 		Service service = initService(list);
 		if(service != null ) {
-			  for(int i=0;i<receivePhones.length;i++){
+			for(int i=0;i<receivePhones.length;i++){
 	            Thread.sleep(2000); //发送消息需要间隔一段时间 ，端口被占用问题。(一定要加)
 	            if(receivePhones[i] != null && !receivePhones[i].equals("")){
 	                OutboundMessage msg = new OutboundMessage(receivePhones[i],sendContent);
@@ -207,7 +208,7 @@ public class GsmCat {
 	                	return result;
 	                }
 	            }
-		     }
+		    }
 		}
 		return false;
     }
