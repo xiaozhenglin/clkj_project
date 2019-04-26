@@ -276,28 +276,35 @@ public class GsmCat {
 			IPointDefineService pointDefineService = SpringUtil.getBean(IPointDefineService.class);
 			TblPointsEntity entity = new TblPointsEntity();
 			if(smsNumber.substring(0,2).equalsIgnoreCase("86")) {
-				entity.setSmsNumber(smsNumber.substring(2)); //
+				entity.setSmsNumber(smsNumber.substring(2)); //设置电话号码
 			}else {
 				entity.setSmsNumber(smsNumber);
 			}
 			List<PointInfoDetail> all = pointDefineService.getAll(entity); 
 			if(!ListUtil.isEmpty(all)) {
-				PointInfoDetail pointInfoDetail = all.get(0); 
+				PointInfoDetail pointInfoDetail = all.get(0);  //找到对应的监控点
 				TblPointsEntity point = pointInfoDetail.getPoint(); 
 				String pointName = point.getPointName();
 				if(alm.equals("A2")){
-					result=pointName+"井盖发生异常，倾斜角度为："+angle;
+					result=pointName+"井盖发生异常，倾斜角度为："+angle; //生成报警短信
 					//发送短信给其他人
+					saveMsgData(point.getSmsNumber(),result,2);
 					sendMsgToOher(point.getPhones(),result);
+					saveMsgData(point.getPhones(),result,1);
 		       	}else if(alm.equals("R1")){
 		       		result=pointName+"井盖恢复正常，当前角度为："+angle;
+		       		saveMsgData(point.getSmsNumber(),result,2);
 					sendMsgToOher(point.getPhones(),result);
+					saveMsgData(point.getPhones(),result,1);
 		       	}else if(alm.equals("T1")){
 					result=pointName+"井盖周期上报，当前角度为："+angle;
 					saveMsgData(point.getSmsNumber(),result,2);
+					
 				}else if(alm.equals("A3")){
 					result=pointName+"井盖电量偏低，请及时更换电池。"+angle;
+					saveMsgData(point.getSmsNumber(),result,2);
 					sendMsgToOher(point.getPhones(),result);
+					saveMsgData(point.getPhones(),result,1);
 				}
 			}
 		}
@@ -305,6 +312,7 @@ public class GsmCat {
 	
 
 	/**记录数据*/
+	@Transactional
 	public static void saveMsgData(String phones, String content,Integer direction) {
     	ICrudService crudService = SpringUtil.getICrudService();
 		TblMsgDataEntity msgData = new TblMsgDataEntity();
