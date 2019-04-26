@@ -2,6 +2,15 @@ package com.changlan.netty.client;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.changlan.common.util.SpringUtil;
+import com.changlan.netty.controller.ConnectClients;
+import com.changlan.netty.event.CommandCallBackEvent;
+import com.changlan.netty.server.NettyServer;
+import com.changlan.netty.service.INettyService;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -25,23 +34,26 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
     	Channel channel = ctx.channel(); 
     	SocketAddress remoteAddress = channel.remoteAddress();
         System.out.println("服务器消息"+ remoteAddress + "内容："+s);
+
+        //通道 找到 对应的设备ip -> 记录id
+     	String ip = getIpByChannel(channel); 
+        INettyService nettyService = SpringUtil.getBean(INettyService.class);
+ 		Integer commandRecordId = nettyService.saveReturnMessage(ip,s);  
+ 		if(commandRecordId!=null) {
+ 			//开启解析事件
+ 			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,ip,s));
+ 		}
     }
     
-    /**
-     * 创建客户端
-     * */
-	public ModbusClient createTcpClient(String servIP, short port) throws IOException { 
-		ModbusClient nettyClient = new ModbusClient(servIP,port); 
-		nettyClient.run();
-		return nettyClient;
-	}
-	
-	/**
-	 * 写消息
-	 */
-	public void writeData(ModbusClient nettyClient,ByteBuf buf) {
-//		ByteBuf和ByteBuffer不一样
-		Channel connectChannel = nettyClient.getConnectChannel(); 
-		connectChannel.writeAndFlush(buf); 
-	}
+    private String getIpByChannel(Channel channel) {
+        Map<String, Channel> channelMap = ConnectClients.clients;
+        Iterator<Entry<String, Channel>> iterator = channelMap.entrySet().iterator();
+        while(iterator.hasNext()) {
+         	Entry<String, Channel> next = iterator.next(); 
+       	    if(next.getValue()== channel ) {
+       		   return next.getKey().toString();
+       	    }
+        }
+        return null;
+ 	}
 }

@@ -109,32 +109,24 @@ public class AnalysisDataUtil {
 	
 	private static List<BigDecimal> temperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+//		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
 		Integer dataByte = protocol.getDataByte(); //结束位置
 		//解析数据
-		//下标值为位置数减去1   6
+		//下标值为位置数减去1   6   
 		Integer begin = beginByte-1;
-		Integer end = dataByte-1;
+		Integer end = dataByte -1;
 		if(begin<backContent.length()) {
-			//0769  7-11
+			//0769  6-10
 			String channelValue = backContent.substring(begin, end); 
 			//1897
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
 			//1897
-			int value = new BigDecimal(decimalConvert).intValue(); 
-			
-			Object ca = null;
-			if(value == 65535) {
-				return null;
-			}
-			if(value>10000 && value !=65535) {
-				ca = canculate(value,"-(%d-10000)/10");
-			}
-			if(value<10000) {
-				ca = canculate(value,"(%d)/10");
-			}
-			BigDecimal canculate = new BigDecimal(ca.toString()); 
+//			int value = new BigDecimal(decimalConvert).intValue(); 
+			//9.26
+//			Object ca = canculate(value,canculateRule); 
+			BigDecimal canculate = new BigDecimal(decimalConvert); 
 			list.add(canculate);
 		}
 		return list;

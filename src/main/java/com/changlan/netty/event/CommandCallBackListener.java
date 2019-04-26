@@ -12,7 +12,7 @@ public class CommandCallBackListener implements ApplicationListener<CommandCallB
 	@Override
 	public void onApplicationEvent(CommandCallBackEvent event) {
 		Integer commandRecordId = (Integer)event.getSource();
-		String registPackage = event.getRegistPackage(); 
+		String registPackage = event.getRegistPackage(); //设备注册包 或者设备ip
 		String receiveMessage = event.getReceiveMessage(); 
 		INettyService nettyService = SpringUtil.getBean(INettyService.class);
 		try {

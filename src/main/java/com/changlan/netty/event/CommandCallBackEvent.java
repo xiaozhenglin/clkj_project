@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationEvent;
 
 public class CommandCallBackEvent extends ApplicationEvent{
 	
-	private String registPackage;
+	private String registPackage; //设备注册包 或者设备ip
 	private String receiveMessage ;
 	
 

@@ -100,16 +100,25 @@ public class NettyServiceImpl implements INettyService{
 	public void clientSendMessage(String ip, String message) throws Exception {
 		//客户端往服务器测温度不需要CRC16校验
 		Boolean sendSuccess = false;
+		
+		//获取通道
+		Channel connectChannel  ;
 		if(ConnectClients.clients.isEmpty() ||   ConnectClients.clients.get(ip)==null) {
 			ModbusClient client = new ModbusClient(ip,502);
 			ConnectClients.clients.put(ip, client.getConnectChannel());
-			if(client.getConnectChannel().isActive()) {
-				ByteBuf buf = Unpooled.buffer(3000);
-				byte[] bytes =  StringUtil.hexStringToBytes(message);
-				client.getConnectChannel().writeAndFlush(buf.writeBytes(bytes)); 
-				sendSuccess =  true ; 
-			}
+			connectChannel = client.getConnectChannel();
+		}else {
+			connectChannel = ConnectClients.clients.get(ip);
 		}
+		
+		//发送指令
+		if(connectChannel.isActive()) {
+			ByteBuf buf = Unpooled.buffer(3000);
+			byte[] bytes =  StringUtil.hexStringToBytes(message);
+			connectChannel.writeAndFlush(buf.writeBytes(bytes)); 
+			sendSuccess =  true ; 
+		}
+		
  		if(!sendSuccess) {
  			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
  		}
@@ -119,13 +128,13 @@ public class NettyServiceImpl implements INettyService{
 	//客户端-》服务器数据 保存记录
 	@Override
 	@Transactional
-	public Integer saveReturnMessage(String registPackage, String receiveMessage) {
+	public Integer saveReturnMessage(String registPackageOrIp, String receiveMessage) {
 		Map<String, Integer> registPackageAndRecord = NettyController.map; 
 		try {
 	    	//
-			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackage) !=null) {
+			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackageOrIp) !=null) {
 		    	Map map = new HashMap();
-		    	Integer commandRecordId =registPackageAndRecord.get(registPackage) ;  
+		    	Integer commandRecordId =registPackageAndRecord.get(registPackageOrIp) ;  
 		    	map.put("commandRecordId", new ParamMatcher(commandRecordId));
 		     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
 		     	//正常只有一个
@@ -140,16 +149,16 @@ public class NettyServiceImpl implements INettyService{
 		    		}
 		    	}
 		    	//清除防止死锁
-	    		NettyController.map.remove(registPackage);
-	    		return registPackageAndRecord.get(registPackage);
+	    		NettyController.map.remove(registPackageOrIp);
+	    		return registPackageAndRecord.get(registPackageOrIp);
 			}
 		} catch (Exception e) {
 			logger.error(this.getClass() + "接受指令保存数据出错==" + e.getMessage()); 
 		}finally {
 			//不管有没有保存成功都要移除限制，否则会死锁
-			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackage) !=null ) {
+			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackageOrIp) !=null ) {
 				//清除防止死锁
-				NettyController.map.remove(registPackage);
+				NettyController.map.remove(registPackageOrIp);
 			}
 		}
 		return null;
@@ -161,12 +170,11 @@ public class NettyServiceImpl implements INettyService{
 	//解析返回的数据
 	@Override
 	public void analysisData(Integer commandRecordId, String registPackage, String receiveMessage) throws Exception { 
-    	//找到解析具体的类别-》解析协议-》保存数据
+    	//找到具体的解析协议-> 解析->保存数据
     	List<CommandRecordDetail> recordDetails = recordService.getList(commandRecordId,registPackage,receiveMessage);
     	if(!ListUtil.isEmpty(recordDetails)) {
-    		TblCommandRecordEntity record = recordDetails.get(0).getRecord();
     		//解析后保存入库的数据
-    		logger.info("第四步：commandRecordId：" + record.getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
+    		logger.info("第四步：commandRecordId：" + recordDetails.get(0).getRecord().getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
     		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
     		if(!ListUtil.isEmpty(pointData)) {
     			//解析是否报警
