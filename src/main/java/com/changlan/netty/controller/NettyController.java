@@ -92,6 +92,7 @@ public class NettyController extends BaseController{
 		if( StringUtil.isEmpty(pointDefine.getIp()) ) {
 			throw new MyDefineException(PoinErrorType.POINT_IP_IS_NULL);
 		}
+		//是否已经有设备 正在等待接收温度指令返回
 		if(!canSendRecord(pointDefine.getIp())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
