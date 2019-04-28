@@ -70,7 +70,7 @@ public class NettyController extends BaseController{
     		instance.stopService();
     	}
       	return success(true);
-  	}
+  	} 
     
     //未加入权限表 测试发送指令用
     @RequestMapping("/test/message")
@@ -140,8 +140,8 @@ public class NettyController extends BaseController{
 		return false;
 	}
 	
-
-	 
+	
+	  
 	
 	
 }

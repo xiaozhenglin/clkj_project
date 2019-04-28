@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.ConnectClients;
 import com.changlan.netty.event.CommandCallBackEvent;
 import com.changlan.netty.server.NettyServer;
@@ -63,4 +64,18 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
         }
         return null;
  	}
+
+    //通道失效
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
+		Channel channel = ctx.channel(); 
+		String ipByChannel = getIpByChannel(channel); 
+		if(StringUtil.isNotEmpty(ipByChannel)) {
+			ConnectClients.clients.remove(ipByChannel);
+		}
+		logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +ipByChannel );
+	}
+    
+    
 }
