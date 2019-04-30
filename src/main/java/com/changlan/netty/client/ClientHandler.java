@@ -76,6 +76,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
 		}
 		logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +ipByChannel );
 	}
+
+	/**
+	 * 异常*/
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		super.exceptionCaught(ctx, cause);
+	}
     
     
 }

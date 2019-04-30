@@ -63,6 +63,14 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
 	public void setDownResult(String downResult) {
 		this.downResult = downResult;
 	}
+
+	public Integer getAlamDownRecordId() {
+		return alamDownRecordId;
+	}
+
+	public void setAlamDownRecordId(Integer alamDownRecordId) {
+		this.alamDownRecordId = alamDownRecordId;
+	}
 	
     
 

@@ -108,7 +108,7 @@ public class NettyController extends BaseController{
 		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(commandDefault.getPointId(), null); 
 		if(pointDefine==null ) {
 			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
-		}
+		} 
 		//通过注册包给设备发送 电流电压的采集指令
 		if( StringUtil.isEmpty(pointDefine.getPointRegistPackage()) ) {
 			throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
@@ -140,7 +140,7 @@ public class NettyController extends BaseController{
 		}
 		return false;
 	}
-	
+	  
 	
 	  
 	

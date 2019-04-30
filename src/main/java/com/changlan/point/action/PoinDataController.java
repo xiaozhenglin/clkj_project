@@ -2,7 +2,9 @@ package com.changlan.point.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +19,7 @@ import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.StringUtil;
@@ -33,6 +36,7 @@ import com.changlan.point.service.IPointDataService;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.point.vo.PoinDataTableVO;
 import com.changlan.point.vo.PointDataListVo;
+import com.changlan.user.pojo.LoginUser;
 
 @RestController
 @RequestMapping("/admin/point/data")
@@ -122,22 +126,37 @@ public class PoinDataController extends BaseController{
 		return list;
 	}
 	
-//	未加入权限表@RequestMapping("/down") 
-//	public ResponseEntity<Object>  down(TblPoinDataEntity entity) {
-//		TblPoinDataEntity update = pointDataService.update(entity); 
-//		return success(update);
-//	}
-//	
-//	//监控点数据报警进行处理
-//	@RequestMapping("/down/record") 
-//	public ResponseEntity<Object>  downRecord(String reason,String downResult) throws Exception { 
-//		TblAlarmDownRecordEntity  entity = new TblAlarmDownRecordEntity();
-//		entity.setDownResult(downResult);
-//		entity.setReason(reason); 
-//		entity.setRecordUser(userIsLogin().getAdminUserId()); 
-//		entity.setRecordTime(new Date()); 
-//		Object update = crudService.update(entity, true);
-//		return success(update);
-//	}
+	//监控点数据报警进行处理
+	@RequestMapping("/down/record") 
+	@Transactional
+	public ResponseEntity<Object>  downRecord(Integer pointDataId,String reason,String downResult) throws Exception { 
+		TblAlarmDownRecordEntity  entity = new TblAlarmDownRecordEntity();
+		entity.setDownResult(downResult);
+		entity.setReason(reason); 
+		if(LoginUser.getCurrentUser()!=null) {
+			entity.setRecordUser(userIsLogin().getAdminUserId()); 
+		}
+		entity.setRecordTime(new Date()); 
+		entity = (TblAlarmDownRecordEntity)crudService.update(entity, true);
+		
+		TblPoinDataEntity pointData = (TblPoinDataEntity)crudService.get(pointDataId, TblPoinDataEntity.class, true); 
+		pointData.setAlarmDown("报警已处理");
+		pointData.setAlarmDownRecord(entity.getAlamDownRecordId());
+		crudService.update(pointData, true);
+		return success(entity);
+	}
+	
+	//监控点数据报警进行处理 记录列表
+	@RequestMapping("/down/record/list") 
+	@Transactional
+	public ResponseEntity<Object>  downRecordList(Integer recordId) throws Exception { 
+		Map map = new HashMap();
+		if(recordId!=null) {
+			map.put("alamDownRecordId", new ParamMatcher(recordId)); 
+		}
+		TblAlarmDownRecordEntity  entity = new TblAlarmDownRecordEntity();
+		Object result= crudService.findByMoreFiledAndPage(TblAlarmDownRecordEntity.class, map, true, getPage());
+		return success(result);
+	}
 	
 }
