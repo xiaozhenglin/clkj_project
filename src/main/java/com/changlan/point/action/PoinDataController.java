@@ -82,9 +82,6 @@ public class PoinDataController extends BaseController{
 			//每个监控点的数据列表
 			query.setPointId(detail.getPoint().getPointId()); 
 			Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage()); 
-			
-			
-			
 			PointDataListVo vo= new PointDataListVo(pointDatas);
 			result.add(vo);
 		}
@@ -137,24 +134,26 @@ public class PoinDataController extends BaseController{
 			entity.setRecordUser(userIsLogin().getAdminUserId()); 
 		}
 		entity.setRecordTime(new Date()); 
+		entity.setPointDataId(pointDataId); 
 		entity = (TblAlarmDownRecordEntity)crudService.update(entity, true);
 		
 		TblPoinDataEntity pointData = (TblPoinDataEntity)crudService.get(pointDataId, TblPoinDataEntity.class, true); 
 		pointData.setAlarmDown("报警已处理");
 		pointData.setAlarmDownRecord(entity.getAlamDownRecordId());
 		crudService.update(pointData, true);
-		return success(entity);
+		return success(true);
 	}
 	
 	//监控点数据报警进行处理 记录列表
 	@RequestMapping("/down/record/list") 
-	@Transactional
-	public ResponseEntity<Object>  downRecordList(Integer recordId) throws Exception { 
+	public ResponseEntity<Object>  downRecordList(TblAlarmDownRecordEntity entity) throws Exception { 
 		Map map = new HashMap();
-		if(recordId!=null) {
-			map.put("alamDownRecordId", new ParamMatcher(recordId)); 
+		if(entity.getAlamDownRecordId()!=null) {
+			map.put("alamDownRecordId", new ParamMatcher(entity.getAlamDownRecordId())); 
 		}
-		TblAlarmDownRecordEntity  entity = new TblAlarmDownRecordEntity();
+		if(entity.getPointDataId()!=null) {
+			map.put("pointDataId",new ParamMatcher(entity.getPointDataId()));
+		}
 		Object result= crudService.findByMoreFiledAndPage(TblAlarmDownRecordEntity.class, map, true, getPage());
 		return success(result);
 	}

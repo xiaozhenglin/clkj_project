@@ -133,6 +133,7 @@ public class CrudDaoImpl implements ICrudDao{
         	Object value = matcher.getValue();
         	MatcheType type = matcher.getType(); 
         	if(type!=MatcheType.BETWEEN ) {
+        		//参数从1开始
         		query.setParameter(i+1, value);
         	}
         }
@@ -257,6 +258,7 @@ public class CrudDaoImpl implements ICrudDao{
         	Object value = matcher.getValue(); 
         	MatcheType type = matcher.getType(); 
         	if(type!=MatcheType.BETWEEN ) {
+        		//参数从1开始
         		query.setParameter(i+1, value);
         	}
         }

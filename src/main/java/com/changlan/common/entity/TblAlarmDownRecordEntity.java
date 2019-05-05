@@ -31,6 +31,9 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
     
     @Column(name = "DOWN_RESULT"   )
     private String downResult;
+    
+    @Column(name = "POINT_DATA_ID"   )
+    private Integer pointDataId;
 
 	public String getReason() {
 		return reason;
@@ -70,6 +73,14 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
 
 	public void setAlamDownRecordId(Integer alamDownRecordId) {
 		this.alamDownRecordId = alamDownRecordId;
+	}
+
+	public Integer getPointDataId() {
+		return pointDataId;
+	}
+
+	public void setPointDataId(Integer pointDataId) {
+		this.pointDataId = pointDataId;
 	}
 	
     
