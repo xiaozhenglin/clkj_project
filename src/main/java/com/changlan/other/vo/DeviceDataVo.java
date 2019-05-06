@@ -8,8 +8,8 @@ public class DeviceDataVo {
 	
 	
 
-	private int channelSettings_id;
-	private List<DeviceData> table;
+	private int channelSettings_id; //通道主键id
+	private List<DeviceData> table;//设备数据
 
 	public DeviceDataVo(int parseInt, List<DeviceData> table) {
 		this.channelSettings_id = parseInt;

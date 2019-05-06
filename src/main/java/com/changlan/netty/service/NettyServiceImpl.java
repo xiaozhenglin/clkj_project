@@ -1,6 +1,7 @@
 package com.changlan.netty.service;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
@@ -178,11 +180,30 @@ public class NettyServiceImpl implements INettyService{
     	if(!ListUtil.isEmpty(recordDetails)) {
     		//解析后保存入库的数据
     		logger.info("第四步：commandRecordId：" + recordDetails.get(0).getRecord().getCommandRecordId() 	+"---》》》执行解析数据"+receiveMessage);
-    		List<TblPoinDataEntity> pointData = recordService.anylysisData(recordDetails.get(0));
+    		TblCommandCategoryEntity category = recordDetails.get(0).getCategory();
+    		//电流、电压、温度解析后的数据
+    		List<Object> pointData = recordService.anylysisData(recordDetails.get(0));
     		if(!ListUtil.isEmpty(pointData)) {
     			//解析是否报警
     			logger.info("解析数据完成-----》报警规则计算开始");
-    			Boolean haveAlarm = alarmService.anylysisPointData(pointData);
+    			
+    			List<TblPoinDataEntity> currentAndVoltage = new ArrayList();
+    			List<TblTemperatureDataEntity> temperature = new ArrayList<>(); 
+    			for(Object o: pointData) {
+    				if(o instanceof  TblPoinDataEntity) {
+    					currentAndVoltage.add((TblPoinDataEntity)o);
+    				}
+    				if(o instanceof  TblTemperatureDataEntity) {
+    					temperature.add((TblTemperatureDataEntity)o);
+    				}
+    			}
+    			
+    			if(!ListUtil.isEmpty(currentAndVoltage)) {
+    				alarmService.anylysisPointData(currentAndVoltage);
+    			}
+    			if(!ListUtil.isEmpty(temperature)) {
+    				alarmService.anylysisTemperatureData(temperature);
+    			}
     			logger.info("-----》》》根据报警规则计算结束");
     			//重试发送指令确认报警
 //    			if(haveAlarm ) {
@@ -216,7 +237,7 @@ public class NettyServiceImpl implements INettyService{
 		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
 		for(CommandDefaultDetail data : commandList) {
 			try {
-				//每个数据延时0.3秒按顺序开启定时任务
+				//每个数据延时0.5秒按顺序开启定时任务
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

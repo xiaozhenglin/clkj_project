@@ -44,6 +44,7 @@ public class CrudServiceImpl implements ICrudService{
 	}
 
 	@Override
+	@Transactional
 	public Object update(Object entity,boolean isPramDataSource) {
 		return dao.update(entity);
 	}

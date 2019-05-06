@@ -80,7 +80,7 @@ public class NettyController extends BaseController{
     	return success(true);
 	}
 
-	//未加入权限表
+	//客户端往服务器发送消息
 	@RequestMapping("/client/send/message")
 	public ResponseEntity<Object>  clientSendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
@@ -96,12 +96,14 @@ public class NettyController extends BaseController{
 		if(!canSendRecord(pointDefine.getIp())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
+		//保存记录 并加锁
 		TblCommandRecordEntity update = recordService.updateClientRecord(commandDefault,pointDefine.getIp()); 
+		//执行发送
 		nettyService.clientSendMessage(pointDefine.getIp(), commandDefault.getCommandContent()); 
 		return success(true);
 	}
 
-	//主动发送，有定时任务被动发送
+	//主动发送，有定时任务被动发送 
 	@RequestMapping("/server/send/message")
 	public ResponseEntity<Object>  serverSendMessage(Integer commanId) throws Exception { 
 		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(commanId, TblPointSendCommandEntity.class, true);
@@ -116,7 +118,9 @@ public class NettyController extends BaseController{
 		if(!canSendRecord(pointDefine.getPointRegistPackage())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
+		//保存记录 并加锁
 		TblCommandRecordEntity update = recordService.updateServerRecord(commandDefault,pointDefine.getPointRegistPackage()); 
+		//执行发送
 		nettyService.serverSendMessage(pointDefine.getPointRegistPackage(), commandDefault.getCommandContent()); 
 		return success(true);
 	}

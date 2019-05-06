@@ -59,6 +59,9 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     @Column(name = "CURRENT_DATA_ID"  )
     private Integer currentDataId;
     
+    @Column(name = "DATA_FROM"  )
+    private String dataFrom;
+    
 	/**
      * 获取alarmId
      * 
@@ -198,6 +201,14 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
 	public void setCurrentDataId(Integer currentDataId) {
 		this.currentDataId = currentDataId;
+	}
+
+	public String getDataFrom() {
+		return dataFrom;
+	}
+
+	public void setDataFrom(String dataFrom) {
+		this.dataFrom = dataFrom;
 	}
 	
     

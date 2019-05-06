@@ -33,6 +33,7 @@ import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
@@ -89,8 +90,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 
 	@Override
 	@Transactional
-	public List<TblPoinDataEntity> anylysisData(CommandRecordDetail recordDetail) {
-		List<TblPoinDataEntity> result = new ArrayList<>(); 
+	public List<Object> anylysisData(CommandRecordDetail recordDetail) {
+		List<Object> result = new ArrayList<Object>();
+//		List<TblPoinDataEntity> currentAndVoltage = new ArrayList<>(); 
+//		List<TblTemperatureDataEntity> temperature = new ArrayList<>(); 
+		//指令类别
+		TblCommandCategoryEntity category = recordDetail.getCategory();
 		//监控点信息
 	  	TblPointsEntity point = recordDetail.getPoint();
 	  	//记录信息
@@ -118,12 +123,36 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         			if(notNegative!=null && notNegative>=1&& compareTo == -1) {
         				bigDecimal = BigDecimal.ZERO;
         			}
-        			TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
-        			result.add(saveData);
+        			String categoryNmae = category.getCategoryNmae();
+        			if(categoryNmae.indexOf("温度")>-1) {
+        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol); 
+        				result.add(value);
+        			}else {
+        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
+        				result.add(saveData);
+        			}
         		}
     		}
     	}
 		return result;
+	}
+
+	//表格参数一样的，是为了分表存储温度和电流的数据
+	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol) {
+		TblTemperatureDataEntity entity = new TblTemperatureDataEntity(); 
+		entity.setPointId(point.getPointId()); 
+		entity.setPointName(point.getPointName());
+		entity.setIndicatorId(protocol.getIndicatorId());  
+		entity.setValue(value); 
+		entity.setRecordTime(new Date()); 
+		entity.setProtocolId(protocol.getProtocolId());  //数据来源协议id
+		TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
+		entity.setCategroryId(indicator.getCategoryId()); //指标类别
+		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
+		entity.setIsAlarm(0); 
+		entity.setIsEarlyWarning(0);  
+		crudService.save(entity, true);
+		return entity;
 	}
 
 	private TblPoinDataEntity saveData(String value, TblPointsEntity point, TblCommandProtocolEntity protocol) {
@@ -227,6 +256,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		}
 		return update;
 	}
+
+//	@Override
+//	public List<TblTemplateDataEntity> anylysisTemplateData(CommandRecordDetail commandRecordDetail) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 	
 

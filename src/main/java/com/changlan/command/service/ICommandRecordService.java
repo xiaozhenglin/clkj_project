@@ -14,18 +14,22 @@ public interface ICommandRecordService {
 	//获取发送记录列表
 	List<CommandRecordDetail> getList(Integer recordId,String registPackage,String backContent);
 
+	//分页查询
 	Page<CommandRecordDetail> getPage(TblCommandRecordEntity record,Pageable page);   
 	
+	//获取上一次的记录
 	CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage);
 
-	//解析数据
-	List<TblPoinDataEntity> anylysisData(CommandRecordDetail commandRecordDetail);
+	//解析电流、电压数据
+	//解析温度数据
+	List<Object> anylysisData(CommandRecordDetail recordDetail); 
 
 	//保存服务器往客户端发送记录
 	TblCommandRecordEntity updateServerRecord(TblPointSendCommandEntity commandDefault,String registPackage);
 
 	//保存客户端往服务器发送记录
 	TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip);
+
 
 
 

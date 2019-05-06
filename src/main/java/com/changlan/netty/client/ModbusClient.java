@@ -121,20 +121,6 @@ public class ModbusClient {
     		ByteBuf buf = Unpooled.buffer(300);
         	byte[] bytes =  StringUtil.hexStringToBytes("000000000006640300010001");
     	 	connectChannel.writeAndFlush(buf.writeBytes(bytes)); 
-//        	ByteBuffer buf = ByteBuffer.allocate(60);
-//			buf.put(0, (byte) 0);
-//			buf.put(1, (byte) 0);
-//			buf.put(2, (byte) 0);
-//			buf.put(3, (byte) 0);
-//			buf.put(4, (byte) 0);
-//			buf.put(5, (byte) 6);
-//			buf.put(6, (byte) 100);
-//			buf.put(7, (byte) 3);
-//			buf.put(8, (byte) 0);
-//			buf.put(9, (byte) 1);
-//			buf.put(10, (byte) 0);
-//			buf.put(11, (byte) 1);
-//			connectChannel.writeAndFlush(buf.writeBytes(buf)); 
     	}
 //
 //		Date now2 = new Date();

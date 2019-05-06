@@ -27,6 +27,7 @@ import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.pojo.SmsParams;
@@ -165,8 +166,8 @@ public class AlarmServiceImpl implements IAlarmService{
 //		logger.info("-----》报警规则计算结束");
 	}
 
-
-	private Boolean canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
+	//计算值是否有预警或者报警
+	public Boolean canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
 		Boolean haveAlarm = false;
 		Integer topAlarm = rule.getTopAlarm();
 		Integer lowerAlarm = rule.getLowerAlarm();
@@ -190,7 +191,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		return haveAlarm;
 	}
 
-
+	//修改数据表中 的预警数据信息
 	private void saveEarlyAlarmData(TblPoinDataEntity data, Integer alarmDataId) {
 		data.setIsEarlyWarning(1); 
 		String alarmDataIds = data.getElarlyAlamDataId();
@@ -202,6 +203,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		TblPoinDataEntity update = pointDataService.update(data);
 	}
 
+	//修改数据表中 的报警数据信息
 	private void savaAlarmData(TblPoinDataEntity data, Integer alarmDataId) {
 		data.setIsAlarm(1); 
 		String alarmDataIds = data.getAlarmDataId();
@@ -214,6 +216,7 @@ public class AlarmServiceImpl implements IAlarmService{
 	}
 
 
+	//保存到报警数据表
 	private Integer saveToAlarmDataBase(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule, Integer constractDataId) {
 		TblPointAlamDataEntity entity = new TblPointAlamDataEntity(); 
 		entity.setPointId(data.getPointId()); 
@@ -225,6 +228,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		entity.setPointId(data.getPointId()); 
 		entity.setCurrentDataId(data.getPointDataId()); 
 		entity.setContrastDataId(constractDataId); 
+		entity.setDataFrom("电流电压采集数据表");
 		TblPointAlamDataEntity update = (TblPointAlamDataEntity)crudService.update(entity, true); 
 		return update.getAlarmId();
 	}
@@ -244,6 +248,85 @@ public class AlarmServiceImpl implements IAlarmService{
 			e.printStackTrace();
 		}
 	}
+	
+	
+//-----------------------------------------------------------------------------------
+	@Override
+	public void anylysisTemperatureData(List<TblTemperatureDataEntity> temperature) {
+		for(TblTemperatureDataEntity data : temperature ) {
+			BigDecimal value = new BigDecimal(data.getValue());
+			//规则
+			List<TblAlarmRuleEntity> rules = alarmRuleService.getAll(null,data.getIndicatorId(),data.getPointId());
+			//没有找到,就不进行报警计算
+			for(int j = 0 ;j<rules.size() ;j++) {
+				TblAlarmRuleEntity rule = rules.get(j); 
+				//规则类
+				Integer alarmCategoryId = rule.getAlarmCategoryId(); 
+				switch (alarmCategoryId) {
+				case 1:
+					//固定
+					int intValue = value.intValue();
+					canculateAlarm(intValue,data,rule);
+					break;
+				}
+			}
+		}
+	}
+
+	private Object canculateAlarm(int intValue, TblTemperatureDataEntity data, TblAlarmRuleEntity rule) {
+		Boolean haveAlarm = false;
+		Integer topAlarm = rule.getTopAlarm();
+		Integer lowerAlarm = rule.getLowerAlarm();
+		Integer topLimit = rule.getTopLimit(); 
+		Integer lowerLimit = rule.getLowerLimit(); 
+		// 低于最低限 高于最高限度
+		if(intValue< lowerAlarm || intValue>topAlarm) {
+			//报警
+//			sendSMSMessage(data.getPointId(),data.getIndicatorId(),intValue);
+			Integer alarmDataId = saveToAlarmDataBase(intValue, data, rule);
+			savaAlarmData(data,alarmDataId);
+			haveAlarm =  true;
+		}
+		// 处于预警值和报警值之间
+		if( (intValue> topLimit && intValue<=topAlarm) || (intValue<lowerLimit && intValue>= lowerAlarm) ) {
+			//预警
+			Integer alarmDataId =  saveToAlarmDataBase(intValue, data, rule);
+			saveEarlyAlarmData(data,alarmDataId);
+		}
+		return haveAlarm;
+	}
+
+	private void saveEarlyAlarmData(TblTemperatureDataEntity data, Integer alarmDataId) {
+		data.setIsEarlyWarning(1); 
+		data.setElarlyAlamDataId(alarmDataId+"");
+		crudService.update(data, true);
+	}
+
+	private void savaAlarmData(TblTemperatureDataEntity data, Integer alarmDataId) {
+		data.setIsEarlyWarning(1); 
+		data.setElarlyAlamDataId(alarmDataId+"");
+		crudService.update(data, true);
+	}
+
+	private Integer saveToAlarmDataBase(int intValue, TblTemperatureDataEntity data, TblAlarmRuleEntity rule) {
+		TblPointAlamDataEntity entity = new TblPointAlamDataEntity(); 
+		entity.setPointId(data.getPointId()); 
+		entity.setAlarmDate(new Date());
+		entity.setAlarmRuleId(rule.getAlarmRuleId());
+		entity.setIndicatorId(data.getIndicatorId());
+		entity.setValue(data.getValue());
+		entity.setIsNotice(1);
+		entity.setPointId(data.getPointId()); 
+		entity.setCurrentDataId(data.getPointDataId()); 
+		entity.setContrastDataId(data.getPointDataId()); 
+		entity.setDataFrom("温度采集数据表");
+		TblPointAlamDataEntity update = (TblPointAlamDataEntity)crudService.update(entity, true); 
+		return update.getAlarmId();
+	}
+
+
+
+
 
 	
 	
