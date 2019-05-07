@@ -8,13 +8,13 @@ import com.changlan.common.util.SpringUtil;
 
 public class ProtocolInfo {
 	private TblCommandProtocolEntity protocol; //一个协议值
-	private TblCommandCategoryEntity category ; //一个指令类别id
+//	private TblCommandCategoryEntity category ; //一个指令类别id
 	private TblIndicatorValueEntity indicators;//对应一个指标
 
 	
 	public ProtocolInfo(TblCommandProtocolEntity entity) {
 		this.protocol = entity;
-		this.category = getCategory(entity.getCommandCatagoryId());
+//		this.category = getCategory(entity.getCommandCatagoryId());
 		this.indicators = getIndicator(entity.getIndicatorId());
 	}
 	
@@ -41,12 +41,12 @@ public class ProtocolInfo {
 	public void setProtocol(TblCommandProtocolEntity protocol) {
 		this.protocol = protocol;
 	}
-	public TblCommandCategoryEntity getCategory() {
-		return category;
-	}
-	public void setCategory(TblCommandCategoryEntity category) {
-		this.category = category;
-	}
+//	public TblCommandCategoryEntity getCategory() {
+//		return category;
+//	}
+//	public void setCategory(TblCommandCategoryEntity category) {
+//		this.category = category;
+//	}
 
 	public TblIndicatorValueEntity getIndicators() {
 		return indicators;

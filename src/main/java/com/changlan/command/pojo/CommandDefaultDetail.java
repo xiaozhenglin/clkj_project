@@ -15,21 +15,18 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.point.service.IPointDefineService;
 
 public class CommandDefaultDetail {
-//	extends CommandCategoryDetail
     //一个类别
 	private TblPointSendCommandEntity commandDefault; //一条默认指令
 	private List<ProtocolInfo> currentDataProtocol;  //当前解析数据的协议
 	private TblPointsEntity  point ;  //一个监控点
-//	private TblIndicatorCategoriesEntity indicatorCategory; //指标类别
 	private TblCommandCategoryEntity category; // 指令类别
 	
 	public CommandDefaultDetail(TblPointSendCommandEntity commandDefault) {
-//		super(commandDefault);
 		this.commandDefault =commandDefault;
 		this.currentDataProtocol = getDataProtocol(commandDefault);
 		this.category = getCategory(commandDefault.getCommandCatagoryId());
 		this.point = getPoint(commandDefault.getPointId());
-//		this.indicatorCategory = getIndicatorCategory(commandDefault.getIndicatorCategory());
+//		指标类别this.indicatorCategory = getIndicatorCategory(commandDefault.getIndicatorCategory());
 	}
 	
 	private TblIndicatorCategoriesEntity getIndicatorCategory(Integer indicatorCategory) {

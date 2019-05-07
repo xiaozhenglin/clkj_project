@@ -10,9 +10,10 @@ import com.changlan.common.entity.TblTemperatureDataEntity;
 
 public interface IAlarmService {
 	
-	//解析指标值信息	
+	//电流电压报警解析	
 	Boolean anylysisPointData(List<TblPoinDataEntity> pointData); 
 	
+	//温度报警解析	
 	void anylysisTemperatureData(List<TblTemperatureDataEntity> temperature); 
 
 	void sendSMSMessage(Integer pointId, Integer indicatorId,int value);
