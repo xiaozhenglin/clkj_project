@@ -14,12 +14,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * descripiton: 服务器初始化
- *
- * @author: www.iknowba.cn
- * @date: 2018/3/23
- * @time: 15:46
- * @modifier:
- * @since:
  */
 public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
     @Override
@@ -32,7 +26,5 @@ public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("encode", new StringEncoder());
         //聊天服务通道处理
         pipeline.addLast("chat", new ServerHandler());
-//        pipeline.addLast(new IdleStateHandler(5, 0, 0,TimeUnit.SECONDS));
-//        pipeline.addLast(new ServerHandler());
     }
 }

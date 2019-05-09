@@ -58,7 +58,7 @@ public class NettyServer extends Thread{
         try {
             //绑定服务端口监听
             Channel channel = bootstrap.bind(NettyConfiguration.nettyPort).sync().channel(); 
-            logger.info("启动服务器端口: " + NettyConfiguration.nettyPort);
+            logger.info("启动tcp服务器端口: " + NettyConfiguration.nettyPort);
             // 这行必须要
             channel.closeFuture().sync();
         } catch (InterruptedException e) {
