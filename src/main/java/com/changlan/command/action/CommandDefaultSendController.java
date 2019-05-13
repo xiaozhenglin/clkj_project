@@ -49,7 +49,6 @@ public class CommandDefaultSendController extends BaseController{
 		return success(list);
 	}
 	
-	//未加入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblPointSendCommandEntity entity) throws MyDefineException { 

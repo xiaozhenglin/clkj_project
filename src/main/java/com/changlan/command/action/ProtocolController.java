@@ -50,7 +50,6 @@ public class ProtocolController extends BaseController{
 		return success(list);
 	} 
 	
-	//未加入权限表
 	@RequestMapping("/delete")
 	@Transactional
 	public ResponseEntity<Object>  delete(TblCommandProtocolEntity entity) throws MyDefineException { 

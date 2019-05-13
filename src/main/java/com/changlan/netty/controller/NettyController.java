@@ -61,7 +61,7 @@ public class NettyController extends BaseController{
 	
     private static final Logger logger = LoggerFactory.getLogger(NettyController.class);
     
-    //未加入权限表 关闭短信猫的服务
+    //设置不需要权限   关闭短信猫的服务
     @RequestMapping("/close/sms/cat")
   	public ResponseEntity<Object>  closeCat() throws Exception { 
     	GsmCat instance = GsmCat.getInstance(); 
@@ -72,7 +72,7 @@ public class NettyController extends BaseController{
       	return success(true);
   	} 
     
-    //未加入权限表 测试发送指令用
+    //设置不需要权限   测试发送指令用
     @RequestMapping("/test/message")
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
     	clientSendMessage(commanId);
@@ -94,7 +94,7 @@ public class NettyController extends BaseController{
 		}
 		//是否已经有设备 正在等待接收温度指令返回
 		if(!canSendRecord(pointDefine.getIp())) { 
-			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
+			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);	
 		}
 		//保存记录 并加锁
 		TblCommandRecordEntity update = recordService.updateClientRecord(commandDefault,pointDefine.getIp()); 

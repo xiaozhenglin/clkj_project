@@ -34,14 +34,14 @@ public class MsgController extends BaseController{
 	@Autowired
 	private ISmsCatService smsCatService;
 	
-	//未加入权限表
+	//未加入权限表 接口没用
 	@RequestMapping("/data/list")
 	public ResponseEntity<Object>  list(TblMsgDataEntity data) throws Exception {  
 		Page<MsgDataDetail> result = msgDataService.getAllByPage(data,getPage());
 		return success(result);
 	} 
 	
-	//未加入权限表 
+	//未加入权限表 接口没用
 	@RequestMapping("/send/sms")
 	public ResponseEntity<Object>  send(SmsParams param ) throws Exception {  
         smsCatService.sendSmsCat(param);

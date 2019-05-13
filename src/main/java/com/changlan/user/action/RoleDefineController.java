@@ -54,7 +54,7 @@ public class RoleDefineController extends BaseController{
 			throw new MyDefineException(UserErrorType.SAVE_ERROR);
 		}
 		return success(update);
-	} 
+	}   
 	
 	@RequestMapping("/delete")
 	@Transactional
