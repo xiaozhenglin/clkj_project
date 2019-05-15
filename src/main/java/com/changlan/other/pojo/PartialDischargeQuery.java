@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.changlan.other.entity.PartialDischargeEntity;
 
-public class PartialDischargeQuery extends PartialDischargeEntity{
+public class PartialDischargeQuery {
 	private Long begin;
 	private Long end;
 	private String localtion;
