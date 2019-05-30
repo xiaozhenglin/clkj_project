@@ -11,6 +11,9 @@
  */
 package com.changlan.common.entity;
 import javax.persistence.GenerationType;
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -77,6 +80,12 @@ public class TblLinesEntity implements java.io.Serializable {
     @Column(name = "POINT_CATAGORY_IDS"   )
     private String pointCatagoryIds;
 
+    @Column(name = "LINE_LENGTH"   )
+    private Double lineLength;
+    
+    @Column(name = "ADD_TIME"   )
+    private Date addTime;
+    
     /**
      * 获取lineId
      * 
@@ -255,4 +264,23 @@ public class TblLinesEntity implements java.io.Serializable {
     public void setPointCatagoryIds(String pointCatagoryIds) {
         this.pointCatagoryIds = pointCatagoryIds;
     }
+
+	public Double getLineLength() {
+		return lineLength;
+	}
+
+	public void setLineLength(Double lineLength) {
+		this.lineLength = lineLength;
+	}
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+    
+    
+    
 }

@@ -55,6 +55,7 @@ public class CrudServiceImpl implements ICrudService{
 	}
 
 	@Override
+	@Transactional
 	public Boolean save(Object entity,boolean isPramDataSource) {
 		return dao.save(entity); 
 	}

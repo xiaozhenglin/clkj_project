@@ -14,7 +14,7 @@ public class CommandCallBackEvent extends ApplicationEvent{
 		this.receiveMessage = receiveMessage;
 	}
 
-	public String getReceiveMessage() {
+	public String getReceiveMessage() {	
 		return receiveMessage;
 	}
 

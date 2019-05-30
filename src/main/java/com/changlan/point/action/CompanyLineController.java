@@ -1,5 +1,6 @@
 package com.changlan.point.action;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -44,13 +45,14 @@ public class CompanyLineController extends BaseController{
 	@RequestMapping("/save")
 	@Transactional
 	public ResponseEntity<Object>  lineSave(TblLinesEntity entity ) throws Exception { 
-		Boolean exist = lineService.existGroupName(entity);
+		Boolean exist = lineService.existName(entity);
 		if(exist) {
-			throw new MyDefineException(PoinErrorType.NAME_EXIST.getCode(), PoinErrorType.NAME_EXIST.getName(), false, null);
+			throw new MyDefineException(PoinErrorType.NAME_EXIST);
 		}
+		entity.setAddTime(new Date());
 		TblLinesEntity update = (TblLinesEntity)crudService.update(entity, true); 
 		if(update == null) {
-			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
+			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}
 		return success(update);
 	}

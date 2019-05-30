@@ -250,17 +250,17 @@ public class AlarmServiceImpl implements IAlarmService{
 	}
 	
 	
-//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------温度报警计算
 	@Override
 	public void anylysisTemperatureData(List<TblTemperatureDataEntity> temperature) {
 		for(TblTemperatureDataEntity data : temperature ) {
 			BigDecimal value = new BigDecimal(data.getValue());
-			//规则
+			//规则列表
 			List<TblAlarmRuleEntity> rules = alarmRuleService.getAll(null,data.getIndicatorId(),data.getPointId());
 			//没有找到,就不进行报警计算
 			for(int j = 0 ;j<rules.size() ;j++) {
 				TblAlarmRuleEntity rule = rules.get(j); 
-				//规则类
+				//规则计算类别
 				Integer alarmCategoryId = rule.getAlarmCategoryId(); 
 				switch (alarmCategoryId) {
 				case 1:
@@ -281,7 +281,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		Integer lowerLimit = rule.getLowerLimit(); 
 		// 低于最低限 高于最高限度
 		if(intValue< lowerAlarm || intValue>topAlarm) {
-			//报警
+			//报警数据表添加数据
 //			sendSMSMessage(data.getPointId(),data.getIndicatorId(),intValue);
 			Integer alarmDataId = saveToAlarmDataBase(intValue, data, rule);
 			savaAlarmData(data,alarmDataId);

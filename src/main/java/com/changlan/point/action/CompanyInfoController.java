@@ -28,7 +28,7 @@ import com.changlan.point.vo.CompanyVo;
 public class CompanyInfoController extends BaseController{
 	
 	@Autowired
-	ICrudService crudService;
+	private ICrudService crudService;
 	
 	@Autowired
 	private ICompanyInfoService companyInfoService;

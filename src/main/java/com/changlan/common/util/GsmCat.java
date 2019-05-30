@@ -87,7 +87,7 @@ public class GsmCat {
 	
 	
 	public static List<SmsParams> lastAddGateWay = new ArrayList<SmsParams>(); //已经添加的设备
-	public static Map<String,SerialModemGateway> gateWays = new HashMap();//已经添加的设备对应的 设备id
+	public static Map<String,SerialModemGateway> gateWays = new HashMap();//已经添加的设备对应的 设备网关
     
 	//初始化多个串口和对应的波特率
     public static Service initService(List<SmsParams> list)  { 
@@ -165,9 +165,8 @@ public class GsmCat {
     
 	//通知运维人员
 	public static Boolean sendMsgToOher(String phones, String sendContent)  { 
-		// 获取需要发送的电话号码
 		if(StringUtil.isNotEmpty(phones)) {
-			//sms 发送消息
+			//获取需要发送的电话号码
 			String[] receivePhones = phones.split(","); 
 			//设置短信猫设备
 			SmsParams param = new SmsParams(SmsCatConfiguration.serverPortName, Integer.parseInt(SmsCatConfiguration.serverPortBound));//服务器的串口来发送

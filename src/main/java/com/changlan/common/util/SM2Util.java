@@ -237,9 +237,9 @@ public class SM2Util {
             BigInteger y = publicKey.getYCoord().toBigInteger();
             if (between(x, new BigInteger("0"), p) && between(y, new BigInteger("0"), p)) {
                 BigInteger xResult = x.pow(3).add(a.multiply(x)).add(b).mod(p);
-//                System.out.println("xResult: " + xResult.toString());
+                System.out.println("xResult: " + xResult.toString());
                 BigInteger yResult = y.pow(2).mod(p);
-//                System.out.println("yResult: " + yResult.toString());
+                System.out.println("yResult: " + yResult.toString());
                 if (yResult.equals(xResult) && publicKey.multiply(n).isInfinity()) {
                     return true;
                 }
@@ -272,6 +272,6 @@ public class SM2Util {
         b); // b
         G = curve.createPoint(xg, yg);
     }
-     
+      
 }
 

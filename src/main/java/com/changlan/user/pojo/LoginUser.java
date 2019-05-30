@@ -1,5 +1,8 @@
 package com.changlan.user.pojo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -24,6 +27,8 @@ public class LoginUser {
 //    	localUser.remove();
 //    }
 //    
+	public static Map<String,TblAdminUserEntity> map = new HashMap();
+	
     public static  TblAdminUserEntity getCurrentUser() {
     	ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     	if(requestAttributes==null) {
@@ -37,4 +42,6 @@ public class LoginUser {
 		TblAdminUserEntity user = (TblAdminUserEntity) session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 		return user;
     }
+    
+    
 }

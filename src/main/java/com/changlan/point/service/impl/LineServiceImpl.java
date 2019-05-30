@@ -28,7 +28,7 @@ public class LineServiceImpl implements ILineService{
 	
 	
 	@Override
-	public Boolean existGroupName(TblLinesEntity entity) {
+	public Boolean existName(TblLinesEntity entity) {
 		Map map = new HashMap();
 		map.put("lineName", new ParamMatcher(entity.getLineName()));
 		List<TblLinesEntity> list = crudService.findByMoreFiled(TblLinesEntity.class, map, true); 

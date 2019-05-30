@@ -81,6 +81,7 @@ public class LoginController extends BaseController{
 	private void addUserInfoToSession(TblAdminUserEntity user) {
 		HttpSession session = getSession(); 
 		session.setAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME,user);
+		LoginUser.map.put(user.getAdminUserId(), user);
 	}
 
 	@RequestMapping("/logout")
@@ -90,6 +91,7 @@ public class LoginController extends BaseController{
 		if(user!=null) {
 			session.removeAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 			logger.info("用户登出"+ user.getName());
+			LoginUser.map.remove(user.getAdminUserId(),user);
 		}
 		return success(true);
 	}

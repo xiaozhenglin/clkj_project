@@ -8,7 +8,7 @@ import com.changlan.point.pojo.LineDetail;
 
 public interface ILineService {
 
-	Boolean existGroupName(TblLinesEntity entity);
+	Boolean existName(TblLinesEntity entity);
 
 	List<LineDetail> getAll(TblLinesEntity entity);   
 

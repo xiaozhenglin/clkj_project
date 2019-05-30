@@ -16,7 +16,7 @@ import com.changlan.point.service.ICompanyInfoService;
 public class LineDetail {
 	
 	private TblLinesEntity line;  // 一条线路信息
-	private  List<TblPointCategoryEntity> pointCategorys = new ArrayList<TblPointCategoryEntity>(); //一条线路多个监控类别
+	private List<TblPointCategoryEntity> pointCategorys = new ArrayList<TblPointCategoryEntity>(); //一条线路多个监控类别
 	private TblCompanyEntity company; //所属一个公司信息 get方法去掉，不显示
 	
 	public LineDetail() { 

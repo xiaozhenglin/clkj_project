@@ -49,17 +49,17 @@ public class ComPanyServiceImpl implements ICompanyInfoService{
 		}
 		
 		//根据用户权限二次筛选
-		TblAdminUserEntity user = LoginUser.getCurrentUser();
-		String companyIdS = user.getCompanyId(); 
-		if(StringUtil.isNotEmpty(companyIdS)) {
-			List<String> stringToList = StringUtil.stringToList(companyIdS); 
-			for(CompanyDetail detail : list) {
-				Integer companyId = detail.getCompany().getCompanyId(); 
-				if(!stringToList.contains(companyId)) {
-					list.remove(list.indexOf(detail)); 
-				}
-			}
-		}
+//		TblAdminUserEntity user = LoginUser.getCurrentUser();
+//		String companyIdS = user.getCompanyId(); 
+//		if(StringUtil.isNotEmpty(companyIdS)) {
+//			List<String> stringToList = StringUtil.stringToList(companyIdS); 
+//			for(CompanyDetail detail : list) {
+//				Integer companyId = detail.getCompany().getCompanyId(); 
+//				if(!stringToList.contains(companyId)) {
+//					list.remove(list.indexOf(detail)); 
+//				}
+//			}
+//		}
 		return list;
 	}
 

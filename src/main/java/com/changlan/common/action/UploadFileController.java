@@ -1,8 +1,13 @@
 package com.changlan.common.action;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.changlan.common.configuration.UploadConfiguration;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.util.FileUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
 import com.changlan.user.pojo.UserErrorType;
 
@@ -40,9 +46,36 @@ public class UploadFileController extends BaseController{
 		}
 		return success(newRealpath);
 	}
+	
+	//未加入权限表 日志文件读取
+	@RequestMapping(value = "/admin/log/list")
+	public ResponseEntity<Object> getLog(String url) throws Exception{
+		logger.info(url); 
+		File file = new File(url);
+		try {
+			List<File> fileList = FileUtil.getFileList("D:\\changlan\\adminplat\\console-2019-05-24.log", new ArrayList<File>()); 
+			return success(fileList);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 	 
-//	public static void main(String[] args) {
-//		File file = new File("D:\\uploads\\notzip\\02ffedfb88f34a1988390349f6ffb91d20190306145009.png");
-//		System.out.println(file.getName());
-//	}
+	public static void main(String[] args) {
+		File file = new File("D:\\changlan\\adminplat\\console-2019-05-24.log");
+		try {
+			String readToBuffer = FileUtil.readToBuffer(file);
+			System.out.println(readToBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		List<File> fileList = FileUtil.getFileList("D:\\changlan\\adminplat", new ArrayList<File>()); 
+		System.out.println(fileList.size()); 
+		for(File file2 : fileList) {
+			System.out.println(file2.getAbsolutePath() + "-----"+ file2.getName()); 
+		}
+	}
+	
+	
+	
 }

@@ -15,7 +15,7 @@ public class SM2UtilTest {
         SM2Util sm2 = new SM2Util();
         //公钥
         SM2KeyPair keyPair = sm2.generateKeyPair();
-        System.out.println(Hex.toHexString(keyPair.getPublicKey().getEncoded())); 
+        System.out.println(Hex.toHexString(keyPair.getPublicKey().getEncoded(false))); 
         
         System.out.println("==========================");
         //加密
@@ -27,5 +27,5 @@ public class SM2UtilTest {
         //解密
         sm2.decrypt(data, keyPair.getPrivateKey());//71017045908707391874054405929626258767106914144911649587813342322113806533034
     }
-    
+     
 }

@@ -23,7 +23,8 @@ import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.point.vo.PointDataListVo;
-
+/**
+ *局放数据*/
 @RestController
 @RequestMapping("/admin/Partial/Discharge")
 public class PartialDischargeController extends BaseController{
