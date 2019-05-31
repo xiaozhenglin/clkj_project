@@ -45,8 +45,8 @@ public class IndicatorValueController extends  BaseController{
 	}
 
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(Integer id,Integer categoryId) {
-		List<IndiCatorValueDetail> list = indicatorValueService.getAll(id,categoryId);
+	public ResponseEntity<Object>  list(Integer indicatorId,Integer categoryId) {
+		List<IndiCatorValueDetail> list = indicatorValueService.getAll(indicatorId,categoryId);
 		return success(list);
 	}
 	
