@@ -20,7 +20,6 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
-import com.changlan.point.vo.CompanyLineVO;
 import com.changlan.point.vo.CompanyVo;
 
 @RestController

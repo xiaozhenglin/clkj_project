@@ -26,7 +26,6 @@ public class LineServiceImpl implements ILineService{
 	@Autowired
 	private ICrudService crudService;
 	
-	
 	@Override
 	public Boolean existName(TblLinesEntity entity) {
 		Map map = new HashMap();
@@ -55,8 +54,8 @@ public class LineServiceImpl implements ILineService{
 	public List<LineDetail> getAll(TblLinesEntity entity) {
 		List<LineDetail> list = new ArrayList<LineDetail>();
 		Map map = new HashMap();
-		if(entity.getCompanyId()!= null) {
-			map.put("companyId", new ParamMatcher(entity.getCompanyId()));
+		if(entity.getChannelId()!= null) {
+			map.put("channelId", new ParamMatcher(entity.getChannelId()));
 		}
 		if(entity.getLineId()!=null) {
 			map.put("lineId", new ParamMatcher(entity.getLineId()));
@@ -64,19 +63,19 @@ public class LineServiceImpl implements ILineService{
 		List<Object> all =  crudService.findByMoreFiled(TblLinesEntity.class, map, true);
 		
 		//根据用户权限二次筛选  去除掉用户不能查看的线路
-		TblAdminUserEntity user = LoginUser.getCurrentUser(); 
-		String lineIdS = user.getLineId(); 
-		if(StringUtil.isNotEmpty(lineIdS)) {
-			List<String> stringToList = StringUtil.stringToList(lineIdS); 
-			for(Object o : all) {
-				TblLinesEntity line = (TblLinesEntity)o;
-				Integer lineId = line.getLineId();
-				//包含可查看范围
-				if(!stringToList.contains(lineId)) {
-					all.remove(all.indexOf(line)); 
-				}
-			}
-		}
+//		TblAdminUserEntity user = LoginUser.getCurrentUser(); 
+//		String lineIdS = user.getLineId(); 
+//		if(StringUtil.isNotEmpty(lineIdS)) {
+//			List<String> stringToList = StringUtil.stringToList(lineIdS); 
+//			for(Object o : all) {
+//				TblLinesEntity line = (TblLinesEntity)o;
+//				Integer lineId = line.getLineId();
+//				//包含可查看范围
+//				if(!stringToList.contains(lineId)) {
+//					all.remove(all.indexOf(line)); 
+//				}
+//			}
+//		}
 		
 		//封装公司线路信息
 		for(Object o : all) {

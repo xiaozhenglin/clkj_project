@@ -27,11 +27,10 @@ import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.ILineService;
 import com.changlan.point.service.IPointDefineService;
-import com.changlan.point.vo.CompanyLineVO;
 
 @RestController
 @RequestMapping("/admin/line")
-public class CompanyLineController extends BaseController{
+public class LineController extends BaseController{
 	@Autowired
 	private ICrudService crudService;
 	

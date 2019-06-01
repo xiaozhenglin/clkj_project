@@ -11,6 +11,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
@@ -73,5 +75,17 @@ public class AdminplatApplication implements ApplicationRunner {
 //		long seconds = (time-time2);
 //		System.out.println(seconds);
 	}
+	
+	//设置会话超时时间
+//	@Bean
+//	public EmbeddedServletContainerCustomizer containerCustomizer(){
+//			return new EmbeddedServletContainerCustomizer() {
+//				@Override
+//				public void customize(ConfigurableEmbeddedServletContainer container) {
+//					// TODO Auto-generated method stub
+//					container.setSessionTimeout(1800);//单位为S
+//				}
+//			};
+//	}
 
 }

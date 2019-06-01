@@ -5,46 +5,41 @@ import java.util.List;
 
 import javax.persistence.Column;
 
+import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblLinesEntity;
+import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.point.pojo.LineDetail;
+import com.changlan.point.service.IChannelService;
 import com.changlan.point.service.ILineService;
 
 public class CompanyVo {
 	
     private Integer companyId;
     private String  title;
-	private List<CompanyLineVO> companyLinesVOs = new ArrayList<CompanyLineVO>(); //二级包含多条线路信息
+	private List<ChannelVO> ChannelVOS = new ArrayList<ChannelVO>(); //二级包含多条通道信息
 
 	public CompanyVo(TblCompanyEntity company) {
 		super();
-//		this.company = company;
 		this.companyId = company.getCompanyId();
 		this.title = company.getName();
-		List<LineDetail> lines = getLines(company.getCompanyId()); 
-		for(LineDetail line : lines) {
-			CompanyLineVO lineVO = new CompanyLineVO(line);
-			companyLinesVOs.add(lineVO);
+		List<TblCompanyChannelEntity> channels =  new ArrayList<TblCompanyChannelEntity>();
+		channels =  getChannels(company);
+		
+		for(TblCompanyChannelEntity entity : channels) {
+			ChannelVO vo  = new ChannelVO(entity);
+			ChannelVOS.add(vo);
 		}
 	}
 
-	private List<LineDetail> getLines(Integer companyId) {
-		ILineService lineService = SpringUtil.getBean(ILineService.class);
-		TblLinesEntity entity = new TblLinesEntity();
-		entity.setCompanyId(companyId);
-		List<LineDetail> all = lineService.getAll(entity); 
-		return all;
+	private List<TblCompanyChannelEntity> getChannels(TblCompanyEntity company) {
+		IChannelService channelService = SpringUtil.getBean(IChannelService.class);
+		TblCompanyChannelEntity entity = new TblCompanyChannelEntity();
+		entity.setCompanyId(company.getCompanyId()); 
+		return channelService.getAllChannel(entity);
 	}
 
-	
-//	public TblCompanyEntity getCompany() {
-//		return company;
-//	}
-//
-//	public void setCompany(TblCompanyEntity company) {
-//		this.company = company;
-//	}
 
 	public Integer getCompanyId() {
 		return companyId;
@@ -53,8 +48,6 @@ public class CompanyVo {
 	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
 	}
-
-	
 	
 	public String getTitle() {
 		return title;
@@ -64,15 +57,13 @@ public class CompanyVo {
 		this.title = title;
 	}
 
-	public List<CompanyLineVO> getCompanyLinesVOs() {
-		return companyLinesVOs;
+	public List<ChannelVO> getChannelVOS() {
+		return ChannelVOS;
 	}
 
-	public void setCompanyLinesVOs(List<CompanyLineVO> companyLinesVOs) {
-		this.companyLinesVOs = companyLinesVOs;
+	public void setChannelVOS(List<ChannelVO> channelVOS) {
+		ChannelVOS = channelVOS;
 	}
-	
-	
 
 	
 

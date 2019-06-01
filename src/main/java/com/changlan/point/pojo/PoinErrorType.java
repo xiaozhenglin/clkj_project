@@ -16,7 +16,8 @@ public enum PoinErrorType {
 	CHANNEL_IS_NOT_ACTIVE("N001","发送失败,设备未连接或 监控点注册包无效或者 netty通道不可用"),
 	LOCK_POINT_SEND_RECORD("N002","当前设备暂不能发送指令,等待上次接受返回值"),
 	SEND_CRC_ERROR("N003","发送的指令不符合CRC校验"),
-	RECEIVE_CRC_ERROR("N004","接受的指令不符合CRC校验");
+	RECEIVE_CRC_ERROR("N004","接受的指令不符合CRC校验"), 
+	COMPANY_CHANNEL_NAME_EXIST("P013","通道名称重复");
 	
 	private String code;
 	private String name;
