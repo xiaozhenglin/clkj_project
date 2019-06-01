@@ -80,7 +80,7 @@ public class LoginController extends BaseController{
 	
 	private void addUserInfoToSession(TblAdminUserEntity user) {
 		HttpSession session = getSession(); 
-		session.setMaxInactiveInterval(1*60);//设置无操作60秒后失效
+//		session.setMaxInactiveInterval(1*60);//设置无操作60秒后失效
 		session.setAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME,user);
 		LoginUser.map.put(user.getAdminUserId(), user);
 	}
