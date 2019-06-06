@@ -42,6 +42,7 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
+import com.changlan.other.entity.DeviceData;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
@@ -102,38 +103,42 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	TblCommandRecordEntity record = recordDetail.getRecord();
 	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
 		//逻辑：获取返回内容 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
-    	for(ProtocolInfo protocolInfo : currentDataProtocol) {
-    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
-    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
-        		return null;
-        	}
-    		String backContent = record.getBackContent();
-    		String reciveAddressCode = backContent.substring(0,0+2);
-    		String addressCode = protocol.getAddressCode(); 
-    		//地址码匹配
-    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode)) ) {
-    			//解析数据
-        		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
-        		if(!ListUtil.isEmpty(data) ) {
-        			//一个监控点的具体指标的值
-        			BigDecimal bigDecimal = data.get(0);
-        			int compareTo = bigDecimal.compareTo(BigDecimal.ZERO); 
-        			//是否不是负值
-        			Integer notNegative = protocol.getNotNegative(); 
-        			if(notNegative!=null && notNegative>=1&& compareTo == -1) {
-        				bigDecimal = BigDecimal.ZERO;
-        			}
-        			String categoryNmae = category.getCategoryNmae();
-        			if(categoryNmae.indexOf("温度")>-1) {
-        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol); 
-        				result.add(value);
-        			}else {
-        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
-        				result.add(saveData);
-        			}
-        		}
-    		}
-    	}
+	  	if(!ListUtil.isEmpty(currentDataProtocol)) {
+	  		for(ProtocolInfo protocolInfo : currentDataProtocol) {
+	    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
+	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
+	        		return null;
+	        	}
+	    		String backContent = record.getBackContent();
+	    		String reciveAddressCode = backContent.substring(0,0+2);
+	    		String addressCode = protocol.getAddressCode(); 
+	    		//地址码匹配
+	    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode)) ) {
+	    			//解析数据
+	        		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+	        		if(!ListUtil.isEmpty(data) ) {
+	        			//一个监控点的具体指标的值
+	        			BigDecimal bigDecimal = data.get(0);
+	        			int compareTo = bigDecimal.compareTo(BigDecimal.ZERO); 
+	        			//是否不是负值
+	        			Integer notNegative = protocol.getNotNegative(); 
+	        			if(notNegative!=null && notNegative>=1&& compareTo == -1) {
+	        				bigDecimal = BigDecimal.ZERO;
+	        			}
+	        			String categoryNmae = category.getCategoryNmae();
+	        			if(categoryNmae.indexOf("温度")>-1) {
+	        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol); 
+	        				result.add(value);
+	        			}else {
+	        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
+	        				result.add(saveData);
+	        			}
+	        		}
+	    		}
+	    	}
+	  	}else if(category.getCategoryNmae().indexOf("局放")>-1){
+	  		return savePartialDischarge(point,record);
+	  	}
 		return result;
 	}
 
@@ -172,6 +177,33 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		entity.setIsEarlyWarning(0);  
 		crudService.save(entity, true);
 		return entity;
+	}
+	
+	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record) {
+		List<Object> result = new ArrayList<Object>();
+		
+		String substring = record.getBackContent().substring(10);
+		System.out.println(substring); 
+		int i = 0 ;
+		while(i<=substring.length()-8) {
+			DeviceData data = new DeviceData();
+			String amplitude = substring.substring(i, i+4);
+			amplitude = StringUtil.decimalConvert(amplitude, 16, 10, null); 
+			System.out.println("幅值"+amplitude); 
+			String phase = substring.substring(i+4, i+8);
+			phase = StringUtil.decimalConvert(phase, 16, 10, null); 
+			System.out.println("相位"+phase); 
+			data.setChannelSettings_id(0);
+			
+			data.setAmplitude(Float.parseFloat(amplitude));//幅值
+			data.setAlarm_amplitude_frequency(Integer.parseInt(phase)); // 报警频次列没什么用，这里用来存储 相位值
+			data.setCreatetime(new Date()); 
+			crudService.update(data, true);
+			result.add(data);
+	
+			i= i+8;
+		}
+		return result;
 	}
 
 	@Override
@@ -231,11 +263,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		return update;
 	}
 
-	private String getRegistPackage(Integer pointId) {
-		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId,null);
-		String pointRegistPackage = pointDefine.getPointRegistPackage(); 
-		return pointRegistPackage;
-	}
+//	private String getRegistPackage(Integer pointId) {
+//		TblPointsEntity pointDefine = pointDefineService.getByRegistPackageOrId(pointId,null);
+//		String pointRegistPackage = pointDefine.getPointRegistPackage(); 
+//		return pointRegistPackage;
+//	}
 
 	@Override
 	@Transactional

@@ -6,6 +6,7 @@ import java.util.Date;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 
+/**用于接收外部数据*/
 public class AcceptExtenalDataVO implements Serializable{
 	
 	private Integer pointId;

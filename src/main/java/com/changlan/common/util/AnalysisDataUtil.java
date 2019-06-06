@@ -54,6 +54,8 @@ public class AnalysisDataUtil {
 		case 5: 
 			//温度采集
 			return temperature(backContent,protocol);
+		case 6:
+			return partialDischarge(backContent);
 		default:
 			break;
 		}
@@ -131,6 +133,13 @@ public class AnalysisDataUtil {
 		}
 		return list;
 	}
+
+
+	private static List<BigDecimal> partialDischarge(String backContent) {
+		
+		return null;
+	}
+
 
 	private static  Object canculate(int value, String str)  { 
 		//(%d*20)/4095
