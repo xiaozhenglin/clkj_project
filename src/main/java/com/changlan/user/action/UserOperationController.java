@@ -19,9 +19,9 @@ public class UserOperationController extends BaseController{
 	
 	@RequestMapping("/admimn/user/operation")
 	public ResponseEntity<Object>  loginError(){
-		Page<TblUserOperationEntity> result =  userOperationService.findByPage(getPage()); 
+		Page<Object> result =  userOperationService.findByPage(getPage()); 
 		return success(result);
 	}
-
+	
 	
 }

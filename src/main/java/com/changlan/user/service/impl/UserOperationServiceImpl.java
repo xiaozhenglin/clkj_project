@@ -25,8 +25,9 @@ public class UserOperationServiceImpl implements IUserOpertaionService{
 	}
 
 	@Override
-	public Page<TblUserOperationEntity> findByPage(Pageable page) {
-		return null;
+	public Page<Object> findByPage(Pageable page) {
+		Page<Object> findByMoreFiledAndPage = crudService.findByMoreFiledAndPage(TblUserOperationEntity.class, null, true, page);
+		return findByMoreFiledAndPage; 
 	}
 	
 }

@@ -21,7 +21,7 @@ public interface ICommandRecordService {
 	CommandRecordDetail getLastOneResult(String registPackage, String receiveMessage);
 
 	//解析电流、电压数据
-	//解析温度数据
+	//解析温度数据,局放数据
 	List<Object> anylysisData(CommandRecordDetail recordDetail); 
 
 	//保存服务器往客户端发送记录

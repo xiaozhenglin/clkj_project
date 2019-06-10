@@ -68,12 +68,12 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Object channelSettingList(PartialDischargeQuery query) {
 		em.clear();
-		String sql = "SELECT channelSettings.*  from channelSettings INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id " ;
+		String sql = "SELECT channelSettings.*  from channelSettings " ;
 		if(query.getPointId()!=null) {
-			sql+=" and devicesettings.point_id = "+query.getPointId();
+			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
 		}
 		if(query.getChannelSettings_id()!=null) {
-			sql+=" and channelSettings.id = "+query.getChannelSettings_id();
+			sql+=" WHERE 1=1 AND channelSettings.id = "+query.getChannelSettings_id();
 		}
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),SimpleEntity.class);
 		return createNativeQuery.getResultList();

@@ -136,7 +136,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        		}
 	    		}
 	    	}
-	  	}else if(category.getCategoryNmae().indexOf("局放")>-1){
+	  	}else if(category.getCategoryNmae().indexOf("相位")>-1){
 	  		return savePartialDischarge(point,record);
 	  	}
 		return result;
@@ -193,10 +193,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			String phase = substring.substring(i+4, i+8);
 			phase = StringUtil.decimalConvert(phase, 16, 10, null); 
 			System.out.println("相位"+phase); 
-			data.setChannelSettings_id(0);
+			data.setChannelSettings_id(14);
 			
 			data.setAmplitude(Float.parseFloat(amplitude));//幅值
-			data.setAlarm_amplitude_frequency(Integer.parseInt(phase)); // 报警频次列没什么用，这里用来存储 相位值
+			data.setPhase(Float.parseFloat(phase));//相位
 			data.setCreatetime(new Date()); 
 			crudService.update(data, true);
 			result.add(data);

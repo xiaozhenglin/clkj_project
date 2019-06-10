@@ -27,8 +27,9 @@ public class DeviceData implements Serializable {
 	private Integer frequency; //频次
 	private Integer energy; //总能量
 	private Integer alarm_amplitude; //幅值报警
-	private Integer alarm_amplitude_frequency; //报警幅值频次  (被存的是原始相位)
+	private Integer alarm_amplitude_frequency; //报警幅值频次  
 	private Date createtime; //创建时间
+	private Float phase; // 相位
 	
 	@Transient	
 	private Float SuperimposedPhase; //叠加相位
@@ -40,7 +41,7 @@ public class DeviceData implements Serializable {
 	public void setCaculate() {
 		BigDecimal fuzhi = new BigDecimal(amplitude); 
 		BigDecimal diejiaXiShu = new BigDecimal(1000); 
-		BigDecimal xiangwei = new BigDecimal(alarm_amplitude_frequency); 
+		BigDecimal xiangwei = new BigDecimal(phase); 
 		
 		BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);
 		System.out.println("商值"+shang);
@@ -52,7 +53,7 @@ public class DeviceData implements Serializable {
 		this.Remainder = yushu.floatValue();
 		
 		BigDecimal diejiaXiangWei = yushu.divide(diejiaXiShu).multiply(new BigDecimal(360));
-		System.out.println("叠加相位"+diejiaXiangWei.intValue());
+		System.out.println("叠加相位"+diejiaXiangWei.floatValue());
 		this.SuperimposedPhase = diejiaXiangWei.floatValue();
 	}
 	
@@ -121,6 +122,14 @@ public class DeviceData implements Serializable {
 	}
 	public void setRemainder(Float remainder) {
 		Remainder = remainder;
+	}
+
+	public Float getPhase() {
+		return phase;
+	}
+
+	public void setPhase(Float phase) {
+		this.phase = phase;
 	}
 	
 	

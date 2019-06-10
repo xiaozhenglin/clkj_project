@@ -9,6 +9,6 @@ public interface IUserOpertaionService {
 	
 	Object save(TblUserOperationEntity entity);
 
-	Page<TblUserOperationEntity> findByPage(Pageable page); 
+	Page<Object> findByPage(Pageable page); 
 	
 }

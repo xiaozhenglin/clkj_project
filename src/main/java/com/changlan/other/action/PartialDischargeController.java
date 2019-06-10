@@ -1,6 +1,8 @@
 package com.changlan.other.action;
 
 import java.io.File;
+
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,6 +12,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.other.dao.IPartialDischargeDao;
 import com.changlan.other.entity.DeviceData;
@@ -35,8 +40,8 @@ import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.point.vo.PointDataListVo;
-/**
- *局放数据*/
+
+
 @RestController
 @RequestMapping("/admin/Partial/Discharge")
 public class PartialDischargeController extends BaseController{
@@ -76,12 +81,6 @@ public class PartialDischargeController extends BaseController{
 		return success(list);
 	}
 	 
-	
-	/**
-	  * 局放数据列表
-	 * @param query 筛选参数
-	 * @return List<DeviceDataVo
-	 */
 	@RequestMapping("/table") 
 	public ResponseEntity<Object>  table(PartialDischargeQuery query) {
 		//找出所有的通道id
@@ -130,5 +129,6 @@ public class PartialDischargeController extends BaseController{
 			i= i+8;
 		}
 	}
+	
 		
 }

@@ -45,10 +45,13 @@ public class CompanyInfoController extends BaseController{
 	
 	@RequestMapping("/save")
 	@Transactional
-	public ResponseEntity<Object>  save(TblCompanyEntity entity) throws MyDefineException { 
+	public ResponseEntity<Object>  save(TblCompanyEntity entity) throws Exception { 
 		Boolean exist = companyInfoService.existName(entity);
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.COMPANY_NAME_EXIST.getCode(), PoinErrorType.COMPANY_NAME_EXIST.getName(), false, null);
+		}
+		if(entity.getGroupId()==null) {
+			entity.setGroupId(1);
 		}
 		TblCompanyEntity update = (TblCompanyEntity)crudService.update(entity, true); 
 		if(update ==null) {
@@ -59,7 +62,7 @@ public class CompanyInfoController extends BaseController{
 	
 	@RequestMapping("/delete")
 	@Transactional
-	public ResponseEntity<Object>  delete(TblCompanyEntity entity) throws MyDefineException { 
+	public ResponseEntity<Object>  delete(TblCompanyEntity entity) throws Exception { 
 		TblCompanyEntity find = (TblCompanyEntity)crudService.get(entity.getCompanyId(),TblCompanyEntity.class,true);
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.COMPANY_NOT_EXIST);

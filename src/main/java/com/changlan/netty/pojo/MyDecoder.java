@@ -31,7 +31,7 @@ public class MyDecoder extends ByteToMessageDecoder {
     		   //注册包
                out.add(str);
                logger.info("MyDecoder类接收内容"+str);
-           } else {
+           } else if(b.length >4){
                //进入的数据解码后丢到接受消息方法中去
         	   String bytesToHexString = bytesToHexString(b);
         	   out.add(bytesToHexString);

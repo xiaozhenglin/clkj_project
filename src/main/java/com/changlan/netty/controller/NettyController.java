@@ -1,9 +1,11 @@
 package com.changlan.netty.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,6 +34,7 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.server.ServerHandler;
 import com.changlan.netty.service.INettyService;
+import com.changlan.other.entity.DeviceData;
 import com.changlan.point.constrant.PointConstrant;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.IPointDefineService;
@@ -75,10 +78,40 @@ public class NettyController extends BaseController{
     //设置不需要权限   测试发送指令用
     @RequestMapping("/test/message")
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
-    	clientSendMessage(commanId);
-//    	serverSendMessage(commanId);
+//    	savePartialDischarge();
+//    	clientSendMessage(commanId);
+    	serverSendMessage(commanId);
     	return success(true);
 	}
+    
+//    public static List<Object> savePartialDischarge() {
+//		String content = "0114B4B30601AC738C01B6756501B6773F01A4791801AC7AF2019F7CCC01B67EA601AE807E01BE825801AC843201B4860B01B287E401A889BD01A08B9601AA8D6F01B08F4901BA912201B692FB01AC94D501A496AE01A8988701AA9A6101A69C3B01A29E14019F9FEE01A2A1C8019DA3A101B2A57B01A2A755019DA92E01A6AB080190ACE1019BAEBA01ACB093019FB26C01AEB44601A6B62001A8B7F90199B9D201A0BBAB01AABD8501A8BF5F01A6C13801AEC3121AD3";
+//		List<Object> result = new ArrayList<Object>();
+//		String substring = content.substring(10);
+//		System.out.println(substring); 
+//		int i = 0 ;
+//		while(i<=substring.length()-8) {
+//			DeviceData data = new DeviceData();
+//			String amplitude = substring.substring(i, i+4);
+//			amplitude = StringUtil.decimalConvert(amplitude, 16, 10, null); 
+//			System.out.println("幅值"+amplitude); 
+//			String phase = substring.substring(i+4, i+8);
+//			phase = StringUtil.decimalConvert(phase, 16, 10, null); 
+//			System.out.println("相位"+phase); 
+//			data.setChannelSettings_id(14);
+//			
+//			data.setAmplitude(Float.parseFloat(amplitude));//幅值
+//			data.setAlarm_amplitude_frequency(Integer.parseInt(phase)); // 报警频次列没什么用，这里用来存储 相位值
+//			data.setCreatetime(new Date()); 
+//			ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+//			crudService.update(data, true);
+//			result.add(data);
+//	
+//			i= i+8;
+//		}
+//		return result;
+//	}
+
 
 	//客户端往服务器发送消息
 	@RequestMapping("/client/send/message")

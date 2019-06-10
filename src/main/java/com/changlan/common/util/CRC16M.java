@@ -199,20 +199,18 @@ public class CRC16M {
 //		   byte[] sbuf = CRC16M.getSendBuf(cmdStr.substring(0,cmdStr.length()-4));
 //		   boolean equalsIgnoreCase = cmdStr.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
 //		   System.out.println(equalsIgnoreCase);
+		   String content="010303020002658F"; 
+		   byte[] sbuf2 = CRC16M.getSendBuf(content.substring(0,content.length()-4));
 		   
-		   
-		   String cmdStr2="01030C  0333 0332 0332 0334 0335 0336  A8D3"; 
-		   byte[] sbuf2 = CRC16M.getSendBuf(cmdStr2.substring(0,cmdStr2.length()-4));
 		   String trim = CRC16M.getBufHexStr(sbuf2).trim();
 		   System.out.println(trim);
-		   boolean equalsIgnoreCase = cmdStr2.equalsIgnoreCase(trim); 
+		   boolean equalsIgnoreCase = content.equalsIgnoreCase(trim); 
 		   System.out.println(equalsIgnoreCase);
-		   
-		   String channelValue = cmdStr2.substring(6, 10); 
-		   //1897
-		   String decimalConvert = StringUtil.decimalConvert(channelValue, 16, 10, null); 
-			//1897
-		   int value = new BigDecimal(decimalConvert).intValue(); 
+//		   String channelValue = cmdStr2.substring(6, 10); 
+//		   //1897
+//		   String decimalConvert = StringUtil.decimalConvert(channelValue, 16, 10, null); 
+//			//1897
+//		   int value = new BigDecimal(decimalConvert).intValue(); 
 	}
 }
 

@@ -54,8 +54,8 @@ public class AnalysisDataUtil {
 		case 5: 
 			//温度采集
 			return temperature(backContent,protocol);
-		case 6:
-			return partialDischarge(backContent);
+//		case 6:   只能记录，解析后不知道存储在哪里，存储在普通数据表里？
+//			return partialDischarge(backContent,protocol);
 		default:
 			break;
 		}
@@ -135,10 +135,10 @@ public class AnalysisDataUtil {
 	}
 
 
-	private static List<BigDecimal> partialDischarge(String backContent) {
-		
-		return null;
-	}
+//	private static List<BigDecimal> partialDischarge(String backContent, TblCommandProtocolEntity protocol) {
+//		
+//		return null;
+//	}
 
 
 	private static  Object canculate(int value, String str)  { 

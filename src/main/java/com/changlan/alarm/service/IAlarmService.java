@@ -15,8 +15,11 @@ public interface IAlarmService {
 	
 	//温度报警解析	
 	void anylysisTemperatureData(List<TblTemperatureDataEntity> temperature); 
+	
+	//局放报警解析
 
+	//发送sms消息
 	void sendSMSMessage(Integer pointId, Integer indicatorId,int value);
-
+	
 	
 }
