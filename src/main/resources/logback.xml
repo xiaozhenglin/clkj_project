@@ -14,7 +14,7 @@
     <!-- 控制台每日日志文件 -->
     <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>D:\\changlan\\adminplat\\console-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>E:\\changlan\\adminplat\\console-%d{yyyy-MM-dd}.log</FileNamePattern>
             <maxHistory>365</maxHistory> 
         </rollingPolicy>
         <encoder>

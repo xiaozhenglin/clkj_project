@@ -75,7 +75,7 @@ public class LoginController extends BaseController{
 		TblAdminUserEntity user = (TblAdminUserEntity)list.get(0);
 		addUserInfoToSession(user);
 		logger.info("用户登入"+ user.getName());
-		return success(getSession().getId()); 
+		return success(user.getAdminUserId()); 
 	}
 	
 	private void addUserInfoToSession(TblAdminUserEntity user) {

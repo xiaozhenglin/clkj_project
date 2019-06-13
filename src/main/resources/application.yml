@@ -6,7 +6,7 @@ not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user
   
   
 upload_image: 
-  path: D:/uploads  #
+  path: E:/uploads  #
 smscat: 
   serverPortName: COM3
   serverPortBound: 115200
@@ -45,6 +45,7 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy:  org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      dialect: org.hibernate.dialect.MySQLDialect
     show-sql: false
 
 
