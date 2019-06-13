@@ -246,13 +246,18 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			if(pinci >0 && pinci <= 122) {
 				String command = "0114070600010000" +  StringUtil.decimalConvert(frequency, 10, 16, 4) + "4507" ; 
 				//计算crc校验 的结果
-				byte[] sbuf2 = CRC16M.getSendBuf(command.substring(0,command.length()-4));
-				String trim = CRC16M.getBufHexStr(sbuf2).trim();
+				byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
+				String trim = CRC16M.getBufHexStr(sbuf).trim();
 				saveAndSend(point, trim); 
 				
 			}else if(pinci >122 && pinci <= 244) {
 				String trim  ="0114070600010000007A4507";
-				saveAndSend(point,trim);
+				saveAndSend(point,trim); //0-121的数据 也就是122个
+				try {
+					Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				Integer more = 244-pinci;
 				String command2 = "011407060001007A" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
 				//计算crc校验 的结果
