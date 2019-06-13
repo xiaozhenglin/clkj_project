@@ -28,7 +28,7 @@ public class ChannelController extends BaseController{
 	@Autowired
 	IChannelService  channelService;
 	
-	//修改或者保存  未加入权限表
+	//修改或者保存 
 	@RequestMapping("/save")
 	@Transactional
 	public ResponseEntity<Object>  functionList(TblCompanyChannelEntity entity ) throws Exception { 
@@ -43,7 +43,7 @@ public class ChannelController extends BaseController{
 		return success(update);
 	}
 
-	//未加入权限表
+	//
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  companyGropList(TblCompanyChannelEntity entity) {
 		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);

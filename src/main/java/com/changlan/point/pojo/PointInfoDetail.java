@@ -20,7 +20,7 @@ public class PointInfoDetail {
 	private TblPointsEntity point; //一个监控点
 	private TblPointCategoryEntity category;  //当前监控点所属类别
 	private TblLinesEntity line; //所属线路
-	private List<TblIndicatorCategoriesEntity> indicatorCategory;
+//	private List<TblIndicatorCategoriesEntity> indicatorCategory;
 	
 	public PointInfoDetail() {
 		super();
@@ -34,20 +34,20 @@ public class PointInfoDetail {
 			this.category = (TblPointCategoryEntity)all.get(0);
 		}
 		this.line = line;
-		this.indicatorCategory = getIndicatoryCategory(entity.getIndicators());
+//		this.indicatorCategory = getIndicatoryCategory(entity.getIndicators());
 		
 	}
-	private List<TblIndicatorCategoriesEntity> getIndicatoryCategory(String indicators) {
-		List<TblIndicatorCategoriesEntity> list = new ArrayList<TblIndicatorCategoriesEntity>();
-		if(StringUtil.isNotEmpty(indicators)) {
-			ICrudService crudService = SpringUtil.getICrudService();
-			List<String> stringToList = StringUtil.stringToList(indicators); 
-			for(String indicator : stringToList) {
-				list.add((TblIndicatorCategoriesEntity)crudService.get(indicators, TblIndicatorCategoriesEntity.class, true));
-			}
-		}
-		return list;
-	}
+//	private List<TblIndicatorCategoriesEntity> getIndicatoryCategory(String indicators) {
+//		List<TblIndicatorCategoriesEntity> list = new ArrayList<TblIndicatorCategoriesEntity>();
+//		if(StringUtil.isNotEmpty(indicators)) {
+//			ICrudService crudService = SpringUtil.getICrudService();
+//			List<String> stringToList = StringUtil.stringToList(indicators); 
+//			for(String indicator : stringToList) {
+//				list.add((TblIndicatorCategoriesEntity)crudService.get(indicators, TblIndicatorCategoriesEntity.class, true));
+//			}
+//		}
+//		return list;
+//	}
 
 	//当前监控点所属类别
 	private List<TblPointCategoryEntity> getCategory(TblPointsEntity entity) {
@@ -82,13 +82,13 @@ public class PointInfoDetail {
 		this.line = line;
 	}
 
-	public List<TblIndicatorCategoriesEntity> getIndicatorCategory() {
-		return indicatorCategory;
-	}
-
-	public void setIndicatorCategory(List<TblIndicatorCategoriesEntity> indicatorCategory) {
-		this.indicatorCategory = indicatorCategory;
-	}
+//	public List<TblIndicatorCategoriesEntity> getIndicatorCategory() {
+//		return indicatorCategory;
+//	}
+//
+//	public void setIndicatorCategory(List<TblIndicatorCategoriesEntity> indicatorCategory) {
+//		this.indicatorCategory = indicatorCategory;
+//	}
 
 	
 

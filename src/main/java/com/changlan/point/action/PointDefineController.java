@@ -55,25 +55,12 @@ public class PointDefineController extends BaseController{
 	
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(TblPointsEntity point) {
-		
-		
-		Map map = new HashMap();
-		if(point.getPointId() != null) {
-			map.put("pointId", new ParamMatcher(point.getPointId()));
-		}
-		if(point.getLineId()!=null) {
-			map.put("lineId", new ParamMatcher(point.getLineId()));
-		}
-		if(point.getPointCatagoryId()!=null) {
-			map.put("pointCatagoryId", new ParamMatcher(point.getPointCatagoryId()));
-		}
 		Page<PointInfoDetail> all = pointDefineService.getPage(point,getPage()); 
 		List result = new ArrayList();
 		for(PointInfoDetail defineDetail : all) {
 			PointDefineVO vo = new PointDefineVO(defineDetail);
 			result.add(vo);
 		}
-
 		return success(new PageImpl(result, getPage(), all.getTotalElements()));
 	}
 	

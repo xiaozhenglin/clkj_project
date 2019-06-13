@@ -13,6 +13,7 @@ public class ChannelVO {
 	
 	private Integer channelId;
 	private String  title;
+	private Integer lineCount; //线路计数
 	private List<ChannelLineVO> companyLinesVOs = new ArrayList<ChannelLineVO>(); //三级包含多条线路信息
 	  
 	public ChannelVO() {
@@ -27,7 +28,7 @@ public class ChannelVO {
 			ChannelLineVO lineVO = new ChannelLineVO(line);
 			companyLinesVOs.add(lineVO);
 		}
-		
+		this.lineCount = companyLinesVOs.size();
 	}
 
 	private List<LineDetail> getLines(Integer channelId) {

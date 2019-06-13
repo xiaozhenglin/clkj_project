@@ -38,10 +38,13 @@ import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.AnalysisDataUtil;
+import com.changlan.common.util.CRC16M;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
+import com.changlan.netty.service.INettyService;
+import com.changlan.netty.service.NettyServiceImpl;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
@@ -59,6 +62,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	@Autowired
 	private IPointDefineService pointDefineService;
+	
+	@Autowired
+	private INettyService nettyService;
 
 	@Override
 	public List<CommandRecordDetail> getList(Integer recordId, String registPackage, String backContent) {
@@ -136,11 +142,16 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        		}
 	    		}
 	    	}
-	  	}else if(category.getCategoryNmae().indexOf("相位")>-1){
+	  	}
+	  	if(category.getCategoryNmae().indexOf("相位")>-1){
 	  		return savePartialDischarge(point,record);
+	  	}
+	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
+	  		return savePartialDischargeCommand(point,record);
 	  	}
 		return result;
 	}
+
 
 	//表格参数一样的，是为了分表存储温度和电流的数据
 	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol) {
@@ -179,6 +190,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		return entity;
 	}
 	
+	/**
+	 * @param point
+	 * @param record
+	 * @return 保存局放数据 devicedata
+	 *  
+	 */
 	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record) {
 		List<Object> result = new ArrayList<Object>();
 		
@@ -204,6 +221,67 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			i= i+8;
 		}
 		return result;
+	}
+	
+
+	/**
+	 * 根据频次计算 需要发送的采集指令 , 保存指令并发送
+	 * @param point
+	 * @param record
+	 * @return
+	 */
+	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record) {
+		List<Object> result = new ArrayList<Object>();
+		String backContent = record.getBackContent();
+		backContent = backContent.substring(6,backContent.length()-4);
+		System.out.println(backContent); 
+		int i = 0 ;
+		while(i<=backContent.length()-4) {
+			String frequency = backContent.substring(i, i+4);
+			frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
+			System.out.println("频次"+frequency); 
+			int pinci = Integer.parseInt(frequency);
+			
+			//一次最多采集122个，所以要分批次采集
+			if(pinci >0 && pinci <= 122) {
+				String command = "0114070600010000" +  StringUtil.decimalConvert(frequency, 10, 16, 4) + "4507" ; 
+				//计算crc校验 的结果
+				byte[] sbuf2 = CRC16M.getSendBuf(command.substring(0,command.length()-4));
+				String trim = CRC16M.getBufHexStr(sbuf2).trim();
+				saveAndSend(point, trim); 
+				
+			}else if(pinci >122 && pinci <= 244) {
+				String trim  ="0114070600010000007A4507";
+				saveAndSend(point,trim);
+				Integer more = 244-pinci;
+				String command2 = "011407060001007A" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
+				//计算crc校验 的结果
+				byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
+				String trim2= CRC16M.getBufHexStr(sbuf2).trim();
+				saveAndSend(point,trim2);
+			}
+			i = i+4;
+		}
+		return null;
+	}
+	
+	private void saveAndSend(TblPointsEntity point, String sendContent) { 
+		TblPointSendCommandEntity data = new TblPointSendCommandEntity();
+		data.setCommandCatagoryId(7);
+		data.setCommandContent(sendContent);
+		data.setCommandName("获取幅值相位");
+		data.setPointId(point.getPointId()); 
+		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
+		System.out.println(update.getSendCommandId());
+		
+		//保存记录 并加锁
+		TblCommandRecordEntity record = updateServerRecord(update,point.getPointRegistPackage()); 
+		//执行发送
+		try {
+			nettyService.serverSendMessage(point.getPointRegistPackage(), update.getCommandContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 	}
 
 	@Override

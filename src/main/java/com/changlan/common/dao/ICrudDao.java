@@ -25,7 +25,7 @@ public interface ICrudDao {
 
     Boolean delete(Object entity);
 
-    Boolean save(Object entity);
+    Object save(Object entity);
 
 	Page findByMoreFiledAndPage(Class clazz, Map map, Pageable page);
 

@@ -208,27 +208,27 @@ public class StringUtil extends StringUtils {
     }
 
     public static void main(String[] args) {
-        String s = decimalConvert("0769", 16, 10, null);
+        String s = decimalConvert("122", 10, 16, 4);
         System.out.println(s);
-        System.out.println(decimalConvert("0021", 16, 10, null));
-        
-        //字符串转16进制
-        byte[] hexStringToBytes = hexStringToBytes("010324C5C8"); 
-        for(int i =0 ;i<hexStringToBytes.length;i++) {
-        	System.out.println(hexStringToBytes[i]);
-        }
-        System.out.println( bytesToHexString(hexStringToBytes));
-        
-        
-        for(int i =0 ;i<hexStringToBytes.length;i++) {
-            System.out.print(getRandomCode()+","); 
-        }
-    
-        String str ="1234";
-        String replace = str.replace(" ", "");
-        System.out.println(replace);
-        System.out.println(replace.length());
-        System.out.println(replace.substring(0,4)); 
+//        System.out.println(decimalConvert("0021", 16, 10, null));
+//        
+//        //字符串转16进制
+//        byte[] hexStringToBytes = hexStringToBytes("010324C5C8"); 
+//        for(int i =0 ;i<hexStringToBytes.length;i++) {
+//        	System.out.println(hexStringToBytes[i]);
+//        }
+//        System.out.println( bytesToHexString(hexStringToBytes));
+//        
+//        
+//        for(int i =0 ;i<hexStringToBytes.length;i++) {
+//            System.out.print(getRandomCode()+","); 
+//        }
+//    
+//        String str ="1234";
+//        String replace = str.replace(" ", "");
+//        System.out.println(replace);
+//        System.out.println(replace.length());
+//        System.out.println(replace.substring(0,4)); 
     }
     
     

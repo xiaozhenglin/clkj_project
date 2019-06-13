@@ -22,7 +22,8 @@ public class PartialDischargeEntity {
 	private Integer alarm_amplitude_frequency; //报警
 	private String location_detail; //监测位置详细信息
 	private Integer point_id; //监控点id
-	private String  POINT_NAME;//监控点名称
+	@Column(name= "POINT_NAME")
+	private String  pointName;//监控点名称
 	
 	public Integer getDeviceId() {
 		return deviceId;
@@ -87,13 +88,16 @@ public class PartialDischargeEntity {
 	public void setRowId(Integer rowId) {
 		this.rowId = rowId;
 	}
-	public String getPOINT_NAME() {
-		return POINT_NAME;
+	public String getPointName() {
+		return pointName;
 	}
-	public void setPOINT_NAME(String pOINT_NAME) {
-		POINT_NAME = pOINT_NAME;
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
 	}
-	
+//	public Integer getRowId() {
+//		return rowId;
+//	}
+
 	
 	
 }

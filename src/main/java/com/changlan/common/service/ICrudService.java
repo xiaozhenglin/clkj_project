@@ -22,7 +22,7 @@ public interface ICrudService {
 	
 	Boolean deleteBySql(String sql,boolean isPramDataSource);
 
-	Boolean save(Object entity,boolean isPramDataSource);
+	Object save(Object entity,boolean isPramDataSource);
 	
     Object findOneByMoreFiled(Class clazz,Map<String,ParamMatcher> map,boolean isPramDataSource);  
 	

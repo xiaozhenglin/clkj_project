@@ -51,7 +51,7 @@ public class TblPointsEntity implements java.io.Serializable {
 
     /** image */
     @Column(name = "IMAGE"   )
-    private String image;
+    private String image; //图标地址
 
     /** pointAddress */
     @Column(name = "POINT_ADDRESS",unique = true   )

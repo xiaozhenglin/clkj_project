@@ -56,10 +56,10 @@ public class TblAlarmRuleEntity implements java.io.Serializable {
     private Integer lowerAlarm;	
     
     @Column(name = "NORMAL"   )
-    private Integer normal;	
+    private Integer normal = 0;	
     
     @Column(name = "ABNOMAL"   )
-    private Integer abnomal;	
+    private Integer abnomal = 0;	
     
     @Column(name = "INDICATOR_CATEGORY_ID"   )
     private Integer indicatorCategoryId;	

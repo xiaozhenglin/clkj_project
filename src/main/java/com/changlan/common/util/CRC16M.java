@@ -199,7 +199,7 @@ public class CRC16M {
 //		   byte[] sbuf = CRC16M.getSendBuf(cmdStr.substring(0,cmdStr.length()-4));
 //		   boolean equalsIgnoreCase = cmdStr.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
 //		   System.out.println(equalsIgnoreCase);
-		   String content="010303020002658F"; 
+		   String content="0114070600010000007A4507"; 
 		   byte[] sbuf2 = CRC16M.getSendBuf(content.substring(0,content.length()-4));
 		   
 		   String trim = CRC16M.getBufHexStr(sbuf2).trim();

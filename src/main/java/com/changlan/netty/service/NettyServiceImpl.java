@@ -73,6 +73,8 @@ public class NettyServiceImpl implements INettyService{
 	   byte[] sbuf = CRC16M.getSendBuf(message.substring(0,message.length()-4));
 	   boolean equalsIgnoreCase = message.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
 	   if(!equalsIgnoreCase) {
+		   //清除防止死锁
+		   NettyController.map.remove(registPackage);
 		   throw new MyDefineException(PoinErrorType.SEND_CRC_ERROR); 
 	   }
 		

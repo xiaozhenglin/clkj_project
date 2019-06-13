@@ -144,19 +144,20 @@ public class CrudDaoImpl implements ICrudDao{
 	
 
     @Override
-    public Boolean save(Object entity){
+    public Object save(Object entity){
 		EntityManager em = getEntityManage(); 
 		em.flush();
     	em.clear();
         boolean flag=false;
         try {
         	em.persist(entity);
-            flag=true;
+//            flag=true;
+        	return entity;
         }catch (Exception e){
         	System.out.println(e);
         	log.info("---------------保存出错---------------");
         }
-        return flag;
+        return null;
     }
 
     @Override
@@ -167,6 +168,7 @@ public class CrudDaoImpl implements ICrudDao{
         try {
             Object merge = em.merge(entity); 
             em.flush();
+            em.persist(merge); 
             return merge;
         } catch (Exception e) {
         	System.out.println(e);
