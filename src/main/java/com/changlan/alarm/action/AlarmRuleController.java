@@ -15,9 +15,12 @@ import com.changlan.alarm.pojo.TblAlarmRuleDetail;
 import com.changlan.alarm.service.IAlarmRuleService;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblAlarmRuleEntity;
+import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblIndicatorValueEntity;
+import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.indicator.service.IIndicatoryValueService;
 import com.changlan.point.pojo.PoinErrorType;
@@ -52,6 +55,16 @@ public class AlarmRuleController  extends  BaseController{
 //		List<TblAlarmRuleEntity> list = alarmRuleService.getAll(entity.getAlarmRuleId(),entity.getIndicatorValueId(),entity.getPointId());
 		Page<TblAlarmRuleDetail> result = alarmRuleService.getPage(entity,getPage());
 		return success(result);
+	}
+	
+	@RequestMapping("/delete")
+	public ResponseEntity<Object>  delete(TblAlarmRuleEntity entity) throws Exception {   
+		List<TblAlarmRuleEntity> list = alarmRuleService.getAll(entity.getAlarmRuleId(),entity.getIndicatorValueId(),entity.getPointId());
+		if(ListUtil.isEmpty(list)) {
+			throw new MyDefineException("0000","没有找到该规则",false,null); 
+		}
+		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_ALARM_RULE WHERE ALARM_RULE_ID ="+entity.getAlarmRuleId(), true); 
+		return success(isSuccess);
 	}
 	
 //	未加权限

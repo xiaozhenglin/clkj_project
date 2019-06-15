@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.IChannelService;
 import com.changlan.point.service.ICompanyGropService;
@@ -50,16 +52,14 @@ public class ChannelController extends BaseController{
 		return success(list);
 	}
 	
-	
-//	@RequestMapping("/delete")
-//	@Transactional
-//	public ResponseEntity<Object>  delete(TblCompanyChannelEntity entity) throws MyDefineException { 
-//		TblCompanyGroupEntity companyEntity = (TblCompanyGroupEntity)crudService.get(entity.getGroupId(),TblCompanyGroupEntity.class,true);
-//		if(companyEntity != null) {
-//			Boolean deleteBySql = crudService.deleteBySql("DELETE FROM TBL_COMPANY_GROUP WHERE GROUP_ID = " +entity.getGroupId() , true);
-//			return success(deleteBySql);
-//		}
-//		return success(false);
-//	}
+	@RequestMapping("/delete")
+	public ResponseEntity<Object>  delete(TblCompanyChannelEntity entity) throws Exception {   
+		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);
+		if(ListUtil.isEmpty(list)) {
+			throw new MyDefineException("0000","没有找到该隧道",false,null); 
+		}
+		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_COMPANY_CHANNEL WHERE CHANNEL_ID ="+entity.getChannelId(), true); 
+		return success(isSuccess);
+	}
 
 }
