@@ -42,7 +42,7 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 
     /** COMMANDCatagoryId */
     @Column(name = "COMMAND_CATAGORY_ID"    )
-    private Integer commandCatagoryId;
+    private Integer commandCatagoryId;//指令解析类别id
 
     /** COMMANDName */
     @Column(name = "COMMAND_NAME"  )
@@ -59,7 +59,7 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     private Integer intervalTime;
     
     @Column(name = "POINT_ID"  )
-    private Integer pointId;
+    private Integer pointId; //监控点id
     
     @Column(name = "INDICATOR_CATEGORY"  )
     private Integer indicatorCategory; //指标类别

@@ -9,37 +9,49 @@ import com.changlan.point.pojo.PointDataDetail;
 
 public class PointDataListVo {
 
-	private TblPointsEntity point ; //没有加get set方法
+	private Integer pointId;
+	private String name;
 	private Page<PointDataDetail> pointDatas;
-
-//	public PointDataListVo(List<PointDataDetail> pointDatas) {
-//		this.pointDatas = pointDatas;
-//	}
 
 	public PointDataListVo() {
 		super();
 	}
 
-	public PointDataListVo(Page<PointDataDetail> pointDatas) {
-//		this.point = point2;
+	public PointDataListVo(Integer pointId,Page<PointDataDetail> pointDatas) {
+		this.pointId = pointId;
 		this.pointDatas = pointDatas;
 	}
 
-	public Page<PointDataDetail> getPointDatas() {
-		return pointDatas;
+	public PointDataListVo(TblPointsEntity point, Page<PointDataDetail> pointDatas) {
+		this.pointId = point.getPointId();
+		this.name = point.getPointName();
+		this.pointDatas = pointDatas;
 	}
 
 	public void setPointDatas(Page<PointDataDetail> pointDatas) {
 		this.pointDatas = pointDatas;
 	}
 
-//	public List<PointDataDetail> getPointDatas() {
-//		return pointDatas;
-//	}
-//
-//	public void setPointDatas(List<PointDataDetail> pointDatas) {
-//		this.pointDatas = pointDatas;
-//	}
+	public Integer getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Page<PointDataDetail> getPointDatas() {
+		return pointDatas;
+	}
+	
 	
 	
 }

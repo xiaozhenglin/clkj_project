@@ -19,7 +19,7 @@ public class TblAlarmRuleDetail {
 		this.alarmRule = alarmRule;
 		this.alarmCategory = (TBLAlarmCategoryEntity)crudService.get(alarmRule.getAlarmCategoryId(), TBLAlarmCategoryEntity.class, true);
 		this.point = (TblPointsEntity)crudService.get(alarmRule.getPointId(), TblPointsEntity.class, true);
-		this.indicator = (TblIndicatorValueEntity)crudService.get(alarmRule.getAlarmCategoryId(), TblIndicatorValueEntity.class, true);
+		this.indicator = (TblIndicatorValueEntity)crudService.get(alarmRule.getIndicatorValueId(), TblIndicatorValueEntity.class, true);
 	}
 	
 	

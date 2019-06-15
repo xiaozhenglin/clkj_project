@@ -60,7 +60,7 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     private Integer currentDataId;
     
     @Column(name = "DATA_FROM"  )
-    private String dataFrom;
+    private String dataFrom; //来源数据表名
     
 	/**
      * 获取alarmId

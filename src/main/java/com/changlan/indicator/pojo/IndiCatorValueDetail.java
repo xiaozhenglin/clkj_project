@@ -26,7 +26,7 @@ public class IndiCatorValueDetail  {
 		if(!ListUtil.isEmpty(all)) {
 			return all.get(0); 
 		}
-		return null;
+		return new TblIndicatorCategoriesEntity();
 	}
 
 

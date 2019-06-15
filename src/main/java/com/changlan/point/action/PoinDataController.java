@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ import com.changlan.point.service.IPointCategoryService;
 import com.changlan.point.service.IPointDataService;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.point.vo.PoinDataTableVO;
+import com.changlan.point.vo.PoinDataVo;
 import com.changlan.point.vo.PointDataListVo;
 import com.changlan.user.pojo.LoginUser;
 
@@ -62,30 +64,37 @@ public class PoinDataController extends BaseController{
 	//非数据图表使用数据
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(PointQuery query) {
-		List<PointDataListVo> result = new ArrayList();
-		
-		TblPointsEntity point = new TblPointsEntity();
-		Integer lineId = query.getLineId(); 
-		if(lineId!=null) { 
-			point.setLineId(lineId);
-		}
-		if(query.getCategroryId()!=null) {
-			point.setPointCatagoryId(query.getCategroryId()); 
-		}
-		if(query.getPointId()!=null) {
-			point.setPointId(query.getPointId()); 
-		}
-		//当前线路下的监控系统      找出所有的监控点 可以优化不需要查出详情。
-		List<PointInfoDetail> all = pointDefineService.getAll(point);
-		
-		for(PointInfoDetail detail : all) {
-			//每个监控点的数据列表
-			query.setPointId(detail.getPoint().getPointId()); 
-			Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage()); 
-			PointDataListVo vo= new PointDataListVo(pointDatas);
+//		List<PointDataListVo> result = new ArrayList();
+//		
+//		TblPointsEntity point = new TblPointsEntity();
+//		Integer lineId = query.getLineId(); 
+//		if(lineId!=null) { 
+//			point.setLineId(lineId);
+//		}
+//		if(query.getCategroryId()!=null) {
+//			point.setPointCatagoryId(query.getCategroryId()); 
+//		}
+//		if(query.getPointId()!=null) {
+//			point.setPointId(query.getPointId()); 
+//		}
+//		//当前线路下的监控系统      找出所有的监控点 可以优化不需要查出详情。
+//		List<PointInfoDetail> all = pointDefineService.getAll(point);
+//		
+//		for(PointInfoDetail detail : all) {
+//			//每个监控点的数据列表
+//			query.setPointId(detail.getPoint().getPointId()); 
+//			Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage()); 
+//			PointDataListVo vo= new PointDataListVo(detail.getPoint(),pointDatas);
+//			result.add(vo);
+//		}
+//		return success(result);
+		List<PoinDataVo> result = new ArrayList<PoinDataVo>();
+		Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage());
+		for(PointDataDetail detail : pointDatas) {
+			PoinDataVo  vo = new PoinDataVo(detail);
 			result.add(vo);
 		}
-		return success(result);
+		return success(new PageImpl(result, getPage(), pointDatas.getTotalElements()));
 	}
 	
 	//数据图表
