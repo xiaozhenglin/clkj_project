@@ -52,6 +52,12 @@ public class ChannelController extends BaseController{
 		return success(list);
 	}
 	
+	/**
+	 * @param entity
+	 * @return
+	 * @throws Exception
+	 * 隧道删除
+	 */
 	@RequestMapping("/delete")
 	public ResponseEntity<Object>  delete(TblCompanyChannelEntity entity) throws Exception {   
 		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);
