@@ -81,7 +81,7 @@ public class UserInfoServiceImpl implements IUserInfoService{
 		List<UserRoleDetail> list = roleService.getAll(query); 
 		for(int i = 0;i<list.size();i++){
 			TBLRoleDefineEntity roleDefine = list.get(i).getRoleDefine(); 
-			if(roleDefine!=null && roleDefine.getRoleName().equalsIgnoreCase("系统管理员")) {
+			if(roleDefine!=null && roleDefine.getRoleName().indexOf("管理员")>-1) {
 				return true;
 			}
 		}
