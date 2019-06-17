@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by DK on 2017/11/14.
- */
 public class FileUtil {
 
 
