@@ -83,20 +83,22 @@ public class OriginFilter   implements Filter {
         logger.info("过滤器 >>>>>>>开始校验参数是否合法");
         checkParamLegal(req.getParameterMap());
         
-        
     	String requestURI = request.getRequestURI();
     	logger.info("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		//需要验证权限，
-    		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
+    		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
+    		if(user == null) {
+    			throw new ServletException("用户没有登录");
+    		}
     		   
-    		if(user != null && HaveAuthorityToCome(user,requestURI)) {
+    		if( HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作
     			 saveToUserOperation(user,requestURI,request.getRemoteHost());
         		 chain.doFilter(req,res);
              }else {
-            	 throw new ServletException("请检查地址是否正确,用户没有登录或者用户没有访问权限");
+            	 throw new ServletException("请检查地址是否正确或用户没有访问权限");
              }
         }else {
         	//不需要验证权限
