@@ -6,11 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +33,9 @@ import com.changlan.user.pojo.UserErrorType;
 public class UploadFileController extends BaseController{
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+//	@Autowired
+//	private  ResourceLoader resourceLoader;
+	
 	/**
 	 * 上传图片
 	 * @param IdForm
@@ -50,21 +57,28 @@ public class UploadFileController extends BaseController{
 		return success(newRealpath);
 	}
 
-	//不需要权限  日志等文件
+	//不需要权限，图片文件
 	@RequestMapping(value = "/admin/file/list")
-	public ResponseEntity<Object> getLog(String url) throws Exception{
+	public ResponseEntity<Object> getLog(String url) throws Exception {
 		logger.info("文件地址 ->"+url); 
-		List<byte[]> result = new ArrayList();
+//		List<byte[]> result = new ArrayList();
 		try {
 			List<File> fileList = FileUtil.getFileList(url, new ArrayList<File>()); 
-			for(File file : fileList) {
-				byte[] fileToByte = FileUtil.fileToByte(file); 
-				result.add(fileToByte); 
-			}
-			return success(result);
+//			for(File file : fileList) {
+//				byte[] fileToByte = FileUtil.fileToByte(file); 
+//				result.add(fileToByte); 
+//			}
+			return success(fileList);
 		} catch (Exception e) {
 			throw e;
-		}
+		} 
+//		  try {
+//	            String path = Paths.get("D:\\uploads", "02ffedfb88f34a1988390349f6ffb91d20190306145009.png").toString();
+//	            Resource resource = resourceLoader.getResource("file:" + path);
+//	            return ResponseEntity.ok(resource);
+//	        } catch (Exception e) {
+//	            throw e;
+//	        }
 	}
 	
 	
