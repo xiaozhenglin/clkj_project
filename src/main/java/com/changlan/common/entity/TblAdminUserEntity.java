@@ -56,7 +56,7 @@ public class TblAdminUserEntity implements java.io.Serializable {
     @Column(name = "PHONE"   )
     private String  phone;	
     
-    @Column(name = "STATUS",nullable = true)
+    @Column(name = "STATUS")
 //    @Enumerated(EnumType.STRING)
     private String status;	
    
