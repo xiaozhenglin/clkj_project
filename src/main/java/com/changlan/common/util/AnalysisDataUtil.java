@@ -101,7 +101,8 @@ public class AnalysisDataUtil {
 			String channelValue = backContent.substring(begin, begin+2); 
 			//00000101
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, 8); 
-			String value = decimalConvert.substring(dataByte-1,dataByte-1+1);
+			//解析00000101后面四位
+			String value = decimalConvert.substring(dataByte-1+4,dataByte-1+1+4);
 			//9.26
 			BigDecimal canculate = new BigDecimal(value); 
 			list.add(canculate);
