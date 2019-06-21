@@ -184,6 +184,7 @@ public class CrudDaoImpl implements ICrudDao{
         boolean flag=false;
         try {
         	em.remove(em.merge(entity));
+    		em.flush();
             flag=true;
         }catch (Exception e){
         	System.out.println(e); 
