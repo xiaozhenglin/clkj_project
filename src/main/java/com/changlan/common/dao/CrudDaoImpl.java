@@ -168,7 +168,6 @@ public class CrudDaoImpl implements ICrudDao{
         try {
             Object merge = em.merge(entity); 
             em.flush();
-            em.persist(merge); 
             return merge;
         } catch (Exception e) {
         	System.out.println(e);
