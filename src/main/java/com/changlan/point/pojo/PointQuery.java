@@ -6,6 +6,7 @@ public class PointQuery extends TblPoinDataEntity{
 	private Integer lineId;
 	private Long begin;
 	private Long end;
+	private String dataType;
 
 	public Integer getLineId() {
 		return lineId;
@@ -29,6 +30,14 @@ public class PointQuery extends TblPoinDataEntity{
 
 	public void setEnd(Long end) {
 		this.end = end;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
 	}
 
 }
