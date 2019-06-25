@@ -240,7 +240,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			String frequency = backContent.substring(i, i+4);
 			frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
 			System.out.println("频次"+frequency); 
-			int pinci = Integer.parseInt(frequency);
+			int pinci = Integer.parseInt(frequency)*2;
 			
 			//一次最多采集122个，所以要分批次采集
 			if(pinci >0 && pinci <= 122) {
