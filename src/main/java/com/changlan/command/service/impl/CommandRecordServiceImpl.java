@@ -259,7 +259,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 					e.printStackTrace();
 				}
 				Integer more = 244-pinci;
-				String command2 = "011407060001007A" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
+				String command2 = "011407060001007B" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
 				//计算crc校验 的结果
 				byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
 				String trim2= CRC16M.getBufHexStr(sbuf2).trim();
