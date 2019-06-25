@@ -249,7 +249,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 				byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
 				String trim = CRC16M.getBufHexStr(sbuf).trim();
 				saveAndSend(point, trim); 
-				
+				try {
+					Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}else if(pinci >122 && pinci <= 244) {
 				String trim  ="0114070600010000007A4507";
 				saveAndSend(point,trim); //0-121的数据 也就是122个
