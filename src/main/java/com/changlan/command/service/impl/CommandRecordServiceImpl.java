@@ -147,7 +147,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  		return savePartialDischarge(point,record);
 	  	}
 	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
-	  		return savePartialDischargeCommand(point,record);
+	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault());
 	  	}
 		return result;
 	}
@@ -229,9 +229,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	 * 根据频次计算 需要发送的采集指令 , 保存指令并发送
 	 * @param point
 	 * @param record
+	 * @param sendCommand 
 	 * @return
 	 */
-	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record) {
+	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record, TblPointSendCommandEntity sendCommand) {
 		List<Object> result = new ArrayList<Object>();
 		String backContent = record.getBackContent();
 		backContent = backContent.substring(6,backContent.length()-4);
