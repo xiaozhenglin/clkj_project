@@ -77,7 +77,11 @@ public class PartialDischargeController extends BaseController{
 //		//当前线路下的监控系统      找出所有的监控点
 //		List<PointInfoDetail> all = pointDefineService.getAll(point);
 		
-		List<PartialDischargeEntity> list = (List<PartialDischargeEntity>)partialDischargeService.list(query); 
+		List<DeviceData> list = (List<DeviceData>)partialDischargeService.table(query); 
+		for(int i =0;i<list.size();i++) {
+			list.get(i).setCaculate();
+			list.get(i).setPointName();
+		}
 		return success(list);
 	}
 	 

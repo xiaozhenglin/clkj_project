@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,7 +33,11 @@ public class DeviceData implements Serializable {
 	private Integer alarm_amplitude_frequency; //报警幅值频次  
 	private Date createtime; //创建时间
 	private Float phase; // 相位
+	@Column(name="POINT_ID")
+	private Integer pointId;
 	
+	@Transient	
+	private String pointName;//余数
 	@Transient	
 	private Float SuperimposedPhase; //叠加相位
 	@Transient	
@@ -55,6 +62,17 @@ public class DeviceData implements Serializable {
 		BigDecimal diejiaXiangWei = yushu.divide(diejiaXiShu).multiply(new BigDecimal(360));
 		System.out.println("叠加相位"+diejiaXiangWei.floatValue());
 		this.SuperimposedPhase = diejiaXiangWei.floatValue();
+	}
+	
+	public void setPointName() {
+		ICrudService iCrudService = SpringUtil.getICrudService(); 
+		if(this.pointId!=null) {
+			Object object = iCrudService.get(this.pointId, TblPointsEntity.class, true);
+			if(object!=null) {
+				TblPointsEntity entity = (TblPointsEntity)object;
+				this.pointName= entity.getPointName();
+			}
+		}
 	}
 	
 	public Integer getId() {
@@ -130,6 +148,22 @@ public class DeviceData implements Serializable {
 
 	public void setPhase(Float phase) {
 		this.phase = phase;
+	}
+
+	public Integer getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(Integer pointId) {
+		this.pointId = pointId;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
 	}
 	
 	

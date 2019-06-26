@@ -215,6 +215,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setAmplitude(Float.parseFloat(amplitude));//幅值
 			data.setPhase(Float.parseFloat(phase));//相位
 			data.setCreatetime(new Date()); 
+			data.setPointId(point.getPointId()); 
 			crudService.update(data, true);
 			result.add(data);
 	

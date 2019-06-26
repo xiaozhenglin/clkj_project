@@ -30,6 +30,7 @@ public class DeviceDataVo {
 		//计算值
 		for(int i =0;i<table.size();i++) {
 			table.get(i).setCaculate();
+			table.get(i).setPointName();
 		}
 		this.table = table;
 	}
