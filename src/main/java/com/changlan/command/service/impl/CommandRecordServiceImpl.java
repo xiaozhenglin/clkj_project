@@ -242,11 +242,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			String frequency = backContent.substring(i, i+4);
 			frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
 			System.out.println("频次"+frequency); 
-			int pinci = Integer.parseInt(frequency)*2;
+			Integer pinci = Integer.parseInt(frequency)*2;
 			
 			//一次最多采集122个，所以要分批次采集
 			if(pinci >0 && pinci <= 122) {
-				String command = "0114070600010000" +  StringUtil.decimalConvert(frequency, 10, 16, 4) + "4507" ; 
+				String command = "0114070600010000" +  StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; 
 				//计算crc校验 的结果
 				byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
 				String trim = CRC16M.getBufHexStr(sbuf).trim();

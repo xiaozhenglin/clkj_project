@@ -73,7 +73,7 @@ public class UploadFileController extends BaseController{
 			throw e;
 		} 
 //		  try {
-//	            String path = Paths.get("D:\\uploads", "02ffedfb88f34a1988390349f6ffb91d20190306145009.png").toString();
+//	            String pat h = Paths.get("D:\\uploads", "02ffedfb88f34a1988390349f6ffb91d20190306145009.png").toString();
 //	            Resource resource = resourceLoader.getResource("file:" + path);
 //	            return ResponseEntity.ok(resource);
 //	        } catch (Exception e) {
