@@ -48,18 +48,21 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Object table(PartialDischargeQuery query) {
 		em.clear();
-		String sql = "SELECT deviceData.* from deviceData INNER  JOIN channelSettings on deviceData.channelSettings_id = channelSettings.id " ;
+		String sql = "SELECT deviceData.* from deviceData INNER  JOIN channelSettings on deviceData.channelSettings_id = channelSettings.id WHERE 1=1 " ;
 		if(query.getChannelSettings_id()!=null) {
 			sql+= " AND deviceData.channelSettings_id = "+query.getChannelSettings_id();
 		}
 		if(query.getPointId()!=null) {
-			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
+			sql+=" AND deviceData.POINT_ID = "+query.getPointId();
 		}
+//		if(query.getPointId()!=null) {
+//			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
+//		}
 		String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
 		System.out.println(beginDate);
 		String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
 		System.out.println(endDate);
-		sql+=" WHERE deviceData.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
+		sql+=" AND deviceData.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
 		sql+= " ORDER BY deviceData.createtime DESC ";
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),DeviceData.class);
 		return createNativeQuery.getResultList();
