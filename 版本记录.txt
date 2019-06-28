@@ -2,3 +2,4 @@
 
 	1. tbl_admin_user ，tbl_user_function , tbl_fun_info ,tbl_command_category , tbl_alarm_category 数据库数据同步到线上测试环境 
 	2.     其它重要数据选择性 同步到线上数据库。
+	3.  sdfhjaldsfasdhf dzsasdfas
