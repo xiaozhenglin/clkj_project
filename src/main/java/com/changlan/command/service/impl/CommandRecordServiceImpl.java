@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.swing.plaf.ListUI;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,8 +134,17 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        			}
 	        			String categoryNmae = category.getCategoryNmae();
 	        			if(categoryNmae.indexOf("温度")>-1) {
-	        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol); 
-	        				result.add(value);
+	        				if(data.size()>1) {
+	        					//BigDecimal temList =
+	        					//String temList = StringUtils.join(data.toArray(),",");
+	        					for(int j = 0 ;j < data.size() ; j++) {
+		        					TblTemperatureDataEntity value = saveTemperatureData(data.get(j).toString(),point,protocol,new Integer(j)); 
+		        					result.add(value);
+	        					}
+	        				}else {
+		        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol,Integer.parseInt("0")); 
+		        				result.add(value);
+	        				}
 	        			}else {
 	        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
 	        				result.add(saveData);
@@ -153,8 +163,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 
 
-	//表格参数一样的，是为了分表存储温度和电流的数据
-	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol) {
+	//表格参数一样的，是为了分表存储温度和电流的数据   6.27 增加 记录 所在距离的温度
+	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,Integer distinct) {
 		TblTemperatureDataEntity entity = new TblTemperatureDataEntity(); 
 		entity.setPointId(point.getPointId()); 
 		entity.setPointName(point.getPointName());
@@ -166,7 +176,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		entity.setCategroryId(indicator.getCategoryId()); //指标类别
 		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
 		entity.setIsAlarm(0); 
-		entity.setIsEarlyWarning(0);  
+		entity.setIsEarlyWarning(0); 
+		entity.setRangeSize(distinct);
 		crudService.save(entity, true);
 		return entity;
 	}

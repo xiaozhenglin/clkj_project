@@ -56,6 +56,9 @@ public class AnalysisDataUtil {
 			return temperature(backContent,protocol);
 //		case 6:   只能记录，解析后不知道存储在哪里，存储在普通数据表里？
 //			return partialDischarge(backContent,protocol);
+		case 8: 
+			//菲博泰温度采集
+			return getTemperature(backContent,protocol);
 		default:
 			break;
 		}
@@ -135,6 +138,38 @@ public class AnalysisDataUtil {
 		return list;
 	}
 
+	//菲博泰温度采集多个温度数据
+	private static List<BigDecimal> getTemperature(String backContent, TblCommandProtocolEntity protocol) {
+		List<BigDecimal> list = new ArrayList<BigDecimal>();
+//		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
+		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
+		Integer beginByte = protocol.getBeginByte(); //开始位置
+		Integer dataByte = protocol.getDataByte(); //结束位置
+		//解析数据
+		//下标值为位置数减去1   6   
+		Integer begin = beginByte-1;
+		Integer end = dataByte -1;
+		if(begin<backContent.length()) {
+			//0769  6-10
+			String channelValue = backContent.substring(begin, end); 
+			//1897
+			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
+            
+			int length = Integer.parseInt(decimalConvert)/2;
+			
+			for (int i =0 ; i< length; i++) {
+				int first = end+2*i;
+				String value = backContent.substring(first, first + 2);
+				String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
+				BigDecimal canculate = new BigDecimal(temperatureData);
+				list.add(canculate);
+			}
+			/*
+			 * BigDecimal canculate = new BigDecimal(decimalConvert); list.add(canculate);
+			 */
+		}
+		return list;
+	}
 
 //	private static List<BigDecimal> partialDischarge(String backContent, TblCommandProtocolEntity protocol) {
 //		
