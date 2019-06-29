@@ -29,6 +29,7 @@ import com.changlan.alarm.pojo.AlarmDownType;
  * @author bianj
  * @version 1.0.0 2019-02-23
  */
+
 @Entity
 @Table(name = "TBL_TEMPERATURE_DATA")
 public class TblTemperatureDataEntity implements java.io.Serializable {
