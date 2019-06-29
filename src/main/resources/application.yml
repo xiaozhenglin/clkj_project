@@ -14,7 +14,7 @@ smscat:
 spring: 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://192.168.1.199:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: 
     tomcat:
