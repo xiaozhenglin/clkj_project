@@ -92,9 +92,19 @@ public class TblTemperatureDataEntity implements java.io.Serializable {
     @Column(name = "ALARM_DOWN" )
 //    @Enumerated(EnumType.STRING)
     private String alarmDown;
-
     
-    /**
+    @Column(name = "RANGE_SIZE" )
+    private Integer rangeSize;  //在那个距离的温度
+      
+	public Integer getRangeSize() {
+		return rangeSize;
+	}
+
+	public void setRangeSize(Integer rangeSize) {
+		this.rangeSize = rangeSize;
+	}
+
+	/**
      * 获取pointDataId
      * 
      * @return pointDataId
