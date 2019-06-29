@@ -163,7 +163,6 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 
 
-	
 	//表格参数一样的，是为了分表存储温度和电流的数据   6.27 增加 记录 所在距离的温度
 	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,Integer distinct) {
 		TblTemperatureDataEntity entity = new TblTemperatureDataEntity(); 
