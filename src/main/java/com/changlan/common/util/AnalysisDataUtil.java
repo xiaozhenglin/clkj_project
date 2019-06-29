@@ -138,6 +138,7 @@ public class AnalysisDataUtil {
 		return list;
 	}
 
+	
 	//菲博泰温度采集多个温度数据
 	private static List<BigDecimal> getTemperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
