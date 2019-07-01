@@ -46,7 +46,7 @@ public class AlarmDataController extends  BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TblPointAlamDataEntity entity) {  
 		List<AlarmDataVo> result = new ArrayList<AlarmDataVo>();
-		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPage());
+		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPageAndOrderBy("ALARM_DATE"));
 		for(TblAlarmDataDetail detail : details) {
 			AlarmDataVo  vo = new AlarmDataVo(detail);
 			result.add(vo);
