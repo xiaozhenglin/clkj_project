@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.alarm.pojo.AlarmDownRecordQuery;
+import com.changlan.alarm.pojo.AlarmDownType;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.alarm.service.IAlarmDataService;
 import com.changlan.alarm.service.IAlarmService;
@@ -71,6 +72,7 @@ public class AlarmDataController extends  BaseController{
 			TblAlarmDownRecordEntity update = (TblAlarmDownRecordEntity)crudService.update(entity, true); 
 			TblPointAlamDataEntity alarmData = (TblPointAlamDataEntity)crudService.get(entity.getAlarmDataId(), TblPointAlamDataEntity.class, true);
 			alarmData.setAlarmDownRecordId(update.getAlamDownRecordId());
+			alarmData.setDownStatus(AlarmDownType.DOWN.toString());
 			crudService.update(alarmData, true);
 			return success(update.getAlamDownRecordId());
 		}
