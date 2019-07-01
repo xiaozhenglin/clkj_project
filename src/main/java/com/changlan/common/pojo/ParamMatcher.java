@@ -19,6 +19,13 @@ public class ParamMatcher {
 		this.begin = begin;
 		this.end = end;
 	}
+	
+	public ParamMatcher(Long begin, Long end) {
+		super();
+		this.type = MatcheType.BETWEEN;
+		this.begin = new Date(begin);
+		this.end = new Date(end);
+	}
 
 	public ParamMatcher(MatcheType type, Object value) {
 		super();

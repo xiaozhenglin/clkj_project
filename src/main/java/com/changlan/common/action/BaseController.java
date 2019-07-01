@@ -40,6 +40,8 @@ import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.pojo.UserRoleDetail;
 import com.changlan.user.service.IUserRoleService;
 
+import io.netty.handler.codec.http2.Http2FrameLogger.Direction;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +57,25 @@ public class BaseController {
     private final int DEFAULT_PAGE = 0;
     private final char DESC = '-';
     private final int DEFAULT_SIZE = 10;
+    
+    protected Pageable getPageAndOrderBy(String orderDescProperty) {
+    	 HttpServletRequest reqeust = getReqeust();
+         int page = DEFAULT_PAGE;
+         if (reqeust.getParameter(PAGE_NAME) != null) {
+             page = Integer.parseInt(reqeust.getParameter(PAGE_NAME));
+         }
 
+         int size = DEFAULT_SIZE;
+         if (reqeust.getParameter(SIZE_NAME) != null) {
+             size = Integer.parseInt(reqeust.getParameter(SIZE_NAME));
+         }
+
+         Sort sort = null;
+         List<Sort.Order> orders = new ArrayList<>();
+         orders.add(new Sort.Order(Sort.Direction.DESC, orderDescProperty));
+         sort = new Sort(orders);
+         return new PageRequest(page, size, sort);
+    }
 
     protected Pageable getPage() {
         HttpServletRequest reqeust = getReqeust();
