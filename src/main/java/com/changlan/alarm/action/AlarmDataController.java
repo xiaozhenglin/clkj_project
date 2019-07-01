@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.changlan.alarm.pojo.AlarmDownRecordQuery;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.alarm.service.IAlarmDataService;
 import com.changlan.alarm.service.IAlarmService;
@@ -61,37 +62,26 @@ public class AlarmDataController extends  BaseController{
 //		return success(detail);
 //	}
 	
-	
+	//监控点数据报警进行处理记录
 	@RequestMapping("/down/record") 
-	public ResponseEntity<Object>  downRecord(Integer alarmDataId,String reason,String downResult) throws Exception { 
-		TblAlarmDownRecordEntity  entity = new TblAlarmDownRecordEntity();
-		entity.setDownResult(downResult);
-		entity.setReason(reason); 
-//		if(LoginUser.getCurrentUser()!=null) {
-//			entity.setRecordUser(userIsLogin().getAdminUserId()); 
-//		}
-//		entity.setRecordTime(new Date()); 
-//		entity.setPointDataId(pointDataId); 
-//		entity = (TblAlarmDownRecordEntity)crudService.update(entity, true);
-//		
-//		TblPoinDataEntity pointData = (TblPoinDataEntity)crudService.get(pointDataId, TblPoinDataEntity.class, true); 
-//		pointData.setAlarmDown("报警已处理");
-//		pointData.setAlarmDownRecord(entity.getAlamDownRecordId());
-//		crudService.update(pointData, true);
-		return success(true);
-	}
+	public ResponseEntity<Object>  downRecord(TblAlarmDownRecordEntity entity) throws Exception { 
+		if(entity.getAlarmDataId()!=null) {
+			entity.setRecordTime(new Date());
+			entity.setRecordUser(userIsLogin().getAdminUserId());
+			TblAlarmDownRecordEntity update = (TblAlarmDownRecordEntity)crudService.update(entity, true); 
+			TblPointAlamDataEntity alarmData = (TblPointAlamDataEntity)crudService.get(entity.getAlarmDataId(), TblPointAlamDataEntity.class, true);
+			alarmData.setAlarmDownRecordId(update.getAlamDownRecordId());
+			crudService.update(alarmData, true);
+			return success(update.getAlamDownRecordId());
+		}
+		return success(null); 
+	} 
 	
 	//监控点数据报警进行处理 记录列表
 	@RequestMapping("/down/record/list") 
-	public ResponseEntity<Object>  downRecordList(TblAlarmDownRecordEntity entity) throws Exception { 
-		Map map = new HashMap();
-//		if(entity.getAlamDownRecordId()!=null) {
-//			map.put("alamDownRecordId", new ParamMatcher(entity.getAlamDownRecordId())); 
-//		}
-//		if(entity.getPointDataId()!=null) {
-//			map.put("pointDataId",new ParamMatcher(entity.getPointDataId()));
-//		}
-//		Object result= crudService.findByMoreFiledAndPage(TblAlarmDownRecordEntity.class, map, true, getPage());
-		return success(null);
+	public ResponseEntity<Object>  downRecordList(AlarmDownRecordQuery query) throws Exception { 
+		Page<TblAlarmDownRecordEntity> result = alarmDataService.getPage(query, getPageAndOrderBy("RECORD_TIME"));
+		return success(result);
 	}
+	
 }
