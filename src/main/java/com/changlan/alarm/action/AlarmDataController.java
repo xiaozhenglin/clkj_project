@@ -45,15 +45,15 @@ public class AlarmDataController extends  BaseController{
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TblPointAlamDataEntity entity) {  
-//		List<AlarmDataVo> result = new ArrayList<AlarmDataVo>();
-//		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPage());
-//		for(TblAlarmDataDetail detail : details) {
-//			AlarmDataVo  vo = new AlarmDataVo(detail);
-//			result.add(vo);
-//		}
-//		return success(new PageImpl(result, getPage(), details.getTotalElements()));
+		List<AlarmDataVo> result = new ArrayList<AlarmDataVo>();
 		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPage());
-		return success(details);
+		for(TblAlarmDataDetail detail : details) {
+			AlarmDataVo  vo = new AlarmDataVo(detail);
+			result.add(vo);
+		}
+		return success(new PageImpl(result, getPage(), details.getTotalElements()));
+//		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPage());
+//		return success(details);
 	}
 	
 //	未加权限

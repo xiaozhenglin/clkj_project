@@ -12,21 +12,18 @@ public class AlarmDataVo {
 	private String  pointName;
 	private Integer indicatorId;
 	private String  indicatorName;
-	private Integer pointDataId;
-	private String  indicatorValue;
+	private TblPointAlamDataEntity alarmData; 
 	
 	public AlarmDataVo(TblAlarmDataDetail detail) {
 		TblPointsEntity point = detail.getPoint(); 
 		TblPointAlamDataEntity alarmData = detail.getAlarmData(); 
 		TblAlarmRuleEntity alarmRule = detail.getAlarmRule(); 
 		TblIndicatorValueEntity indicator = detail.getIndicator(); 
-		this.pointId = pointId;
-		this.pointName = pointName;
-		this.indicatorId = indicatorId;
-		this.indicatorName = indicatorName;
-		this.pointDataId = pointDataId;
-		this.indicatorValue = indicatorValue;
-		
+		this.pointId = point.getPointId();
+		this.pointName = point.getPointName();
+		this.indicatorId = indicator.getIndicatorId();
+		this.indicatorName = indicator.getName();
+		this.alarmData = alarmData;
 	}
 	
 	public AlarmDataVo() {
@@ -57,17 +54,14 @@ public class AlarmDataVo {
 	public void setIndicatorName(String indicatorName) {
 		this.indicatorName = indicatorName;
 	}
-	public Integer getPointDataId() {
-		return pointDataId;
+
+	public TblPointAlamDataEntity getAlarmData() {
+		return alarmData;
 	}
-	public void setPointDataId(Integer pointDataId) {
-		this.pointDataId = pointDataId;
+
+	public void setAlarmData(TblPointAlamDataEntity alarmData) {
+		this.alarmData = alarmData;
 	}
-	public String getIndicatorValue() {
-		return indicatorValue;
-	}
-	public void setIndicatorValue(String indicatorValue) {
-		this.indicatorValue = indicatorValue;
-	}
+	
 	
 }
