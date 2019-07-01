@@ -79,7 +79,7 @@ public class LoginController extends BaseController{
 			return success(UserErrorType.VERIFIED_NULL.getCode(),UserErrorType.VERIFIED_NULL.getMsg(),false,null); 
 		}
 		//不是生成的验证码报 验证失败错误
-		if(!(verifyCode.trim()).equals((generalCode.trim()))){
+		if(!(verifyCode.trim()).equalsIgnoreCase((generalCode.trim()))){
 			return success(UserErrorType.VERIFIED_ERROR.getCode(),UserErrorType.VERIFIED_ERROR.getMsg(),false,null); 
 		}
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
