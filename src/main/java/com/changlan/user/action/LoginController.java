@@ -1,5 +1,8 @@
 package com.changlan.user.action;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.bouncycastle.math.ec.ECPoint;
@@ -31,6 +35,7 @@ import com.changlan.common.util.FastjsonUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SM2Util;
 import com.changlan.common.util.StringUtil;
+import com.changlan.common.util.VerifyCodeUtil;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.UserErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -62,11 +67,21 @@ public class LoginController extends BaseController{
 	}
 	
 	@RequestMapping("/login")
-	public ResponseEntity<Object>  login(String name,String pass){
+	public ResponseEntity<Object>  login(String name,String pass,String verifyCode){
 		Map map = new HashMap();
 		map.put("name", new ParamMatcher(name));
 		map.put("pass", new ParamMatcher(pass));
 		map.put("removeFlage", new ParamMatcher(0)); //被删除的将无法登陆
+		HttpSession session = getSession(); 
+		String generalCode = ((String) session.getAttribute("verifyCode")); 
+		//验证码为空
+		if(verifyCode == null || "".equals(verifyCode.trim())){
+			return success(UserErrorType.VERIFIED_NULL.getCode(),UserErrorType.VERIFIED_NULL.getMsg(),false,null); 
+		}
+		//不是生成的验证码报 验证失败错误
+		if(!(verifyCode.trim()).equals((generalCode.trim()))){
+			return success(UserErrorType.VERIFIED_ERROR.getCode(),UserErrorType.VERIFIED_ERROR.getMsg(),false,null); 
+		}
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
 		if(ListUtil.isEmpty(list)) {  
 			//没找到抛出异常
@@ -94,6 +109,29 @@ public class LoginController extends BaseController{
 			logger.info("用户登出"+ user.getName());
 			LoginUser.map.remove(user.getAdminUserId(),user);
 		}
+		return success(true);
+	}
+	
+	@RequestMapping("/getImage")
+	public ResponseEntity<Object>  getImage() throws IOException{
+		HttpSession session = getSession(); 
+		HttpServletResponse response = getResponse();
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("image/jpeg");
+		String verifyCode = VerifyCodeUtil.generateVerifyCode(4,"");
+        
+		logger.info("生成的验证码为："+ verifyCode.toUpperCase());
+		session.removeAttribute("verifyCode");
+		session.removeAttribute("codeTime");
+
+		session.setAttribute("verifyCode", verifyCode.toUpperCase());
+		//session.setAttribute("codeTime", LocalDateTime.now());
+		// 生成图片
+		int w = 100, h = 30;
+	    OutputStream out = response.getOutputStream();
+		VerifyCodeUtil.outputImage(w, h, out, verifyCode);		
 		return success(true);
 	}
 	

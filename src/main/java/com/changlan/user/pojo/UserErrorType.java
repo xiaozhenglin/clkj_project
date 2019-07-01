@@ -12,7 +12,9 @@ public enum UserErrorType {
 	PASS_LENGTH("A009","密码长度不能小于8"),
 	USER_ROLE_EXIST("A010","用户角色已经存在"),
 	NAME_EXIST("A011","名称重复"),
-	UPLOAD_ERROR("A012","上传文件错误"); 
+	UPLOAD_ERROR("A012","上传文件错误"), 
+	VERIFIED_NULL("A013","验证码为空"),
+    VERIFIED_ERROR("A014","验证失败");
 	
 	private String code;
 	private String msg;
