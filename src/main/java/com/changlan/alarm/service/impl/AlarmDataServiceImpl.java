@@ -11,9 +11,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.changlan.alarm.pojo.AlarmDownRecordQuery;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.alarm.service.IAlarmDataService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
+import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.pojo.ParamMatcher;
@@ -75,6 +77,22 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 			list.add(detail);
 		}
 		result = new PageImpl<TblAlarmDataDetail>(list, pageable, datas.getTotalElements());
+		return result;
+	}
+
+	@Override
+	public Page getPage(AlarmDownRecordQuery query, Pageable page) {
+		Map map = new HashMap();
+		if(query.getAlamDownRecordId() != null) {
+			map.put("alamDownRecordId", new ParamMatcher(query.getAlamDownRecordId()));
+		}
+		if(query.getAlarmDataId()!=null) {
+			map.put("alarmDataId", new ParamMatcher(query.getAlarmDataId()));
+		}
+		if(query.getBegin()!=null && query.getEnd()!=null) {
+			map.put("recordTime", new ParamMatcher(query.getBegin(),query.getEnd()));
+		}
+		Page result = crudService.findByMoreFiledAndPage(TblAlarmDownRecordEntity.class, map, true, page);
 		return result;
 	}
 	

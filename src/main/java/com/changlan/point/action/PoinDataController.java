@@ -89,7 +89,7 @@ public class PoinDataController extends BaseController{
 //		}
 //		return success(result);
 		List<PoinDataVo> result = new ArrayList<PoinDataVo>();
-		Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPage());
+		Page<PointDataDetail> pointDatas = pointDataService.getAll(query,getPageAndOrderBy("RECORD_TIME"));
 		for(PointDataDetail detail : pointDatas) {
 			PoinDataVo  vo = new PoinDataVo(detail);
 			result.add(vo);

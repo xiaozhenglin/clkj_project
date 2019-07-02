@@ -65,6 +65,9 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     @Column(name = "ALAM_DOWN_RECORD_ID"  )
     private Integer alarmDownRecordId;
     
+    @Column(name ="DOWN_STATUS")
+    private String downStatus;
+    
 	/**
      * 获取alarmId
      * 
@@ -220,6 +223,14 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
 	public void setAlarmDownRecordId(Integer alarmDownRecordId) {
 		this.alarmDownRecordId = alarmDownRecordId;
+	}
+
+	public String getDownStatus() {
+		return downStatus;
+	}
+
+	public void setDownStatus(String downStatus) {
+		this.downStatus = downStatus;
 	}
 	
     
