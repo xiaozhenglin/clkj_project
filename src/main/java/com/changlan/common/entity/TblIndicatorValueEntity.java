@@ -48,6 +48,9 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
     @Column(name = "CATEGORY_ID"    )
     private Integer categoryId;
 
+    @Column(name = "UNIT" )
+    private String unit;
+
 
     /**
      * 获取indicatorId
@@ -110,5 +113,15 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
 	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+	
+	
 
 }

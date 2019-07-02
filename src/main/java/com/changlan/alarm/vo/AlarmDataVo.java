@@ -12,7 +12,8 @@ public class AlarmDataVo {
 	private String  pointName;
 	private Integer indicatorId;
 	private String  indicatorName;
-	private TblPointAlamDataEntity alarmData; 
+	private String  unit; //指标单位
+	private TblPointAlamDataEntity alarmData;
 	
 	public AlarmDataVo(TblAlarmDataDetail detail) {
 		TblPointsEntity point = detail.getPoint(); 
@@ -23,6 +24,7 @@ public class AlarmDataVo {
 		this.pointName = point.getPointName();
 		this.indicatorId = indicator.getIndicatorId();
 		this.indicatorName = indicator.getName();
+		this.unit = indicator.getUnit();
 		this.alarmData = alarmData;
 	}
 	
@@ -61,6 +63,14 @@ public class AlarmDataVo {
 
 	public void setAlarmData(TblPointAlamDataEntity alarmData) {
 		this.alarmData = alarmData;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 	
 	

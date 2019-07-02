@@ -9,11 +9,12 @@ import com.changlan.point.pojo.PointDataDetail;
 
 public class PoinDataVo implements Serializable{
 
+	private Integer pointDataId;
 	private Integer pointId;
 	private String pointName;
 	private Integer indicatorId;
 	private String indicatorName;
-	private Integer pointDataId;
+	private String  unit; //指标单位
 	private String indicatorValue;
 	private Integer indicatorCategoryId;
 	private String indicatorCategoryName;
@@ -28,6 +29,7 @@ public class PoinDataVo implements Serializable{
 		this.indicatorName = valueDetail.getIndicatorValue().getName();
 		this.pointDataId = pointData.getPointDataId();
 		this.indicatorValue = pointData.getValue();
+		this.unit = valueDetail.getIndicatorValue().getUnit();
 		this.indicatorCategoryId = valueDetail.getCategory().getCategoryId();
 		this.indicatorCategoryName = valueDetail.getCategory().getName();
 	}
@@ -98,6 +100,14 @@ public class PoinDataVo implements Serializable{
 
 	public void setIndicatorCategoryName(String indicatorCategoryName) {
 		this.indicatorCategoryName = indicatorCategoryName;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	
