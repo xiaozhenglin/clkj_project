@@ -2,7 +2,7 @@ server:
   port: 8082
   
 netty_server_port: 1111
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage,/admin/downLogFile
   
   
 upload_image: 
@@ -14,7 +14,7 @@ smscat:
 spring: 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.199:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: 
     tomcat:
