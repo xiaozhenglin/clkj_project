@@ -31,7 +31,6 @@ public class ProtocolController extends BaseController{
 	private IProtocolService protocolService;
 
 	@RequestMapping("/save")
-	@Transactional
 	public ResponseEntity<Object>  save(TblCommandProtocolEntity entity) throws Exception {
 //		Boolean existName = protocolService.existName(entity); 
 //		if(existName) {
@@ -51,7 +50,6 @@ public class ProtocolController extends BaseController{
 	} 
 	
 	@RequestMapping("/delete")
-	@Transactional
 	public ResponseEntity<Object>  delete(TblCommandProtocolEntity entity) throws MyDefineException { 
 		TblCommandProtocolEntity find = (TblCommandProtocolEntity)crudService.get(entity.getProtocolId(),TblCommandProtocolEntity.class,true);
 		if(find == null) {

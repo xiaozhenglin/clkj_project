@@ -30,7 +30,6 @@ public class CommandDefaultSendController extends BaseController{
 	private ICommandDefaultService commandDefaultService;
 
 	@RequestMapping("/save")
-	@Transactional
 	public ResponseEntity<Object>  save(TblPointSendCommandEntity entity) throws Exception {
 		Boolean existName = commandDefaultService.existName(entity); 
 		if(existName) {
@@ -50,7 +49,6 @@ public class CommandDefaultSendController extends BaseController{
 	}
 	
 	@RequestMapping("/delete")
-	@Transactional
 	public ResponseEntity<Object>  delete(TblPointSendCommandEntity entity) throws MyDefineException { 
 		TblPointSendCommandEntity find = (TblPointSendCommandEntity)crudService.get(entity.getSendCommandId(),TblIndicatorCategoriesEntity.class,true);
 		if(find == null) {
