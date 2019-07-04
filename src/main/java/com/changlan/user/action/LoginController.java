@@ -82,6 +82,12 @@ public class LoginController extends BaseController{
 		if(!(verifyCode.trim()).equalsIgnoreCase((generalCode.trim()))){
 			return success(UserErrorType.VERIFIED_ERROR.getCode(),UserErrorType.VERIFIED_ERROR.getMsg(),false,null); 
 		}
+		LocalDateTime time = LocalDateTime.now();
+		LocalDateTime codeTime = ((LocalDateTime) session.getAttribute("codeTime")); 
+		if(time.compareTo(codeTime) > 0) { //验证码失效
+			return success(UserErrorType.VERIFIED_TIMEOUT_ERROR.getCode(),UserErrorType.VERIFIED_TIMEOUT_ERROR.getMsg(),false,null);
+		}
+		
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
 		if(ListUtil.isEmpty(list)) {  
 			//没找到抛出异常
@@ -127,7 +133,8 @@ public class LoginController extends BaseController{
 		session.removeAttribute("codeTime");
 
 		session.setAttribute("verifyCode", verifyCode.toUpperCase());
-		//session.setAttribute("codeTime", LocalDateTime.now());
+		LocalDateTime time = LocalDateTime.now().plusSeconds(60);//增加60秒时间超时
+		session.setAttribute("codeTime", time);
 		// 生成图片
 		int w = 100, h = 30;
 	    OutputStream out = response.getOutputStream();

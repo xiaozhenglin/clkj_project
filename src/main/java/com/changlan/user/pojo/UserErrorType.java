@@ -14,7 +14,8 @@ public enum UserErrorType {
 	NAME_EXIST("A011","名称重复"),
 	UPLOAD_ERROR("A012","上传文件错误"), 
 	VERIFIED_NULL("A013","验证码为空"),
-    VERIFIED_ERROR("A014","验证失败");
+    VERIFIED_ERROR("A014","验证失败"),
+	VERIFIED_TIMEOUT_ERROR("A015","验证码超时");
 	
 	private String code;
 	private String msg;
