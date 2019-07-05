@@ -64,7 +64,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = context.channel();
         logger.info("ServerHandler类channelRead方法接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
-        	 if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1 || s.indexOf("33413130303230303031464A445430443041")>-1) {
+        	 if(s.indexOf("messageBox")>-1) {
+        		setMessageBoxChannel(s,channel);
+        	 }else if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1 || s.indexOf("33413130303230303031464A445430443041")>-1) {
              	//设置注册包
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);
@@ -84,7 +86,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         context.flush(); //加的部分
     }
     
-    private void setPackageChannel(String registPackage, Channel channel) {
+    private void setMessageBoxChannel(String s, Channel channel) {
+    	 NettyServer.messageChannelMap.put(s, channel); 
+   	  	 logger.info("第一步:消息弹框接受注册包 [" + channel.remoteAddress() + "]:"+ s + " 长度 "+s.length()+"\n");
+	}
+
+	private void setPackageChannel(String registPackage, Channel channel) {
     	  NettyServer.channelMap.put(registPackage, channel); 
     	  logger.info("第一步接受注册包 [" + channel.remoteAddress() + "]:"+ registPackage + " 长度 "+registPackage.length()+"\n");
 	}

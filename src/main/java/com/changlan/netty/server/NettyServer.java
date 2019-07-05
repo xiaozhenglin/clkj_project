@@ -32,7 +32,9 @@ public class NettyServer extends Thread{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    public static Map<Object,Channel> channelMap = new ConcurrentHashMap<Object, Channel>(); 
+    public static Map<Object,Channel> channelMap = new ConcurrentHashMap<Object, Channel>(); //用于发送指令
+    
+    public static Map<Object,Channel> messageChannelMap = new ConcurrentHashMap<Object, Channel>(); //用于弹框的消息推送
 
     public NettyServer() {
 		super();
@@ -78,6 +80,15 @@ public class NettyServer extends Thread{
 		NettyServer.channelMap = channelMap;
 	}
 
+	public static Map<Object, Channel> getMessageChannelMap() {
+		return messageChannelMap;
+	}
+
+	public static void setMessageChannelMap(Map<Object, Channel> messageChannelMap) {
+		NettyServer.messageChannelMap = messageChannelMap;
+	}
+
+	
 	
 
 }

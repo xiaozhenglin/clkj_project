@@ -27,7 +27,7 @@ public class MyDecoder extends ByteToMessageDecoder {
        //字节数组转字符串
        String str = new String(b);
        if(StringUtil.isNotEmpty(str)) {
-    	   if(str.indexOf("CLKJ")>-1) {
+    	   if(str.indexOf("CLKJ")>-1 || str.indexOf("messageBox")>-1) {
     		   //注册包
                out.add(str);
                logger.info("MyDecoder类接收内容"+str);
