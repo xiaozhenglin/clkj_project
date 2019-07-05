@@ -33,6 +33,7 @@ import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.AnalysisDataUtil;
 import com.changlan.common.util.CRC16M;
+import com.changlan.common.util.FastjsonUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
@@ -63,7 +64,6 @@ public class NettyServiceImpl implements INettyService{
 	@Autowired
 	ICommandDefaultService commandDefaultService;
 	
-	
 	protected static final Logger logger = LoggerFactory.getLogger(NettyServiceImpl.class);
 
 	//服务器-》客户端发送数据
@@ -93,6 +93,25 @@ public class NettyServiceImpl implements INettyService{
  					channel.writeAndFlush(buf.writeBytes(bytes)); 
  					sendSuccess =  true ; 
  				}
+ 			}
+ 		}	
+ 		if(!sendSuccess) {
+ 			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
+ 		}
+	}
+	
+	@Override
+	public void serverSendMessageBox(Object messageBox) throws Exception {
+		//registPackage 对应的通道
+ 		Map<Object, Channel> messageChannelMap = NettyServer.messageChannelMap; 
+ 		Boolean sendSuccess = false;
+ 		if(!messageChannelMap.isEmpty()) {
+ 			Channel channel = messageChannelMap.get("messageBox"); 
+ 			if(channel.isActive()) {
+				ByteBuf buf = Unpooled.buffer(3000);
+				String beanToJson = FastjsonUtil.beanToJson(messageBox);
+				channel.writeAndFlush(buf.writeBytes(beanToJson.getBytes())); 
+				sendSuccess =  true ; 
  			}
  		}	
  		if(!sendSuccess) {

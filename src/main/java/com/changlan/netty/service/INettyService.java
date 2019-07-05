@@ -6,6 +6,8 @@ public interface INettyService {
 	//服务器往客户端发送指令
 	void serverSendMessage(String registPackage, String message) throws Exception;
 	
+	void serverSendMessageBox(Object messageBox) throws Exception;
+	
 	//客户端往服务器发送指令
 	void clientSendMessage(String ip, String commandContent) throws Exception;
 	

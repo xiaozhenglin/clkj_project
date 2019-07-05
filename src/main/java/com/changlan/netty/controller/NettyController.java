@@ -26,6 +26,7 @@ import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.GsmCat;
@@ -80,7 +81,9 @@ public class NettyController extends BaseController{
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
 //    	savePartialDischarge();
 //    	clientSendMessage(commanId);
-    	serverSendMessage(commanId);
+//    	serverSendMessage(commanId);
+    	BaseResult baseResult = new BaseResult("", "", true, "testData"); 
+    	nettyService.serverSendMessageBox(baseResult);
     	return success(true);
 	}
     
