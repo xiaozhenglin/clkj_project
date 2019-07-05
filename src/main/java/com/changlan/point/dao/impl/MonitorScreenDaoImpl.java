@@ -26,9 +26,20 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 				" union all select count(1)  from tbl_alarm_down_record " + 
 				" union all select count(1) from tbl_point_alam_data a  where a.ALAM_DOWN_RECORD_ID is null " + 
 				" union all select count(1) from  tbl_points " + 
-				" union all select count(1) from  tbl_points b where b.`STATUS`='DATA_CAN_IN' or b.`STATUS` = 'CONNECT' " + 
-				" union all select count(1) from  tbl_points b where b.`STATUS`!='DATA_CAN_IN' and b.`STATUS` != 'CONNECT'";
+				" union all select count(1) from  tbl_points b where b.`STATUS`='DATA_CAN_IN'  " + 
+				" union all select count(1) from  tbl_points b where b.`STATUS`='OUT_CONNECT'";
 		
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
+		return createNativeQuery.getResultList(); 
+	}
+
+	@Override
+	public List<Object> queryPointId(String pointName) {
+		em.clear();
+		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS ,count(a.ALARM_ID) ,  "
+				+ "count(a.ALAM_DOWN_RECORD_ID)  " + 
+				"from tbl_points t , tbl_point_alam_data a where  a.POINT_ID = t.POINT_ID  and 1 = 1";
+		sql += " and POINT_NAME = " +  "'" + pointName + "'";
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
 		return createNativeQuery.getResultList(); 
 	}

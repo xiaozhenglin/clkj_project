@@ -21,4 +21,12 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 		return list;
 	}
 
+	@Override
+	public List<Object> queryPointId(String pointName) {
+		List<Object> list = dao.queryPointId(pointName); 
+		return list;
+	}
+	
+	
+
 }

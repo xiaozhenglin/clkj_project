@@ -9,4 +9,6 @@ import com.changlan.point.vo.MonitorScreenVO;
 public interface IMonitorScreenService {
 	
 	List<Object> display(MonitorScreenQuery query);
+	
+	List<Object> queryPointId(String pointName);
 }

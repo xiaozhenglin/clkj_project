@@ -15,6 +15,8 @@ import com.changlan.point.dao.IMonitorScreenDao;
 import com.changlan.point.pojo.MonitorScreenQuery;
 import com.changlan.point.service.IMonitorScreenService;
 import com.changlan.point.vo.MonitorScreenVO;
+import com.changlan.point.vo.ScreenPointIdVO;
+
 import java.math.BigInteger;
 
 @RestController
@@ -57,5 +59,36 @@ public class MonitorScreenController extends BaseController {
 		
 		return success(vo);
 	}
+	
+	
+	@RequestMapping("/getPointInfo") 
+	public ResponseEntity<Object>  display(String pointName) {
+		List<Object> list = (List<Object>)monitorScreenService.queryPointId(pointName);
+		ScreenPointIdVO vo = new ScreenPointIdVO();
+		
+		
+		Object[] object0 = (Object[]) list.get(0);
+		vo.setPoint_id(object0[1].toString());
+		
+		//Object[] object1 = (Object[]) list.get(0);
+		vo.setPoint_name(object0[2].toString());
+		
+		//Object[] object2 = (Object[]) list.get(0);
+		vo.setPoint_address(object0[3].toString());
+		
+		//Object[] object3 = (Object[]) list.get(0);		
+		vo.setAlarm_total(object0[4].toString());
+		
+		//Object[] object4 = (Object[]) list.get(0);
+		vo.setAlarm_deal(object0[5].toString());
+		
+		String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
+		
+		vo.setAlarm_not_deal(not_deal_num);
+		//vo.setCaculate();
+		
+		return success(vo);
+	}
+	
 	
 }
