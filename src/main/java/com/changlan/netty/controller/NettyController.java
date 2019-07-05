@@ -81,9 +81,9 @@ public class NettyController extends BaseController{
 	public ResponseEntity<Object>  sendMessage(Integer commanId) throws Exception { 
 //    	savePartialDischarge();
 //    	clientSendMessage(commanId);
-//    	serverSendMessage(commanId);
-    	BaseResult baseResult = new BaseResult("", "", true, "testData"); 
-    	nettyService.serverSendMessageBox(baseResult);
+    	serverSendMessage(commanId);
+//    	BaseResult baseResult = new BaseResult("", "", true, "testData"); 
+//    	nettyService.serverSendMessageBox(baseResult);
     	return success(true);
 	}
     

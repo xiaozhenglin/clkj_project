@@ -110,13 +110,14 @@ public class NettyServiceImpl implements INettyService{
  			if(channel.isActive()) {
 				ByteBuf buf = Unpooled.buffer(3000);
 				String beanToJson = FastjsonUtil.beanToJson(messageBox);
+				logger.info("消息弹窗" + beanToJson  ); 
 				channel.writeAndFlush(buf.writeBytes(beanToJson.getBytes())); 
 				sendSuccess =  true ; 
  			}
  		}	
- 		if(!sendSuccess) {
- 			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
- 		}
+// 		if(!sendSuccess) {
+// 			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
+// 		}
 	}
 	
 	@Override
