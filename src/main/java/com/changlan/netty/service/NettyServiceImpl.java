@@ -87,7 +87,7 @@ public class NettyServiceImpl implements INettyService{
  			if(key.equals(registPackage)) {
  				Channel channel = next.getValue();
  				//channel为一个接口，如果断线，这个接口获取的状态会随之改变。
- 				if(channel.isActive()) {
+ 				if(channel!=null && channel.isActive()) {
  					ByteBuf buf = Unpooled.buffer(3000);
  					byte[] bytes =  StringUtil.hexStringToBytes(message);
  					channel.writeAndFlush(buf.writeBytes(bytes)); 
@@ -107,7 +107,7 @@ public class NettyServiceImpl implements INettyService{
  		Boolean sendSuccess = false;
  		if(!messageChannelMap.isEmpty()) {
  			Channel channel = messageChannelMap.get("messageBox"); 
- 			if(channel.isActive()) {
+ 			if(channel!=null &&channel.isActive()) {
 				ByteBuf buf = Unpooled.buffer(3000);
 				String beanToJson = FastjsonUtil.beanToJson(messageBox);
 				logger.info("消息弹窗" + beanToJson  ); 
