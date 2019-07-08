@@ -38,7 +38,7 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
 import com.changlan.user.pojo.UserErrorType;
 
-@Controller
+@RestController
 public class UploadFileController extends BaseController{
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,7 +50,6 @@ public class UploadFileController extends BaseController{
 	 * @param IdForm
 	 * @return RestResult<Object>
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/admin/uploadImg")
 	public ResponseEntity<Object> uploadImg(MultipartFile file) throws Exception{
 		logger.info(file.getOriginalFilename()); 
@@ -66,7 +65,6 @@ public class UploadFileController extends BaseController{
 		return success(newRealpath);
 	}
 		
-	@ResponseBody
 	@RequestMapping(value = "/admin/downLogFile")
 	public ResponseEntity<Object> downLogFile(String filePath, String fileName) throws Exception{
 		HttpServletResponse response = getResponse();
