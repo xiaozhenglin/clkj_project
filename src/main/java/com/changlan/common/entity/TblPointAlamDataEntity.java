@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -40,7 +42,7 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
     /** categroryId */
     @Column(name = "CATEGRORY_ID" )
-    private Integer categroryId;
+    private Integer categroryId; //指标类别id
 
     /** isNotice */
     @Column(name = "IS_NOTICE" )
@@ -68,6 +70,15 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     @Column(name ="DOWN_STATUS")
     private String downStatus;
     
+    @Transient
+	private String  indicatorName;
+    
+    @Transient
+	private String  pointName;
+    
+    @Transient
+	private String  unit; //指标单位
+
 	/**
      * 获取alarmId
      * 
@@ -231,6 +242,30 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
 	public void setDownStatus(String downStatus) {
 		this.downStatus = downStatus;
+	}
+
+	public String getIndicatorName() {
+		return indicatorName;
+	}
+
+	public void setIndicatorName(String indicatorName) {
+		this.indicatorName = indicatorName;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 	
     
