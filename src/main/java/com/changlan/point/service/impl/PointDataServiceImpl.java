@@ -25,6 +25,7 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.IPointDataDao;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointInfoDetail;
+import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.service.IPointDataService;
 
 @Service
@@ -71,7 +72,7 @@ public class PointDataServiceImpl implements IPointDataService{
 	}
 
 	@Override
-	public Page<PointDataDetail> getAll(TblPoinDataEntity data, Pageable page) {
+	public Page<PointDataDetail> getAll(PointQuery data, Pageable page) {
 		Map map = new HashMap();
 		if(data.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(data.getPointId()));
@@ -92,6 +93,9 @@ public class PointDataServiceImpl implements IPointDataService{
 		//监控系统类别
 		if(data.getPointCatagoryId()!=null) {
 			map.put("pointCatagoryId", new ParamMatcher(data.getPointCatagoryId()));
+		}
+		if(data.getBegin()!=null&& data.getEnd()!=null) {
+			map.put("recordTime", new ParamMatcher(data.getBegin(),data.getEnd()));
 		}
 		//按条件筛选后的结果， 再选其中分页条数得到的结果
 		Page datas = crudService.findByMoreFiledAndPage(TblPoinDataEntity.class, map, true, page);
