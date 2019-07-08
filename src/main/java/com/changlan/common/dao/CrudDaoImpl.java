@@ -217,6 +217,9 @@ public class CrudDaoImpl implements ICrudDao{
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
 				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
 				break;
+			case NOT_EQUALS:
+				sql+=" and "+getColumnNameByField(clazz,list.get(i))+" != :"+list.get(i); 
+				break;
 			default:
 				break;
 			}

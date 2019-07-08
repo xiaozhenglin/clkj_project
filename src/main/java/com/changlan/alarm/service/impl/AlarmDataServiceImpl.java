@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.changlan.alarm.pojo.AlarmDataQuery;
 import com.changlan.alarm.pojo.AlarmDownRecordQuery;
+import com.changlan.alarm.pojo.AlarmDownType;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.alarm.service.IAlarmDataService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
+import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
@@ -72,8 +74,12 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 		if(entity.getBegin()!=null&& entity.getEnd()!=null) {
 			map.put("alarmDate", new ParamMatcher(entity.getBegin(),entity.getEnd()));
 		}
-		if(StringUtil.isNotEmpty(entity.getDownStatus())) {
-			map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
+		if(StringUtil.isNotEmpty(entity.getDownStatus())   ) {
+			if(entity.getDownStatus().equals(AlarmDownType.DOWN.toString())) {
+				map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
+			}else {
+				map.put("downStatus", new ParamMatcher(MatcheType.NOT_EQUALS,AlarmDownType.DOWN.toString()));
+			}
 		}
 		Page datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true, pageable);
 		
