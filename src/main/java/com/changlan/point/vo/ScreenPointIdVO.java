@@ -8,7 +8,7 @@ public class ScreenPointIdVO {
 	private String point_id;
 	private String point_name;
 	private String point_address;
-	
+	private String long_lati; //经纬度
 	
 	public ScreenPointIdVO() {
 		super();
@@ -16,7 +16,7 @@ public class ScreenPointIdVO {
 	
 	
 	public ScreenPointIdVO(String alarm_total, String alarm_deal, String alarm_not_deal, String point_id,
-			String point_name, String point_address) {
+			String point_name, String point_address, String long_lati) {
 		super();
 		this.alarm_total = alarm_total;
 		this.alarm_deal = alarm_deal;
@@ -24,8 +24,17 @@ public class ScreenPointIdVO {
 		this.point_id = point_id;
 		this.point_name = point_name;
 		this.point_address = point_address;
+		this.long_lati = long_lati;
 	}
-	
+
+	public String getLong_lati() {
+		return long_lati;
+	}
+
+	public void setLong_lati(String long_lati) {
+		this.long_lati = long_lati;
+	}
+
 	public String getAlarm_total() {
 		return alarm_total;
 	}

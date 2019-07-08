@@ -80,6 +80,8 @@ public class MonitorScreenController extends BaseController {
 		
 		vo.setAlarm_deal(object0[5].toString());
 		
+		vo.setLong_lati(object0[6].toString());
+		
 		String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
 		
 		vo.setAlarm_not_deal(not_deal_num);
@@ -108,6 +110,8 @@ public class MonitorScreenController extends BaseController {
 			vo.setPoint_id(object[2].toString());
 			
 			vo.setPoint_name(object[3].toString());
+			
+			vo.setLong_lati(object[4].toString());
 								
 			voList.add(vo);
 			//return success(vo);
