@@ -34,14 +34,35 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	}
 
 	@Override
-	public List<Object> queryPointId(String pointName) {
+	public List<Object> queryPointId(String pointName , String pointId) {
 		em.clear();
 		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS ,count(a.ALARM_ID) ,  "
 				+ "count(a.ALAM_DOWN_RECORD_ID)  " + 
 				"from tbl_points t , tbl_point_alam_data a where  a.POINT_ID = t.POINT_ID  and 1 = 1";
-		sql += " and POINT_NAME = " +  "'" + pointName + "'";
+		if(pointName != null) {
+			sql += " and t.POINT_NAME = " +  "'" + pointName + "'";
+		}
+		if(pointId != null) {
+			sql += " and t.POINT_ID = " +  "'" + pointId + "'";
+		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
 		return createNativeQuery.getResultList(); 
 	}
+
+	@Override
+	public List<Object> searchPoints(String pointName, String pointId) {
+		em.clear();
+		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME from tbl_points t  where   ";
+		if(pointName != null) {
+			sql += "  POINT_NAME like " +  "'%" + pointName + "%'";
+		}
+		if(pointId != null) {
+			sql += "  POINT_ID like " +  "'%" + pointId + "%'";
+		}
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
+		return createNativeQuery.getResultList(); 
+	}
+	
+	
 
 }
