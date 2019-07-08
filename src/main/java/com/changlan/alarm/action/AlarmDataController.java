@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.changlan.alarm.pojo.AlarmDataQuery;
 import com.changlan.alarm.pojo.AlarmDownRecordQuery;
 import com.changlan.alarm.pojo.AlarmDownType;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
@@ -44,9 +45,9 @@ public class AlarmDataController extends  BaseController{
 	private IAlarmDataService alarmDataService;
 	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  list(TblPointAlamDataEntity entity) {  
+	public ResponseEntity<Object>  list(AlarmDataQuery query) {  
 		List<AlarmDataVo> result = new ArrayList<AlarmDataVo>();
-		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPageAndOrderBy("ALARM_DATE"));
+		Page<TblAlarmDataDetail> details = alarmDataService.getPage(query,getPageAndOrderBy("ALARM_DATE"));
 		for(TblAlarmDataDetail detail : details) {
 			AlarmDataVo  vo = new AlarmDataVo(detail);
 			result.add(vo);
