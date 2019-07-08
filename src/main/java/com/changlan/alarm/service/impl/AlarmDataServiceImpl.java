@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.changlan.alarm.pojo.AlarmDataQuery;
 import com.changlan.alarm.pojo.AlarmDownRecordQuery;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.alarm.service.IAlarmDataService;
@@ -52,7 +53,7 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 	}
 
 	@Override
-	public Page<TblAlarmDataDetail> getPage(TblPointAlamDataEntity entity, Pageable pageable) {
+	public Page<TblAlarmDataDetail> getPage(AlarmDataQuery entity, Pageable pageable) {
 		Page<TblAlarmDataDetail> result ;
 		Map map = new HashMap();
 		if(entity.getAlarmId() != null) {
@@ -66,6 +67,9 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 		}
 		if(entity.getPointId() !=null) {
 			map.put("pointId", new ParamMatcher(entity.getPointId()));
+		}
+		if(entity.getBegin()!=null&& entity.getEnd()!=null) {
+			map.put("alarmDate", new ParamMatcher(entity.getBegin(),entity.getEnd()));
 		}
 		Page datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true, pageable);
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.changlan.alarm.pojo.AlarmDataQuery;
 import com.changlan.alarm.pojo.AlarmDownRecordQuery;
 import com.changlan.alarm.pojo.TblAlarmDataDetail;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
@@ -18,7 +19,7 @@ public interface IAlarmDataService {
 
 	TblAlarmDataDetail getDetail(Integer id);
 
-	Page<TblAlarmDataDetail> getPage(TblPointAlamDataEntity entity, Pageable page);    
+	Page<TblAlarmDataDetail> getPage(AlarmDataQuery query, Pageable page);    
 	
 	Page<TblAlarmDownRecordEntity> getPage(AlarmDownRecordQuery entity, Pageable page);   
 
