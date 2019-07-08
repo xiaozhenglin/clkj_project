@@ -21,6 +21,7 @@ import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
 
 @Service
 public class AlarmDataServiceImpl implements IAlarmDataService {
@@ -70,6 +71,9 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 		}
 		if(entity.getBegin()!=null&& entity.getEnd()!=null) {
 			map.put("alarmDate", new ParamMatcher(entity.getBegin(),entity.getEnd()));
+		}
+		if(StringUtil.isNotEmpty(entity.getDownStatus())) {
+			map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
 		}
 		Page datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true, pageable);
 		
