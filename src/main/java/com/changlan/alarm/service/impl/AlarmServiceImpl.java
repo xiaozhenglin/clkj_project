@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.changlan.alarm.pojo.AlarmDownType;
 import com.changlan.alarm.service.IAlarmRuleService;
 import com.changlan.alarm.service.IAlarmService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
@@ -229,6 +230,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		entity.setCurrentDataId(data.getPointDataId()); 
 		entity.setContrastDataId(constractDataId); 
 		entity.setDataFrom("电流电压采集数据表");
+		entity.setDownStatus(AlarmDownType.UN_DOWN.toString());
 		TblPointAlamDataEntity update = (TblPointAlamDataEntity)crudService.update(entity, true); 
 		return update.getAlarmId();
 	}
@@ -320,6 +322,7 @@ public class AlarmServiceImpl implements IAlarmService{
 		entity.setCurrentDataId(data.getPointDataId()); 
 		entity.setContrastDataId(data.getPointDataId()); 
 		entity.setDataFrom("温度采集数据表");
+		entity.setDownStatus(AlarmDownType.UN_DOWN.toString());
 		TblPointAlamDataEntity update = (TblPointAlamDataEntity)crudService.update(entity, true); 
 		return update.getAlarmId();
 	}
