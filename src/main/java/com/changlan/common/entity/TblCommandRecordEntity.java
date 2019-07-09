@@ -20,6 +20,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -68,6 +70,12 @@ public class TblCommandRecordEntity implements java.io.Serializable {
     
     @Column(name = "RECORD_TIME"  )
     private Date recordTime;
+    
+    @Transient
+    private String commandName;
+    
+    @Transient
+    private String commandCatagoryName;
     
 	public Integer getCommandRecordId() {
 		return commandRecordId;
@@ -139,6 +147,22 @@ public class TblCommandRecordEntity implements java.io.Serializable {
 
 	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
+	}
+
+	public String getCommandName() {
+		return commandName;
+	}
+
+	public void setCommandName(String commandName) {
+		this.commandName = commandName;
+	}
+
+	public String getCommandCatagoryName() {
+		return commandCatagoryName;
+	}
+
+	public void setCommandCatagoryName(String commandCatagoryName) {
+		this.commandCatagoryName = commandCatagoryName;
 	}
 
     

@@ -1,5 +1,6 @@
 package com.changlan.command.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.command.pojo.CommandDefaultDetail;
+import com.changlan.command.pojo.CommandProtolDetail;
 import com.changlan.command.service.ICommandCategoryService;
 import com.changlan.command.service.ICommandDefaultService;
+import com.changlan.command.vo.CommandDefaultVO;
+import com.changlan.command.vo.CommandProtolVO;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblIndicatorCategoriesEntity;
@@ -45,7 +49,13 @@ public class CommandDefaultSendController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TblPointSendCommandEntity command) {
 		List<CommandDefaultDetail> list = commandDefaultService.commandList(command);
-		return success(list);
+		List result = new ArrayList();
+		for(CommandDefaultDetail detail : list ) {
+			CommandDefaultVO vo = new CommandDefaultVO(detail);
+			result.add(vo);
+		}
+		
+		return success(result);
 	}
 	
 	@RequestMapping("/delete")

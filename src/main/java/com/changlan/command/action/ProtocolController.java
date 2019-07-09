@@ -1,5 +1,6 @@
 package com.changlan.command.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -13,6 +14,7 @@ import com.changlan.command.pojo.CommandDefaultDetail;
 import com.changlan.command.pojo.CommandProtolDetail;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.IProtocolService;
+import com.changlan.command.vo.CommandProtolVO;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblCommandProtocolEntity;
 import com.changlan.common.entity.TblIndicatorCategoriesEntity;
@@ -46,7 +48,14 @@ public class ProtocolController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  list(TblCommandProtocolEntity protocol) {
 		List<CommandProtolDetail> list = protocolService.protocolList(protocol);
-		return success(list);
+		
+		List result = new ArrayList();
+		for(CommandProtolDetail detail : list ) {
+			CommandProtolVO  vo = new CommandProtolVO(detail);
+			result.add(vo);
+		}
+		
+		return success(result);
 	} 
 	
 	@RequestMapping("/delete")

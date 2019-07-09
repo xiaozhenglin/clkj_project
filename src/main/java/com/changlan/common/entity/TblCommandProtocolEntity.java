@@ -20,6 +20,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import com.changlan.common.util.StringUtil;
@@ -94,6 +96,16 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
     @Column(name = "NOT_NEGATIVE"  )
     private Integer notNegative;
     
+  
+      
+    @Transient
+  	private String  pointName;
+    @Transient
+  	private String  indicatorName;
+    @Transient
+  	private String  unit; //指标单位
+    @Transient
+  	private String  commandCategoryName;
     
 	public Integer getProtocolId() {
 		return protocolId;
@@ -238,6 +250,38 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 
 	public void setNotNegative(Integer notNegative) {
 		this.notNegative = notNegative;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
+	}
+
+	public String getIndicatorName() {
+		return indicatorName;
+	}
+
+	public void setIndicatorName(String indicatorName) {
+		this.indicatorName = indicatorName;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getCommandCategoryName() {
+		return commandCategoryName;
+	}
+
+	public void setCommandCategoryName(String commandCategoryName) {
+		this.commandCategoryName = commandCategoryName;
 	}
 
   

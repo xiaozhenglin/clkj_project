@@ -16,6 +16,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -64,6 +66,10 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     @Column(name = "INDICATOR_CATEGORY"  )
     private Integer indicatorCategory; //指标类别
     
+    @Transient
+   	private String  pointName;
+    @Transient
+   	private String  commandCategoryName;
 
 	public Integer getSendCommandId() {
 		return sendCommandId;
@@ -135,6 +141,22 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 
 	public void setIndicatorCategory(Integer indicatorCategory) {
 		this.indicatorCategory = indicatorCategory;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
+	}
+
+	public String getCommandCategoryName() {
+		return commandCategoryName;
+	}
+
+	public void setCommandCategoryName(String commandCategoryName) {
+		this.commandCategoryName = commandCategoryName;
 	}
 
 	
