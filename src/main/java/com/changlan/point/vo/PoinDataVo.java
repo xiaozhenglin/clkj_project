@@ -1,6 +1,7 @@
 package com.changlan.point.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
@@ -18,6 +19,7 @@ public class PoinDataVo implements Serializable{
 	private String indicatorValue;
 	private Integer indicatorCategoryId;
 	private String indicatorCategoryName;
+	private Date recordTime;
 
 	public PoinDataVo(PointDataDetail detail) {
 		TblPointsEntity point = detail.getPoint();
@@ -32,6 +34,7 @@ public class PoinDataVo implements Serializable{
 		this.unit = valueDetail.getIndicatorValue().getUnit();
 		this.indicatorCategoryId = valueDetail.getCategory().getCategoryId();
 		this.indicatorCategoryName = valueDetail.getCategory().getName();
+		this.recordTime =  pointData.getRecordTime();
 	}
 
 	public PoinDataVo() {
@@ -108,6 +111,14 @@ public class PoinDataVo implements Serializable{
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public Date getRecordTime() {
+		return recordTime;
+	}
+
+	public void setRecordTime(Date recordTime) {
+		this.recordTime = recordTime;
 	}
 
 	
