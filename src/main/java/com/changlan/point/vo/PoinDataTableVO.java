@@ -14,6 +14,7 @@ public class PoinDataTableVO {
 	private Integer indicatorId; //指标id
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
+	private String unit; //指标单位
 	private List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 
 	public PoinDataTableVO(Integer indicatorId,List<PointDataDetail> dataDetails) {
@@ -24,6 +25,7 @@ public class PoinDataTableVO {
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
 			this.indicatorCode = indicatorValue.getIndicatorCode();
 			this.indicatorName = indicatorValue.getName();
+			this.unit = indicatorValue.getUnit();
 			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
 			results.add(vo);
 		}
@@ -63,6 +65,14 @@ public class PoinDataTableVO {
 
 	public void setIndicatorName(String indicatorName) {
 		this.indicatorName = indicatorName;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 
