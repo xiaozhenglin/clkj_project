@@ -20,11 +20,14 @@ import com.changlan.point.pojo.PointInfoDetail;
 public class PointDefineVO {
   
 	private Integer pointId;
-	private String pointName;
-	private String status;
+	private String pointName; 
+	private String status;   //设备状态
     private String pointAddress;
     private String longLati;
-    private String phones;
+    private String phones;   //负责人电话
+    private String personName; //负责人姓名
+    private String personCompanyName; // 负责人公司名称
+    
     private String pointRegistPackage;
 //    private String portName;
 //    private Integer portBound;
@@ -41,9 +44,9 @@ public class PointDefineVO {
 //	private Integer indicatorCategoryId; //指标类别
 //	private String  indicatorCategoryName;//指标类别名称
 	
-	private String lineName; //线路名称
+	private String  lineName; //线路名称
 	private Integer lineId;	//线路id
-	private String lineAddress;
+	private String  lineAddress; //线路地址
 
 
 	public PointDefineVO() {
