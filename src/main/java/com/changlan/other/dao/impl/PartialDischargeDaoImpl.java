@@ -58,11 +58,11 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 //		if(query.getPointId()!=null) {
 //			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
 //		}
-		String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
-		System.out.println(beginDate);
-		String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
-		System.out.println(endDate);
-		sql+=" AND deviceData.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
+		if(query.getBegin()!=null && query.getEnd()!=null) {
+			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
+			sql+=" AND deviceData.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
+		}
 		sql+= " ORDER BY deviceData.createtime DESC ";
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),DeviceData.class);
 		return createNativeQuery.getResultList();
