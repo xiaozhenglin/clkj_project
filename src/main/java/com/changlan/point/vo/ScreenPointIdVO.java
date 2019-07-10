@@ -10,13 +10,19 @@ public class ScreenPointIdVO {
 	private String point_address;
 	private String long_lati; //经纬度
 	
+	private String line_id;  
+	private String line_name;
+	private String line_order;
+	
 	public ScreenPointIdVO() {
 		super();
 	}
 	
-	
+		
+
 	public ScreenPointIdVO(String alarm_total, String alarm_deal, String alarm_not_deal, String point_id,
-			String point_name, String point_address, String long_lati) {
+			String point_name, String point_address, String long_lati, String line_id, String line_name,
+			String line_order) {
 		super();
 		this.alarm_total = alarm_total;
 		this.alarm_deal = alarm_deal;
@@ -25,7 +31,41 @@ public class ScreenPointIdVO {
 		this.point_name = point_name;
 		this.point_address = point_address;
 		this.long_lati = long_lati;
+		this.line_id = line_id;
+		this.line_name = line_name;
+		this.line_order = line_order;
 	}
+
+
+	public String getLine_id() {
+		return line_id;
+	}
+
+
+	public void setLine_id(String line_id) {
+		this.line_id = line_id;
+	}
+
+
+	public String getLine_name() {
+		return line_name;
+	}
+
+
+	public void setLine_name(String line_name) {
+		this.line_name = line_name;
+	}
+
+
+	public String getLine_order() {
+		return line_order;
+	}
+
+
+	public void setLine_order(String line_order) {
+		this.line_order = line_order;
+	}
+
 
 	public String getLong_lati() {
 		return long_lati;

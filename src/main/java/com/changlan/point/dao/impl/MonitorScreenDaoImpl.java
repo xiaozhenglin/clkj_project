@@ -36,8 +36,8 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	@Override
 	public List<Object> queryPointId(String pointName , String pointId) {
 		em.clear();
-		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS ,count(a.ALARM_ID) ,  "
-				+ "count(a.ALAM_DOWN_RECORD_ID) , t.LONG_LATI  " + 
+		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS, count(a.ALARM_ID) ,  "
+				+ "count(a.ALAM_DOWN_RECORD_ID) , t.LONG_LATI , t.LINE_ID, t.LINE_ORDER , (select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME  " + 
 				"from tbl_points t , tbl_point_alam_data a where  a.POINT_ID = t.POINT_ID  and 1 = 1";
 		if(pointName != null) {
 			sql += " and t.POINT_NAME = " +  "'" + pointName + "'";
@@ -50,15 +50,13 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	}
 
 	@Override
-	public List<Object> searchPoints(String pointName, String pointId) {
+	public List<Object> searchPoints(String search) {
 		em.clear();
-		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME , t.LONG_LATI from tbl_points t  ";
-		if(pointName != null) {
-			sql += "  where  POINT_NAME like " +  "'%" + pointName + "%'";
+		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME ,  t.LONG_LATI, t.LINE_ID,  t.LINE_ORDER ,(select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME from tbl_points t    ";
+		if(search != null) {
+			sql += "  where POINT_NAME like " +  "'%" + search + "%'" +  " or POINT_ID like " +  "'%" + search + "%'";
 		}
-		if(pointId != null) {
-			sql += "  where  POINT_ID like " +  "'%" + pointId + "%'";
-		}
+		
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
 		return createNativeQuery.getResultList(); 
 	}

@@ -82,6 +82,12 @@ public class MonitorScreenController extends BaseController {
 		
 		vo.setLong_lati(object0[6].toString());
 		
+		vo.setLine_id(object0[7].toString());
+		
+		vo.setLine_order(object0[8].toString());
+		
+		vo.setLine_name(object0[9].toString());
+		
 		String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
 		
 		vo.setAlarm_not_deal(not_deal_num);
@@ -90,8 +96,8 @@ public class MonitorScreenController extends BaseController {
 	}
 	
 	@RequestMapping("/searchPoints") 
-	public ResponseEntity<Object>  searchPoints(String pointName ,String pointId) {
-		List<Object> list = (List<Object>)monitorScreenService.searchPoints(pointName,pointId);
+	public ResponseEntity<Object>  searchPoints(String search ) {
+		List<Object> list = (List<Object>)monitorScreenService.searchPoints(search);
 		List<ScreenPointsVO> voList = new ArrayList<ScreenPointsVO>();
 		
 		for(int i= 0;i<list.size();i++) {
@@ -112,6 +118,12 @@ public class MonitorScreenController extends BaseController {
 			vo.setPoint_name(object[3].toString());
 			
 			vo.setLong_lati(object[4].toString());
+			
+			vo.setLine_id(object[5].toString());
+			
+			vo.setLine_order(object[6].toString());
+			
+			vo.setLine_name(object[7].toString());
 								
 			voList.add(vo);
 			//return success(vo);

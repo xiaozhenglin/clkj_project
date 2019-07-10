@@ -12,5 +12,5 @@ public interface IMonitorScreenService {
 	
 	List<Object> queryPointId(String pointName , String pointId);
 	
-	public List<Object> searchPoints(String pointName, String pointId);
+	public List<Object> searchPoints(String search);
 }
