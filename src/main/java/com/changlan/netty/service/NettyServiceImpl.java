@@ -1,6 +1,7 @@
 package com.changlan.netty.service;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.service.IIndicatoryValueService;
+import com.changlan.netty.HttpNettyServer;
 import com.changlan.netty.client.ModbusClient;
 import com.changlan.netty.controller.ConnectClients;
 import com.changlan.netty.controller.NettyController;
@@ -49,6 +51,7 @@ import com.changlan.user.pojo.LoginUser;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 @Service
 public class NettyServiceImpl implements INettyService{
@@ -103,15 +106,14 @@ public class NettyServiceImpl implements INettyService{
 	@Override
 	public void serverSendMessageBox(Object messageBox) throws Exception {
 		//registPackage 对应的通道
- 		Map<Object, Channel> messageChannelMap = NettyServer.messageChannelMap; 
+ 		Map<Object, Channel> messageChannelMap = HttpNettyServer.messageChannelMap; 
  		Boolean sendSuccess = false;
  		if(!messageChannelMap.isEmpty()) {
  			Channel channel = messageChannelMap.get("messageBox"); 
  			if(channel!=null &&channel.isActive()) {
 				ByteBuf buf = Unpooled.buffer(3000);
 				String beanToJson = FastjsonUtil.beanToJson(messageBox);
-				logger.info("消息弹窗" + beanToJson  ); 
-				channel.writeAndFlush(buf.writeBytes(beanToJson.getBytes())); 
+				channel.writeAndFlush(new TextWebSocketFrame(beanToJson));
 				sendSuccess =  true ; 
  			}
  		}	

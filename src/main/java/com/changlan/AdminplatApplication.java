@@ -29,6 +29,7 @@ import com.changlan.common.configuration.SmsCatConfiguration;
 import com.changlan.common.configuration.UploadConfiguration;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.netty.HttpNettyServer;
 import com.changlan.netty.pojo.MyTask;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
@@ -48,6 +49,7 @@ public class AdminplatApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		new NettyServer().start(); //启动netty服务器
+		new HttpNettyServer().start();
 // 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
 //		nettyService.task(); 
 		
