@@ -66,9 +66,11 @@ public class PointDataDaoImpl implements IPointDataDao{
 			sql.append(" AND POINT_ID = :pointId ");
 			map.put("pointId", pointId);
 		}
-		String beginDate = DateUtil.formatDate(begin, "yyyy-MM-dd HH:mm:ss"); 
-		String endDate = DateUtil.formatDate(end, "yyyy-MM-dd HH:mm:ss"); 
-		sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
+		if(begin!=null && end !=null ) {
+			String beginDate = DateUtil.formatDate(begin, "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(end, "yyyy-MM-dd HH:mm:ss"); 
+			sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
+		}
 //		sql.append(" ORDER BY RECORD_TIME DESC ");
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),TblPoinDataEntity.class);
 		Iterator<Entry<String, String>> iterator = map.entrySet().iterator();  
