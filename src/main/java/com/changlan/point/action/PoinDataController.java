@@ -101,9 +101,12 @@ public class PoinDataController extends BaseController{
 	@RequestMapping("/table") 
 	public ResponseEntity<Object>  table(PointDataQuery query) {
 		List<PoinDataTableVO> result = new ArrayList<PoinDataTableVO>();
-		Date begin = new Date(query.getBegin());
-		Date end = new Date(query.getEnd());	
-		
+		Date begin = null  ;
+		Date end = null;
+		if(query.getBegin()!=null && query.getEnd()!=null) {
+			begin = new Date(query.getBegin());
+			end =  new Date(query.getEnd());	
+		}
 		List<Integer> indicators = getIndicatorList(query.getCategroryId(),query.getIndicatorIds());
 		//遍历 指标
 		for(Integer indicatorId : indicators) {
@@ -118,17 +121,34 @@ public class PoinDataController extends BaseController{
 
 	private List<Integer> getIndicatorList(Integer categoryId, String indicatorId) {
 		List<Integer> list = new ArrayList<Integer>();
-		if(StringUtil.isEmpty(indicatorId)) {
-			List<IndiCatorValueDetail> all = indicatorValueService.getAll(null, categoryId); 
+		//传入的都为空
+		if(StringUtil.isEmpty(indicatorId) && categoryId ==null) {
+			List<IndiCatorValueDetail> all = indicatorValueService.getAll(null, null);
 			for(IndiCatorValueDetail detail : all) {
 				list.add(detail.getIndicatorValue().getIndicatorId());
 			}
-		}else {
+			return list;
+		}
+		
+		// 指标值id不为空
+		if(StringUtil.isNotEmpty(indicatorId)) {
 			List<String> stringToList = StringUtil.stringToList(indicatorId); 
 			for(String s : stringToList ) {
 				list.add(Integer.parseInt(s));
 			}
+			
+			return list;
 		}
+		
+		//指标类别不为空
+		if(categoryId!=null) {
+			List<IndiCatorValueDetail> all = indicatorValueService.getAll(null, categoryId); 
+			for(IndiCatorValueDetail detail : all) {
+				list.add(detail.getIndicatorValue().getIndicatorId());
+			}
+			return list;
+		}
+		
 		return list;
 	}
 	
