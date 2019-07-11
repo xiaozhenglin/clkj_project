@@ -34,6 +34,18 @@ public class TblAlarmDownRecordEntity implements java.io.Serializable {
     
     @Column(name = "ALARM_DATA_ID"   )
     private Integer alarmDataId;
+    
+    @Column(name = "POINT_ID"   )
+    private Integer point_id; //监控点id
+    
+    
+	public Integer getPoint_id() {
+		return point_id;
+	}
+
+	public void setPoint_id(Integer point_id) {
+		this.point_id = point_id;
+	}
 
 	public String getReason() {
 		return reason;
