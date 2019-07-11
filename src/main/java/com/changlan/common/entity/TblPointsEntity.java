@@ -100,6 +100,12 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "IP"    )
     private String ip;
+    
+    @Column(name = "PRINCIPAL"    )
+    private String principal; //负责人姓名
+    
+    @Column(name = "COMPANY"    )
+    private String company;  //负责人公司名称
 
 	public Integer getPointId() {
 		return pointId;
@@ -244,8 +250,24 @@ public class TblPointsEntity implements java.io.Serializable {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-    	
 
+	public String getPrincipal() {
+		return principal;
+	}
+
+	public void setPrincipal(String principal) {
+		this.principal = principal;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+    	
+	
 
     
     
