@@ -44,6 +44,7 @@ import com.changlan.indicator.pojo.SimpleIndicator;
 import com.changlan.indicator.service.IIndicatoryValueService;
 import com.changlan.point.dao.IPointDataDao;
 import com.changlan.point.pojo.PoinErrorType;
+import com.changlan.point.pojo.PointStatus;
 import com.changlan.point.service.IPointDataService;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.MsgType;
@@ -202,6 +203,11 @@ public class AlarmServiceImpl implements IAlarmService{
 			data.setElarlyAlamDataId(alarmDataIds+","+alarmDataId.toString());
 		}
 		TblPoinDataEntity update = pointDataService.update(data);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(data.getPointId(), TblPointsEntity.class, true);
+		if(point!=null) {
+			point.setStatus(PointStatus.EARLY_WARNING.toString());
+			crudService.update(point, true);
+		}
 	}
 
 	//修改数据表中 的报警数据信息
@@ -214,6 +220,11 @@ public class AlarmServiceImpl implements IAlarmService{
 			data.setAlarmDataId(alarmDataIds+","+alarmDataId.toString());
 		}
 		TblPoinDataEntity update = pointDataService.update(data);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(data.getPointId(), TblPointsEntity.class, true);
+		if(point!=null) {
+			point.setStatus(PointStatus.WARNING.toString());
+			crudService.update(point, true);
+		}
 	}
 
 
@@ -302,12 +313,22 @@ public class AlarmServiceImpl implements IAlarmService{
 		data.setIsEarlyWarning(1); 
 		data.setElarlyAlamDataId(alarmDataId+"");
 		crudService.update(data, true);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(data.getPointId(), TblPointsEntity.class, true);
+		if(point!=null) {
+			point.setStatus(PointStatus.EARLY_WARNING.toString());
+			crudService.update(point, true);
+		}
 	}
 
 	private void savaAlarmData(TblTemperatureDataEntity data, Integer alarmDataId) {
 		data.setIsEarlyWarning(1); 
 		data.setElarlyAlamDataId(alarmDataId+"");
 		crudService.update(data, true);
+		TblPointsEntity point = (TblPointsEntity)crudService.get(data.getPointId(), TblPointsEntity.class, true);
+		if(point!=null) {
+			point.setStatus(PointStatus.WARNING.toString());
+			crudService.update(point, true);
+		}
 	}
 
 	private Integer saveToAlarmDataBase(int intValue, TblTemperatureDataEntity data, TblAlarmRuleEntity rule) {
