@@ -68,13 +68,23 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     private Integer alarmDownRecordId;
     
     @Column(name ="DOWN_STATUS")
-    private String downStatus;
+    private String downStatus; // AlarmDownType 
+    
+    @Column(name ="CONTENT")
+    private String content; //报警内容
+    
+
+    @Transient
+	private String  pointName;
+    
+    @Transient
+   	private Integer  lineId;
+    
+    @Transient
+   	private String  lineName;
     
     @Transient
 	private String  indicatorName;
-    
-    @Transient
-	private String  pointName;
     
     @Transient
 	private String  unit; //指标单位
@@ -266,6 +276,30 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public Integer getLineId() {
+		return lineId;
+	}
+
+	public void setLineId(Integer lineId) {
+		this.lineId = lineId;
+	}
+
+	public String getLineName() {
+		return lineName;
+	}
+
+	public void setLineName(String lineName) {
+		this.lineName = lineName;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
     

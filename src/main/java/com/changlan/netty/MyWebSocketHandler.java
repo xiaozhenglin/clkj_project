@@ -20,7 +20,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 			  Channel channel = ctx.channel();
 		      System.out.println(channel.remoteAddress() + ": " + msg.text());
 		      ctx.channel().writeAndFlush(new TextWebSocketFrame("来自服务端: " + LocalDateTime.now()));
-		}
+		} 
 
 		@Override
 	    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {

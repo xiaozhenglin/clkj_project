@@ -19,6 +19,7 @@ import com.changlan.alarm.service.IAlarmDataService;
 import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblAlarmRuleEntity;
+import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -88,6 +89,14 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 			TblPointAlamDataEntity alarmData =(TblPointAlamDataEntity)o;
 			TblAlarmRuleEntity alarmRule = (TblAlarmRuleEntity)crudService.get(alarmData.getAlarmRuleId(), TblAlarmRuleEntity.class, true);
 			TblAlarmDataDetail detail = new TblAlarmDataDetail(alarmData,alarmRule);
+			
+			if(alarmData.getAlarmDownRecordId()!=null) {
+				TblAlarmDownRecordEntity downRecord = (TblAlarmDownRecordEntity)crudService.get(alarmData.getAlarmDownRecordId(), TblAlarmDownRecordEntity.class, true);
+				if(downRecord!=null) {
+					detail.setDownRecord(downRecord); 
+				}
+			}
+			
 			list.add(detail);
 		}
 		result = new PageImpl<TblAlarmDataDetail>(list, pageable, datas.getTotalElements());
