@@ -30,18 +30,23 @@ public class PartialDischargeQuery {
 		CategoryId = categoryId;
 	}
 
-	public Date getBegin() {
-		return new Date(begin);
+
+	public Long getBegin() {
+		return begin;
 	}
+
 	public void setBegin(Long begin) {
 		this.begin = begin;
 	}
-	public Date getEnd() {
-		return new Date(end);
+
+	public Long getEnd() {
+		return end;
 	}
+
 	public void setEnd(Long end) {
 		this.end = end;
 	}
+
 	public String getLocaltion() {
 		return localtion;
 	}
