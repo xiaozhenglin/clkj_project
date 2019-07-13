@@ -33,7 +33,7 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 	ICrudService crudService;
 
 	@Override
-	public List<TblPointAlamDataEntity> getList(TblPointAlamDataEntity entity) {
+	public List<TblAlarmDataDetail> getList(TblPointAlamDataEntity entity) {
 		Map map = new HashMap();
 		if(entity.getAlarmId() != null) {
 			map.put("alarmId", new ParamMatcher(entity.getAlarmId()));
@@ -44,8 +44,28 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 		if(entity.getAlarmRuleId()!=null) {
 			map.put("alarmRuleId", new ParamMatcher(entity.getAlarmRuleId()));
 		}
+		if(StringUtil.isNotEmpty(entity.getDownStatus())) {
+			if(entity.getDownStatus().equals(AlarmDownType.DOWN.toString())) {
+				map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
+			}else {
+				map.put("downStatus", new ParamMatcher(MatcheType.NOT_EQUALS,AlarmDownType.DOWN.toString()));
+			}
+		}
 		List<TblPointAlamDataEntity> all = crudService.findByMoreFiled(TblPointAlamDataEntity.class, map, true);
-		return all;
+		
+		List<TblAlarmDataDetail> list = new ArrayList<TblAlarmDataDetail>();
+		for(TblPointAlamDataEntity alarmData : all) {
+			TblAlarmRuleEntity alarmRule = (TblAlarmRuleEntity)crudService.get(alarmData.getAlarmRuleId(), TblAlarmRuleEntity.class, true);
+			TblAlarmDataDetail detail = new TblAlarmDataDetail(alarmData,alarmRule);
+			if(alarmData.getAlarmDownRecordId()!=null) {
+				TblAlarmDownRecordEntity downRecord = (TblAlarmDownRecordEntity)crudService.get(alarmData.getAlarmDownRecordId(), TblAlarmDownRecordEntity.class, true);
+				if(downRecord!=null) {
+					detail.setDownRecord(downRecord); 
+				}
+			}
+			list.add(detail);
+		}
+		return list;
 	}
 
 	@Override

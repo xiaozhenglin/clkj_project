@@ -15,7 +15,7 @@ import com.changlan.common.util.PageUtil;
 
 public interface IAlarmDataService {
 
-	List<TblPointAlamDataEntity> getList(TblPointAlamDataEntity entity);
+	List<TblAlarmDataDetail> getList(TblPointAlamDataEntity entity);
 
 	TblAlarmDataDetail getDetail(Integer id);
 
