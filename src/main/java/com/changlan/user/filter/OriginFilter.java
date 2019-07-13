@@ -94,7 +94,7 @@ public class OriginFilter   implements Filter {
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
     		if(user == null) {
-    			throw new ServletException("请登录");
+    			throw new ServletException("登录已超时,请重新登录");
     		}
     		if( HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
