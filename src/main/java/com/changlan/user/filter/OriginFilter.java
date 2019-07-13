@@ -36,6 +36,7 @@ import com.changlan.common.entity.TblFunInfoEntity;
 import com.changlan.common.entity.TblUserOperationEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.user.config.UserAuthorityUrlConfig;
@@ -81,24 +82,27 @@ public class OriginFilter   implements Filter {
         response.setContentType("application/json");
      
         logger.info("过滤器 >>>>>>>开始校验参数是否合法");
-        checkParamLegal(req.getParameterMap());
+//        checkParamLegal(req.getParameterMap());
         
     	String requestURI = request.getRequestURI();
     	logger.info("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
+    		
+    		if(!requestUrlIsRight(requestURI)) { 
+    			throw new ServletException("地址不正确");
+    		}
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
     		if(user == null) {
-    			throw new ServletException("用户没有登录");
+    			throw new ServletException("登录已超时,请重新登录");
     		}
-    		   
     		if( HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作
     			 saveToUserOperation(user,requestURI,request.getRemoteHost());
         		 chain.doFilter(req,res);
              }else {
-            	 throw new ServletException("请检查地址是否正确或用户没有访问权限");
+            	 throw new ServletException("用户没有访问权限");
              }
         }else {
         	//不需要验证权限
@@ -106,7 +110,27 @@ public class OriginFilter   implements Filter {
         }
     }
 
-    private void saveToUserOperation(TblAdminUserEntity user, String requestURI, String fromIp) {
+    private boolean requestUrlIsRight(String requestURI) { 
+    	ICrudService crudService = SpringUtil.getICrudService();
+    	List<Object> all = crudService.getAll(TblFunInfoEntity.class, true); 
+    	if(ListUtil.isEmpty(all)) {
+    		 return false;
+    	}
+    	for(Object object : all) {
+    		TblFunInfoEntity funInfo = (TblFunInfoEntity)object;
+    		if(funInfo.getAddress().indexOf(requestURI)>-1) {
+    			return true;
+    		}
+    	}
+		return false;
+	}
+
+	private boolean urlIsRight(String requestURI) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private void saveToUserOperation(TblAdminUserEntity user, String requestURI, String fromIp) {
     	 IUserOpertaionService service = SpringUtil.getBean(IUserOpertaionService.class);
 		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI);
 		 service.save(userOperation);
