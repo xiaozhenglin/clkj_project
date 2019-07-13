@@ -76,7 +76,7 @@ public class UserRoleController extends BaseController{
 		//只有系统管理员能够修改或添加用户的角色
 		TblAdminUserEntity adminUser = super.userIsLogin();
 		if(isSuperAdminUser(adminUser.getAdminUserId())) {
-			Boolean delete = crudService.deleteBySql("DELETE FROM USER_ROLE_ID WHERE USER_ROLE_ID = " +role.getRoleID() , true); 
+			Boolean delete = crudService.deleteBySql("DELETE FROM USER_ROLE_ID WHERE USER_ROLE_ID = " +role.getUserRoleId() , true); 
 			return success(delete);
 		}
 		return success(false);
