@@ -52,9 +52,9 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	@Override
 	public List<Object> searchPoints(String search) {
 		em.clear();
-		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME ,  t.LONG_LATI, t.LINE_ID,  t.LINE_ORDER ,(select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME from tbl_points t    ";
+		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME ,  t.LONG_LATI, t.LINE_ID,  t.LINE_ORDER ,(select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME from tbl_points t, tbl_lines k  where k.LINE_ID = t.LINE_ID   ";
 		if(search != null) {
-			sql += "  where POINT_NAME like " +  "'%" + search + "%'" +  " or POINT_ID like " +  "'%" + search + "%'";
+			sql += " and ( t.POINT_NAME like " +  "'%" + search + "%'" +  " or k.LINE_NAME like " +  "'%" + search + "%'" + ")";
 		}
 		
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
