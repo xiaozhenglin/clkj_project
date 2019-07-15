@@ -154,6 +154,7 @@ public class NettyController extends BaseController{
 		if(!canSendRecord(pointDefine.getPointRegistPackage())) { 
 			throw new MyDefineException(PoinErrorType.LOCK_POINT_SEND_RECORD);
 		}
+		commandDefault.setPointName(pointDefine.getPointName()); 
 		//保存记录 并加锁
 		TblCommandRecordEntity update = recordService.updateServerRecord(commandDefault,pointDefine.getPointRegistPackage()); 
 		//执行发送
