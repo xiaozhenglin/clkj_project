@@ -70,29 +70,33 @@ public class MonitorScreenController extends BaseController {
 		
 		
 		Object[] object0 = (Object[]) list.get(0);
-		vo.setPoint_id(object0[1].toString());
-		
-		vo.setPoint_name(object0[2].toString());
-		
-		vo.setPoint_address(object0[3].toString());
-				
-		vo.setAlarm_total(object0[4].toString());
-		
-		vo.setAlarm_deal(object0[5].toString());
-		
-		vo.setLong_lati(object0[6].toString());
-		
-		vo.setLine_id(object0[7].toString());
-		
-		vo.setLine_order(object0[8].toString());
-		
-		vo.setLine_name(object0[9].toString());
-		
-		String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
-		
-		vo.setAlarm_not_deal(not_deal_num);
-		
-		return success(vo);
+		if(object0[1]==null) {
+			return success(0);
+		}else {
+			vo.setPoint_id(object0[1].toString());
+			
+			vo.setPoint_name(object0[2].toString());
+			
+			vo.setPoint_address(object0[3].toString());
+					
+			vo.setAlarm_total(object0[4].toString());
+			
+			vo.setAlarm_deal(object0[5].toString());
+			
+			vo.setLong_lati(object0[6].toString());
+			
+			vo.setLine_id(object0[7].toString());
+			
+			vo.setLine_order(object0[8].toString());
+			
+			vo.setLine_name(object0[9].toString());
+			
+			String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
+			
+			vo.setAlarm_not_deal(not_deal_num);
+			
+			return success(vo);
+		}
 	}
 	
 	@RequestMapping("/searchPoints") 
