@@ -38,14 +38,14 @@ public class ChannelController extends BaseController{
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.COMPANY_CHANNEL_NAME_EXIST);
 		}
-		TblCompanyGroupEntity update = (TblCompanyGroupEntity)crudService.update(entity, true); 
+		TblCompanyChannelEntity update = (TblCompanyChannelEntity)crudService.update(entity, true); 
 		if(update == null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}
 		return success(update);
 	}
 
-	//
+	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  companyGropList(TblCompanyChannelEntity entity) {
 		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);

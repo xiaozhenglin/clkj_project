@@ -109,35 +109,37 @@ public class CrudDaoImpl implements ICrudDao{
         	MatcheType type = matcher.getType(); 
         	switch (type) {
 			case EQUALS:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = :" +list.get(i); 
 				break;
 			case EXIST:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST :" +list.get(i); 
 				break;
 			case LIKE:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' ? '%'  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i) + "'%'";
 				break;
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
 				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
 				break;
+			case NOT_EQUALS:
+				sql+=" and "+getColumnNameByField(clazz,list.get(i))+" != :"+list.get(i); 
+				break;
 			default:
 				break;
 			}
         }
         
-        Query query=em.createNativeQuery(sql, clazz);
+        Query query=em.createNativeQuery(sql,clazz);
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)params.get(list.get(i));
-        	Object value = matcher.getValue();
+        	Object value = matcher.getValue(); 
         	MatcheType type = matcher.getType(); 
         	if(type!=MatcheType.BETWEEN ) {
-        		//参数从1开始
-        		query.setParameter(i+1, value);
+        		query.setParameter(list.get(i), value);
         	}
         }
-     
+        
         List<Object> listResult= query.getResultList();
         return listResult;
 	}
@@ -239,13 +241,13 @@ public class CrudDaoImpl implements ICrudDao{
         	MatcheType type = matcher.getType(); 
         	switch (type) {
 			case EQUALS:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" = :" +list.get(i); 
 				break;
 			case EXIST:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST ?  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST :" +list.get(i); 
 				break;
 			case LIKE:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' ? '%'  ";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i) + "'%'";
 				break;
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
@@ -263,8 +265,7 @@ public class CrudDaoImpl implements ICrudDao{
         	Object value = matcher.getValue(); 
         	MatcheType type = matcher.getType(); 
         	if(type!=MatcheType.BETWEEN ) {
-        		//参数从1开始
-        		query.setParameter(i+1, value);
+        		query.setParameter(list.get(i), value);
         	}
         }
         Object result= query.getSingleResult();
