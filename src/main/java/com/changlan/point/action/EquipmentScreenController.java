@@ -37,21 +37,25 @@ public class EquipmentScreenController extends BaseController {
 	public ResponseEntity<Object>  display(String pointId) {
 		List<Object> list = (List<Object>)equipmentScreenDao.queryPointInfo(pointId);
 		EquipmentScreenVO vo = new EquipmentScreenVO();
-				
-		Object[] object0 = (Object[]) list.get(0);
 		
-		vo.setPoint_id(object0[1].toString());
-		vo.setPoint_name(object0[2].toString());
-		vo.setPoint_address(object0[3].toString());
-		vo.setPhones(object0[4].toString());
-		vo.setPrincipal(object0[5].toString());
-		vo.setCompany(object0[6].toString());
-		vo.setPoint_catagory_name(object0[7].toString());
-		//vo.setIndicators(object0[8].toString());
-		vo.setAlarm_deal(object0[9].toString());
-		vo.setAlarm_not_deal(object0[10].toString());
-						
-		return success(vo);
+		if(list.size()==0) {
+			return success(null);
+		}else{
+			Object[] object0 = (Object[]) list.get(0);
+			
+			vo.setPoint_id(object0[1].toString());
+			vo.setPoint_name(object0[2].toString());
+			vo.setPoint_address(object0[3].toString());
+			vo.setPhones(object0[4].toString());
+			vo.setPrincipal(object0[5].toString());
+			vo.setCompany(object0[6].toString());
+			vo.setPoint_catagory_name(object0[7].toString());
+			//vo.setIndicators(object0[8].toString());
+			vo.setAlarm_deal(object0[9].toString());
+			vo.setAlarm_not_deal(object0[10].toString());
+							
+			return success(vo);
+		}
 	}
 	
 
