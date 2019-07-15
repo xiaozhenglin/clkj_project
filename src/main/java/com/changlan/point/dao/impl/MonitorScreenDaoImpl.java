@@ -54,7 +54,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		em.clear();
 		String sql =" select t.`STATUS` , t.POINT_ID , t.POINT_NAME ,  t.LONG_LATI, t.LINE_ID,  t.LINE_ORDER ,(select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME from tbl_points t, tbl_lines k  where k.LINE_ID = t.LINE_ID   ";
 		if(search != null) {
-			sql += " and ( t.POINT_NAME like " +  "'%" + search + "%'" +  " or k.LINE_NAME like " +  "'%" + search + "%'" + ")";
+			sql += " and ( t.POINT_NAME like " +  "'%" + search + "%'" +  " or k.LINE_NAME like " +  "'%" + search + "%'" +  " or t.LINE_ID like " +  "'%" + search + "%'" + ")";
 		}
 		
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
