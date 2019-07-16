@@ -173,7 +173,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//entity.setIndicatorId(protocol.getIndicatorId());  
         String commandContent = record.getCommandContent();
 		
-        String key = commandContent.substring(7, 8);
+        String key = commandContent.substring(6, 8);
         
         if(key.contentEquals("00")||key.contentEquals("01")||key.contentEquals("06")||key.contentEquals("07")||key.contentEquals("0c")||key.contentEquals("0d")) //幅值
         {
@@ -181,10 +181,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         	entity.setAmplitude(fz);
         }else if(key.contentEquals("02")||key.contentEquals("03")||key.contentEquals("08")||key.contentEquals("09")||key.contentEquals("0e")||key.contentEquals("0f"))//频次
         {
-        	int pc = Integer.getInteger(value);
+        	int pc = Integer.parseInt(value);
         	entity.setFrequency(pc);
         }else {
-        	int nl = Integer.getInteger(value);
+        	int nl = Integer.parseInt(value);
         	entity.setEnergy(nl);
         }
         
@@ -393,10 +393,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
-		TblAdminUserEntity currentUser = LoginUser.getCurrentUser(); 
-		if(currentUser!=null) {
-			entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人
-		}
+		/*
+		 * TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		 * if(currentUser!=null) {
+		 * entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 }
+		 */
 		entity.setPointName(commandDefault.getPointName());
 		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
 		entity.setSendCommandId(commandDefault.getSendCommandId()); //发送的默认指令Id
