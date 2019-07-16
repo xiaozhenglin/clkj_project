@@ -59,6 +59,7 @@ public class ProtocolController extends BaseController{
 	} 
 	
 	@RequestMapping("/delete")
+	@Transactional
 	public ResponseEntity<Object>  delete(TblCommandProtocolEntity entity) throws MyDefineException { 
 		TblCommandProtocolEntity find = (TblCommandProtocolEntity)crudService.get(entity.getProtocolId(),TblCommandProtocolEntity.class,true);
 		if(find == null) {

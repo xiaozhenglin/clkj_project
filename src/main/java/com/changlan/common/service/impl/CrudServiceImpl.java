@@ -71,6 +71,7 @@ public class CrudServiceImpl implements ICrudService{
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteBySql(String sql, boolean isPramDataSource) {
 		return dao.deleteBysql(sql);
 	}

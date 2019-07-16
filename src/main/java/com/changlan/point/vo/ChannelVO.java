@@ -5,16 +5,17 @@ import java.util.List;
 
 import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblLinesEntity;
+import com.changlan.common.entity.TblMonitorSystemEntity;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.service.ILineService;
+import com.changlan.point.service.IMonitorSystemService;
 
 public class ChannelVO {
 	
 	private Integer channelId;
 	private String  title;
-	private Integer lineCount; //线路计数
-	private List<ChannelLineVO> companyLinesVOs = new ArrayList<ChannelLineVO>(); //三级包含多条线路信息
+	private List<MonitorSystemVO> MonitorSystemVOs = new ArrayList<MonitorSystemVO>(); //三级包含多条线路信息
 	  
 	public ChannelVO() {
 		super();
@@ -23,19 +24,18 @@ public class ChannelVO {
 	public ChannelVO(TblCompanyChannelEntity entity) { 
 		this.channelId = entity.getChannelId();
 		this.title = entity.getName();
-		List<LineDetail>  lines = getLines(entity.getChannelId());
-		for(LineDetail line : lines) {
-			ChannelLineVO lineVO = new ChannelLineVO(line);
-			companyLinesVOs.add(lineVO);
+		List<TblMonitorSystemEntity>  list = getMonitorSystem(entity.getChannelId());
+		for(TblMonitorSystemEntity monitor : list) {
+			MonitorSystemVO VO = new MonitorSystemVO(monitor);
+			MonitorSystemVOs.add(VO);
 		}
-		this.lineCount = companyLinesVOs.size();
 	}
 
-	private List<LineDetail> getLines(Integer channelId) {
-		ILineService lineService = SpringUtil.getBean(ILineService.class);
-		TblLinesEntity entity = new TblLinesEntity();
-		entity.setMonitorId(channelId);
-		List<LineDetail> all = lineService.getAll(entity); 
+	private List<TblMonitorSystemEntity> getMonitorSystem(Integer channelId) {
+		IMonitorSystemService service = SpringUtil.getBean(IMonitorSystemService.class);
+		TblMonitorSystemEntity entity = new TblMonitorSystemEntity();
+		entity.setChannelId(channelId);
+		List<TblMonitorSystemEntity> all = service.getAll(entity); 
 		return all;
 	}
 
@@ -45,13 +45,6 @@ public class ChannelVO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public List<ChannelLineVO> getCompanyLinesVOs() {
-		return companyLinesVOs;
-	}
-	public void setCompanyLinesVOs(List<ChannelLineVO> companyLinesVOs) {
-		this.companyLinesVOs = companyLinesVOs;
-	}
-
 	public Integer getChannelId() {
 		return channelId;
 	}
@@ -59,7 +52,15 @@ public class ChannelVO {
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
 	}
-	  
+
+	public List<MonitorSystemVO> getMonitorSystemVOs() {
+		return MonitorSystemVOs;
+	}
+
+	public void setMonitorSystemVOs(List<MonitorSystemVO> monitorSystemVOs) {
+		MonitorSystemVOs = monitorSystemVOs;
+	}
+  
 	  
 	  
 }
