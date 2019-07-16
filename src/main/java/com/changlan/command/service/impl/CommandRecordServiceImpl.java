@@ -133,6 +133,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        				bigDecimal = BigDecimal.ZERO;
 	        			}
 	        			String categoryNmae = category.getCategoryNmae();
+	        			if(categoryNmae.indexOf("频次")>-1) {
+	        				DeviceData  value = saveDeviceData(data.get(0).toString(),point,protocol,record);
+	        				result.add(value);
+	        			}
 	        			if(categoryNmae.indexOf("温度")>-1) {
 	        				if(data.size()>1) {
 	        					//BigDecimal temList =
@@ -161,7 +165,45 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	}
 		return result;
 	}
-
+    
+	private DeviceData saveDeviceData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,TblCommandRecordEntity record) {
+		DeviceData entity = new DeviceData(); 
+		entity.setPointId(point.getPointId()); 
+		entity.setPointName(point.getPointName());
+		//entity.setIndicatorId(protocol.getIndicatorId());  
+        String commandContent = record.getCommandContent();
+		
+        String key = commandContent.substring(7, 8);
+        
+        if(key.contentEquals("00")||key.contentEquals("01")||key.contentEquals("06")||key.contentEquals("07")||key.contentEquals("0c")||key.contentEquals("0d")) //幅值
+        {
+        	float fz = Float.parseFloat(value);
+        	entity.setAmplitude(fz);
+        }else if(key.contentEquals("02")||key.contentEquals("03")||key.contentEquals("08")||key.contentEquals("09")||key.contentEquals("0e")||key.contentEquals("0f"))//频次
+        {
+        	int pc = Integer.getInteger(value);
+        	entity.setFrequency(pc);
+        }else {
+        	int nl = Integer.getInteger(value);
+        	entity.setEnergy(nl);
+        }
+        
+        if(key.contentEquals("00")||key.contentEquals("01")||key.contentEquals("02")||key.contentEquals("03")||key.contentEquals("04")||key.contentEquals("05")) //幅值
+        {
+        	float fz = Float.parseFloat(value);
+        	entity.setPhase_no("A"); //A相
+        }else if(key.contentEquals("06")||key.contentEquals("07")||key.contentEquals("08")||key.contentEquals("09")||key.contentEquals("0a")||key.contentEquals("0b"))//频次
+        {
+        	int pc = Integer.getInteger(value);
+        	entity.setPhase_no("B"); //B相
+        }else {
+        	int nl = Integer.getInteger(value);
+        	entity.setPhase_no("C"); //C相
+        }
+        				
+		crudService.save(entity, true);
+		return entity;
+	}
 
 	//表格参数一样的，是为了分表存储温度和电流的数据   6.27 增加 记录 所在距离的温度
 	private TblTemperatureDataEntity saveTemperatureData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,Integer distinct) {
@@ -245,9 +287,16 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	 */
 	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record, TblPointSendCommandEntity sendCommand) {
 		List<Object> result = new ArrayList<Object>();
+		String commandContent = record.getCommandContent();
+		
 		String backContent = record.getBackContent();
 		backContent = backContent.substring(6,backContent.length()-4);
-		System.out.println(backContent); 
+		System.out.println(backContent);
+		
+		DeviceData data = new DeviceData();
+		//data.setChannelSettings_id();
+		data.setPointId(point.getPointId()); 
+		crudService.update(data, true);
 		int i = 0 ;
 		while(i<=backContent.length()-4) {
 			String frequency = backContent.substring(i, i+4);

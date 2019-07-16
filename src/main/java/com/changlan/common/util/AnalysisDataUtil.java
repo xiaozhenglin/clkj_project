@@ -54,8 +54,8 @@ public class AnalysisDataUtil {
 		case 5: 
 			//温度采集
 			return temperature(backContent,protocol);
-//		case 6:   只能记录，解析后不知道存储在哪里，存储在普通数据表里？
-//			return partialDischarge(backContent,protocol);
+		case 6:   //获取局放频次
+			return partialDischarge(backContent,protocol);
 		case 8: 
 			//菲博泰温度采集
 			return getTemperature(backContent,protocol);
@@ -171,11 +171,19 @@ public class AnalysisDataUtil {
 		}
 		return list;
 	}
-
-//	private static List<BigDecimal> partialDischarge(String backContent, TblCommandProtocolEntity protocol) {
-//		
-//		return null;
-//	}
+    //获取频次，幅值,能量
+	private static List<BigDecimal> partialDischarge(String backContent, TblCommandProtocolEntity protocol) {
+		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		
+		int  k = backContent.length()-8;
+		String frequency = backContent.substring(k, k+4);
+		frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
+		System.out.println("频次,幅值,能量"+frequency); 
+		BigDecimal value = new BigDecimal(frequency);
+		list.add(value);
+		
+		return list;
+	}
 
 
 	private static  Object canculate(int value, String str)  { 

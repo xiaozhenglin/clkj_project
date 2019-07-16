@@ -36,6 +36,7 @@ public class DeviceData implements Serializable {
 	@Column(name="POINT_ID")
 	private Integer pointId;
 	
+	private String phase_no;
 	@Transient	
 	private String pointName;//余数
 	@Transient	
@@ -44,6 +45,8 @@ public class DeviceData implements Serializable {
 	private Float quotient ; //商数
 	@Transient	
 	private Float Remainder;//余数
+	
+	
 	
 	public void setCaculate() {
 		BigDecimal fuzhi = new BigDecimal(amplitude); 
@@ -75,6 +78,15 @@ public class DeviceData implements Serializable {
 		}
 	}
 	
+		
+	public String getPhase_no() {
+		return phase_no;
+	}
+
+	public void setPhase_no(String phase_no) {
+		this.phase_no = phase_no;
+	}
+
 	public Integer getId() {
 		return id;
 	}
