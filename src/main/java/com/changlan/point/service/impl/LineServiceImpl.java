@@ -55,7 +55,7 @@ public class LineServiceImpl implements ILineService{
 		List<LineDetail> list = new ArrayList<LineDetail>();
 		Map map = new HashMap();
 		if(entity.getMonitorId()!= null) {
-			map.put("channelId", new ParamMatcher(entity.getMonitorId()));
+			map.put("monitorId", new ParamMatcher(entity.getMonitorId()));
 		}
 		if(entity.getLineId()!=null) {
 			map.put("lineId", new ParamMatcher(entity.getLineId()));

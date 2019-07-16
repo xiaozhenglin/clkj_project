@@ -18,7 +18,7 @@ public class CompanyVo {
 	
     private Integer companyId;
     private String  title;
-    private Integer channelCount;
+//    private Integer channelCount;
 	private List<ChannelVO> ChannelVOS = new ArrayList<ChannelVO>(); //二级包含多条通道信息
 
 	public CompanyVo(TblCompanyEntity company) {
@@ -32,7 +32,7 @@ public class CompanyVo {
 			ChannelVO vo  = new ChannelVO(entity);
 			ChannelVOS.add(vo);
 		}
-		this.channelCount = ChannelVOS.size();
+//		this.channelCount = ChannelVOS.size();
 	}
 
 	private List<TblCompanyChannelEntity> getChannels(TblCompanyEntity company) {
