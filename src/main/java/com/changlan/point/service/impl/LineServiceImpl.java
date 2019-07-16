@@ -54,8 +54,8 @@ public class LineServiceImpl implements ILineService{
 	public List<LineDetail> getAll(TblLinesEntity entity) {
 		List<LineDetail> list = new ArrayList<LineDetail>();
 		Map map = new HashMap();
-		if(entity.getChannelId()!= null) {
-			map.put("channelId", new ParamMatcher(entity.getChannelId()));
+		if(entity.getMonitorId()!= null) {
+			map.put("channelId", new ParamMatcher(entity.getMonitorId()));
 		}
 		if(entity.getLineId()!=null) {
 			map.put("lineId", new ParamMatcher(entity.getLineId()));

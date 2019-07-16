@@ -44,8 +44,8 @@ public class TblLinesEntity implements java.io.Serializable {
     private Integer lineId;
 
     /** companyId */
-    @Column(name = "CHANNEL_ID"    )
-    private Integer channelId;
+    @Column(name = "MONITOR_ID"    )
+    private Integer monitorId;
 
     /** lineName */
     @Column(name = "LINE_NAME"   )
@@ -104,14 +104,12 @@ public class TblLinesEntity implements java.io.Serializable {
         this.lineId = lineId;
     }
 
-  
-
-    public Integer getChannelId() {
-		return channelId;
+	public Integer getMonitorId() {
+		return monitorId;
 	}
 
-	public void setChannelId(Integer channelId) {
-		this.channelId = channelId;
+	public void setMonitorId(Integer monitorId) {
+		this.monitorId = monitorId;
 	}
 
 	/**

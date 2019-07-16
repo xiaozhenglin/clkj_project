@@ -34,7 +34,7 @@ public class ChannelVO {
 	private List<LineDetail> getLines(Integer channelId) {
 		ILineService lineService = SpringUtil.getBean(ILineService.class);
 		TblLinesEntity entity = new TblLinesEntity();
-		entity.setChannelId(channelId);
+		entity.setMonitorId(channelId);
 		List<LineDetail> all = lineService.getAll(entity); 
 		return all;
 	}
