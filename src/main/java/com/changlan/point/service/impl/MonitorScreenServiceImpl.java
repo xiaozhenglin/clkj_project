@@ -28,8 +28,8 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 	}
 	
 	@Override
-	public List<Object> searchPoints(String search) {
-		List<Object> list = dao.searchPoints(search); 
+	public List<Object> searchPoints(String search, String pointName) {
+		List<Object> list = dao.searchPoints(search,pointName); 
 		return list;
 	}
 	

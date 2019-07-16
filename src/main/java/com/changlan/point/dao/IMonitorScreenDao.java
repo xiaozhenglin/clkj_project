@@ -11,5 +11,5 @@ public interface IMonitorScreenDao {
 	
 	List<Object> queryPointId(String pointName, String pointId);
 	
-	List<Object> searchPoints(String search);
+	List<Object> searchPoints(String search, String pointName);
 }

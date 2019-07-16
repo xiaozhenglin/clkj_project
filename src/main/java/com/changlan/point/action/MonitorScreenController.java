@@ -100,8 +100,8 @@ public class MonitorScreenController extends BaseController {
 	}
 	
 	@RequestMapping("/searchPoints") 
-	public ResponseEntity<Object>  searchPoints(String search ) {
-		List<Object> list = (List<Object>)monitorScreenService.searchPoints(search);
+	public ResponseEntity<Object>  searchPoints(String search, String pointName ) {
+		List<Object> list = (List<Object>)monitorScreenService.searchPoints(search,pointName);
 		List<ScreenPointsVO> voList = new ArrayList<ScreenPointsVO>();
 		
 		for(int i= 0;i<list.size();i++) {
