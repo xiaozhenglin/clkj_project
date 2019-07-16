@@ -52,7 +52,7 @@ public class MonitorSystemController  extends BaseController{
 	public ResponseEntity<Object>  delete(TblMonitorSystemEntity entity) throws Exception {   
 		List<TblMonitorSystemEntity> list = monitorSystemService.getAll(entity);
 		if(ListUtil.isEmpty(list)) {
-			throw new MyDefineException("0000","没有找到该隧道",false,null); 
+			throw new MyDefineException("0000","没有找到该监控系统",false,null); 
 		}
 		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_MONITOR_SYSTEM WHERE MONITOR_ID ="+entity.getMonitorId(), true); 
 		return success(isSuccess);
