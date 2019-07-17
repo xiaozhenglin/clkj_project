@@ -40,8 +40,6 @@ public class ExcelController {
 	public void export(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	    //获取数据
-	    INettyService nettyService = SpringUtil.getBean(INettyService.class); 
 		//查找报警数据 
 		IAlarmDataService alarmdAlarmDataService = SpringUtil.getBean(IAlarmDataService.class);
 		TblPointAlamDataEntity query = new TblPointAlamDataEntity();
