@@ -37,8 +37,8 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	public List<Object> queryPointId(String pointName , String pointId) {
 		em.clear();
 		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS, count(a.ALARM_ID) ,  "
-				+ "count(a.ALAM_DOWN_RECORD_ID) , t.LONG_LATI , t.LINE_ID, t.LINE_ORDER , (select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME  " + 
-				"from tbl_points t , tbl_point_alam_data a where  a.POINT_ID = t.POINT_ID  and 1 = 1";
+				+ "count(a.ALAM_DOWN_RECORD_ID) , t.LONG_LATI , t.LINE_ID, t.LINE_ORDER ,  s.LINE_NAME  " + 
+				"from tbl_points t , tbl_point_alam_data a , tbl_lines s where  t.LINE_ID = s.LINE_ID and a.POINT_ID = t.POINT_ID  and 1 = 1";
 		if(pointName != null) {
 			sql += " and t.POINT_NAME = " +  "'" + pointName + "'";
 		}
