@@ -76,9 +76,9 @@ public class MonitorScreenController extends BaseController {
 			vo.setPoint_id(object0[1].toString());
 			
 			vo.setPoint_name(object0[2].toString());
-			
-			vo.setPoint_address(object0[3].toString());
-					
+			if(object0[3] != null) {
+				vo.setPoint_address(object0[3].toString());
+			}		
 			vo.setAlarm_total(object0[4].toString());
 			
 			vo.setAlarm_deal(object0[5].toString());
@@ -86,9 +86,9 @@ public class MonitorScreenController extends BaseController {
 			vo.setLong_lati(object0[6].toString());
 			
 			vo.setLine_id(object0[7].toString());
-			
-			vo.setLine_order(object0[8].toString());
-			
+			if(object0[8] != null) {
+				vo.setLine_order(object0[8].toString());
+			}
 			vo.setLine_name(object0[9].toString());
 			
 			String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
@@ -124,9 +124,9 @@ public class MonitorScreenController extends BaseController {
 			vo.setLong_lati(object[4].toString());
 			
 			vo.setLine_id(object[5].toString());
-			
-			vo.setLine_order(object[6].toString());
-			
+			if(object[6] != null) {
+				vo.setLine_order(object[6].toString());
+			}
 			vo.setLine_name(object[7].toString());
 								
 			voList.add(vo);

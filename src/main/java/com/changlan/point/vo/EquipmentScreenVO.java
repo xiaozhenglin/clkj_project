@@ -22,13 +22,13 @@ public class EquipmentScreenVO {
 	private String company;
 	private String point_catagory_name;
 	private String indicators;
+	private String video_url;
+	private String picture_url;
 	
     		
-
-
 	public EquipmentScreenVO(String alarm_deal, String alarm_not_deal, String point_id, String point_name,
 			String point_address, String phones, String principal, String company, String point_catagory_name,
-			String indicators) {
+			String indicators, String video_url, String picture_url) {
 		super();
 		this.alarm_deal = alarm_deal;
 		this.alarm_not_deal = alarm_not_deal;
@@ -40,6 +40,8 @@ public class EquipmentScreenVO {
 		this.company = company;
 		this.point_catagory_name = point_catagory_name;
 		this.indicators = indicators;
+		this.video_url = video_url;
+		this.picture_url = picture_url;
 	}
 
 
@@ -48,6 +50,26 @@ public class EquipmentScreenVO {
 	}
 	
 	
+	public String getVideo_url() {
+		return video_url;
+	}
+
+
+	public void setVideo_url(String video_url) {
+		this.video_url = video_url;
+	}
+
+
+	public String getPicture_url() {
+		return picture_url;
+	}
+
+
+	public void setPicture_url(String picture_url) {
+		this.picture_url = picture_url;
+	}
+
+
 	public String getAlarm_deal() {
 		return alarm_deal;
 	}

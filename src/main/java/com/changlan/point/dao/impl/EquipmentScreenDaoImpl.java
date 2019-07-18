@@ -25,7 +25,7 @@ public class EquipmentScreenDaoImpl  implements IEquipmentScreenDao {
 		String sql ="select  p.POINT_ID,p.POINT_NAME,p.POINT_ADDRESS, p.PHONES,p.PRINCIPAL,p.COMPANY,  " + 
 				"(select c.PONT_CATAGORY_NAME from tbl_point_category c where c.POINT_CATGORY_ID = p.POINT_CATAGORY_ID ) as POINT_CATAGORY_NAME , " + 
 				"p.INDICATORS, (select count(a.DOWN_STATUS) from tbl_point_alam_data a where a.POINT_ID = p.POINT_ID AND a.DOWN_STATUS = 'DOWN') as alarm_deal ,   " + 
-				"(select count(a.DOWN_STATUS) from tbl_point_alam_data a where a.POINT_ID = p.POINT_ID AND a.DOWN_STATUS = 'UN_DOWN') as alarm_not_deal  " + 
+				"(select count(a.DOWN_STATUS) from tbl_point_alam_data a where a.POINT_ID = p.POINT_ID AND a.DOWN_STATUS = 'UN_DOWN') as alarm_not_deal , p.PICTURE_URL, p.VIDEO_URL  " + 
 				"from tbl_points p ";
 		if(pointId != null) {
 			sql  += " where p.POINT_ID = " +  "'" + pointId + "'";
