@@ -37,6 +37,8 @@ public class DeviceData implements Serializable {
 	private Integer pointId;
 	
 	private String phase_no;
+	
+	private String record_id;
 	@Transient	
 	private String pointName;//余数
 	@Transient	
@@ -78,7 +80,15 @@ public class DeviceData implements Serializable {
 		}
 	}
 	
-		
+			
+	public String getRecord_id() {
+		return record_id;
+	}
+
+	public void setRecord_id(String record_id) {
+		this.record_id = record_id;
+	}
+
 	public String getPhase_no() {
 		return phase_no;
 	}

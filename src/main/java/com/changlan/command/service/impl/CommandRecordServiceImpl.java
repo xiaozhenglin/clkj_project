@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpSession;
 import javax.swing.plaf.ListUI;
 import javax.transaction.Transactional;
 
@@ -41,12 +43,14 @@ import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.AnalysisDataUtil;
 import com.changlan.common.util.CRC16M;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.SessionUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.service.INettyService;
 import com.changlan.netty.service.NettyServiceImpl;
 import com.changlan.other.entity.DeviceData;
+import com.changlan.other.entity.DeviceDataSpecial;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
@@ -66,6 +70,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	@Autowired
 	private INettyService nettyService;
+	
 
 	@Override
 	public List<CommandRecordDetail> getList(Integer recordId, String registPackage, String backContent) {
@@ -108,7 +113,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	TblPointsEntity point = recordDetail.getPoint();
 	  	//记录信息
 	  	TblCommandRecordEntity record = recordDetail.getRecord();
-	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol();  
+	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol(); 
+	  	DeviceData  deviceDataValue = new DeviceData();
 		//逻辑：获取返回内容 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
 	  	if(!ListUtil.isEmpty(currentDataProtocol)) {
 	  		for(ProtocolInfo protocolInfo : currentDataProtocol) {
@@ -134,8 +140,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        			}
 	        			String categoryNmae = category.getCategoryNmae();
 	        			if(categoryNmae.indexOf("频次")>-1) {
-	        				DeviceData  value = saveDeviceData(data.get(0).toString(),point,protocol,record);
-	        				result.add(value);
+	        				deviceDataValue = saveDeviceData(data.get(0).toString(),point,protocol,record);
+	        				result.add(deviceDataValue);
 	        			}
 	        			if(categoryNmae.indexOf("温度")>-1) {
 	        				if(data.size()>1) {
@@ -158,10 +164,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    	}
 	  	}
 	  	if(category.getCategoryNmae().indexOf("相位")>-1){
-	  		return savePartialDischarge(point,record);
+	  		return savePartialDischarge(point,record,deviceDataValue);
 	  	}
 	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
-	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault());
+	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault(),deviceDataValue);
 	  	}
 		return result;
 	}
@@ -188,20 +194,26 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         	entity.setEnergy(nl);
         }
         
+              
         if(key.contentEquals("00")||key.contentEquals("01")||key.contentEquals("02")||key.contentEquals("03")||key.contentEquals("04")||key.contentEquals("05")) //幅值
         {
-        	float fz = Float.parseFloat(value);
+        	//float fz = Float.parseFloat(value);
         	entity.setPhase_no("A"); //A相
+        	SessionUtil.storage.put("phase_no", "A");
         }else if(key.contentEquals("06")||key.contentEquals("07")||key.contentEquals("08")||key.contentEquals("09")||key.contentEquals("0a")||key.contentEquals("0b"))//频次
         {
-        	int pc = Integer.getInteger(value);
+        	//float pc = Float.parseFloat(value);
         	entity.setPhase_no("B"); //B相
+        	SessionUtil.storage.put("phase_no", "B");
         }else {
-        	int nl = Integer.getInteger(value);
+        	//float nl = Float.parseFloat(value);
         	entity.setPhase_no("C"); //C相
+        	SessionUtil.storage.put("phase_no", "C");
         }
+        
+        System.out.println("saveDeviceData " + SessionUtil.storage.get("phase_no"));
         				
-		crudService.save(entity, true);
+		//crudService.save(entity, true);
 		return entity;
 	}
 
@@ -249,11 +261,51 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	 * @return 保存局放数据 devicedata
 	 *  
 	 */
-	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record) {
+	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData) {
 		List<Object> result = new ArrayList<Object>();
 		
 		String substring = record.getBackContent().substring(10);
 		System.out.println(substring); 
+		String substringcopy = substring;
+		long curTime = new Date().getTime();
+		float maxPhase = 0;
+		float maxAmplitude = 0;
+		int energy = 0;
+		int j = 0;
+		int frequencyMax = 0;
+		while(j<=substringcopy.length()-8) {
+			
+			String amplitude = substringcopy.substring(j, j+4);
+			amplitude = StringUtil.decimalConvert(amplitude, 16, 10, null); 
+			//System.out.println("幅值"+amplitude); 
+			String phase = substringcopy.substring(j+4, j+8);
+			phase = StringUtil.decimalConvert(phase, 16, 10, null); 
+			//System.out.println("相位"+phase); 
+			
+			if(maxAmplitude < Float.parseFloat(amplitude) ) {  //幅值取最大值
+				maxAmplitude = Float.parseFloat(amplitude);
+			}
+			if(maxPhase < Float.parseFloat(phase) ) {
+				maxPhase = Float.parseFloat(phase);
+			}
+			energy  = energy + Integer.parseInt(amplitude);    //能量为总幅值之和
+			frequencyMax++;				    //频次为循环次数
+			j= j+8;
+			
+		}
+		
+		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
+		dataSpecial.setAmplitude(maxAmplitude);
+		dataSpecial.setCommond_record_id(record.getSendCommandId());
+		dataSpecial.setEnergy(energy);
+		dataSpecial.setPhase(maxPhase);
+		dataSpecial.setPointId(record.getPointId());
+		dataSpecial.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+		dataSpecial.setCreatetime(new Date());
+		dataSpecial.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+		dataSpecial.setFrequency(frequencyMax);
+		crudService.save(dataSpecial, true);
+		
 		int i = 0 ;
 		while(i<=substring.length()-8) {
 			DeviceData data = new DeviceData();
@@ -269,11 +321,17 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setPhase(Float.parseFloat(phase));//相位
 			data.setCreatetime(new Date()); 
 			data.setPointId(point.getPointId()); 
+			
+			System.out.println(SessionUtil.storage.get("phase_no"));
+			data.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+			data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
+			
 			crudService.update(data, true);
 			result.add(data);
 	
 			i= i+8;
 		}
+		//SessionUtil.storage.remove("phase_no");
 		return result;
 	}
 	
@@ -285,7 +343,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	 * @param sendCommand 
 	 * @return
 	 */
-	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record, TblPointSendCommandEntity sendCommand) {
+	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record, TblPointSendCommandEntity sendCommand,DeviceData  deviceData) {
 		List<Object> result = new ArrayList<Object>();
 		String commandContent = record.getCommandContent();
 		
@@ -293,10 +351,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		backContent = backContent.substring(6,backContent.length()-4);
 		System.out.println(backContent);
 		
-		DeviceData data = new DeviceData();
-		//data.setChannelSettings_id();
-		data.setPointId(point.getPointId()); 
-		crudService.update(data, true);
+		/*
+		 * DeviceData data = new DeviceData(); //data.setChannelSettings_id();
+		 * data.setPointId(point.getPointId()); crudService.update(data, true);
+		 */
 		int i = 0 ;
 		while(i<=backContent.length()-4) {
 			String frequency = backContent.substring(i, i+4);
