@@ -58,7 +58,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		}
 		if(search != null && pointName == "ALL") {
 			sql +=   " and  k.LINE_NAME like " +  "'%" + search + "%'" ;	
-		}else{
+		}else if(search != null && pointName != null){
 			sql += "  and (k.LINE_NAME like " +  "'%" + search + "%'" + ")" ;
 			sql += "  and (t.POINT_NAME like " +  "'%" + pointName + "%'" + ")" ;
 		}
