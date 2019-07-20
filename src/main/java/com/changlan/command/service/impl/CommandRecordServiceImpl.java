@@ -50,6 +50,7 @@ import com.changlan.netty.controller.NettyController;
 import com.changlan.netty.service.INettyService;
 import com.changlan.netty.service.NettyServiceImpl;
 import com.changlan.other.entity.DeviceData;
+import com.changlan.other.entity.DeviceDataColl;
 import com.changlan.other.entity.DeviceDataSpecial;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
@@ -117,6 +118,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	DeviceData  deviceDataValue = new DeviceData();
 		//逻辑：获取返回内容 -》 获取解析规则 -》解析结果 -》保存入库 -》返回保存的数据
 	  	if(!ListUtil.isEmpty(currentDataProtocol)) {
+	  		if(category.getCategoryNmae().indexOf("相位")>-1){
+		  		return savePartialDischarge(point,record,deviceDataValue,currentDataProtocol);
+		  	}	  		
 	  		for(ProtocolInfo protocolInfo : currentDataProtocol) {
 	    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
@@ -155,17 +159,16 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol,Integer.parseInt("0")); 
 		        				result.add(value);
 	        				}
-	        			}else {
+	        			}else if(categoryNmae.indexOf("模拟量")>-1){
 	        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
 	        				result.add(saveData);
 	        			}
+	        			
 	        		}
 	    		}
 	    	}
 	  	}
-	  	if(category.getCategoryNmae().indexOf("相位")>-1){
-	  		return savePartialDischarge(point,record,deviceDataValue);
-	  	}
+	  	
 	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
 	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault(),deviceDataValue);
 	  	}
@@ -261,7 +264,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	 * @return 保存局放数据 devicedata
 	 *  
 	 */
-	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData) {
+	private List<Object> savePartialDischarge(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData,List<ProtocolInfo> currentDataProtocol) {
 		List<Object> result = new ArrayList<Object>();
 		
 		String substring = record.getBackContent().substring(10);
@@ -305,6 +308,38 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		dataSpecial.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
 		dataSpecial.setFrequency(frequencyMax);
 		crudService.save(dataSpecial, true);
+		
+		String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase) };  //设置好 频次、 相位、能量值
+		
+		//for(ProtocolInfo protocolInfo : currentDataProtocol) {
+	    for(int i = 0; i < currentDataProtocol.size(); i++)  {  
+	    	ProtocolInfo protocolInfo = currentDataProtocol.get(i);
+			TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
+    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
+        		return null;
+        	}
+			
+			DeviceDataColl dataColl = new DeviceDataColl();  
+			//dataColl.setAmplitude(maxAmplitude);
+			dataColl.setCommond_record_id(record.getSendCommandId());
+	
+			dataColl.setPointId(record.getPointId());
+			dataColl.setPointName(point.getPointName());
+			dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+			dataColl.setRecordTime(new Date());
+			dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+			//dataColl.setValue(String.valueOf(maxPhase));   //
+			dataColl.setValue(indexs[i]);
+			dataColl.setIndicatorId(protocol.getIndicatorId());
+			dataColl.setProtocolId(protocol.getProtocolId());
+			TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
+			dataColl.setCategroryId(indicator.getCategoryId());
+			dataColl.setPointCatagoryId(point.getPointCatagoryId());
+			
+			crudService.save(dataColl, true);
+									
+						
+		}
 		
 		int i = 0 ;
 		while(i<=substring.length()-8) {
@@ -400,6 +435,17 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		data.setCommandContent(sendContent);
 		data.setCommandName("获取幅值相位");
 		data.setPointId(point.getPointId()); 
+		data.setPointName(point.getPointName());
+		String phase_type = (String)SessionUtil.storage.get("phase_no");//获取是A还是B还是C相
+		if("A".equals(phase_type)) {
+			data.setProtocolId("17,14");
+		}else if("B".equals(phase_type)){
+			data.setProtocolId("18,15");
+		}else {
+			data.setProtocolId("19,16");
+		}
+		
+		
 		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
 		System.out.println(update.getSendCommandId());
 		
