@@ -106,6 +106,12 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "COMPANY"    )
     private String company;  //负责人公司名称
+    
+    @Column(name = "VIDEO_URL"    )
+    private String video_url;
+    
+    @Column(name = "PICTURE_URL"    )
+    private String picture_url;
 
 	public Integer getPointId() {
 		return pointId;
@@ -113,6 +119,22 @@ public class TblPointsEntity implements java.io.Serializable {
 
 	public void setPointId(Integer pointId) {
 		this.pointId = pointId;
+	}
+    
+	public String getVideo_url() {
+		return video_url;
+	}
+
+	public void setVideo_url(String video_url) {
+		this.video_url = video_url;
+	}
+
+	public String getPicture_url() {
+		return picture_url;
+	}
+
+	public void setPicture_url(String picture_url) {
+		this.picture_url = picture_url;
 	}
 
 	public Integer getLineId() {
