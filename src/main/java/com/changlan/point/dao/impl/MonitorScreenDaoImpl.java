@@ -44,8 +44,8 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		if(StringUtil.isNotEmpty(query.getPointName())) {
 			sql += " where t.POINT_NAME = " +  "'" + query.getPointName() + "'";
 		}
-		if(StringUtil.isNotEmpty(String.valueOf(query.getPointId()))) {
-			sql += " where t.POINT_ID = " +  "'" + query.getPointId() + "'";
+		if(query.getPointId()!=null) {
+			sql += " and t.POINT_ID = " +  "'" + query.getPointId() + "'";
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
 		return createNativeQuery.getResultList(); 
@@ -62,7 +62,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 			sql +=   " where  k.LINE_NAME like " +  "'%" + query.getLineName() + "%'" ;	
 		}else if(StringUtil.isNotEmpty(query.getLineName()) && StringUtil.isNotEmpty(query.getPointName())){
 			sql += "  where (k.LINE_NAME like " +  "'%" + query.getLineName() + "%'" + ")" ;
-			sql += "  where (t.POINT_NAME like " +  "'%" + query.getPointName() + "%'" + ")" ;
+			sql += "  and (t.POINT_NAME like " +  "'%" + query.getPointName() + "%'" + ")" ;
 		}
 		
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
