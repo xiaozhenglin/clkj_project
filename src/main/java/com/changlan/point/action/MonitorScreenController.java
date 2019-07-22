@@ -14,6 +14,7 @@ import com.changlan.other.entity.DeviceData;
 import com.changlan.other.pojo.PartialDischargeQuery;
 import com.changlan.point.dao.IMonitorScreenDao;
 import com.changlan.point.pojo.MonitorScreenQuery;
+import com.changlan.point.pojo.ScreenQuery;
 import com.changlan.point.service.IMonitorScreenService;
 import com.changlan.point.vo.MonitorScreenVO;
 import com.changlan.point.vo.ScreenPointIdVO;
@@ -64,8 +65,8 @@ public class MonitorScreenController extends BaseController {
 	
 	
 	@RequestMapping("/getPointInfo") 
-	public ResponseEntity<Object>  display(String pointName ,String pointId) {
-		List<Object> list = (List<Object>)monitorScreenService.queryPointId(pointName,pointId);
+	public ResponseEntity<Object>  display(ScreenQuery query) {
+		List<Object> list = (List<Object>)monitorScreenService.queryPointId(query);
 		ScreenPointIdVO vo = new ScreenPointIdVO();
 		
 		
@@ -100,8 +101,8 @@ public class MonitorScreenController extends BaseController {
 	}
 	
 	@RequestMapping("/searchPoints") 
-	public ResponseEntity<Object>  searchPoints(String search, String pointName ) {
-		List<Object> list = (List<Object>)monitorScreenService.searchPoints(search,pointName);
+	public ResponseEntity<Object>  searchPoints(ScreenQuery screenQuery, String pointName ) {
+		List<Object> list = (List<Object>)monitorScreenService.searchPoints(screenQuery);
 		List<ScreenPointsVO> voList = new ArrayList<ScreenPointsVO>();
 		
 		for(int i= 0;i<list.size();i++) {

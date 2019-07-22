@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.changlan.point.dao.IMonitorScreenDao;
 import com.changlan.point.pojo.MonitorScreenQuery;
+import com.changlan.point.pojo.ScreenQuery;
 import com.changlan.point.service.IMonitorScreenService;
 import com.changlan.point.vo.MonitorScreenVO;
 @Service
@@ -22,14 +23,14 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 	}
 
 	@Override
-	public List<Object> queryPointId(String pointName, String pointId) {
-		List<Object> list = dao.queryPointId(pointName,pointId); 
+	public List<Object> queryPointId(ScreenQuery query) {
+		List<Object> list = dao.queryPointId(query); 
 		return list;
 	}
 	
 	@Override
-	public List<Object> searchPoints(String search, String pointName) {
-		List<Object> list = dao.searchPoints(search,pointName); 
+	public List<Object> searchPoints(ScreenQuery query) {
+		List<Object> list = dao.searchPoints(query); 
 		return list;
 	}
 	

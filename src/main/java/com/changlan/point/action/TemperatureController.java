@@ -69,9 +69,12 @@ public class TemperatureController extends BaseController{
 		@RequestMapping("/table") 
 		public ResponseEntity<Object>  table(TemperatureQuery query) {
 			List<TemperatureDataVo> result = new ArrayList<TemperatureDataVo>();
-			Date begin = new Date(query.getBegin());
-			Date end = new Date(query.getEnd());	
-			
+			Date begin = null  ;
+			Date end = null;
+			if(query.getBegin()!=null && query.getEnd()!=null) {
+				begin = new Date(query.getBegin());
+				end = new Date(query.getEnd());	
+			}
 			List<Integer> indicators = getIndicatorList(query.getCategroryId(),query.getIndicatorIds());
 			//遍历 指标
 			for(Integer indicatorId : indicators) {
