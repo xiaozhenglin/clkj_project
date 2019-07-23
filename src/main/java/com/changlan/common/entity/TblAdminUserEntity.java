@@ -79,6 +79,9 @@ public class TblAdminUserEntity implements java.io.Serializable {
     
     @Column(name = "REMOVE_FLAGE"   )
     private Integer removeFlage;
+    
+    @Column(name = "TRUE_NAME"   )
+    private String trueName;
 
     public TblAdminUserEntity(TblAdminUserEntity user) {
     	TblAdminUserEntity entity = new TblAdminUserEntity();
@@ -250,6 +253,14 @@ public class TblAdminUserEntity implements java.io.Serializable {
 
 	public void setRemoveFlage(Integer removeFlage) {
 		this.removeFlage = removeFlage;
+	}
+
+	public String getTrueName() {
+		return trueName;
+	}
+
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
 	}
     
     
