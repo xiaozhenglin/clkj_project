@@ -33,6 +33,8 @@ public class ScreenPointEntity {
 	private Integer alarm_not_deal;
 	@Transient
 	private Integer alarm_total;
+	@Transient
+	private float alarm_deal_ratio ;
 	
 	public void setROW_ID(Integer rOW_ID) {
 		ROW_ID = rOW_ID;
@@ -126,6 +128,12 @@ public class ScreenPointEntity {
 	}
 	public void setAlarm_total(Integer alarm_total) {
 		this.alarm_total = alarm_total;
+	}
+	public float getAlarm_deal_ratio() {
+		return alarm_deal_ratio;
+	}
+	public void setAlarm_deal_ratio(float alarm_deal_ratio) {
+		this.alarm_deal_ratio = alarm_deal_ratio;
 	}
 
 	
