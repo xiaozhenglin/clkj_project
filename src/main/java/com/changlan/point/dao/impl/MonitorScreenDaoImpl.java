@@ -65,11 +65,6 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		return createNativeQuery.getResultList(); 
 	}
 	
-	@Override
-	public List<Object> countAlarmDataByPointId(ScreenQuery query) {
-		return null;
-	}
-	
 
 	@Override
 	public List<Object> searchPoints(ScreenQuery query) {

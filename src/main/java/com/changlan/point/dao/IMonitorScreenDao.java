@@ -15,5 +15,4 @@ public interface IMonitorScreenDao {
 
 	List<Object> searchPoints(ScreenQuery query);
 
-	List<Object> countAlarmDataByPointId(ScreenQuery query); 
 }

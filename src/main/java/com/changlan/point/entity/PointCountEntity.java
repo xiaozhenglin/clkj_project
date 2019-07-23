@@ -18,7 +18,7 @@ public class PointCountEntity {
 	private Integer point_not_online = 0;
 	
 	@Transient
-	private float point_online_ratio;
+	private float point_online_ratio = 0;
 	
 	
 	private Integer alarm_total = 0;
@@ -28,29 +28,30 @@ public class PointCountEntity {
 	private Integer alarm_not_deal= 0 ;
 	
 	@Transient
-	private float alarm_deal_ratio;
+	private float alarm_deal_ratio = 0;
 	
 	public void setCaculate() {
-		BigDecimal alarm_sum = new BigDecimal(alarm_total); 
-		BigDecimal alarm = new BigDecimal(alarm_deal); 
+		if(alarm_total!=0) {
+			BigDecimal alarm_sum = new BigDecimal(alarm_total); 
+			BigDecimal alarm = new BigDecimal(alarm_deal); 
+			BigDecimal alarm_per = alarm.divide(alarm_sum,4, RoundingMode.HALF_UP);
+			System.out.println("报警处理率"+alarm_per);
+			this.alarm_deal_ratio = alarm_per.floatValue();
+		}
 		
-		BigDecimal alarm_per = alarm.divide(alarm_sum,4, RoundingMode.HALF_UP);
-				
-		System.out.println("报警处理率"+alarm_per);
-		this.alarm_deal_ratio = alarm_per.floatValue();
+		if(point_total!=0) {
+			BigDecimal point_sum = new BigDecimal(point_total); 
+			BigDecimal point = new BigDecimal(point_online); 
+			BigDecimal point_per = point.divide(point_sum,4, RoundingMode.HALF_UP);
+			System.out.println("设备在线率"+point_per);
+			this.point_online_ratio = point_per.floatValue();
+		}
 		
-		
-		BigDecimal point_sum = new BigDecimal(point_total); 
-		BigDecimal point = new BigDecimal(point_online); 
-		
-		BigDecimal point_per = point.divide(point_sum,4, RoundingMode.HALF_UP);
-		System.out.println("设备在线率"+point_per);
-		this.point_online_ratio = point_per.floatValue();
 	}
 
-	public Integer getROW_ID() {
-		return ROW_ID;
-	}
+//	public Integer getROW_ID() {
+//		return ROW_ID;
+//	}
 
 	public void setROW_ID(Integer rOW_ID) {
 		ROW_ID = rOW_ID;

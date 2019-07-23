@@ -36,8 +36,9 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 				
 				//报警数据统计
 				Integer alarm_deal = 0 ;
-			    Integer alarm_not_deal= 0 ; 
-			    Integer alarm_total = 0;
+			    Integer alarm_not_deal= 0 ;
+			    Integer alarm_total = 0 ;
+			    query.setPointId(point.getPoint_id());
 				List<PointCountEntity> pointCount = dao.query(query);
 				
 				if(!ListUtil.isEmpty(pointCount)) {
