@@ -28,11 +28,13 @@ import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.PointDataQuery;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureDataQuery;
 import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.IPointCategoryService;
 import com.changlan.point.service.ITemperatureDataService;
 import com.changlan.point.vo.PoinDataTableVO;
 import com.changlan.point.vo.PoinDataVo;
+import com.changlan.point.vo.TemperatureDataTableVO;
 import com.changlan.point.vo.TemperatureDataVo;
 import com.changlan.user.pojo.LoginUser;
 
@@ -67,8 +69,8 @@ public class TemperatureController extends BaseController{
 	
 	//数据图表
 		@RequestMapping("/table") 
-		public ResponseEntity<Object>  table(TemperatureQuery query) {
-			List<TemperatureDataVo> result = new ArrayList<TemperatureDataVo>();
+		public ResponseEntity<Object>  table(TemperatureDataQuery query) {
+			List<TemperatureDataTableVO> result = new ArrayList<TemperatureDataTableVO>();
 			Date begin = null  ;
 			Date end = null;
 			if(query.getBegin()!=null && query.getEnd()!=null) {
@@ -80,7 +82,7 @@ public class TemperatureController extends BaseController{
 			for(Integer indicatorId : indicators) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				List<TemperatureDataDetail> list = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
-				TemperatureDataVo vo = new TemperatureDataVo();
+				TemperatureDataTableVO vo = new TemperatureDataTableVO(indicatorId,list);
 				result.add(vo);
 			}
 			
