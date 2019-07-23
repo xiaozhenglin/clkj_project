@@ -12,9 +12,10 @@ import com.changlan.common.util.SqlUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.other.entity.PartialDischargeEntity;
 import com.changlan.point.dao.IMonitorScreenDao;
-import com.changlan.point.pojo.MonitorScreenQuery;
+import com.changlan.point.entity.PointCountEntity;
+import com.changlan.point.entity.ScreenPointEntity;
+import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.ScreenQuery;
-import com.changlan.point.vo.MonitorScreenVO;
 
 @Repository
 public class MonitorScreenDaoImpl implements IMonitorScreenDao{
@@ -22,34 +23,54 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	EntityManager em;
 	
 	@Override
-	public List<Object> query(MonitorScreenQuery query) {		
+	public List<PointCountEntity> query(ScreenQuery query) {		
 		em.clear();		
-		String sql =" select count(1)  from tbl_point_alam_data " + 
-				" union all select count(1)  from tbl_alarm_down_record " + 
-				" union all select count(1) from tbl_point_alam_data a  where a.ALAM_DOWN_RECORD_ID is null " + 
-				" union all select count(1) from  tbl_points " + 
-				" union all select count(1) from  tbl_points b where b.`STATUS`='DATA_CAN_IN'  " + 
-				" union all select count(1) from  tbl_points b where b.`STATUS`='OUT_CONNECT'";
-		
-		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
+		String paramQuery = "";
+		if(query.getPointId()!=null) {
+			 paramQuery = " and  point_id = "+ query.getPointId();
+		}
+		String sql =" SELECT * from ( "
+				+ "  ( select count(*) AS alarm_total from tbl_point_alam_data where 1=1  " +  paramQuery +   " )  AS alarm_total "
+				+"  ,( select count(*) AS alarm_deal from tbl_point_alam_data  where tbl_point_alam_data.down_status = 'DOWN' " +  paramQuery +  " )  AS alarm_deal "
+				+"  ,( select count(*) AS alarm_not_deal from tbl_point_alam_data  where tbl_point_alam_data.down_status != 'DOWN'  " + paramQuery +  " )  AS alarm_not_deal "
+				+"  ,( select count(*) AS point_total from  tbl_points where 1=1 " + paramQuery +  " )  AS point_total "
+				+"  ,( select count(*) AS point_online from  tbl_points  where STATUS!='OUT_CONNECT'  " + paramQuery +  " )  AS point_online "
+				+"  ,( select count(*) AS point_not_online from  tbl_points  where STATUS='OUT_CONNECT'  " + paramQuery + " )  AS point_not_online "
+				+ " ) ";
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),PointCountEntity.class);
 		return createNativeQuery.getResultList(); 
 	}
 
 	@Override
-	public List<Object> queryPointId(ScreenQuery query) {
+	public List<ScreenPointEntity> queryPoint(ScreenQuery query) {
 		em.clear();
-		String sql =" select  t.POINT_ID , t.POINT_NAME, t.POINT_ADDRESS, count(a.ALARM_ID) ,  "
-				+ "count(a.ALAM_DOWN_RECORD_ID) , t.LONG_LATI , t.LINE_ID, t.LINE_ORDER ,  (select  s.LINE_NAME  from tbl_lines s  where t.LINE_ID = s.LINE_ID) as LINE_NAME  " + 
-				"from tbl_points t  left join tbl_point_alam_data a on  a.POINT_ID = t.POINT_ID ";
+		String sql =" select  point.* , line.LINE_NAME  from tbl_points  point  left join tbl_lines line on  point.LINE_ID = line.LINE_ID  where 1=1  ";
+		
 		if(StringUtil.isNotEmpty(query.getPointName())) {
-			sql += " where t.POINT_NAME = " +  "'" + query.getPointName() + "'";
+			sql += " AND point.POINT_NAME LIKE '%" +  query.getPointName() + "%' " ;
 		}
-		if(StringUtil.isNotEmpty(String.valueOf(query.getPointId()))) {
-			sql += " where t.POINT_ID = " +  "'" + query.getPointId() + "'";
+		if(query.getPointId()!=null) {
+			sql += " AND  point.POINT_ID = " + query.getPointId();
 		}
-		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
+		if(query.getLineId()!=null) {
+			sql += " AND  line.LINE_ID = " + query.getLineId();
+		}
+		if(StringUtil.isNotEmpty(query.getLineName())) {
+			sql += " AND line.LINE_NAME LIKE '%" +  query.getLineName() + "%' " ;;
+		}
+		if(StringUtil.isNotEmpty(query.getPointNameOrLineName())) {
+			sql += " AND line.LINE_NAME LIKE '%" +  query.getPointNameOrLineName() + "%'  or  point.POINT_NAME LIKE '%" +  query.getPointNameOrLineName() + "%' " ;
+		}
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),ScreenPointEntity.class);
 		return createNativeQuery.getResultList(); 
 	}
+	
+	@Override
+	public List<Object> countAlarmDataByPointId(ScreenQuery query) {
+		return null;
+	}
+	
+	
 
 	@Override
 	public List<Object> searchPoints(ScreenQuery query) {
@@ -68,6 +89,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));
 		return createNativeQuery.getResultList(); 
 	}
+
 	
 	
 

@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.other.pojo.PartialDischargeQuery;
 import com.changlan.point.dao.IMonitorScreenDao;
-import com.changlan.point.pojo.MonitorScreenQuery;
+import com.changlan.point.entity.PointCountEntity;
+import com.changlan.point.entity.ScreenPointEntity;
+import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.ScreenQuery;
 import com.changlan.point.service.IMonitorScreenService;
-import com.changlan.point.vo.MonitorScreenVO;
 import com.changlan.point.vo.ScreenPointIdVO;
 import com.changlan.point.vo.ScreenPointsVO;
 
@@ -37,67 +39,20 @@ public class MonitorScreenController extends BaseController {
 	private IMonitorScreenService monitorScreenService;
 	
 	@RequestMapping("/display") 
-	public ResponseEntity<Object>  display(MonitorScreenQuery query) {
-		List<Object> list = (List<Object>)monitorScreenService.display(query);
-		MonitorScreenVO vo = new MonitorScreenVO();
-		Object[] object0 = (Object[]) list.get(0);		
-		vo.setAlarm_total(object0[1].toString());
-		
-		Object[] object1 = (Object[]) list.get(1);
-		vo.setAlarm_deal(object1[1].toString());
-		
-		Object[] object2 = (Object[]) list.get(2);
-		vo.setAlarm_not_deal(object2[1].toString());
-		
-		Object[] object3 = (Object[]) list.get(3);
-		vo.setPoint_total(object3[1].toString());
-		
-		Object[] object4 = (Object[]) list.get(4);
-		vo.setPoint_online(object4[1].toString());
-		
-		Object[] object5 = (Object[]) list.get(5);
-		vo.setPoint_not_online(object5[1].toString());
-		
-		vo.setCaculate();
-		
-		return success(vo);
+	public ResponseEntity<Object>  display(ScreenQuery query) {
+		List<PointCountEntity> list = monitorScreenService.display(query);
+		if(!ListUtil.isEmpty(list)) {
+			PointCountEntity result = list.get(0); 
+			result.setCaculate();
+			return success(result);
+		}
+		return success( new PointCountEntity());
 	}
 	
-	
 	@RequestMapping("/getPointInfo") 
-	public ResponseEntity<Object>  display(ScreenQuery query) {
-		List<Object> list = (List<Object>)monitorScreenService.queryPointId(query);
-		ScreenPointIdVO vo = new ScreenPointIdVO();
-		
-		
-		Object[] object0 = (Object[]) list.get(0);
-		if(object0[1]==null) {
-			return success(0);
-		}else {
-			vo.setPoint_id(object0[1].toString());
-			
-			vo.setPoint_name(object0[2].toString());
-			if(object0[3] != null) {
-				vo.setPoint_address(object0[3].toString());
-			}		
-			vo.setAlarm_total(object0[4].toString());
-			
-			vo.setAlarm_deal(object0[5].toString());
-			
-			vo.setLong_lati(object0[6].toString());
-			
-			vo.setLine_id(object0[7].toString());
-			if(object0[8] != null) {
-				vo.setLine_order(object0[8].toString());
-			}
-			vo.setLine_name(object0[9].toString());
-			
-			String not_deal_num = Integer.toString(Integer.parseInt(object0[4].toString()) - Integer.parseInt(object0[5].toString()));
-			
-			vo.setAlarm_not_deal(not_deal_num);
-			
-			return success(vo);
-		}
+	public ResponseEntity<Object>  query(ScreenQuery query) {
+		List<ScreenPointEntity> list =  monitorScreenService.queryPointId(query);
+		return success(list);
 	}
 	
 	@RequestMapping("/searchPoints") 
