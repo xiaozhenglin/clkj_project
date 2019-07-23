@@ -26,6 +26,7 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.ITemperatureDataDao;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.ITemperatureDataService;
 
 @Service
@@ -72,7 +73,7 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 	}
 	
 	@Override
-	public Page<TemperatureDataDetail> getAll(TblTemperatureDataEntity data, Pageable page){
+	public Page<TemperatureDataDetail> getAll(TemperatureQuery data, Pageable page){
 		Map map = new HashMap();
 		if(data.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(data.getPointId()));

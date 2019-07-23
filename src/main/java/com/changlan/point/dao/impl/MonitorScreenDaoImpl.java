@@ -70,7 +70,6 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		return null;
 	}
 	
-	
 
 	@Override
 	public List<Object> searchPoints(ScreenQuery query) {
@@ -83,7 +82,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 			sql +=   " where  k.LINE_NAME like " +  "'%" + query.getLineName() + "%'" ;	
 		}else if(StringUtil.isNotEmpty(query.getLineName()) && StringUtil.isNotEmpty(query.getPointName())){
 			sql += "  where (k.LINE_NAME like " +  "'%" + query.getLineName() + "%'" + ")" ;
-			sql += "  where (t.POINT_NAME like " +  "'%" + query.getPointName() + "%'" + ")" ;
+			sql += "  and (t.POINT_NAME like " +  "'%" + query.getPointName() + "%'" + ")" ;
 		}
 		
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()));

@@ -12,6 +12,7 @@ import com.changlan.common.entity.TblTemperatureDataEntity;
 
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureQuery;
 
 public interface ITemperatureDataService {
 	//获取所有的监控点数据
@@ -21,7 +22,7 @@ public interface ITemperatureDataService {
 	TblTemperatureDataEntity update(TblTemperatureDataEntity data);
 	
 	//分页获取所有监控点数据
-	Page<TemperatureDataDetail> getAll(TblTemperatureDataEntity entity, Pageable page);
+	Page<TemperatureDataDetail> getAll(TemperatureQuery entity, Pageable page);
 
 	//检点数据图表形式
 	List<TemperatureDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);      
