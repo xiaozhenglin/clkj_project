@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.script.ScriptException;
 import javax.servlet.http.HttpSession;
 import javax.swing.plaf.ListUI;
 import javax.transaction.Transactional;
@@ -120,7 +121,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	if(!ListUtil.isEmpty(currentDataProtocol)) {
 	  		if(category.getCategoryNmae().indexOf("相位")>-1){
 		  		return savePartialDischarge(point,record,deviceDataValue,currentDataProtocol);
-		  	}	  		
+		  	}
+	  		if(category.getCategoryNmae().indexOf("局放全采集")>-1) {
+		  		return  saveDeviceDataTotal(point,record,deviceDataValue,currentDataProtocol);				
+			}
 	  		for(ProtocolInfo protocolInfo : currentDataProtocol) {
 	    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
@@ -143,10 +147,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        				bigDecimal = BigDecimal.ZERO;
 	        			}
 	        			String categoryNmae = category.getCategoryNmae();
-	        			if(categoryNmae.indexOf("频次")>-1) {
+	        			if(categoryNmae.indexOf("频次")>-1) {   //可以得到 频次, 求得多个幅值相位的频次
 	        				deviceDataValue = saveDeviceData(data.get(0).toString(),point,protocol,record);
 	        				result.add(deviceDataValue);
 	        			}
+	        			
 	        			if(categoryNmae.indexOf("温度")>-1) {
 	        				if(data.size()>1) {
 	        					//BigDecimal temList =
@@ -168,6 +173,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    		}
 	    	}
 	  	}
+	  	
 	  	
 	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
 	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault(),deviceDataValue);
@@ -370,7 +376,76 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		return result;
 	}
 	
+	
+	
+	/**
+	 * @param point
+	 * @param record
+	 * @return 保存局放采集全量数据 DeviceDataColl,DeviceDataSpecial
+	 *  
+	 */
+	private List<Object> saveDeviceDataTotal(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData,List<ProtocolInfo> currentDataProtocol) {
+		
+		List<Object> result = new ArrayList<Object>();
+		
+		String substring = record.getBackContent().substring(10);
+		System.out.println(substring); 
+		String substringcopy = substring;
+		long curTime = new Date().getTime();
+		
+		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
+		dataSpecial.setCommond_record_id(record.getSendCommandId());
+		dataSpecial.setPointId(record.getPointId());
+		dataSpecial.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+		dataSpecial.setCreatetime(new Date());
+		dataSpecial.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+		
+		for(ProtocolInfo protocolInfo : currentDataProtocol) {
+    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
+		    //解析数据
+		    List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+		    
+		    saveDeviceData(data.get(0).toString(),point,protocol,record);  //取得 相位 , 是否 为 A相, B相,C相 
+		    
 
+		    DeviceDataColl dataColl = new DeviceDataColl(); 
+		    dataColl.setCommond_record_id(record.getSendCommandId());
+			
+			dataColl.setPointId(record.getPointId());
+			dataColl.setPointName(point.getPointName());
+			dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+			dataColl.setRecordTime(new Date());
+			dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+		    
+		    String protocolName  = protocol.getDataType();		    		    
+		    if(protocolName.indexOf("频次")>-1) {
+		    	dataSpecial.setFrequency(Integer.parseInt(data.get(0).toString()));
+		    	dataColl.setValue(data.get(0).toString());
+		    }else if (protocolName.indexOf("幅值")>-1) {
+		    	dataSpecial.setAmplitude(Float.parseFloat(data.get(0).toString()));
+		    	dataSpecial.setPhase(Float.parseFloat(data.get(0).toString()));
+		    	dataColl.setValue(data.get(0).toString());
+		    }else {   //能量值
+		    	dataSpecial.setEnergy(Integer.parseInt(data.get(0).toString()));
+		    	dataColl.setValue(data.get(0).toString());
+		    }		    
+		    dataColl.setIndicatorId(protocol.getIndicatorId());
+			dataColl.setProtocolId(protocol.getProtocolId());
+			TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
+			dataColl.setCategroryId(indicator.getCategoryId());
+			dataColl.setPointCatagoryId(point.getPointCatagoryId());
+			
+			crudService.save(dataColl, true);
+			result.add(dataColl);
+		}								
+		crudService.save(dataSpecial, true);						
+		//SessionUtil.storage.remove("phase_no");
+		return result;
+	}
+	
+	
+	
+	
 	/**
 	 * 根据频次计算 需要发送的采集指令 , 保存指令并发送
 	 * @param point
@@ -438,11 +513,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		data.setPointName(point.getPointName());
 		String phase_type = (String)SessionUtil.storage.get("phase_no");//获取是A还是B还是C相
 		if("A".equals(phase_type)) {
-			data.setProtocolId("17,14");
+			data.setProtocolId("17,14,20");
 		}else if("B".equals(phase_type)){
-			data.setProtocolId("18,15");
+			data.setProtocolId("18,15,21");
 		}else {
-			data.setProtocolId("19,16");
+			data.setProtocolId("19,16,22");
 		}
 		
 		
