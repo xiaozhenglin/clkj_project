@@ -68,12 +68,4 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 		return list;
 	}
 	
-	@Override
-	public List<Object> searchPoints(ScreenQuery query) {
-		List<Object> list = dao.searchPoints(query); 
-		return list;
-	}
-	
-	
-
 }

@@ -13,6 +13,4 @@ public interface IMonitorScreenDao {
 	
 	List<ScreenPointEntity> queryPoint(ScreenQuery query);
 
-	List<Object> searchPoints(ScreenQuery query);
-
 }

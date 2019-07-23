@@ -15,7 +15,7 @@ public class ScreenPointEntity {
 	private String point_address;
 	private String long_lati; //经纬度
 	
-	private String line_id;  
+	private Integer line_id;  
 	private String line_name;
 	
 	private String principal;
@@ -61,10 +61,10 @@ public class ScreenPointEntity {
 	public void setLong_lati(String long_lati) {
 		this.long_lati = long_lati;
 	}
-	public String getLine_id() {
+	public Integer getLine_id() {
 		return line_id;
 	}
-	public void setLine_id(String line_id) {
+	public void setLine_id(Integer line_id) {
 		this.line_id = line_id;
 	}
 	public String getLine_name() {

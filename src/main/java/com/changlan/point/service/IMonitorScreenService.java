@@ -14,5 +14,4 @@ public interface IMonitorScreenService {
 	
 	List<ScreenPointEntity> queryPointId(ScreenQuery query);
 	
-	public List<Object> searchPoints(ScreenQuery query);
 }

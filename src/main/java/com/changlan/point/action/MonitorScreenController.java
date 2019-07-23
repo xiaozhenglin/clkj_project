@@ -27,8 +27,6 @@ import java.math.BigInteger;
 @RestController
 @RequestMapping("/admin/screen")
 public class MonitorScreenController extends BaseController {
-	private static final int List = 0;
-
 	@Autowired
 	private ICrudService crudService;
 	
@@ -55,41 +53,10 @@ public class MonitorScreenController extends BaseController {
 		return success(list);
 	}
 	
-//	@RequestMapping("/searchPoints") 
-//	public ResponseEntity<Object>  searchPoints(ScreenQuery screenQuery, String pointName ) {
-//		List<Object> list = (List<Object>)monitorScreenService.searchPoints(screenQuery);
-//		List<ScreenPointsVO> voList = new ArrayList<ScreenPointsVO>();
-//		
-//		for(int i= 0;i<list.size();i++) {
-//			
-//			ScreenPointsVO vo = new ScreenPointsVO();
-//		    Object[] object = (Object[]) list.get(i);
-//		    if(object[1]== null) {
-//		    	vo.setPoint_status("离线");
-//		    }else if(object[1].toString().trim().equals("DATA_CAN_IN")){
-//		    	vo.setPoint_status("在线");
-//		    }else if(object[1].toString().trim().equals("OUT_CONNECT")){
-//		    	vo.setPoint_status("离线");}
-//		    else {
-//		    	vo.setPoint_status(object[1].toString());
-//		    }
-//			vo.setPoint_id(object[2].toString());
-//			
-//			vo.setPoint_name(object[3].toString());
-//			
-//			vo.setLong_lati(object[4].toString());
-//			
-//			vo.setLine_id(object[5].toString());
-//			if(object[6] != null) {
-//				vo.setLine_order(object[6].toString());
-//			}
-//			vo.setLine_name(object[7].toString());
-//								
-//			voList.add(vo);
-//			//return success(vo);
-//		}
-//		
-//		return success(voList);
-//	}
-//	
+	@RequestMapping("/searchPoints") 
+	public ResponseEntity<Object>  searchPoints(ScreenQuery query) {
+		List<ScreenPointEntity> list = monitorScreenDao.queryPoint(query); 
+		return success(list);
+	}
+	
 }
