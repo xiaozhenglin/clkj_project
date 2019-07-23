@@ -39,8 +39,9 @@ public class PointDefineVO {
     private Integer pointCatagoryId;//监控点类别
     private String  pointCatagoryName; //监控类别名称
     
-//    private List<TblIndicatorCategoriesEntity>  indicatorCategorys =  new ArrayList();//指标类别
-//	private String indicators; //指标类别id  多个以逗号分隔
+    private List<TblIndicatorCategoriesEntity>  indicatorCategorys =  new ArrayList();//指标类别
+	private String indicators; //指标类别id  多个以逗号分隔
+	
 //	private Integer indicatorCategoryId; //指标类别
 //	private String  indicatorCategoryName;//指标类别名称
 	
@@ -69,7 +70,7 @@ public class PointDefineVO {
 			this.lineOrder = point.getLineOrder(); //在线路中的次序
 			this.isCorner =  point.getIsCorner();
 			this.ip = point.getIp();
-//			this.indicators = point.getIndicators(); 
+			this.indicators = point.getIndicators(); 
 		}
 		
 		TblPointCategoryEntity category = defineDetail.getCategory();
@@ -78,7 +79,7 @@ public class PointDefineVO {
 			this.pointCatagoryName = category.getPontCatagoryName() ;
 		}
 		
-//		this.indicatorCategorys = defineDetail.getIndicatorCategory();	
+		this.indicatorCategorys = defineDetail.getIndicatorCategory();	
 		
 		TblLinesEntity line = defineDetail.getLine(); 
 		if(line!=null) {
@@ -284,6 +285,26 @@ public class PointDefineVO {
 
 	public void setLineAddress(String lineAddress) {
 		this.lineAddress = lineAddress;
+	}
+
+
+	public List<TblIndicatorCategoriesEntity> getIndicatorCategorys() {
+		return indicatorCategorys;
+	}
+
+
+	public void setIndicatorCategorys(List<TblIndicatorCategoriesEntity> indicatorCategorys) {
+		this.indicatorCategorys = indicatorCategorys;
+	}
+
+
+	public String getIndicators() {
+		return indicators;
+	}
+
+
+	public void setIndicators(String indicators) {
+		this.indicators = indicators;
 	}
 
 
