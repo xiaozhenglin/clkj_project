@@ -121,9 +121,9 @@ public class PointDataServiceImpl implements IPointDataService{
 		//封装信息
 		if(!ListUtil.isEmpty(list)) {
 			for(TblPoinDataEntity entity : list) {
-//				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
 //				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-				PointDataDetail detail = new PointDataDetail(entity, null, null);
+				PointDataDetail detail = new PointDataDetail(entity, point, null);
 				result.add(detail);
 			}
 		}

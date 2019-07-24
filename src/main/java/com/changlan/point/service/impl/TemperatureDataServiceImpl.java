@@ -119,9 +119,9 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 		//封装信息
 		if(!ListUtil.isEmpty(list)) {
 			for(TblTemperatureDataEntity entity : list) {
-//				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
 //				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-				TemperatureDataDetail detail = new TemperatureDataDetail(entity, null, null);
+				TemperatureDataDetail detail = new TemperatureDataDetail(entity, point, null);
 				result.add(detail);
 			}
 		}
