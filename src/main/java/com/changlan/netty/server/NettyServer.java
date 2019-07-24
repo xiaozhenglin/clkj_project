@@ -36,6 +36,17 @@ public class NettyServer extends Thread{
     
     public static Map<Object,Channel> messageChannelMap = new ConcurrentHashMap<Object, Channel>(); //用于弹框的消息推送
 
+    public static NettyServer server = new NettyServer();
+    
+    public static NettyServer getInstance() {
+    	return server;
+    }
+    
+    public static void close() {
+    	NettyServer instance = getInstance();
+    	instance.close();
+    }
+    
     public NettyServer() {
 		super();
 	}

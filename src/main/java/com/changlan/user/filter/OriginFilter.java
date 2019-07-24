@@ -89,12 +89,14 @@ public class OriginFilter   implements Filter {
     	if(needVerifyUserPermission(requestURI)){ 
     		
     		if(!requestUrlIsRight(requestURI)) { 
-    			throw new ServletException("地址不正确");
+    			response.sendError(401, "访问地址不正确");
+    			return;
     		}
     		//需要验证权限，
     		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
     		if(user == null) {
-    			throw new ServletException("登录已超时,请重新登录");
+    			response.sendError(402, "登录超时,请重新登录");
+    			return;
     		}
     		if( HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
@@ -102,8 +104,10 @@ public class OriginFilter   implements Filter {
     			 saveToUserOperation(user,requestURI,request.getRemoteHost());
         		 chain.doFilter(req,res);
              }else {
-            	 throw new ServletException("用户没有访问权限");
+            	 response.sendError(403, "用户没有访问权限");
+     			 return;
              }
+    		
         }else {
         	//不需要验证权限
         	chain.doFilter(req,res);
