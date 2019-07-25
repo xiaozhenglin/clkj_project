@@ -229,6 +229,11 @@ public class StringUtil extends StringUtils {
         System.out.println(replace);
         System.out.println(replace.length());
         System.out.println(replace.substring(0,4)); 
+        
+        String content ="数字量输出状态采集 ";
+		if(content.indexOf("温度")==-1 && content.indexOf("局放") == -1) {
+			System.out.println("筛选");
+		}
     }
     
     
