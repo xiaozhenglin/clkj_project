@@ -8,14 +8,17 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.util.SqlUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.other.entity.PartialDischargeEntity;
 import com.changlan.point.dao.IMonitorScreenDao;
+import com.changlan.point.entity.LineMonitorCountEntity;
 import com.changlan.point.entity.PointCountEntity;
 import com.changlan.point.entity.ScreenPointEntity;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.ScreenQuery;
+import com.changlan.user.pojo.LoginUser;
 
 @Repository
 public class MonitorScreenDaoImpl implements IMonitorScreenDao{
@@ -65,6 +68,24 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		return createNativeQuery.getResultList(); 
 	}
 	
+
+	@Override
+	public List<LineMonitorCountEntity> queryLine(ScreenQuery query) {		
+		em.clear();		
+		String paramQuery = "";
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		if(currentUser!=null) {
+			String userId = currentUser.getAdminUserId();
+		}
+		if(query.getPointId()!=null) {
+			 paramQuery = " and  point_id = "+ query.getPointId();
+		}
+		String sql =" SELECT * from ( ( select count(*) AS point_total from  tbl_points where 1=1  )  AS point_total ,  "
+				+ "( select count(*) AS line_total from  tbl_lines   where 1=1    )  AS line_total ,   " 
+				+  "( select count(*)  AS operation_total from tbl_user_operation  where 1=1  )  AS operation_total  ) ";
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),LineMonitorCountEntity.class);
+		return createNativeQuery.getResultList(); 
+	}
 
 	
 	
