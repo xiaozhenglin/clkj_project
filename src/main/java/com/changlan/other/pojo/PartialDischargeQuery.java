@@ -12,6 +12,16 @@ public class PartialDischargeQuery {
 	private Integer lineId;
     private Integer CategoryId;
     private Integer channelSettings_id;
+    private String record_id;
+
+        
+	public String getRecord_id() {
+		return record_id;
+	}
+
+	public void setRecord_id(String record_id) {
+		this.record_id = record_id;
+	}
 
 	public Integer getLineId() {
 		return lineId;

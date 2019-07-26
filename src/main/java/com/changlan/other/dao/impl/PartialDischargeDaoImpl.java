@@ -18,6 +18,7 @@ import com.changlan.common.util.DaoUtil;
 import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SqlUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.other.dao.IPartialDischargeDao;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.other.entity.PartialDischargeEntity;
@@ -54,6 +55,10 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 		}
 		if(query.getPointId()!=null) {
 			sql+=" AND deviceData.POINT_ID = "+query.getPointId();
+		}
+		
+		if(StringUtil.isNotEmpty(query.getRecord_id())) {
+			sql+=" AND deviceData.record_id = "+ "'" + query.getRecord_id() + "'";
 		}
 //		if(query.getPointId()!=null) {
 //			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
