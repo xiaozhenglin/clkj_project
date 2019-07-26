@@ -14,9 +14,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
 
-/**
- * Created by DK on 2018/1/17.
- */
 @Repository
 public class DaoUtil {
     @PersistenceContext
