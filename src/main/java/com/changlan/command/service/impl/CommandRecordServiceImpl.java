@@ -220,10 +220,28 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         	SessionUtil.storage.put("phase_no", "C");
         }
         
+        SessionUtil.storage.put("jfTwo", "no");
+        
         System.out.println("saveDeviceData " + SessionUtil.storage.get("phase_no"));
         				
 		//crudService.save(entity, true);
 		return entity;
+	}
+	
+	//设置相位 
+	private void savePhaseNo(String value,TblCommandProtocolEntity protocol) {
+		
+		              
+        int beginByte = protocol.getBeginByte();
+            
+        if(beginByte<31) {                           	
+        	SessionUtil.storage.put("phase_no", "A");
+        }else if (beginByte<55) {
+        	SessionUtil.storage.put("phase_no", "B");
+        }else{
+        	SessionUtil.storage.put("phase_no", "C");
+        }
+                       					
 	}
 
 	//表格参数一样的，是为了分表存储温度和电流的数据   6.27 增加 记录 所在距离的温度
@@ -274,6 +292,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		List<Object> result = new ArrayList<Object>();
 		
 		String substring = record.getBackContent().substring(10);
+		 
+		String commandContent = record.getCommandContent();
+		
+		
 		System.out.println(substring); 
 		String substringcopy = substring;
 		long curTime = new Date().getTime();
@@ -315,36 +337,40 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		dataSpecial.setFrequency(frequencyMax);
 		crudService.save(dataSpecial, true);
 		
-		String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase) };  //设置好 频次、 相位、能量值
+		if(SessionUtil.storage.get("jfTwo").equals("no")) {
 		
-		//for(ProtocolInfo protocolInfo : currentDataProtocol) {
-	    for(int i = 0; i < currentDataProtocol.size(); i++)  {  
-	    	ProtocolInfo protocolInfo = currentDataProtocol.get(i);
-			TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
-    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
-        		return null;
-        	}
+			String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase),String.valueOf(energy) };  //设置好 频次、 相位、能量值
 			
-			DeviceDataColl dataColl = new DeviceDataColl();  
-			//dataColl.setAmplitude(maxAmplitude);
-			dataColl.setCommond_record_id(record.getSendCommandId());
-	
-			dataColl.setPointId(record.getPointId());
-			dataColl.setPointName(point.getPointName());
-			dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
-			dataColl.setRecordTime(new Date());
-			dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
-			//dataColl.setValue(String.valueOf(maxPhase));   //
-			dataColl.setValue(indexs[i]);
-			dataColl.setIndicatorId(protocol.getIndicatorId());
-			dataColl.setProtocolId(protocol.getProtocolId());
-			TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
-			dataColl.setCategroryId(indicator.getCategoryId());
-			dataColl.setPointCatagoryId(point.getPointCatagoryId());
-			
-			crudService.save(dataColl, true);
-									
-						
+			//for(ProtocolInfo protocolInfo : currentDataProtocol) {
+		    for(int i = 0; i < currentDataProtocol.size(); i++)  {  
+		    	ProtocolInfo protocolInfo = currentDataProtocol.get(i);
+				TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
+	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
+	        		return null;
+	        	}
+				
+				DeviceDataColl dataColl = new DeviceDataColl();  
+				//dataColl.setAmplitude(maxAmplitude);
+				dataColl.setCommond_record_id(record.getSendCommandId());
+		
+				dataColl.setPointId(record.getPointId());
+				dataColl.setPointName(point.getPointName());
+				dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+				dataColl.setRecordTime(new Date());
+				dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+				//dataColl.setValue(String.valueOf(maxPhase));   //
+				SessionUtil.storage.put("record_id", (String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+				dataColl.setValue(indexs[i]);
+				dataColl.setIndicatorId(protocol.getIndicatorId());
+				dataColl.setProtocolId(protocol.getProtocolId());
+				TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
+				dataColl.setCategroryId(indicator.getCategoryId());
+				dataColl.setPointCatagoryId(point.getPointCatagoryId());
+				
+				crudService.save(dataColl, true);
+										
+							
+			}
 		}
 		
 		int i = 0 ;
@@ -365,8 +391,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			
 			System.out.println(SessionUtil.storage.get("phase_no"));
 			data.setPhase_no((String)SessionUtil.storage.get("phase_no"));
-			data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
-			
+			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
+			data.setRecord_id((String)SessionUtil.storage.get("record_id"));
 			crudService.update(data, true);
 			result.add(data);
 	
@@ -405,7 +431,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		    //解析数据
 		    List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
 		    
-		    saveDeviceData(data.get(0).toString(),point,protocol,record);  //取得 相位 , 是否 为 A相, B相,C相 
+		    savePhaseNo(data.get(0).toString(),protocol);  //取得 相位 , 是否 为 A相, B相,C相 
 		    
 
 		    DeviceDataColl dataColl = new DeviceDataColl(); 
@@ -416,11 +442,15 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
 			dataColl.setRecordTime(new Date());
 			dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+			
+			SessionUtil.storage.put("record_id", (String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime)); //设置好 record_id
+			SessionUtil.storage.put("jfTwo", "yes");
 		    
 		    String protocolName  = protocol.getDataType();		    		    
 		    if(protocolName.indexOf("频次")>-1) {
 		    	dataSpecial.setFrequency(Integer.parseInt(data.get(0).toString()));
 		    	dataColl.setValue(data.get(0).toString());
+		    	sendFrequent(point,data.get(0).toString());  ////得到频次
 		    }else if (protocolName.indexOf("幅值")>-1) {
 		    	dataSpecial.setAmplitude(Float.parseFloat(data.get(0).toString()));
 		    	dataSpecial.setPhase(Float.parseFloat(data.get(0).toString()));
@@ -441,6 +471,39 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		crudService.save(dataSpecial, true);						
 		//SessionUtil.storage.remove("phase_no");
 		return result;
+	}
+	
+	//计算频次后发送
+	public void sendFrequent(TblPointsEntity point,String frequency) {
+		Integer pinci = Integer.parseInt(frequency)*2;
+		
+		//一次最多采集122个，所以要分批次采集
+		if(pinci >0 && pinci <= 122) {
+			String command = "0114070600010000" +  StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; 
+			//计算crc校验 的结果
+			byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
+			String trim = CRC16M.getBufHexStr(sbuf).trim();
+			saveAndSend(point, trim); 
+			try {
+				Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}else if(pinci >122 && pinci <= 244) {
+			String trim  ="0114070600010000007A4507";
+			saveAndSend(point,trim); //0-121的数据 也就是122个
+			try {
+				Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Integer more = 244-pinci;
+			String command2 = "011407060001007B" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
+			//计算crc校验 的结果
+			byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
+			String trim2= CRC16M.getBufHexStr(sbuf2).trim();
+			saveAndSend(point,trim2);
+		}
 	}
 	
 	
