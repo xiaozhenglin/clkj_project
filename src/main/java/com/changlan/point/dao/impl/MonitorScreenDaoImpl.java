@@ -39,7 +39,8 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 				+"  ,( select count(*) AS point_total from  tbl_points where 1=1 " + paramQuery +  " )  AS point_total "
 				+"  ,( select count(*) AS point_online from  tbl_points  where STATUS!='OUT_CONNECT'  " + paramQuery +  " )  AS point_online "
 				+"  ,( select count(*) AS point_not_online from  tbl_points  where STATUS='OUT_CONNECT'  " + paramQuery + " )  AS point_not_online "
-				+ " ) ";
+				+ " ,( select count(*) AS early_alarm from tbl_point_alam_data  where tbl_point_alam_data.ALARM_TYPE != 'ALARM'  " + paramQuery +  " )  AS early_alarm"
+				+ " ,( select count(*) AS alarm from tbl_point_alam_data  where tbl_point_alam_data.ALARM_TYPE = 'ALARM'  " + paramQuery +  " )  AS alarm ) ";
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),PointCountEntity.class);
 		return createNativeQuery.getResultList(); 
 	}

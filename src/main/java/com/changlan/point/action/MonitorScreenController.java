@@ -56,7 +56,7 @@ public class MonitorScreenController extends BaseController {
 	
 	@RequestMapping("/searchPoints") 
 	public ResponseEntity<Object>  searchPoints(ScreenQuery query) {
-		List<ScreenPointEntity> list = monitorScreenDao.queryPoint(query); 
+		List<ScreenPointEntity> list =  monitorScreenService.queryPointId(query);
 		return success(list);
 	}
 	

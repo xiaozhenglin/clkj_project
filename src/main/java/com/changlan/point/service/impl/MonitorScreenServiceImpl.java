@@ -39,6 +39,9 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 			    Integer alarm_not_deal= 0 ;
 			    Integer alarm_total = 0 ;
 			    float alarm_deal_ratio = 0;
+			     Integer early_alarm= 0 ;
+				 Integer alarm= 0 ;
+			    
 			    query.setPointId(point.getPoint_id());
 				List<PointCountEntity> pointCount = dao.query(query);
 				
@@ -61,12 +64,21 @@ public class MonitorScreenServiceImpl implements IMonitorScreenService{
 						alarm_deal_ratio = count.getAlarm_deal_ratio();
 					}
 					
+					if(count.getEarly_alarm()!=0) {
+						early_alarm = count.getEarly_alarm();
+					}
+					if(count.getAlarm()!=0) {
+						alarm = count.getAlarm();
+					}
+					
 				}
 				
 				point.setAlarm_total(alarm_total); 
 				point.setAlarm_deal(alarm_deal); 
 				point.setAlarm_not_deal(alarm_not_deal); 
 				point.setAlarm_deal_ratio(alarm_deal_ratio); 
+				point.setEarly_alarm(early_alarm);
+				point.setAlarm(alarm); 
 			}
 			
 		}

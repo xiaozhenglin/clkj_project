@@ -35,6 +35,10 @@ public class ScreenPointEntity {
 	private Integer alarm_total;
 	@Transient
 	private float alarm_deal_ratio ;
+	@Transient
+	private Integer early_alarm ;
+	@Transient
+	private Integer alarm ;
 	
 	public void setROW_ID(Integer rOW_ID) {
 		ROW_ID = rOW_ID;
@@ -134,6 +138,18 @@ public class ScreenPointEntity {
 	}
 	public void setAlarm_deal_ratio(float alarm_deal_ratio) {
 		this.alarm_deal_ratio = alarm_deal_ratio;
+	}
+	public Integer getEarly_alarm() {
+		return early_alarm;
+	}
+	public void setEarly_alarm(Integer early_alarm) {
+		this.early_alarm = early_alarm;
+	}
+	public Integer getAlarm() {
+		return alarm;
+	}
+	public void setAlarm(Integer alarm) {
+		this.alarm = alarm;
 	}
 
 	

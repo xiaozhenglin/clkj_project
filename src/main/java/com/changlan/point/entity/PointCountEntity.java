@@ -27,6 +27,10 @@ public class PointCountEntity {
 	private Integer alarm_deal = 0 ;
 	private Integer alarm_not_deal= 0 ;
 	
+	
+	private Integer early_alarm= 0 ;
+	private Integer alarm= 0 ;
+	
 	@Transient
 	private float alarm_deal_ratio = 0;
 	
@@ -120,6 +124,23 @@ public class PointCountEntity {
 	public void setAlarm_deal_ratio(float alarm_deal_ratio) {
 		this.alarm_deal_ratio = alarm_deal_ratio;
 	}
+
+	public Integer getEarly_alarm() {
+		return early_alarm;
+	}
+
+	public void setEarly_alarm(Integer early_alarm) {
+		this.early_alarm = early_alarm;
+	}
+
+	public Integer getAlarm() {
+		return alarm;
+	}
+
+	public void setAlarm(Integer alarm) {
+		this.alarm = alarm;
+	}
+
 	
 	
 	
