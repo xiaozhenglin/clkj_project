@@ -20,6 +20,7 @@ public class CommonDataTableVO {
 	private Integer indicatorId; //指标id
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
+	private String visualType; 
 	private String picture_url;   //静态页面路径 
 	private String video_url;
 	private String record_id;
@@ -37,6 +38,9 @@ public class CommonDataTableVO {
 			TblPoinDataEntity pointData = dataDetail.getPointData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
+			
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
 		
 			vo.setIndicatorName(indicatorValue.getName());
@@ -68,7 +72,8 @@ public class CommonDataTableVO {
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-		
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorName(indicatorValue.getName());
 			
 			vo.setUnit(indicatorValue.getUnit());
@@ -98,7 +103,8 @@ public class CommonDataTableVO {
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-		
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorName(indicatorValue.getName());
 		
 			vo.setUnit(indicatorValue.getUnit());
@@ -129,7 +135,8 @@ public class CommonDataTableVO {
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-		
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorName(indicatorValue.getName());
 		
 			vo.setUnit(indicatorValue.getUnit());
@@ -158,7 +165,8 @@ public class CommonDataTableVO {
 			DeviceDataColl pointData = dataDetail.getDeviceDataCollData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
-		
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
 	
 			vo.setIndicatorName(indicatorValue.getName());
@@ -189,7 +197,8 @@ public class CommonDataTableVO {
 			DeviceDataColl pointData = dataDetail.getDeviceDataCollData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
-		
+			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+			vo.setVisualType(indicatorValue.getVisualType()); 
 			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
 	
 			vo.setIndicatorName(indicatorValue.getName());
@@ -279,5 +288,14 @@ public class CommonDataTableVO {
 	public void setRecord_id(String record_id) {
 		this.record_id = record_id;
 	}
-			
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
+	}
+	
+	
 }

@@ -35,7 +35,7 @@ public class AlarmCategoryController extends BaseController{
 		}
 		List<TBLAlarmCategoryEntity> list = crudService.findByMoreFiled(TBLAlarmCategoryEntity.class, map, true);
 		return success(list);
-	}
+	} 
 	
 	
 }

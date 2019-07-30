@@ -3,7 +3,7 @@ server:
 
   
 netty_server_port: 1111
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage,/admin/downLogFile,/admin/export/excel,/admin/screen/display,/admin/screen/getPointInfo
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage,/admin/downLogFile,/admin/export/excel,/admin/screen/display,/admin/screen/getPointInfo,/admin/line/list
   
   
 upload_image: 

@@ -7,6 +7,7 @@ import java.util.List;
 import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
+import com.changlan.indicator.pojo.VisualType;
 import com.changlan.other.entity.DeviceDataColl;
 import com.changlan.point.pojo.PartDischargeDataDetail;
 import com.changlan.point.pojo.PointDataDetail;
@@ -17,6 +18,7 @@ public class PartDischargeDataTableVO {
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
 	private String unit; //指标单位
+	private String visualType = VisualType.NUMBER.toString();
 	private List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 
 	public PartDischargeDataTableVO(Integer indicatorId,List<PartDischargeDataDetail> dataDetails) {
@@ -75,6 +77,14 @@ public class PartDischargeDataTableVO {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
 	}
 
 

@@ -6,6 +6,7 @@ public class ScreenQuery {
 	private Integer LineId;
 	private Integer pointId;
 	private String pointNameOrLineName;
+	private Integer isCorner;
 
 	public Long begin;
 	public Long end;
@@ -52,6 +53,12 @@ public class ScreenQuery {
 	}
 	public void setEnd(Long end) {
 		this.end = end;
+	}
+	public Integer getIsCorner() {
+		return isCorner;
+	}
+	public void setIsCorner(Integer isCorner) {
+		this.isCorner = isCorner;
 	}
 	
 	

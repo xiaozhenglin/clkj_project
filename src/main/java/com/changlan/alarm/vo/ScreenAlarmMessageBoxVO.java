@@ -11,7 +11,9 @@ import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
+import com.changlan.indicator.pojo.VisualType;
 import com.changlan.point.pojo.PointDataDetail;
 
 public class ScreenAlarmMessageBoxVO {
@@ -22,6 +24,7 @@ public class ScreenAlarmMessageBoxVO {
 	private Integer indicatorId;
 	private String indicatorName;
 	private String indicatorValue;
+	private String visualType;
 	private String  unit; //指标单位
 	private Date recordTime; //报警时间
 	private String content ; //报警内容
@@ -41,6 +44,10 @@ public class ScreenAlarmMessageBoxVO {
 			this.indicatorId = indicator.getIndicatorId();
 			this.indicatorName = indicator.getName();
 			this.unit = indicator.getUnit();
+			if(StringUtil.isNotEmpty(indicator.getVisualType())) {
+				this.visualType = indicator.getVisualType();
+//				this.visualType = VisualType.valueOf(indicator.getVisualType()).getName();
+			}
 		}
 	
 		
@@ -133,6 +140,14 @@ public class ScreenAlarmMessageBoxVO {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
 	}
 	
 	

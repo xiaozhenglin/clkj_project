@@ -51,7 +51,9 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
     @Column(name = "UNIT" )
     private String unit;
 
-
+    @Column(name = "VISUAL_TYPE" )
+    private String visualType;
+    
     /**
      * 获取indicatorId
      * 
@@ -120,6 +122,14 @@ public class TblIndicatorValueEntity implements java.io.Serializable {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
 	}
 	
 	

@@ -12,6 +12,7 @@ import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
+import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
@@ -59,6 +60,9 @@ public class LineServiceImpl implements ILineService{
 		}
 		if(entity.getLineId()!=null) {
 			map.put("lineId", new ParamMatcher(entity.getLineId()));
+		}
+		if(StringUtil.isNotEmpty(entity.getLineName())) {
+			map.put("lineName", new ParamMatcher(MatcheType.LIKE,entity.getLineName()));
 		}
 		List<Object> all =  crudService.findByMoreFiled(TblLinesEntity.class, map, true);
 		

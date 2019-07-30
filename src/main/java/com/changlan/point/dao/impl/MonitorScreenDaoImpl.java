@@ -64,6 +64,11 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		if(StringUtil.isNotEmpty(query.getPointNameOrLineName())) {
 			sql += " AND ( line.LINE_NAME LIKE '%" +  query.getPointNameOrLineName() + "%'  or  point.POINT_NAME LIKE '%" +  query.getPointNameOrLineName() + "%' ) " ;
 		}
+		if(query.getIsCorner()!=null) {
+			sql += " AND point.IS_CORNER = "+query.getIsCorner();
+		}else {
+			sql += " AND (point.is_corner is null or point.is_corner!= 1) ";
+		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),ScreenPointEntity.class);
 		return createNativeQuery.getResultList(); 
 	}

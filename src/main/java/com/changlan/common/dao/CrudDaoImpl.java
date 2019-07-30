@@ -115,12 +115,12 @@ public class CrudDaoImpl implements ICrudDao{
 	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST :" +list.get(i); 
 				break;
 			case LIKE:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i) + "'%'";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i) + " '%'";
 				break;
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");
 				String end = DateUtil.formatDate(matcher.getEnd(),"yyyy-MM-dd HH:mm:ss");
-				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "'";
+				sql+=" AND "+getColumnNameByField(clazz,list.get(i))+" BETWEEN '" +begin + "' AND '"+end + "' ";
 				break;
 			case NOT_EQUALS:
 				sql+=" and "+getColumnNameByField(clazz,list.get(i))+" != :"+list.get(i); 
@@ -133,13 +133,16 @@ public class CrudDaoImpl implements ICrudDao{
         Query query=em.createNativeQuery(sql,clazz);
         for (int i=0;i<list.size();i++){
         	ParamMatcher matcher = (ParamMatcher)params.get(list.get(i));
+//        	System.out.println(list.get(i));
         	Object value = matcher.getValue(); 
+//        	System.out.println(value);
+        	
         	MatcheType type = matcher.getType(); 
         	if(type!=MatcheType.BETWEEN ) {
         		query.setParameter(list.get(i), value);
         	}
         }
-        
+//        System.out.println(sql);
         List<Object> listResult= query.getResultList();
         return listResult;
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
+import com.changlan.indicator.pojo.VisualType;
 import com.changlan.point.pojo.PointDataDetail;
 
 public class PoinDataTableVO {
@@ -15,6 +16,8 @@ public class PoinDataTableVO {
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
 	private String unit; //指标单位
+	private String visualType ;
+
 	private List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 
 	public PoinDataTableVO(Integer indicatorId,List<PointDataDetail> dataDetails) {
@@ -26,6 +29,7 @@ public class PoinDataTableVO {
 			this.indicatorCode = indicatorValue.getIndicatorCode();
 			this.indicatorName = indicatorValue.getName();
 			this.unit = indicatorValue.getUnit();
+			this.visualType = indicatorValue.getVisualType();
 			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
 			results.add(vo);
 		}
@@ -73,6 +77,14 @@ public class PoinDataTableVO {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
 	}
 
 
