@@ -15,6 +15,8 @@ import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
+import com.changlan.common.entity.TblMonitorSystemEntity;
+import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
@@ -26,6 +28,7 @@ import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointInfoDetail;
 import com.changlan.point.service.ILineService;
+import com.changlan.point.service.IMonitorSystemService;
 import com.changlan.point.service.IPointDefineService;
 
 @RestController
@@ -40,6 +43,8 @@ public class LineController extends BaseController{
 	@Autowired
 	private IPointDefineService pointDefineService;
 	
+	
+	
 	//修改或者保存
 	@RequestMapping("/save")
 	@Transactional
@@ -48,12 +53,17 @@ public class LineController extends BaseController{
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.NAME_EXIST);
 		}
-		entity.setAddTime(new Date());
-		TblLinesEntity update = (TblLinesEntity)crudService.update(entity, true); 
-		if(update == null) {
-			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
+		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
+		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
+			entity.setAddTime(new Date());
+			TblLinesEntity update = (TblLinesEntity)crudService.update(entity, true); 			
+			if(update == null) {
+				throw new MyDefineException(PoinErrorType.SAVE_EROOR);
+			}
+			return success(update);
+		}else {
+			throw new MyDefineException(PoinErrorType.LINE_CANNOT_CREATE);
 		}
-		return success(update);
 	}
 	
 	@RequestMapping("/list") 

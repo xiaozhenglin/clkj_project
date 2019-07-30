@@ -17,7 +17,8 @@ public enum PoinErrorType {
 	LOCK_POINT_SEND_RECORD("N002","当前设备暂不能发送指令,等待上次接受返回值"),
 	SEND_CRC_ERROR("N003","发送的指令不符合CRC校验"),
 	RECEIVE_CRC_ERROR("N004","接受的指令不符合CRC校验"), 
-	COMPANY_CHANNEL_NAME_EXIST("P013","通道名称重复");
+	COMPANY_CHANNEL_NAME_EXIST("P013","通道名称重复"),
+	LINE_CANNOT_CREATE("P014","非电缆本体监控不能建立线路");
 	
 	private String code;
 	private String name;
