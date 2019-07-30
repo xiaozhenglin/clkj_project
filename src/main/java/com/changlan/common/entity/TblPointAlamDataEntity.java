@@ -73,6 +73,8 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     @Column(name ="CONTENT")
     private String content; //报警内容
     
+    @Column(name ="AlARM_TYPE")
+    private String alarmType; //报警内容
 
     @Transient
 	private String  pointName;
@@ -300,6 +302,14 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getAlarmType() {
+		return alarmType;
+	}
+
+	public void setAlarmType(String alarmType) {
+		this.alarmType = alarmType;
 	}
 	
     
