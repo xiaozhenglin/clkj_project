@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointInfoDetail;
+import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.ILineService;
 import com.changlan.point.service.IPointDefineService;
 
@@ -60,5 +62,34 @@ public class VarController extends BaseController{
 		return success("resetNettyServerPort");
 	}
 							
+	@RequestMapping("list") 
+	public ResponseEntity<Object>  list() throws FileNotFoundException {
+		Yaml yml = new Yaml();
+		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		FileReader  reader =   new FileReader(new File(ymlPath));
+		Map<String, String> map = yml.loadAs(reader, Map.class);
+		return success(map);
+	
+	}
+	
+	@RequestMapping("save") 
+	public ResponseEntity<Object>  save(Map<String, Object> currMap) throws IOException {
+		Yaml yml = new Yaml();
+		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		FileReader  reader =   new FileReader(new File(ymlPath));
+		
+		Map<String, String> map = yml.loadAs(reader, Map.class);
+		
+		Iterator iter = currMap.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next(); 
+			String key = (String) entry.getKey();
+			Object val = entry.getValue();
+			map.put(key, val.toString());
+		}
+		yml.dump(map,new FileWriter(new File(ymlPath)));
+		return success(map);
+	
+	}
 	
 }

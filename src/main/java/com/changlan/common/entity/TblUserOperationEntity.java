@@ -32,6 +32,18 @@ public class TblUserOperationEntity implements Serializable{
     @Column(name = "INTEFACE_ADDRESS")
 	private String intefaceAddress;
     
+    @Column(name = "FUNC_NAME")
+    private String funcName;
+    
+    @Column(name = "IS_SUCCESS")
+    private String isSuccess;
+    
+    @Column(name = "OPERATION_TYPE")
+    private String operationType;
+    
+    @Column(name = "CRUD_NAME")
+    private String curdName;
+    
     
 	public TblUserOperationEntity(Integer userOperationId, Date recordTime, String fromIp, String userId,
 			String intefaceAddress) {
@@ -42,7 +54,23 @@ public class TblUserOperationEntity implements Serializable{
 		this.userId = userId;
 		this.intefaceAddress = intefaceAddress;
 	}
+		
 	
+	public TblUserOperationEntity(Integer userOperationId, Date recordTime, String fromIp, String userId,
+			String intefaceAddress, String funcName, String isSuccess, String operationType, String curdName) {
+		super();
+		this.userOperationId = userOperationId;
+		this.recordTime = recordTime;
+		this.fromIp = fromIp;
+		this.userId = userId;
+		this.intefaceAddress = intefaceAddress;
+		this.funcName = funcName;
+		this.isSuccess = isSuccess;
+		this.operationType = operationType;
+		this.curdName = curdName;
+	}
+
+
 	public TblUserOperationEntity() {
 		super();
 	}
@@ -88,7 +116,36 @@ public class TblUserOperationEntity implements Serializable{
 		this.intefaceAddress = intefaceAddress;
 	}
 
-	
-    
+	public String getFuncName() {
+		return funcName;
+	}
+
+	public void setFuncName(String funcName) {
+		this.funcName = funcName;
+	}
+
+	public String getIsSuccess() {
+		return isSuccess;
+	}
+
+	public void setIsSuccess(String isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
+	public String getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(String operationType) {
+		this.operationType = operationType;
+	}
+
+	public String getCurdName() {
+		return curdName;
+	}
+
+	public void setCurdName(String curdName) {
+		this.curdName = curdName;
+	}
 
 }

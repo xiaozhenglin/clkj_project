@@ -95,6 +95,9 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 		if(data.getPointCatagoryId()!=null) {
 			map.put("pointCatagoryId", new ParamMatcher(data.getPointCatagoryId()));
 		}
+		if(data.getBegin()!=null&& data.getEnd()!=null) {
+			map.put("recordTime", new ParamMatcher(data.getBegin(),data.getEnd()));
+		}
 		//按条件筛选后的结果， 再选其中分页条数得到的结果
 		Page datas = crudService.findByMoreFiledAndPage(TblTemperatureDataEntity.class, map, true, page);
 		

@@ -11,6 +11,8 @@ public class NettyConfiguration {
 //	public static String nettyIp ;
 	public static int nettyPort;
 	
+	public static int httpNettyPort;
+	
 //	public static String getNettyIp() {
 //		return nettyIp;
 //	}
@@ -27,6 +29,17 @@ public class NettyConfiguration {
 	public  void setNettyPort(int nettyPort) {
 		NettyConfiguration.nettyPort = nettyPort;
 	}
+
+	public static int getHttpNettyPort() {
+		return httpNettyPort;
+	}
+	
+	@Value("${http_netty_server_port}")
+	public  void setHttpNettyPort(int httpNettyPort) {
+		NettyConfiguration.httpNettyPort = httpNettyPort;
+	}	
+
+
 	
 	
 }

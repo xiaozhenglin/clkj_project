@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.changlan.common.configuration.SmsCatConfiguration;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.server.ServerIniterHandler;
@@ -38,8 +39,8 @@ public class HttpNettyServer extends Thread{
 	                           .childHandler(new WebSocketChannelInitializer());
 	            
 	            try {
-	            	ChannelFuture channelFuture = serverBootstrap.bind(1112).sync();
-	            	logger.info("启动http服务器端口"+1112);
+	            	ChannelFuture channelFuture = serverBootstrap.bind(NettyConfiguration.getHttpNettyPort()).sync();
+	            	logger.info("启动http服务器端口"+NettyConfiguration.getHttpNettyPort());
 					channelFuture.channel().closeFuture().sync();
 				} catch (InterruptedException e) {
 					e.printStackTrace();

@@ -11,6 +11,8 @@ public class SmsCatConfiguration {
 	public static String serverPortName;
 	
 	public static String serverPortBound;
+	
+	public static String smsCatType;
 
 	public static String getServerPortName() {
 		return serverPortName;
@@ -30,6 +32,14 @@ public class SmsCatConfiguration {
 		SmsCatConfiguration.serverPortBound = serverPortBound;
 	}
 
+	public static String getSmsCatType() {
+		return smsCatType;
+	}
+
+	@Value("${smscattype}")
+	public  void setSmsCatType(String smsCatType) {
+		SmsCatConfiguration.smsCatType = smsCatType;
+	}
 
 	
 
