@@ -3,6 +3,8 @@ package com.changlan.point.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.FileUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.other.pojo.PartialDischargeQuery;
@@ -23,6 +26,7 @@ import com.changlan.point.service.IMonitorScreenService;
 import com.changlan.point.vo.ScreenPointIdVO;
 import com.changlan.point.vo.ScreenPointsVO;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 
 @RestController
@@ -51,6 +55,13 @@ public class MonitorScreenController extends BaseController {
 	@RequestMapping("/getPointInfo") 
 	public ResponseEntity<Object>  query(ScreenQuery query) {
 		List<ScreenPointEntity> list =  monitorScreenService.queryPointId(query);
+		for(ScreenPointEntity screenPoint : list) {
+			String picturePath = screenPoint.getPicture_url();
+			//HttpServletResponse response =  getResponse();
+
+			String pictureChar = FileUtil.getImageStr(picturePath);
+			screenPoint.setPicture_url(pictureChar);
+		}
 		return success(list);
 	}
 	

@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 
@@ -168,7 +171,69 @@ public class FileUtil {
 
         return getFileSuffix(file.getContentType());
     }
+    
+    // 根据图片地址将图片转换为字符串类型的数据
+    public static String imageToString(String picture) {
+        StringBuffer sb2 = new StringBuffer();
+        BufferedImage image1 = getImage(picture);
+        byte[] img = getBytes(image1);
 
+        for (int i = 0; i < img.length; i++) {
+            if (sb2.length() == 0) {
+                sb2.append(img[i]);
+            } else {
+                sb2.append("," + img[i]);
+            }
+        }
+        return sb2.toString();
+
+    }
+
+ // 将BufferImage 转换为字节数组
+    private static byte[] getBytes(BufferedImage image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "jpg", baos);
+        } catch (Exception e) {
+          
+        }
+        return baos.toByteArray();
+    }
+    // 根据图片地址得到BufferedImage
+    public static BufferedImage getImage(String picture) {
+
+        try {
+
+            BufferedImage bImage = ImageIO.read(new File(picture));
+            return bImage;
+        } catch (Exception ex) {
+            
+            return null;
+        }
+
+    }
+    
+    public static String getImageStr(String imgFile) {
+		// 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+		InputStream in = null;
+		byte[] data = null;
+		// 读取图片字节数组
+		try {
+			in = new FileInputStream(new File(imgFile));
+			data = new byte[in.available()];
+			in.read(data);
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// 对字节数组Base64编码
+		Base64.Encoder encoder = Base64.getEncoder();		
+		// 返回Base64编码过的字节数组字符串
+		return encoder.encodeToString(data);
+	}
+
+ 
+    
     /**
      * 这里只处理常见的
      * <url>http://www.runoob.com/http/http-content-type.html</url>
