@@ -208,21 +208,21 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         {
         	//float fz = Float.parseFloat(value);
         	entity.setPhase_no("A"); //A相
-        	SessionUtil.storage.put("phase_no", "A");
+        	SessionUtil.storage.put(point.getPointId() + "phase_no", "A");
         }else if(key.contentEquals("06")||key.contentEquals("07")||key.contentEquals("08")||key.contentEquals("09")||key.contentEquals("0a")||key.contentEquals("0b"))//频次
         {
         	//float pc = Float.parseFloat(value);
         	entity.setPhase_no("B"); //B相
-        	SessionUtil.storage.put("phase_no", "B");
+        	SessionUtil.storage.put(point.getPointId() + "phase_no", "B");
         }else {
         	//float nl = Float.parseFloat(value);
         	entity.setPhase_no("C"); //C相
-        	SessionUtil.storage.put("phase_no", "C");
+        	SessionUtil.storage.put(point.getPointId() + "phase_no", "C");
         }
         
-        SessionUtil.storage.put("jfTwo", "no");
+        SessionUtil.storage.put(point.getPointId() + "jfTwo", "no");
         
-        System.out.println("saveDeviceData " + SessionUtil.storage.get("phase_no"));
+        System.out.println("saveDeviceData " + SessionUtil.storage.get(point.getPointId() + "phase_no"));
         				
 		//crudService.save(entity, true);
 		return entity;
@@ -235,11 +235,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         int beginByte = protocol.getBeginByte();
             
         if(beginByte<31) {                           	
-        	SessionUtil.storage.put("phase_no", "A");
+        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "A");
         }else if (beginByte<55) {
-        	SessionUtil.storage.put("phase_no", "B");
+        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "B");
         }else{
-        	SessionUtil.storage.put("phase_no", "C");
+        	SessionUtil.storage.put(protocol.getPointId() +  "phase_no", "C");
         }
                        					
 	}
@@ -331,13 +331,13 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		dataSpecial.setEnergy(energy);
 		dataSpecial.setPhase(maxPhase);
 		dataSpecial.setPointId(record.getPointId());
-		dataSpecial.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+		dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 		dataSpecial.setCreatetime(new Date());
-		dataSpecial.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+		dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
 		dataSpecial.setFrequency(frequencyMax);
 		crudService.save(dataSpecial, true);
 		
-		if(SessionUtil.storage.get("jfTwo").equals("no")) {
+		if(SessionUtil.storage.get(point.getPointId() + "jfTwo").equals("no")) {
 		
 			String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase),String.valueOf(energy) };  //设置好 频次、 相位、能量值
 			
@@ -355,11 +355,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 				dataColl.setPointId(record.getPointId());
 				dataColl.setPointName(point.getPointName());
-				dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+				dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 				dataColl.setRecordTime(new Date());
-				dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+				dataColl.setRecord_id((String)SessionUtil.storage.get( point.getPointId() + "phase_no")+String.valueOf(curTime));
 				//dataColl.setValue(String.valueOf(maxPhase));   //
-				SessionUtil.storage.put("record_id", (String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+				SessionUtil.storage.put(point.getPointId() + "record_id", (String)SessionUtil.storage.get( point.getPointId() +"phase_no")+String.valueOf(curTime));
 				dataColl.setValue(indexs[i]);
 				dataColl.setIndicatorId(protocol.getIndicatorId());
 				dataColl.setProtocolId(protocol.getProtocolId());
@@ -389,10 +389,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setCreatetime(new Date()); 
 			data.setPointId(point.getPointId()); 
 			
-			System.out.println(SessionUtil.storage.get("phase_no"));
-			data.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+			System.out.println(SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
-			data.setRecord_id((String)SessionUtil.storage.get("record_id"));
+			data.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "record_id"));
 			crudService.update(data, true);
 			result.add(data);
 	
@@ -422,9 +422,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
 		dataSpecial.setCommond_record_id(record.getSendCommandId());
 		dataSpecial.setPointId(record.getPointId());
-		dataSpecial.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+		dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 		dataSpecial.setCreatetime(new Date());
-		dataSpecial.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+		dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
 		
 		for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
@@ -439,12 +439,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			
 			dataColl.setPointId(record.getPointId());
 			dataColl.setPointName(point.getPointName());
-			dataColl.setPhase_no((String)SessionUtil.storage.get("phase_no"));
+			dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			dataColl.setRecordTime(new Date());
-			dataColl.setRecord_id((String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime));
+			dataColl.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
 			
-			SessionUtil.storage.put("record_id", (String)SessionUtil.storage.get("phase_no")+String.valueOf(curTime)); //设置好 record_id
-			SessionUtil.storage.put("jfTwo", "yes");
+			SessionUtil.storage.put(point.getPointId() + "record_id", (String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime)); //设置好 record_id
+			SessionUtil.storage.put(point.getPointId() + "jfTwo", "yes");
 		    
 		    String protocolName  = protocol.getDataType();		    		    
 		    if(protocolName.indexOf("频次")>-1) {
@@ -574,7 +574,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		data.setCommandName("获取幅值相位");
 		data.setPointId(point.getPointId()); 
 		data.setPointName(point.getPointName());
-		String phase_type = (String)SessionUtil.storage.get("phase_no");//获取是A还是B还是C相
+		String phase_type = (String)SessionUtil.storage.get( point.getPointId() + "phase_no");//获取是A还是B还是C相
 		if("A".equals(phase_type)) {
 			data.setProtocolId("17,14,20");
 		}else if("B".equals(phase_type)){
