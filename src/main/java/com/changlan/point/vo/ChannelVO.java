@@ -34,7 +34,7 @@ public class ChannelVO {
 	private List<TblMonitorSystemEntity> getMonitorSystem(Integer channelId) {
 		IMonitorSystemService service = SpringUtil.getBean(IMonitorSystemService.class);
 		TblMonitorSystemEntity entity = new TblMonitorSystemEntity();
-		entity.setChannelId(channelId);
+		//entity.setChannelId(channelId);
 		List<TblMonitorSystemEntity> all = service.getAll(entity); 
 		return all;
 	}

@@ -25,9 +25,10 @@ public class MonitorSystemServiceImpl implements IMonitorSystemService{
 	public List<TblMonitorSystemEntity> getAll(TblMonitorSystemEntity entity) {
 		List<TblMonitorSystemEntity> all = null;
 		Map map = new HashMap();
-		if(entity.getChannelId() != null) {
-			map.put("channelId", new ParamMatcher(entity.getChannelId()));
-		}
+		/*
+		 * if(entity.getChannelId() != null) { map.put("channelId", new
+		 * ParamMatcher(entity.getChannelId())); }
+		 */
 		if(StringUtil.isNotEmpty(entity.getName())) {
 			map.put("name", new ParamMatcher(entity.getName()));
 		}

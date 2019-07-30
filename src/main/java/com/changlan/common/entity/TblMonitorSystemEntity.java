@@ -19,8 +19,8 @@ public class TblMonitorSystemEntity {
 	 @Column(name = "NAME", unique = true )
 	 private String name;
 	 
-	 @Column(name = "CHANNEL_ID", unique = true )
-	 private Integer channelId;
+	// @Column(name = "CHANNEL_ID", unique = true )
+	// private Integer channelId;
 
 	public Integer getMonitorId() {
 		return monitorId;
@@ -38,13 +38,11 @@ public class TblMonitorSystemEntity {
 		this.name = name;
 	}
 
-	public Integer getChannelId() {
-		return channelId;
-	}
-
-	public void setChannelId(Integer channelId) {
-		this.channelId = channelId;
-	}
+	/*
+	 * public Integer getChannelId() { return channelId; }
+	 * 
+	 * public void setChannelId(Integer channelId) { this.channelId = channelId; }
+	 */
 	 
 	 
 

@@ -21,6 +21,9 @@ public class TblCompanyChannelEntity implements java.io.Serializable {
     
     @Column(name = "COMPANY_ID", unique = true )
     private Integer companyId;
+    
+    @Column(name = "MONITOR_IDS"   )
+    private String monitor_ids;
 
 	public Integer getChannelId() {
 		return channelId;
@@ -28,6 +31,14 @@ public class TblCompanyChannelEntity implements java.io.Serializable {
 
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
+	}
+		
+	public String getMonitor_ids() {
+		return monitor_ids;
+	}
+
+	public void setMonitor_ids(String monitor_ids) {
+		this.monitor_ids = monitor_ids;
 	}
 
 	public String getName() {
