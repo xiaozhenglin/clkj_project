@@ -78,6 +78,9 @@ public class PartDischargeDataServiceImpl implements IPartDischargeDataService{
 		if(data.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(data.getPointId()));
 		}
+		if(data.getLineId() != null) {
+			map.put("lineId", new ParamMatcher(data.getLineId()));
+		}
 		if(data.getIndicatorId()!=null) {
 			map.put("indicatorId", new ParamMatcher(data.getIndicatorId()));
 		}
@@ -106,8 +109,8 @@ public class PartDischargeDataServiceImpl implements IPartDischargeDataService{
 		for(Object o : datas) {
 			DeviceDataColl entity = (DeviceDataColl)o;
 			TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
-//			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-			PartDischargeDataDetail detail = new PartDischargeDataDetail(entity, point, null);
+			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+			PartDischargeDataDetail detail = new PartDischargeDataDetail(entity, point, line);
 			list.add(detail);
 		}
 		

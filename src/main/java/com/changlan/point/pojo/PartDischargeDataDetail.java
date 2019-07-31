@@ -22,6 +22,7 @@ public class PartDischargeDataDetail {
 	private DeviceDataColl deviceDataCollData; //一个监控点的数据
 	private IndiCatorValueDetail valueDetail; //对应一个指标信息
 	private TblPointsEntity point; //监控点信息
+	private TblLinesEntity line; //线路信息
 
 	
 	public PartDischargeDataDetail(DeviceDataColl deviceDataCollData, TblPointsEntity point,TblLinesEntity line) {
@@ -29,6 +30,7 @@ public class PartDischargeDataDetail {
 		this.deviceDataCollData = deviceDataCollData;
 		this.valueDetail = getIndicator(deviceDataCollData.getIndicatorId());;
 		this.point = point;
+		this.line = line;
 	}
 
 
@@ -70,9 +72,14 @@ public class PartDischargeDataDetail {
 	public void setPoint(TblPointsEntity point) {
 		this.point = point;
 	}
-	
-	
-	
-	
 
+
+	public TblLinesEntity getLine() {
+		return line;
+	}
+
+	public void setLine(TblLinesEntity line) {
+		this.line = line;
+	}
+			
 }

@@ -78,6 +78,9 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 		if(data.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(data.getPointId()));
 		}
+		if(data.getLineId() != null) {
+			map.put("lineId", new ParamMatcher(data.getLineId()));
+		}
 		if(data.getIndicatorId()!=null) {
 			map.put("indicatorId", new ParamMatcher(data.getIndicatorId()));
 		}
@@ -106,8 +109,8 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 		for(Object o : datas) {
 			TblTemperatureDataEntity entity = (TblTemperatureDataEntity)o;
 			TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
-//			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-			TemperatureDataDetail detail = new TemperatureDataDetail(entity, point, null);
+			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+			TemperatureDataDetail detail = new TemperatureDataDetail(entity, point, line);
 			list.add(detail);
 		}
 		

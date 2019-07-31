@@ -15,8 +15,14 @@ public class LineMonitorCountEntity {
 	
 	private Integer line_total = 0;
 	private Integer point_total = 0;
-	private Integer operation_total = 0;		
+	private Integer operation_total = 0;
 	
+	private Integer success_count = 0;
+	
+    private Integer exception_count = 0;
+    
+	private Integer unauthority_count = 0;
+    
 	@Transient
 	private Integer cpu_total = 0;
 	@Transient	
@@ -117,5 +123,35 @@ public class LineMonitorCountEntity {
 	public void setFreeMemory(Long freeMemory) {
 		this.freeMemory = freeMemory;
 	}
-				
+
+
+	public Integer getSuccess_count() {
+		return success_count;
+	}
+
+
+	public void setSuccess_count(Integer success_count) {
+		this.success_count = success_count;
+	}
+
+
+	public Integer getException_count() {
+		return exception_count;
+	}
+
+
+	public void setException_count(Integer exception_count) {
+		this.exception_count = exception_count;
+	}
+
+
+	public Integer getUnauthority_count() {
+		return unauthority_count;
+	}
+
+
+	public void setUnauthority_count(Integer unauthority_count) {
+		this.unauthority_count = unauthority_count;
+	}
+			
 }

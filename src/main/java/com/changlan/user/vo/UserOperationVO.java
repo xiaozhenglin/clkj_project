@@ -17,6 +17,10 @@ public class UserOperationVO {
 	private Date recordTime;
 	private String fromIp;
 	private String intefaceAddress; 
+	private String funcName;
+	private String isSuccess;
+	private String operationType;
+	private String curdName;
 
 	public UserOperationVO(UserOperationDetail object) {
 		TblUserOperationEntity entity = object.getEntity();
@@ -28,6 +32,10 @@ public class UserOperationVO {
 		this.recordTime = entity.getRecordTime();
 		this.fromIp = entity.getFromIp();
 		this.intefaceAddress = entity.getIntefaceAddress();
+		this.funcName = entity.getFuncName();
+		this.isSuccess = entity.getIsSuccess();
+		this.operationType = entity.getOperationType();
+		this.curdName = entity.getCurdName();
 	}
 
 	public UserOperationVO() {
@@ -81,6 +89,37 @@ public class UserOperationVO {
 	public void setIntefaceAddress(String intefaceAddress) {
 		this.intefaceAddress = intefaceAddress;
 	}
-	
-	
+
+	public String getFuncName() {
+		return funcName;
+	}
+
+	public void setFuncName(String funcName) {
+		this.funcName = funcName;
+	}
+
+	public String getIsSuccess() {
+		return isSuccess;
+	}
+
+	public void setIsSuccess(String isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
+	public String getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(String operationType) {
+		this.operationType = operationType;
+	}
+
+	public String getCurdName() {
+		return curdName;
+	}
+
+	public void setCurdName(String curdName) {
+		this.curdName = curdName;
+	}
+		
 }

@@ -77,6 +77,9 @@ public class PointDataServiceImpl implements IPointDataService{
 		if(data.getPointId() != null) {
 			map.put("pointId", new ParamMatcher(data.getPointId()));
 		}
+		if(data.getLineId() != null) {
+			map.put("lineId", new ParamMatcher(data.getLineId()));
+		}
 		if(data.getIndicatorId()!=null) {
 			map.put("indicatorId", new ParamMatcher(data.getIndicatorId()));
 		}
@@ -105,8 +108,8 @@ public class PointDataServiceImpl implements IPointDataService{
 		for(Object o : datas) {
 			TblPoinDataEntity entity = (TblPoinDataEntity)o;
 			TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
-//			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
-			PointDataDetail detail = new PointDataDetail(entity, point, null);
+			TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+			PointDataDetail detail = new PointDataDetail(entity, point, line);
 			list.add(detail);
 		}
 		

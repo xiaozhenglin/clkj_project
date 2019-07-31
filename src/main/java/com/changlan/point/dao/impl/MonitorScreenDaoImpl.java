@@ -19,6 +19,7 @@ import com.changlan.point.entity.ScreenPointEntity;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.ScreenQuery;
 import com.changlan.user.pojo.LoginUser;
+import com.changlan.user.pojo.OperationDataType;
 
 @Repository
 public class MonitorScreenDaoImpl implements IMonitorScreenDao{
@@ -88,7 +89,11 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		}
 		String sql =" SELECT * from ( ( select count(*) AS point_total from  tbl_points where 1=1  )  AS point_total ,  "
 				+ "( select count(*) AS line_total from  tbl_lines   where 1=1    )  AS line_total ,   " 
-				+  "( select count(*)  AS operation_total from tbl_user_operation  where 1=1  )  AS operation_total  ) ";
+				+  "( select count(*)  AS operation_total from tbl_user_operation  where 1=1  )  AS operation_total ,  "
+				+  "( select count(*)  AS success_count from tbl_user_operation  where OPERATION_TYPE = " + "'" + OperationDataType.SUCCESS.getName() + "'" + "  )AS success_count , "
+			    +  "( select count(*)  AS exception_count from tbl_user_operation  where OPERATION_TYPE = " + "'" + OperationDataType.EXCEPTION.getName() + "'" + "  )AS exception_count , "
+				+  "( select count(*)  AS unauthority_count from tbl_user_operation  where OPERATION_TYPE = " + "'" + OperationDataType.UNAUTHORITY.getName() + "'" + "  )AS unauthority_count ) "
+				;
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),LineMonitorCountEntity.class);
 		return createNativeQuery.getResultList(); 
 	}
