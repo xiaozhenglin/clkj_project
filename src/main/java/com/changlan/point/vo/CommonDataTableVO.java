@@ -16,7 +16,8 @@ import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.TemperatureDataDetail;
 
 public class CommonDataTableVO {
-
+    private String pointName;
+    private String indicators;
 	private Integer indicatorId; //指标id
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
@@ -46,7 +47,14 @@ public class CommonDataTableVO {
 			vo.setIndicatorName(indicatorValue.getName());
 			
 			vo.setUnit(indicatorValue.getUnit());
-		
+		    
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
+						
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -77,7 +85,13 @@ public class CommonDataTableVO {
 			vo.setIndicatorName(indicatorValue.getName());
 			
 			vo.setUnit(indicatorValue.getUnit());
-		
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
+			
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -109,6 +123,12 @@ public class CommonDataTableVO {
 		
 			vo.setUnit(indicatorValue.getUnit());
 
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -140,7 +160,12 @@ public class CommonDataTableVO {
 			vo.setIndicatorName(indicatorValue.getName());
 		
 			vo.setUnit(indicatorValue.getUnit());
-
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -175,6 +200,12 @@ public class CommonDataTableVO {
 				vo.setRecord_id(pointData.getRecord_id());
 			}
 			vo.setUnit(indicatorValue.getUnit());
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -207,6 +238,12 @@ public class CommonDataTableVO {
 				vo.setRecord_id(pointData.getRecord_id());
 			}
 			vo.setUnit(indicatorValue.getUnit());
+			if(StringUtil.isNotEmpty(point.getPointName())) {
+				vo.setPointName(point.getPointName());
+			}
+			if(StringUtil.isNotEmpty(point.getIndicators())) {
+				vo.setIndicators(point.getIndicators());
+			}
 			if(StringUtil.isNotEmpty(point.getPicture_url())) {
 				vo.setPicture_url(point.getPicture_url());
 			}
@@ -295,6 +332,22 @@ public class CommonDataTableVO {
 
 	public void setVisualType(String visualType) {
 		this.visualType = visualType;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
+	}
+
+	public String getIndicators() {
+		return indicators;
+	}
+
+	public void setIndicators(String indicators) {
+		this.indicators = indicators;
 	}
 	
 	
