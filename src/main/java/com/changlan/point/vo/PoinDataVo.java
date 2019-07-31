@@ -20,6 +20,7 @@ public class PoinDataVo implements Serializable{
 	private Integer indicatorCategoryId;
 	private String indicatorCategoryName;
 	private Date recordTime;
+	private Integer lineId;
 
 	public PoinDataVo(PointDataDetail detail) {
 		TblPointsEntity point = detail.getPoint();
@@ -35,6 +36,7 @@ public class PoinDataVo implements Serializable{
 		this.indicatorCategoryId = valueDetail.getCategory().getCategoryId();
 		this.indicatorCategoryName = valueDetail.getCategory().getName();
 		this.recordTime =  pointData.getRecordTime();
+		this.lineId = point.getLineId();
 	}
 
 	public PoinDataVo() {
@@ -119,6 +121,14 @@ public class PoinDataVo implements Serializable{
 
 	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
+	}
+
+	public Integer getLineId() {
+		return lineId;
+	}
+
+	public void setLineId(Integer lineId) {
+		this.lineId = lineId;
 	}
 
 	
