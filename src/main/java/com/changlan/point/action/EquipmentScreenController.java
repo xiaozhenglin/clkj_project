@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.changlan.alarm.vo.ScreenAlarmMessageBoxVO;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ExcelUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.indicator.service.IIndicatoryValueService;
@@ -26,7 +32,9 @@ import com.changlan.point.service.ITemperatureDataService;
 import com.changlan.point.vo.CommonDataTableVO;
 import com.changlan.point.vo.PoinDataTableVO;
 
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 
 @RestController
 @RequestMapping("/admin/equipment")
@@ -57,6 +65,12 @@ public class EquipmentScreenController extends BaseController {
 	//实时数据展示
 	@RequestMapping("/currentPointInfo") 
 	public ResponseEntity<Object>  currentPointInfoDisplay(CommonDataQuery query) {
+		List<CommonDataTableVO> result = getCurrentPointInfo(query);
+						
+		return success(result);
+	}
+	
+	private List<CommonDataTableVO> getCurrentPointInfo(CommonDataQuery query){
 		List<CommonDataTableVO> result = new ArrayList<CommonDataTableVO>();
 		Date begin = null  ;
 		Date end = null;
@@ -104,14 +118,97 @@ public class EquipmentScreenController extends BaseController {
 				result.add(value);
 			}
 		}
-				
-		return success(result);
+		return result;
 	}
 	
+	@RequestMapping(value = "currExcel")
+	public void exportCurr(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
+		List<CommonDataTableVO> result = getCurrentPointInfo(query);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		//excel标题
+	    String[] title = {"指标名称", "指标值", "创建日期"};
+
+	    //excel文件名
+	    String fileName = "实时数据表" + System.currentTimeMillis() + ".xls";
+
+	    //sheet名
+	    String sheetName = "实时数据页";
+
+	    String content[][] = new String[result.size()][title.length];
+	    for (int i = 0; i < result.size(); i++) {
+
+	    	CommonDataTableVO obj = result.get(i);
+	      
+	        content[i][0] = obj.getIndicatorName();
+	        content[i][1] = obj.getResults().get(0).getValue();
+	        System.out.println(obj.getResults().get(0).getRecordTime().toString());
+	        //content[i][3] = sdf.format( obj.getResults().get(0).getRecordTime());
+	        //content[i][3] = obj.getResults().get(0).getRecordTime().toString();
+	        
+	    }
+
+	    //创建HSSFWorkbook
+	    HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
+	    //响应到客户端
+	    try {
+	        this.setResponseHeader(response, fileName);
+	        OutputStream os = response.getOutputStream();
+	        wb.write(os);
+	        os.flush();
+	        os.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	@RequestMapping(value = "histExcel")
+	public void exportHist(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
+		List<CommonDataTableVO> result = getHistoryPointInfo(query);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		//excel标题
+	    String[] title = {"指标名称", "指标值", "创建日期"};
+
+	    //excel文件名
+	    String fileName = "历史数据表" + System.currentTimeMillis() + ".xls";
+
+	    //sheet名
+	    String sheetName = "历史数据页";
+
+	    String content[][] = new String[result.size()][title.length];
+	    for (int i = 0; i < result.size(); i++) {
+
+	    	CommonDataTableVO obj = result.get(i);
+	      
+	        content[i][0] = obj.getIndicatorName();
+	        content[i][1] = obj.getResults().get(0).getValue();
+	       // content[i][3] = sdf.format(obj.getResults().get(0).getRecordTime());
+	        
+	    }
+
+	    //创建HSSFWorkbook
+	    HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
+	    //响应到客户端
+	    try {
+	        this.setResponseHeader(response, fileName);
+	        OutputStream os = response.getOutputStream();
+	        wb.write(os);
+	        os.flush();
+	        os.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
     
 	//历史数据展示 
 	@RequestMapping("/historyPointInfo") 
 	public ResponseEntity<Object>  historyPointInfoDisplay(CommonDataQuery query) {
+		List<CommonDataTableVO> result = getHistoryPointInfo(query);
+				
+		return success(result);
+	}
+	
+	private List<CommonDataTableVO> getHistoryPointInfo(CommonDataQuery query){
 		List<CommonDataTableVO> result = new ArrayList<CommonDataTableVO>();
 		Date begin = null  ;
 		Date end = null;
@@ -159,10 +256,9 @@ public class EquipmentScreenController extends BaseController {
 				result.add(value);
 			}
 		}
-		
-		
-		return success(result);
+		return result;
 	}
+	
 	
 	private List<Integer> getIndicatorList(Integer categoryId, String indicatorId ,List<Object> listPointIndicators) {
 		List<Integer> indicatorsList = new ArrayList<Integer>();
@@ -208,6 +304,23 @@ public class EquipmentScreenController extends BaseController {
 		}
 		
 		return list;
+	}
+	
+	private void setResponseHeader(HttpServletResponse response, String fileName) {
+		try {
+	        try {
+	            fileName = new String(fileName.getBytes(), "ISO8859-1");
+	        } catch (Exception e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+	        response.setContentType("application/octet-stream;charset=ISO8859-1");
+	        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+	        response.addHeader("Pargam", "no-cache");
+	        response.addHeader("Cache-Control", "no-cache");
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
 	}
 	
 }

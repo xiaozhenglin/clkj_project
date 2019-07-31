@@ -86,6 +86,9 @@ public class TblLinesEntity implements java.io.Serializable {
     @Column(name = "ADD_TIME"   )
     private Date addTime;
     
+    @Column(name = "PICTURL_ADDRESS"   )
+    private String picture_address;
+    
     /**
      * 获取lineId
      * 
@@ -270,7 +273,14 @@ public class TblLinesEntity implements java.io.Serializable {
 	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
+
+	public String getPicture_address() {
+		return picture_address;
+	}
+
+	public void setPicture_address(String picture_address) {
+		this.picture_address = picture_address;
+	}
     
-    
-    
+        
 }

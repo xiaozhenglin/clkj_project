@@ -53,6 +53,9 @@ public class LineController extends BaseController{
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.NAME_EXIST);
 		}
+		if(StringUtil.isNotEmpty(entity.getPicture_address())){
+			
+		}
 		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
 		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());
