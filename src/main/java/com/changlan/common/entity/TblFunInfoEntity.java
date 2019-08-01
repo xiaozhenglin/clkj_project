@@ -56,6 +56,15 @@ public class TblFunInfoEntity implements java.io.Serializable {
     @Column(name = "POINT"   )
     private String point;
 
+    @Column(name = "OPERATION_ID"   )
+    private String operation_id;
+    
+    @Column(name = "FUN_CATEGORY"   )
+    private String fun_category;
+    
+    @Column(name = "BUSINESS_CATEGORY"   )
+    private String business_category;
+    
     /**
      * 获取funcId
      * 
@@ -163,4 +172,30 @@ public class TblFunInfoEntity implements java.io.Serializable {
     public void setPoint(String point) {
         this.point = point;
     }
+
+	public String getOperation_id() {
+		return operation_id;
+	}
+
+	public void setOperation_id(String operation_id) {
+		this.operation_id = operation_id;
+	}
+
+	public String getFun_category() {
+		return fun_category;
+	}
+
+	public void setFun_category(String fun_category) {
+		this.fun_category = fun_category;
+	}
+
+	public String getBusiness_category() {
+		return business_category;
+	}
+
+	public void setBusiness_category(String business_category) {
+		this.business_category = business_category;
+	}
+    
+    
 }

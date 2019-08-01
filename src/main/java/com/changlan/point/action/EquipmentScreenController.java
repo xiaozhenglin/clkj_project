@@ -124,7 +124,7 @@ public class EquipmentScreenController extends BaseController {
 	@RequestMapping(value = "currExcel")
 	public void exportCurr(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
 		List<CommonDataTableVO> result = getCurrentPointInfo(query);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//excel标题
 	    String[] title = {"指标名称", "指标值", "创建日期"};
 
@@ -141,9 +141,10 @@ public class EquipmentScreenController extends BaseController {
 	      
 	        content[i][0] = obj.getIndicatorName();
 	        content[i][1] = obj.getResults().get(0).getValue();
-	        System.out.println(obj.getResults().get(0).getRecordTime().toString());
-	        //content[i][3] = sdf.format( obj.getResults().get(0).getRecordTime());
-	        //content[i][3] = obj.getResults().get(0).getRecordTime().toString();
+	        System.out.println(obj.getResults().get(0).getRecordTime().toGMTString());
+	        //if(obj.getResults().get(0).getRecordTime()!=null) {
+	        	content[i][2] = sdf.format( obj.getResults().get(0).getRecordTime());
+	        //}
 	        
 	    }
 
@@ -165,7 +166,7 @@ public class EquipmentScreenController extends BaseController {
 	@RequestMapping(value = "histExcel")
 	public void exportHist(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
 		List<CommonDataTableVO> result = getHistoryPointInfo(query);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//excel标题
 	    String[] title = {"指标名称", "指标值", "创建日期"};
 
@@ -174,15 +175,28 @@ public class EquipmentScreenController extends BaseController {
 
 	    //sheet名
 	    String sheetName = "历史数据页";
-
-	    String content[][] = new String[result.size()][title.length];
+	    int valueSize = 0;
+	    int totalSize = 0;
+	    for (int i = 0; i < result.size(); i++) {
+	    	CommonDataTableVO obj = result.get(i);
+	    	totalSize += obj.getResults().size();
+	    }
+	    
+	     
+	    String content[][] = new String[totalSize][title.length];
 	    for (int i = 0; i < result.size(); i++) {
 
 	    	CommonDataTableVO obj = result.get(i);
-	      
-	        content[i][0] = obj.getIndicatorName();
-	        content[i][1] = obj.getResults().get(0).getValue();
-	       // content[i][3] = sdf.format(obj.getResults().get(0).getRecordTime());
+	    	
+	    	//valueSize += obj.getResults().size();
+	        for(int j = 0; j < obj.getResults().size() ; j++) {
+		        content[valueSize][0] = obj.getIndicatorName();
+		        content[valueSize][1] = obj.getResults().get(j).getValue();
+		        if(obj.getResults().get(j).getRecordTime()!=null) {
+		        	content[valueSize][2] = sdf.format(obj.getResults().get(j).getRecordTime());
+		        }
+		        valueSize++;
+	        }
 	        
 	    }
 

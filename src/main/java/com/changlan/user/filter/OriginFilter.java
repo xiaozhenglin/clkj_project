@@ -3,6 +3,7 @@ package com.changlan.user.filter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -33,8 +34,10 @@ import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
+import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblUserOperationEntity;
 import com.changlan.common.pojo.BaseResult;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
@@ -101,9 +104,10 @@ public class OriginFilter   implements Filter {
     		if( HaveAuthorityToCome(user,requestURI)) {
     			//用户登录了而且用户有权限
     			//记录用户操作
-    			 saveToUserOperation(user,requestURI,request.getRemoteHost());
+    			 //saveToUserOperation(user,requestURI,request.getRemoteHost());
         		 chain.doFilter(req,res);
              }else {
+            	 saveToUserOperation(user,requestURI,request.getRemoteHost());
             	 response.sendError(403, "用户没有访问权限");
      			 return;
              }
@@ -136,7 +140,18 @@ public class OriginFilter   implements Filter {
 
 	private void saveToUserOperation(TblAdminUserEntity user, String requestURI, String fromIp) {
     	 IUserOpertaionService service = SpringUtil.getBean(IUserOpertaionService.class);
-		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI);
+    	 
+    	 ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+    	 Map map = new HashMap();
+    	 map.clear();
+ 		 map.put("address", new ParamMatcher(requestURI));
+    	// TblFunInfoEntity tblFunInfo = (TblFunInfoEntity)crudService.get(requestURI, TblFunInfoEntity.class, true);
+    	 TblFunInfoEntity tblFunInfo = (TblFunInfoEntity)crudService.findOneByMoreFiled(TblFunInfoEntity.class,map,true);
+    	 String funcName = tblFunInfo.getFuncName();
+    	 String isSuccess = "失败";
+    	 String operationType = "越权";
+    	 String curdName = tblFunInfo.getFun_category();
+		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
 		 service.save(userOperation);
 	}
 

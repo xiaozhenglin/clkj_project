@@ -29,15 +29,20 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblFunInfoEntity;
+import com.changlan.common.entity.TblUserOperationEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.user.config.UserAuthorityUrlConfig;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.pojo.UserRoleDetail;
+import com.changlan.user.service.IUserOpertaionService;
 import com.changlan.user.service.IUserRoleService;
 
 import io.netty.handler.codec.http2.Http2FrameLogger.Direction;
@@ -45,7 +50,10 @@ import io.netty.handler.codec.http2.Http2FrameLogger.Direction;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class BaseController {
@@ -127,12 +135,71 @@ public class BaseController {
     
 	public ResponseEntity<Object> success(String code, String msg, Boolean success, Object data){
 		BaseResult result = new BaseResult(code, msg, success, data);
+		saveToUserOperation("code");
 		return new ResponseEntity(result,HttpStatus.OK); 
 	}
 	
 	public ResponseEntity<Object> success(Object data){
 		BaseResult result = new BaseResult("200", "success", true, data);
+		saveToUserOperation("200");
 		return new ResponseEntity(result,HttpStatus.OK); 
+	}
+	
+	private boolean needVerifyUserPermission(String requestURI) { 
+    	String notRequireAuthorityUrl = UserAuthorityUrlConfig.getNotRequireAuthorityUrl(); 
+    	if(notRequireAuthorityUrl.indexOf(requestURI) >-1 ) { 
+    		return false;
+    	}
+		return true;
+	}
+	
+	private void saveToUserOperation(String code) {
+	   	 IUserOpertaionService service = SpringUtil.getBean(IUserOpertaionService.class);
+	   	 HttpSession session = getSession();
+	   	 HttpServletRequest request = getReqeust();
+	   	 String requestURI = request.getRequestURI();
+	   	 String fromIp = request.getRemoteHost();
+	   	 TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
+	   	 ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+	   	 Map map = new HashMap();
+	   	 map.clear();
+		 map.put("address", new ParamMatcher(requestURI));
+	   	// TblFunInfoEntity tblFunInfo = (TblFunInfoEntity)crudService.get(requestURI, TblFunInfoEntity.class, true);
+		 
+	   	 if(needVerifyUserPermission(requestURI)){	   		 
+	   		TblFunInfoEntity tblFunInfo = (TblFunInfoEntity)crudService.findOneByMoreFiled(TblFunInfoEntity.class,map,true);
+		   	 String funcName = tblFunInfo.getFuncName();
+		   	 String isSuccess ="";
+		   	 String operationType = "";
+		   	 if(code.equals("200")) {
+			   	 isSuccess = "成功";
+			   	 operationType = "正常";
+		   	 }else {
+		   		 isSuccess = "失败";
+			   	 operationType = "异常";
+		   	 }
+		   	 String curdName = tblFunInfo.getFun_category();
+		   	 TblUserOperationEntity userOperation = new TblUserOperationEntity();
+	   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
+	   		 service.save(userOperation);
+	   	 }else {
+	   		 String funcName ="数据库菜单表未知";
+			 String curdName ="查询";
+			 String isSuccess ="";
+		   	 String operationType = "";					   	 
+		   	 if(code.equals("200")) {
+			   	 isSuccess = "成功";
+			   	 operationType = "正常";
+		   	 }else {
+		   		 isSuccess = "失败";
+			   	 operationType = "异常";
+		   	 }
+		   	 
+		   	 TblUserOperationEntity userOperation = new TblUserOperationEntity();
+	   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, "system", requestURI,funcName,isSuccess,operationType,curdName);
+	   		 service.save(userOperation);
+	   	 }
+		
 	}
 	
 //	token 方式
