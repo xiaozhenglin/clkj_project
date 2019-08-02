@@ -51,7 +51,7 @@ import com.changlan.point.service.IPointDefineService;
 @RequestMapping("/admin/var")
 public class VarController extends BaseController{
 	
-	@RequestMapping("setNettyServerPort") 
+	@RequestMapping("/setNettyServerPort") 
 	public ResponseEntity<Object>  setNettyServerPort(int nettyServerPort) throws Exception {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
@@ -62,7 +62,7 @@ public class VarController extends BaseController{
 		return success("resetNettyServerPort");
 	}
 							
-	@RequestMapping("list") 
+	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list() throws FileNotFoundException {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
@@ -72,7 +72,7 @@ public class VarController extends BaseController{
 	
 	}
 	
-	@RequestMapping("save") 
+	@RequestMapping("/save") 
 	public ResponseEntity<Object>  save(Map<String, Object> currMap) throws IOException {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;

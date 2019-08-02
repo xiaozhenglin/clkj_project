@@ -121,7 +121,7 @@ public class EquipmentScreenController extends BaseController {
 		return result;
 	}
 	
-	@RequestMapping(value = "currExcel")
+	@RequestMapping(value = "/currExcel")
 	public void exportCurr(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
 		List<CommonDataTableVO> result = getCurrentPointInfo(query);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -163,7 +163,7 @@ public class EquipmentScreenController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value = "histExcel")
+	@RequestMapping(value = "/histExcel")
 	public void exportHist(HttpServletRequest request, HttpServletResponse response,CommonDataQuery query) throws Exception {
 		List<CommonDataTableVO> result = getHistoryPointInfo(query);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
