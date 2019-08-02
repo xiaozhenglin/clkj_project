@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
@@ -55,7 +57,7 @@ public class VarController extends BaseController{
 	public ResponseEntity<Object>  setNettyServerPort(int nettyServerPort) throws Exception {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		FileReader  reader =   new FileReader(new File(ymlPath));
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map map = yml.loadAs(reader, Map.class);
 		map.put("netty_server_port", nettyServerPort);
 		yml.dump(map,new FileWriter(new File(ymlPath)));
@@ -66,9 +68,16 @@ public class VarController extends BaseController{
 	public ResponseEntity<Object>  list() throws FileNotFoundException {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		FileReader  reader =   new FileReader(new File(ymlPath));
-		Map<String, String> map = yml.loadAs(reader, Map.class);
-		return success(map);
+		InputStreamReader reader;
+		try {
+			reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
+			Map<String, String> map = yml.loadAs(reader, Map.class);
+			return success(map);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	
 	}
 	
@@ -76,8 +85,7 @@ public class VarController extends BaseController{
 	public ResponseEntity<Object>  save(Map<String, Object> currMap) throws IOException {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		FileReader  reader =   new FileReader(new File(ymlPath));
-		
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map<String, String> map = yml.loadAs(reader, Map.class);
 		
 		Iterator iter = currMap.entrySet().iterator();
@@ -85,7 +93,8 @@ public class VarController extends BaseController{
 			Map.Entry entry = (Map.Entry) iter.next(); 
 			String key = (String) entry.getKey();
 			Object val = entry.getValue();
-			map.put(key, val.toString());
+			//String value = new String("UTF-8");
+			map.put(key, new String(val.toString().getBytes("UTF-8")));
 		}
 		yml.dump(map,new FileWriter(new File(ymlPath)));
 		return success(map);

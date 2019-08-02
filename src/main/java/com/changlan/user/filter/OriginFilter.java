@@ -91,26 +91,19 @@ public class OriginFilter   implements Filter {
     	logger.info("过滤器 >>>>>>>开始校验权限 requestURI"+requestURI); 
     	if(needVerifyUserPermission(requestURI)){ 
     		
-    		if(!requestUrlIsRight(requestURI)) { 
-    			response.sendError(401, "访问地址不正确");
-    			return;
-    		}
-    		//需要验证权限，
-    		TblAdminUserEntity user = (TblAdminUserEntity)session.getAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
-    		if(user == null) {
-    			response.sendError(402, "登录超时,请重新登录");
-    			return;
-    		}
-    		if( HaveAuthorityToCome(user,requestURI)) {
-    			//用户登录了而且用户有权限
-    			//记录用户操作
-    			 //saveToUserOperation(user,requestURI,request.getRemoteHost());
-        		 chain.doFilter(req,res);
-             }else {
-            	 saveToUserOperation(user,requestURI,request.getRemoteHost());
-            	 response.sendError(403, "用户没有访问权限");
-     			 return;
-             }
+			/*
+			 * if(!requestUrlIsRight(requestURI)) { response.sendError(401, "访问地址不正确");
+			 * return; } //需要验证权限， TblAdminUserEntity user =
+			 * (TblAdminUserEntity)session.getAttribute(UserModuleConst.
+			 * USER_SESSION_ATTRIBUTENAME); if(user == null) { response.sendError(402,
+			 * "登录超时,请重新登录"); return; } if( HaveAuthorityToCome(user,requestURI)) {
+			 * //用户登录了而且用户有权限 //记录用户操作
+			 * //saveToUserOperation(user,requestURI,request.getRemoteHost());
+			 * chain.doFilter(req,res); }else {
+			 * saveToUserOperation(user,requestURI,request.getRemoteHost());
+			 * response.sendError(403, "用户没有访问权限"); return; }
+			 */
+    		chain.doFilter(req,res);
     		
         }else {
         	//不需要验证权限
