@@ -42,29 +42,29 @@ public class ChannelController extends BaseController{
 	//修改或者保存 
 	@RequestMapping("/save")
 	@Transactional
-	public ResponseEntity<Object>  functionList(TblCompanyChannelEntity entity , TblMonitorSystemEntity tblMonitorSystemEntity ) throws Exception { 
+	public ResponseEntity<Object>  functionList(TblCompanyChannelEntity entity ) throws Exception { 
 		Boolean exist = channelService.existChannelName(entity);
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.COMPANY_CHANNEL_NAME_EXIST);
 		}
-
-		List<TblMonitorSystemEntity> all = monitorSystemservice.getAll(tblMonitorSystemEntity); 
-		
-		//String monitor_ids = "";
-		List<String> monitorList = new ArrayList<String>();
-		for(TblMonitorSystemEntity tblMonitorSystem : all) {
-			Integer monitor =  tblMonitorSystem.getMonitorId();
-			monitorList.add(String.valueOf(monitor));
-		}
-		
-		String monitor_ids =  StringUtils.join(monitorList.toArray(),",");  
-		entity.setMonitor_ids(monitor_ids);
-		
 		TblCompanyChannelEntity update = (TblCompanyChannelEntity)crudService.update(entity, true); 
 		if(update == null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}
 		return success(update);
+//		List<TblMonitorSystemEntity> all = monitorSystemservice.getAll(tblMonitorSystemEntity); 
+//		
+//		//String monitor_ids = "";
+//		List<String> monitorList = new ArrayList<String>();
+//		for(TblMonitorSystemEntity tblMonitorSystem : all) {
+//			Integer monitor =  tblMonitorSystem.getMonitorId();
+//			monitorList.add(String.valueOf(monitor));
+//		}
+//		
+//		String monitor_ids =  StringUtils.join(monitorList.toArray(),",");  
+//		entity.setMonitor_ids(monitor_ids);
+//		
+		
 	}
 
 	
