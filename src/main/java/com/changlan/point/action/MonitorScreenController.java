@@ -55,13 +55,13 @@ public class MonitorScreenController extends BaseController {
 	@RequestMapping("/getPointInfo") 
 	public ResponseEntity<Object>  query(ScreenQuery query) {
 		List<ScreenPointEntity> list =  monitorScreenService.queryPointId(query);
-		for(ScreenPointEntity screenPoint : list) {
-			String picturePath = screenPoint.getPicture_url();
-			//HttpServletResponse response =  getResponse();
-
-			String pictureChar = FileUtil.getImageStr(picturePath);
-			screenPoint.setPicture_url(pictureChar);
-		}
+//		for(ScreenPointEntity screenPoint : list) {
+//			String picturePath = screenPoint.getPicture_url();
+//			//HttpServletResponse response =  getResponse();
+//
+//			String pictureChar = FileUtil.getImageStr(picturePath);
+//			screenPoint.setPicture_url(pictureChar);
+//		}
 		return success(list);
 	}
 	
