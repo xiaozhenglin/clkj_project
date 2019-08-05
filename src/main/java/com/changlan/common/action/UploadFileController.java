@@ -53,9 +53,9 @@ public class UploadFileController extends BaseController{
 	@RequestMapping(value = "/admin/uploadImg")
 	public ResponseEntity<Object> uploadImg(MultipartFile file) throws Exception{
 		logger.info(file.getOriginalFilename()); 
-		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
-		String newRealpath = UploadConfiguration.getUploadPath() + "/" + newImageName;
-		File newFile = new File(newRealpath);
+//		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
+		String newRealpath = UploadConfiguration.getUploadPath() + "/" + file.getOriginalFilename();
+		File newFile = new File(newRealpath); 
 		try {
 			file.transferTo(newFile);
 		} catch (Exception e) {
@@ -76,6 +76,7 @@ public class UploadFileController extends BaseController{
             //指明为下载
             response.setContentType("application/x-download");         
             response.addHeader("Content-Disposition", "attachment;fileName="+file.getName());   // 设置文件名
+            response.setCharacterEncoding("UTF-8"); 
             //把输入流copy到输出流
             IOUtils.copy(inputStream, outputStream);
             outputStream.flush();
