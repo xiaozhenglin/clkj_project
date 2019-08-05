@@ -41,6 +41,9 @@ public class PointDefineVO {
     
     private List<TblIndicatorCategoriesEntity>  indicatorCategorys =  new ArrayList();//指标类别
 	private String indicators; //指标类别id  多个以逗号分隔
+	private String picture_url;
+	private String video_url;
+	private String image;
 	
 //	private Integer indicatorCategoryId; //指标类别
 //	private String  indicatorCategoryName;//指标类别名称
@@ -71,6 +74,15 @@ public class PointDefineVO {
 			this.isCorner =  point.getIsCorner();
 			this.ip = point.getIp();
 			this.indicators = point.getIndicators(); 
+			if(StringUtil.isNotEmpty(point.getPicture_url())) {
+				this.picture_url = point.getPicture_url();
+			}
+			if(StringUtil.isNotEmpty(point.getVideo_url())) {
+				this.video_url = point.getVideo_url();
+		    }
+			if(StringUtil.isNotEmpty(point.getImage())) {
+				this.image = point.getImage();
+			}
 		}
 		
 		TblPointCategoryEntity category = defineDetail.getCategory();
@@ -308,10 +320,58 @@ public class PointDefineVO {
 	}
 
 
+	public String getPersonName() {
+		return personName;
+	}
+
+
+	public void setPersonName(String personName) {
+		this.personName = personName;
+	}
+
+
+	public String getPersonCompanyName() {
+		return personCompanyName;
+	}
+
+
+	public void setPersonCompanyName(String personCompanyName) {
+		this.personCompanyName = personCompanyName;
+	}
+
+
+	public String getPicture_url() {
+		return picture_url;
+	}
+
+
+	public void setPicture_url(String picture_url) {
+		this.picture_url = picture_url;
+	}
+
+
+	public String getVideo_url() {
+		return video_url;
+	}
+
+
+	public void setVideo_url(String video_url) {
+		this.video_url = video_url;
+	}
+
+
+	public String getImage() {
+		return image;
+	}
+
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+
 
 	
-
-
 	
 	
 }
