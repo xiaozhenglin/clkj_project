@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +27,18 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import com.changlan.common.configuration.UploadConfiguration;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
+import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblDvdEntity;
 import com.changlan.common.entity.TblMonitorSystemEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.pojo.TblDvdQuery;
 import com.changlan.common.service.FileOperationService;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserErrorType;
@@ -59,19 +65,21 @@ public class FileOperationController extends BaseController{
 		if(currentUser!=null) {
 			entity.setRecordUser(currentUser.getAdminUserId());
 		}
-		entity.setCreatetime(new Date());
+		Date date = new Date(); 
+		entity.setCreatetime(date);
+		entity.setModifytime(date);
 		Object save = crudService.update(entity, true); 
 		return success(save);
 	}
 		
 	//图片删除
 	@RequestMapping(value = "/delete")
-	public ResponseEntity<Object> deleteImg(TblDvdEntity entity) throws Exception{
-		List<TblDvdEntity> list = fileOperationService.getAll(entity.getDvd_id(),entity.getName(),entity.getPointId());
+	public ResponseEntity<Object> deleteImg(TblDvdQuery query) throws Exception{
+		List<TblDvdEntity> list = fileOperationService.getAll(query);
 		if(ListUtil.isEmpty(list)) {
 			throw new MyDefineException("0000","没有找到记录",false,null); 
 		}
-		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_DVD WHERE dvd_id ="+entity.getDvd_id(), true); 
+		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_DVD WHERE dvd_id ="+query.getDvd_id(), true); 
 		return success(isSuccess);
 	}
 	
@@ -82,7 +90,9 @@ public class FileOperationController extends BaseController{
 		if(currentUser!=null) {
 			entity.setRecordUser(currentUser.getAdminUserId());
 		}
-		entity.setModifytime(new Date());
+		Date date = new Date(); 
+		entity.setCreatetime(date);
+		entity.setModifytime(date);
 		Object save = crudService.update(entity, true); 
 		return success(save);
 	}
@@ -90,8 +100,8 @@ public class FileOperationController extends BaseController{
 	//展示图片
 	@RequestMapping(value = "/list")
 	public ResponseEntity<Object> getPage(TblDvdQuery query) throws Exception {
-		List<Object> all = crudService.getAll(TblDvdEntity.class, true); 
-		return success(all);
+		List<TblDvdEntity> list = fileOperationService.getAll(query);
+		return success(list);
 	}
 	
 }

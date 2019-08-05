@@ -13,5 +13,5 @@ import com.changlan.common.pojo.TblDvdQuery;
 public interface FileOperationService {
 	Page<TblDvdEntity> getPage(TblDvdQuery entity, Pageable page);  
 	
-	List<TblDvdEntity> getAll(Integer id, String name, Integer pointId); 
+	List<TblDvdEntity> getAll(TblDvdQuery query); 
 }

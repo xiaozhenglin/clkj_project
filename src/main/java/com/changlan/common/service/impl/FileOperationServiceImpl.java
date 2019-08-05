@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblDvdEntity;
+import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.pojo.TblDvdQuery;
 import com.changlan.common.service.FileOperationService;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
 
 @Service
 public class FileOperationServiceImpl implements  FileOperationService{
@@ -48,16 +50,19 @@ public class FileOperationServiceImpl implements  FileOperationService{
 	}
 
 	@Override
-	public List<TblDvdEntity> getAll(Integer id, String name, Integer pointId) {
+	public List<TblDvdEntity> getAll(TblDvdQuery query) {
 		Map map = new HashMap();
-		if(id != null) {
-			map.put("id", new ParamMatcher(id));
+		if(query.getDvd_id() != null) {
+			map.put("dvd_id", new ParamMatcher(query.getDvd_id()));
 		}
-		if(name!=null) {
-			map.put("name", new ParamMatcher(name));
+		if(query.getBegin()!=null&& query.getEnd()!=null) {
+			map.put("modifytime", new ParamMatcher(query.getBegin(),query.getEnd()));
 		}
-		if(pointId!=null) {
-			map.put("pointId", new ParamMatcher(pointId));
+		if(StringUtil.isNotEmpty(query.getName())) {
+			map.put("name", new ParamMatcher(MatcheType.LIKE, query.getName()));
+		}
+		if(query.getPointId()!=null) {
+			map.put("pointId", new ParamMatcher(query.getPointId()));
 		}
 		List<TblDvdEntity> all = crudService.findByMoreFiled(TblDvdEntity.class, map, true);
 		return all;
