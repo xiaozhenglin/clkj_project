@@ -23,6 +23,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 import com.changlan.common.configuration.UploadConfiguration;
+import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblDvdEntity;
 import com.changlan.common.entity.TblMonitorSystemEntity;
@@ -33,6 +34,7 @@ import com.changlan.common.service.FileOperationService;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.UUIDUtil;
+import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserErrorType;
 
 @RestController
@@ -45,8 +47,6 @@ public class FileOperationController extends BaseController{
 
 	@Autowired
 	private FileOperationService fileOperationService;
-//	@Autowired
-//	private  ResourceLoader resourceLoader;
 	
 	/**
 	 * 新增上传图片
@@ -54,77 +54,15 @@ public class FileOperationController extends BaseController{
 	 * @return RestResult<Object>
 	 */
 	@RequestMapping(value = "/create")
-	public ResponseEntity<Object> uploadImg(String pointId ,String newpath) throws Exception{
-		//MultipartFile file = null ;
-		//logger.info(file.getOriginalFilename()); 
-		//String path = "C:/Tulip.jpg";
-		File newFile = new File(newpath);
-		//File newFile = new File(path);
-		MultipartFile file = getMulFileByPath(newFile);
-		
-		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
-		String newRealpath = UploadConfiguration.getUploadPath() + "/" + newImageName;
-		File newRealFile = new File(newRealpath);
-		
-		TblPointsEntity tblPoints  = (TblPointsEntity)crudService.get(Integer.parseInt(pointId), TblPointsEntity.class, true);
-		tblPoints.setPicture_url(newRealpath);
-		TblPointsEntity update = (TblPointsEntity)crudService.update(tblPoints, true);
-		
-		System.out.println(file.getOriginalFilename());
-		//File newFile = new File(newRealpath);								
-		try {
-			file.transferTo(newRealFile);
-		} catch (Exception e) {
-			logger.info("上传出错"+e.getMessage());
-			throw new MyDefineException(UserErrorType.UPLOAD_ERROR);
+	public ResponseEntity<Object> uploadImg(TblDvdEntity entity) throws Exception{
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		if(currentUser!=null) {
+			entity.setRecordUser(currentUser.getAdminUserId());
 		}
-		
-		TblDvdEntity entity = new TblDvdEntity();
-		entity.setName(newpath);
 		entity.setCreatetime(new Date());
-		entity.setPointId(Integer.parseInt(pointId));
-		entity.setRecordUser(userIsLogin().getAdminUserId());
-		entity.setPicture_url(newRealpath);
-		
-		crudService.save(entity, true);
-		return success("create");
+		Object save = crudService.update(entity, true); 
+		return success(save);
 	}
-	
-	private  MultipartFile getMulFileByPath(File file) {  
-        FileItem fileItem = createFileItem(file.getPath(),file.getName());  
-        MultipartFile mfile = new CommonsMultipartFile(fileItem);  
-        return mfile;  
-    }  
-  
-    private  FileItem createFileItem(String filePath,String fileName)  
-    {  
-        FileItemFactory factory = new DiskFileItemFactory(16, null);  
-        String textFieldName = "textField";  
-        int num = filePath.lastIndexOf(".");  
-       // String extFile = filePath.substring(num);  
-        FileItem item = factory.createItem(textFieldName, "text/plain", true,  fileName);  
-        File newfile = new File(filePath);  
-        int bytesRead = 0;  
-        byte[] buffer = new byte[8192];  
-        try  
-        {  
-            FileInputStream fis = new FileInputStream(newfile);  
-            OutputStream os = item.getOutputStream();  
-            while ((bytesRead = fis.read(buffer, 0, 8192))  
-                != -1)  
-            {  
-                os.write(buffer, 0, bytesRead);  
-            }  
-            os.close();  
-            fis.close();  
-        }  
-        catch (IOException e)  
-        {  
-            e.printStackTrace();  
-        }  
-        return (FileItem) item;  
-    }  
-
 		
 	//图片删除
 	@RequestMapping(value = "/delete")
@@ -140,25 +78,20 @@ public class FileOperationController extends BaseController{
 	//图片修改
 	@RequestMapping(value = "/modify")
 	public ResponseEntity<Object> modifyImg(TblDvdEntity entity) throws Exception{
-		if(entity.getDvd_id()!=null) {
-			entity.setModifytime(new Date());
-			entity.setRecordUser(userIsLogin().getAdminUserId());
-			TblDvdEntity update = (TblDvdEntity)crudService.update(entity, true); 
-			return success(update);
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		if(currentUser!=null) {
+			entity.setRecordUser(currentUser.getAdminUserId());
 		}
-		return success(null);
+		entity.setModifytime(new Date());
+		Object save = crudService.update(entity, true); 
+		return success(save);
 	}
 	
-
 	//展示图片
 	@RequestMapping(value = "/list")
 	public ResponseEntity<Object> getPage(TblDvdQuery query) throws Exception {
-		Page<TblDvdEntity> result = fileOperationService.getPage(query,getPage());
-		return success(result);
-	
+		List<Object> all = crudService.getAll(TblDvdEntity.class, true); 
+		return success(all);
 	}
-	
-	
-	
 	
 }

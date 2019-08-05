@@ -66,25 +66,25 @@ public class UploadFileController extends BaseController{
 	}
 		
 	@RequestMapping(value = "/admin/downLogFile")
-	public ResponseEntity<Object> downLogFile(String filePath, String fileName) throws Exception{
+	public ResponseEntity<Object> downLogFile(String filePath) throws Exception{
 		HttpServletResponse response = getResponse();
 		HttpServletRequest request = getReqeust();
 		try {
-			InputStream inputStream = new FileInputStream(new File(filePath + "/" + fileName));
+			File file = new File(filePath);
+			InputStream inputStream = new FileInputStream(file);
             OutputStream outputStream = response.getOutputStream();       
             //指明为下载
             response.setContentType("application/x-download");         
-            response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);   // 设置文件名
+            response.addHeader("Content-Disposition", "attachment;fileName="+file.getName());   // 设置文件名
             //把输入流copy到输出流
             IOUtils.copy(inputStream, outputStream);
             outputStream.flush();
-            
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-		return success(filePath + "/" + fileName);
+		return success(filePath);
 	}
 
 	//不需要权限，图片文件

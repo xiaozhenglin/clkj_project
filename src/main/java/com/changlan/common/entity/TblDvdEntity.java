@@ -16,14 +16,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name="TBL_DVD")
 public class TblDvdEntity implements Serializable {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-
+    @Column(name = "DVD_ID" )
 	private Integer dvd_id;	
 	
+    @Column(name = "NAME" )
 	private String  name; //名称
-		
+	
+    @Column(name = "CREATE_TIME" )
 	private Date createtime; //创建时间
+	
+    @Column(name = "MODIFY_TIME" )
 	private Date modifytime; //修改时间
 
 	@Column(name="PICTURE_URL")
@@ -32,14 +37,12 @@ public class TblDvdEntity implements Serializable {
 	@Column(name="VIDEO_URL")
 	private String vidio_url; //视频地址 
 	
-	@Column(name = "RECORD_USER"   )
+	@Column(name = "RECORD_USER" )
     private String recordUser;
 	
 	@Column(name="POINT_ID")
 	private Integer pointId;
 
-	
-	
 	public String getRecordUser() {
 		return recordUser;
 	}
@@ -47,8 +50,6 @@ public class TblDvdEntity implements Serializable {
 	public void setRecordUser(String recordUser) {
 		this.recordUser = recordUser;
 	}
-
-	
 
 	public String getVidio_url() {
 		return vidio_url;
@@ -82,8 +83,6 @@ public class TblDvdEntity implements Serializable {
 		this.picture_url = picture_url;
 	}
 
-
-
 	public Date getCreatetime() {
 		return createtime;
 	}
@@ -107,5 +106,6 @@ public class TblDvdEntity implements Serializable {
 	public void setPointId(Integer pointId) {
 		this.pointId = pointId;
 	}
-				
+	
+	
 }

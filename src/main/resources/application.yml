@@ -6,14 +6,14 @@ netty_server_port: 1111 #
 
 http_netty_server_port: 1112
 
-not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage,/admin/downLogFile,/admin/export/excel,/admin/screen/display,/admin/screen/getPointInfo,/admin/line/list,/admin/screen/searchPoints
+not_require_user_authority_url: /admin/user/login,/admin/user/logout,/admin/user/get/public/key,/admin/uploadImg,/favicon.ico,/admin/template/data/receive,/admin/netty/test/message,/admin/netty/close/sms/cat,/admin/accept/extenal/data,/admin/file/list,/admin/user/getImage,/admin/downLogFile,/admin/export/excel,/admin/screen/display,/admin/screen/getPointInfo,/admin/line/list,/admin/screen/searchPoints,/admin/picture/create,/admin/picture/modify,/admin/picture/list,/admin/point/define/list,/admin/line/list,/admin/downLogFile
  
 
 system_name: 长缆科技管理系统
 
   
 upload_image: 
-  path: E:/uploads  #
+  path: E:/  #
 smscat: 
   serverPortName: COM3
   serverPortBound: 115200

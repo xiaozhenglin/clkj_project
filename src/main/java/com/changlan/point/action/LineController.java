@@ -70,16 +70,16 @@ public class LineController extends BaseController{
 //			uploadImg(entity.getLineId(),entity.getPicture_address());
 //		}
 		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
-		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
+//		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());
 			TblLinesEntity update = (TblLinesEntity)crudService.update(entity, true); 			
 			if(update == null) {
 				throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 			}
 			return success(update);
-		}else {
-			throw new MyDefineException(PoinErrorType.LINE_CANNOT_CREATE);
-		}
+//		}else {
+//			throw new MyDefineException(PoinErrorType.LINE_CANNOT_CREATE);
+//		}
 	}
 	
 //	public ResponseEntity<Object> uploadImg(Integer lineId,String newpath) throws Exception{
