@@ -15,7 +15,7 @@ public class ChannelVO {
 	
 	private Integer channelId;
 	private String  title;
-	private List<MonitorSystemVO> MonitorSystemVOs = new ArrayList<MonitorSystemVO>(); //三级包含多条线路信息
+	//private List<MonitorSystemVO> MonitorSystemVOs = new ArrayList<MonitorSystemVO>(); //三级包含多条线路信息
 	  
 	public ChannelVO() {
 		super();
@@ -24,11 +24,11 @@ public class ChannelVO {
 	public ChannelVO(TblCompanyChannelEntity entity) { 
 		this.channelId = entity.getChannelId();
 		this.title = entity.getName();
-		List<TblMonitorSystemEntity>  list = getMonitorSystem(entity.getChannelId());
-		for(TblMonitorSystemEntity monitor : list) {
-			MonitorSystemVO VO = new MonitorSystemVO(monitor);
-			MonitorSystemVOs.add(VO);
-		}
+		/*
+		 * List<TblMonitorSystemEntity> list = getMonitorSystem(entity.getChannelId());
+		 * for(TblMonitorSystemEntity monitor : list) { MonitorSystemVO VO = new
+		 * MonitorSystemVO(monitor); MonitorSystemVOs.add(VO); }
+		 */
 	}
 
 	private List<TblMonitorSystemEntity> getMonitorSystem(Integer channelId) {
@@ -53,13 +53,13 @@ public class ChannelVO {
 		this.channelId = channelId;
 	}
 
-	public List<MonitorSystemVO> getMonitorSystemVOs() {
-		return MonitorSystemVOs;
-	}
-
-	public void setMonitorSystemVOs(List<MonitorSystemVO> monitorSystemVOs) {
-		MonitorSystemVOs = monitorSystemVOs;
-	}
+	/*
+	 * public List<MonitorSystemVO> getMonitorSystemVOs() { return MonitorSystemVOs;
+	 * }
+	 * 
+	 * public void setMonitorSystemVOs(List<MonitorSystemVO> monitorSystemVOs) {
+	 * MonitorSystemVOs = monitorSystemVOs; }
+	 */
   
 	  
 	  
