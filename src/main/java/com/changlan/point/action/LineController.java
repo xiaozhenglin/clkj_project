@@ -66,9 +66,9 @@ public class LineController extends BaseController{
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.NAME_EXIST);
 		}
-		if(StringUtil.isNotEmpty(entity.getPicture_address())){
-			uploadImg(entity.getLineId(),entity.getPicture_address());
-		}
+//		if(StringUtil.isNotEmpty(entity.getPicture_address())){
+//			uploadImg(entity.getLineId(),entity.getPicture_address());
+//		}
 		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
 		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());
@@ -82,67 +82,67 @@ public class LineController extends BaseController{
 		}
 	}
 	
-	public ResponseEntity<Object> uploadImg(Integer lineId,String newpath) throws Exception{
-		//MultipartFile file = null ;
-		//logger.info(file.getOriginalFilename()); 
-		String path = "C:/Tulip.jpg";
-		File newFile = new File(newpath);
-		//File newFile = new File(path);
-		MultipartFile file = getMulFileByPath(newFile);
-		
-		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
-		String newRealpath = UploadConfiguration.getUploadPath() + "/" + newImageName;
-		File newRealFile = new File(newRealpath);
-		
-		TblLinesEntity tblLines  = (TblLinesEntity)crudService.get(lineId, TblLinesEntity.class, true);
-		tblLines.setPicture_address(newRealpath);
-		TblLinesEntity update = (TblLinesEntity)crudService.update(tblLines, true);
-		
-		System.out.println(file.getOriginalFilename());
-		//File newFile = new File(newRealpath);								
-		try {
-			file.transferTo(newRealFile);
-		} catch (Exception e) {
-			throw new MyDefineException(UserErrorType.UPLOAD_ERROR);
-		}
-
-		return success("create");
-	}
-	
-	private  MultipartFile getMulFileByPath(File file) {  
-        FileItem fileItem = createFileItem(file.getPath(),file.getName());  
-        MultipartFile mfile = new CommonsMultipartFile(fileItem);  
-        return mfile;  
-    }  
-  
-    private  FileItem createFileItem(String filePath,String fileName)  
-    {  
-        FileItemFactory factory = new DiskFileItemFactory(16, null);  
-        String textFieldName = "textField";  
-        int num = filePath.lastIndexOf(".");  
-       // String extFile = filePath.substring(num);  
-        FileItem item = factory.createItem(textFieldName, "text/plain", true,  fileName);  
-        File newfile = new File(filePath);  
-        int bytesRead = 0;  
-        byte[] buffer = new byte[8192];  
-        try  
-        {  
-            FileInputStream fis = new FileInputStream(newfile);  
-            OutputStream os = item.getOutputStream();  
-            while ((bytesRead = fis.read(buffer, 0, 8192))  
-                != -1)  
-            {  
-                os.write(buffer, 0, bytesRead);  
-            }  
-            os.close();  
-            fis.close();  
-        }  
-        catch (IOException e)  
-        {  
-            e.printStackTrace();  
-        }  
-        return (FileItem) item;  
-    }  
+//	public ResponseEntity<Object> uploadImg(Integer lineId,String newpath) throws Exception{
+//		//MultipartFile file = null ;
+//		//logger.info(file.getOriginalFilename()); 
+//		String path = "C:/Tulip.jpg";
+//		File newFile = new File(newpath);
+//		//File newFile = new File(path);
+//		MultipartFile file = getMulFileByPath(newFile);
+//		
+//		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
+//		String newRealpath = UploadConfiguration.getUploadPath() + "/" + newImageName;
+//		File newRealFile = new File(newRealpath);
+//		
+//		TblLinesEntity tblLines  = (TblLinesEntity)crudService.get(lineId, TblLinesEntity.class, true);
+//		tblLines.setPicture_address(newRealpath);
+//		TblLinesEntity update = (TblLinesEntity)crudService.update(tblLines, true);
+//		
+//		System.out.println(file.getOriginalFilename());
+//		//File newFile = new File(newRealpath);								
+//		try {
+//			file.transferTo(newRealFile);
+//		} catch (Exception e) {
+//			throw new MyDefineException(UserErrorType.UPLOAD_ERROR);
+//		}
+//
+//		return success("create");
+//	}
+//	
+//	private  MultipartFile getMulFileByPath(File file) {  
+//        FileItem fileItem = createFileItem(file.getPath(),file.getName());  
+//        MultipartFile mfile = new CommonsMultipartFile(fileItem);  
+//        return mfile;  
+//    }  
+//  
+//    private  FileItem createFileItem(String filePath,String fileName)  
+//    {  
+//        FileItemFactory factory = new DiskFileItemFactory(16, null);  
+//        String textFieldName = "textField";  
+//        int num = filePath.lastIndexOf(".");  
+//       // String extFile = filePath.substring(num);  
+//        FileItem item = factory.createItem(textFieldName, "text/plain", true,  fileName);  
+//        File newfile = new File(filePath);  
+//        int bytesRead = 0;  
+//        byte[] buffer = new byte[8192];  
+//        try  
+//        {  
+//            FileInputStream fis = new FileInputStream(newfile);  
+//            OutputStream os = item.getOutputStream();  
+//            while ((bytesRead = fis.read(buffer, 0, 8192))  
+//                != -1)  
+//            {  
+//                os.write(buffer, 0, bytesRead);  
+//            }  
+//            os.close();  
+//            fis.close();  
+//        }  
+//        catch (IOException e)  
+//        {  
+//            e.printStackTrace();  
+//        }  
+//        return (FileItem) item;  
+//    }  
 	
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  lineList(TblLinesEntity line) throws Exception {
