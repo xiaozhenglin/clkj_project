@@ -26,6 +26,7 @@ public class ScreenPointEntity {
 	private String picture_url;
 	
 	private String indicators;
+	
 	private String status;
 	
 	@Transient
@@ -41,13 +42,6 @@ public class ScreenPointEntity {
 	@Transient
 	private Integer alarm ;
 	
-	
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
 	public void setROW_ID(Integer rOW_ID) {
 		ROW_ID = rOW_ID;
 	}
@@ -159,7 +153,13 @@ public class ScreenPointEntity {
 	public void setAlarm(Integer alarm) {
 		this.alarm = alarm;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 
-	
-	
+		
 }
