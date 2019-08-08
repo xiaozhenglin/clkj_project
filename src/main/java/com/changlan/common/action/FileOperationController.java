@@ -68,17 +68,18 @@ public class FileOperationController extends BaseController{
 		Date date = new Date(); 
 		entity.setCreatetime(date);
 		entity.setModifytime(date);
-		Object save = crudService.update(entity, true); 
+		Object save = crudService.save(entity, true); 
 		return success(save);
 	}
 		
 	//图片删除
 	@RequestMapping(value = "/delete")
-	public ResponseEntity<Object> deleteImg(TblDvdQuery query) throws Exception{
-		List<TblDvdEntity> list = fileOperationService.getAll(query);
-		if(ListUtil.isEmpty(list)) {
-			throw new MyDefineException("0000","没有找到记录",false,null); 
-		}
+	public ResponseEntity<Object> deleteImg(TblDvdEntity query) throws Exception{
+		/*
+		 * List<TblDvdEntity> list = fileOperationService.getAll(query);
+		 * query.setDvd_id(19); if(ListUtil.isEmpty(list)) { throw new
+		 * MyDefineException("0000","没有找到记录",false,null); }
+		 */
 		Boolean isSuccess = crudService.deleteBySql("DELETE FROM TBL_DVD WHERE dvd_id ="+query.getDvd_id(), true); 
 		return success(isSuccess);
 	}
