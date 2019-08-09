@@ -55,9 +55,10 @@ import com.changlan.point.service.IPointDefineService;
 public class VarController extends BaseController{
 	
 	@RequestMapping("/setNettyServerPort") 
-	public ResponseEntity<Object>  setNettyServerPort(int nettyServerPort) throws Exception {
+	public ResponseEntity<Object>  setNettyServerPort(String path,int nettyServerPort) throws Exception {
 		Yaml yml = new Yaml();
-		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		String ymlPath = path + "application.yml" ;
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map map = yml.loadAs(reader, Map.class);
 		map.put("netty_server_port", nettyServerPort);
@@ -66,22 +67,24 @@ public class VarController extends BaseController{
 	}
 	
 	@RequestMapping("/setSystemName") 
-	public ResponseEntity<Object>  setSystemName(String systemName) throws Exception {
+	public ResponseEntity<Object>  setSystemName(String path,String systemName) throws Exception {
 		Yaml yml = new Yaml();
 		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		//String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		String ymlPath = path + "application.yml" ;
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map map = yml.loadAs(reader, Map.class);
-		map.put("systemName", systemName);
+		map.put("system_name", "长缆电工");
 		yml.dump(map,new FileWriter(new File(ymlPath)));
 		return success("systemName");
 	}
 							
 	@RequestMapping("/list") 
-	public ResponseEntity<Object>  list() throws FileNotFoundException, UnsupportedEncodingException {
+	public ResponseEntity<Object>  list(String path) throws FileNotFoundException, UnsupportedEncodingException {
 		Yaml yml = new Yaml();
 		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		//String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		String ymlPath = path + "application.yml" ;
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map map = yml.loadAs(reader, Map.class);
 		return success(map);
@@ -89,7 +92,7 @@ public class VarController extends BaseController{
 	}
 	
 	@RequestMapping("/save") 
-	public ResponseEntity<Object>  save(Map<String, Object> currMap) throws IOException {
+	public ResponseEntity<Object>  save(String path,Map<String, Object> currMap) throws IOException {
 		Yaml yml = new Yaml();
 		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
