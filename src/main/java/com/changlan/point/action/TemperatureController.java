@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
+import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
@@ -29,11 +30,13 @@ import com.changlan.point.pojo.PointDataQuery;
 import com.changlan.point.pojo.PointQuery;
 import com.changlan.point.pojo.TemperatureDataDetail;
 import com.changlan.point.pojo.TemperatureDataQuery;
+import com.changlan.point.pojo.TemperatureDtsDataDetail;
 import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.IPointCategoryService;
 import com.changlan.point.service.ITemperatureDataService;
 import com.changlan.point.vo.PoinDataTableVO;
 import com.changlan.point.vo.PoinDataVo;
+import com.changlan.point.vo.TemperatureDataDtsTableVO;
 import com.changlan.point.vo.TemperatureDataTableVO;
 import com.changlan.point.vo.TemperatureDataVo;
 import com.changlan.user.pojo.LoginUser;
@@ -83,6 +86,27 @@ public class TemperatureController extends BaseController{
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				List<TemperatureDataDetail> list = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
 				TemperatureDataTableVO vo = new TemperatureDataTableVO(indicatorId,list);
+				result.add(vo);
+			}
+			
+			return success(result);
+		}
+		
+		@RequestMapping("/dtsTable") 
+		public ResponseEntity<Object>  dtsTable(TemperatureDataQuery query) {
+			List<TemperatureDataDtsTableVO> result = new ArrayList<TemperatureDataDtsTableVO>();
+			Date begin = null  ;
+			Date end = null;
+			if(query.getBegin()!=null && query.getEnd()!=null) {
+				begin = new Date(query.getBegin());
+				end = new Date(query.getEnd());	
+			}
+			List<Integer> indicators = getIndicatorList(query.getCategroryId(),query.getIndicatorIds());
+			//遍历 指标
+			for(Integer indicatorId : indicators) {
+				//根据指标id,监控点Id 和 时间 筛选得到的数据
+				List<TemperatureDtsDataDetail> list = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId()); 
+				TemperatureDataDtsTableVO vo = new TemperatureDataDtsTableVO(indicatorId,list);
 				result.add(vo);
 			}
 			

@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.changlan.common.entity.TblPoinDataEntity;
+import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureDtsDataDetail;
 import com.changlan.point.pojo.TemperatureQuery;
 
 public interface ITemperatureDataService {
@@ -25,6 +27,8 @@ public interface ITemperatureDataService {
 	Page<TemperatureDataDetail> getAll(TemperatureQuery entity, Pageable page);
 
 	//检点数据图表形式
-	List<TemperatureDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);      
+	List<TemperatureDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);   
+	
+	List<TemperatureDtsDataDetail> getDtsTable(Date begin, Date end, Integer indicator, Integer pointId);
 
 }

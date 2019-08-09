@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.changlan.common.entity.TblCommandRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
+import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.ListUtil;
@@ -82,6 +83,38 @@ public class TemperatureDataDaoImpl implements ITemperatureDataDao{
 			createNativeQuery.setParameter(next.getKey(), next.getValue()); 
 		}
 		List<TblTemperatureDataEntity> resultList = createNativeQuery.getResultList(); 
+		if(!ListUtil.isEmpty(resultList)) {
+			return resultList;
+		}
+		return null;
+	}
+	
+	@Override
+	public List<TblTemperatureDTSDataEntity> getDtsTableData(Date begin, Date end,Integer indicatorId,Integer pointId) {
+		em.clear();
+		StringBuffer sql = new StringBuffer("SELECT * FROM TBL_TEMPERATURE_DTS_DATA A WHERE A.VALUE IS NOT NULL  ");
+		Map map = new HashMap();
+		if(indicatorId!=null) {
+			sql.append(" AND INDICATOR_ID = :indicatorId ");
+			map.put("indicatorId", indicatorId);
+		}
+		if(pointId!=null) {
+			sql.append(" AND POINT_ID = :pointId ");
+			map.put("pointId", pointId);
+		}		
+		if(begin!=null && end !=null ) {
+			String beginDate = DateUtil.formatDate(begin, "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(end, "yyyy-MM-dd HH:mm:ss"); 
+			sql.append(" AND RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
+		}
+		sql.append(" ORDER BY RECORD_TIME DESC ");
+		Query createNativeQuery = em.createNativeQuery(sql.toString(),TblTemperatureDTSDataEntity.class);
+		Iterator<Entry<String, String>> iterator = map.entrySet().iterator();  
+		while(iterator.hasNext()) {
+			Entry<String, String> next = iterator.next(); 
+			createNativeQuery.setParameter(next.getKey(), next.getValue()); 
+		}
+		List<TblTemperatureDTSDataEntity> resultList = createNativeQuery.getResultList(); 
 		if(!ListUtil.isEmpty(resultList)) {
 			return resultList;
 		}

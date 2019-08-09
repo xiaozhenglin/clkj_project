@@ -60,7 +60,8 @@ public class CommandDefaultSendController extends BaseController{
 	
 	@RequestMapping("/delete")
 	public ResponseEntity<Object>  delete(TblPointSendCommandEntity entity) throws MyDefineException { 
-		TblPointSendCommandEntity find = (TblPointSendCommandEntity)crudService.get(entity.getSendCommandId(),TblIndicatorCategoriesEntity.class,true);
+		//entity.setSendCommandId(74);
+		TblPointSendCommandEntity find = (TblPointSendCommandEntity)crudService.get(entity.getSendCommandId(),TblPointSendCommandEntity.class,true);
 		if(find == null) {
 			throw new MyDefineException(PoinErrorType.NOT_EXIST);
 		}

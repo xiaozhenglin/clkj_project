@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,21 +64,27 @@ public class VarController extends BaseController{
 		yml.dump(map,new FileWriter(new File(ymlPath)));
 		return success("resetNettyServerPort");
 	}
+	
+	@RequestMapping("/setSystemName") 
+	public ResponseEntity<Object>  setSystemName(String systemName) throws Exception {
+		Yaml yml = new Yaml();
+		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
+		Map map = yml.loadAs(reader, Map.class);
+		map.put("systemName", systemName);
+		yml.dump(map,new FileWriter(new File(ymlPath)));
+		return success("systemName");
+	}
 							
 	@RequestMapping("/list") 
-	public ResponseEntity<Object>  list() throws FileNotFoundException {
+	public ResponseEntity<Object>  list() throws FileNotFoundException, UnsupportedEncodingException {
 		Yaml yml = new Yaml();
-		String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		InputStreamReader reader;
-		try {
-			reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
-			Map<String, String> map = yml.loadAs(reader, Map.class);
-			return success(map);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
+		String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
+		Map map = yml.loadAs(reader, Map.class);
+		return success(map);
 	
 	}
 	

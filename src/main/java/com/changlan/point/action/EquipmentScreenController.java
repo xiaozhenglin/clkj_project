@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.alarm.vo.ScreenAlarmMessageBoxVO;
 import com.changlan.common.action.BaseController;
+import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ExcelUtil;
 import com.changlan.common.util.StringUtil;
@@ -25,6 +26,7 @@ import com.changlan.point.pojo.CommonDataQuery;
 import com.changlan.point.pojo.PartDischargeDataDetail;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureDtsDataDetail;
 import com.changlan.point.service.IEquipmentScreenService;
 import com.changlan.point.service.IPartDischargeDataService;
 import com.changlan.point.service.IPointDataService;
@@ -99,10 +101,22 @@ public class EquipmentScreenController extends BaseController {
 			//遍历 指标
 			for(Integer indicatorId : indicatorsTemperatureList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
-				List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
-				CommonDataTableVO vo = new CommonDataTableVO();
-				CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
-				result.add(value);
+				TblIndicatorValueEntity find = (TblIndicatorValueEntity)crudService.get(indicatorId,TblIndicatorValueEntity.class,true);
+				/*
+				 * if(find.getName().indexOf("DST")>-1) { List<TemperatureDtsDataDetail>
+				 * listTemperatureData =
+				 * temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId());
+				 * CommonDataTableVO vo = new CommonDataTableVO(); CommonDataTableVO value =
+				 * vo.CommonTemperatureDSTDataTableVOSinger(indicatorId, listTemperatureData);
+				 * result.add(value);
+				 * 
+				 * }else {
+				 */			
+					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
+					CommonDataTableVO vo = new CommonDataTableVO();
+					CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
+					result.add(value);
+				//}
 			}
 		}
 		
@@ -251,10 +265,19 @@ public class EquipmentScreenController extends BaseController {
 			//遍历 指标
 			for(Integer indicatorId : indicatorsTemperatureList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
-				List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
-				CommonDataTableVO vo = new CommonDataTableVO();
-				CommonDataTableVO value = vo.CommonTemperatureDataTableVO(indicatorId, listTemperatureData);
-				result.add(value);
+				TblIndicatorValueEntity find = (TblIndicatorValueEntity)crudService.get(indicatorId,TblIndicatorValueEntity.class,true);
+				if(find.getName().indexOf("DST")>-1) {
+					List<TemperatureDtsDataDetail> listTemperatureData = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId()); 
+					CommonDataTableVO vo = new CommonDataTableVO();
+					CommonDataTableVO value = vo.CommonTemperatureDSTDataTableVO(indicatorId, listTemperatureData);
+					result.add(value);
+					
+				}else {				
+					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
+					CommonDataTableVO vo = new CommonDataTableVO();
+					CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
+					result.add(value);
+				}
 			}
 		}
 		

@@ -37,6 +37,7 @@ import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -156,8 +157,15 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        				if(data.size()>1) {
 	        					//BigDecimal temList =
 	        					//String temList = StringUtils.join(data.toArray(),",");
+	        					BigDecimal temValue = new BigDecimal(0);
+	        					for(int i = 0; i < data.size() ; i++) {
+	        						temValue = temValue.add(data.get(i));
+	        					}
+	        					BigDecimal avgValue =	temValue.divide(new BigDecimal(data.size()));
+	        					TblTemperatureDataEntity aveValue = saveTemperatureData(avgValue.toString(),point,protocol,Integer.parseInt("0")); 
+	        					
 	        					for(int j = 0 ;j < data.size() ; j++) {
-		        					TblTemperatureDataEntity value = saveTemperatureData(data.get(j).toString(),point,protocol,new Integer(j)); 
+	        						TblTemperatureDTSDataEntity value = saveTemperatureDtsData(data.get(j).toString(),point,protocol,new Integer(j),aveValue.getPointDataId()); 
 		        					result.add(value);
 	        					}
 	        				}else {
@@ -262,6 +270,25 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		crudService.save(entity, true);
 		return entity;
 	}
+	
+	private TblTemperatureDTSDataEntity saveTemperatureDtsData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,Integer distinct,Integer refPointDataId) {
+		TblTemperatureDTSDataEntity entity = new TblTemperatureDTSDataEntity(); 
+		entity.setPointId(point.getPointId()); 
+		entity.setRefPointDataId(refPointDataId);
+		entity.setPointName(point.getPointName());
+		entity.setIndicatorId(protocol.getIndicatorId());  
+		entity.setValue(value); 
+		entity.setRecordTime(new Date()); 
+		entity.setProtocolId(protocol.getProtocolId());  //数据来源协议id
+		TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
+		entity.setCategroryId(indicator.getCategoryId()); //指标类别
+		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
+		entity.setIsAlarm(0); 
+		entity.setIsEarlyWarning(0); 
+		entity.setRangeSize(distinct);
+		crudService.save(entity, true);
+		return entity;
+	}
 
 	private TblPoinDataEntity saveData(String value, TblPointsEntity point, TblCommandProtocolEntity protocol) {
 		TblPoinDataEntity entity = new TblPoinDataEntity(); 
@@ -325,19 +352,20 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			
 		}
 		
-		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
-		dataSpecial.setAmplitude(maxAmplitude);
-		dataSpecial.setCommond_record_id(record.getSendCommandId());
-		dataSpecial.setEnergy(energy);
-		dataSpecial.setPhase(maxPhase);
-		dataSpecial.setPointId(record.getPointId());
-		dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
-		dataSpecial.setCreatetime(new Date());
-		dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
-		dataSpecial.setFrequency(frequencyMax);
-		crudService.save(dataSpecial, true);
+		
 		
 		if(SessionUtil.storage.get(point.getPointId() + "jfTwo").equals("no")) {
+			DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
+			dataSpecial.setAmplitude(maxAmplitude);
+			dataSpecial.setCommond_record_id(record.getSendCommandId());
+			dataSpecial.setEnergy(energy);
+			dataSpecial.setPhase(maxPhase);
+			dataSpecial.setPointId(record.getPointId());
+			dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			dataSpecial.setCreatetime(new Date());
+			dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
+			dataSpecial.setFrequency(frequencyMax);
+			crudService.save(dataSpecial, true);
 		
 			String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase),String.valueOf(energy) };  //设置好 频次、 相位、能量值
 			

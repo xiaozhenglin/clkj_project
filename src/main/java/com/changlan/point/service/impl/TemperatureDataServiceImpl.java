@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -26,6 +27,7 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.ITemperatureDataDao;
 import com.changlan.point.pojo.TemperatureDataDetail;
+import com.changlan.point.pojo.TemperatureDtsDataDetail;
 import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.ITemperatureDataService;
 
@@ -128,6 +130,23 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
 //				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
 				TemperatureDataDetail detail = new TemperatureDataDetail(entity, point, null);
+				result.add(detail);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public List<TemperatureDtsDataDetail> getDtsTable(Date begin, Date end, Integer indicator, Integer pointId){
+		List<TemperatureDtsDataDetail> result = new ArrayList<TemperatureDtsDataDetail>();
+		List<TblTemperatureDTSDataEntity> list = temperatureDataDao.getDtsTableData(begin,end,indicator,pointId); 
+		
+		//封装信息
+		if(!ListUtil.isEmpty(list)) {
+			for(TblTemperatureDTSDataEntity entity : list) {
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+//				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+				TemperatureDtsDataDetail detail = new TemperatureDtsDataDetail(entity, point, null);
 				result.add(detail);
 			}
 		}

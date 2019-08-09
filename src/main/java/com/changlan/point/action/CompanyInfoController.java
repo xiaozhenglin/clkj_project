@@ -50,9 +50,9 @@ public class CompanyInfoController extends BaseController{
 		if(exist) {
 			throw new MyDefineException(PoinErrorType.COMPANY_NAME_EXIST.getCode(), PoinErrorType.COMPANY_NAME_EXIST.getName(), false, null);
 		}
-		if(entity.getGroupId()==null) {
-			entity.setGroupId(1);
-		}
+		/*
+		 * if(entity.getGroupId()==null) { entity.setGroupId(1); }
+		 */
 		TblCompanyEntity update = (TblCompanyEntity)crudService.update(entity, true); 
 		if(update ==null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR.getCode(), PoinErrorType.SAVE_EROOR.getName(), false, null);
