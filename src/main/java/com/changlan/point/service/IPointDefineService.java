@@ -17,4 +17,6 @@ public interface IPointDefineService {
 	TblPointsEntity getByRegistPackageOrId(Integer pointId,String registPackage);
 
 	Page<PointInfoDetail> getPage(TblPointsEntity entity, Pageable pageable);
+
+	Boolean initPointStatus();
 }

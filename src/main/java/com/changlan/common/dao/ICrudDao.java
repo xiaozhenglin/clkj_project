@@ -33,6 +33,7 @@ public interface ICrudDao {
 
 	Boolean deleteBysql(String sql);   
 
+	Boolean updateBysql(String sql);
 //	void setDataSource(String beanName); 
 
     

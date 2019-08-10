@@ -69,6 +69,6 @@ public class CompanyInfoController extends BaseController{
 		}
 		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_COMPANY WHERE COMPANY_ID = " +entity.getCompanyId() , true);
 		return success(delete);
-	}
+	} 
 	
 }

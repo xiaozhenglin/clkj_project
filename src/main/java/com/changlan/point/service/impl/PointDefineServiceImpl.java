@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -125,6 +127,14 @@ public class PointDefineServiceImpl implements IPointDefineService{
 			return null;
 		}
 		return (TblPointsEntity)findByMoreFiled.get(0);  
+	}
+
+	@Override
+	@Transactional
+	public Boolean initPointStatus() {
+		String sql = " UPDATE TBL_POINTS SET TBL_POINTS.`STATUS` = 'OUT_CONNECT' ";
+		Boolean deleteBySql = crudService.deleteBySql(sql, true);
+		return deleteBySql;
 	}
 
 }

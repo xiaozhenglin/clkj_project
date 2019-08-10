@@ -283,5 +283,13 @@ public class CrudDaoImpl implements ICrudDao{
 		return executeUpdate>0?true:false;
 	}
 
+	@Override
+	public Boolean updateBysql(String sql) {
+		EntityManager em = getEntityManage();
+		em.clear(); 
+		int executeUpdate = em.createNativeQuery(sql).executeUpdate();
+		return executeUpdate>0?true:false;
+	}
+
     
 }
