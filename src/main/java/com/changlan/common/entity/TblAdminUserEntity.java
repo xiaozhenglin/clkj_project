@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import com.changlan.common.pojo.BasicInfo;
@@ -82,6 +84,9 @@ public class TblAdminUserEntity implements java.io.Serializable {
     
     @Column(name = "TRUE_NAME"   )
     private String trueName;
+    
+    @Transient	
+	private String redirctUrl ; //跳转地址
 
     public TblAdminUserEntity(TblAdminUserEntity user) {
     	TblAdminUserEntity entity = new TblAdminUserEntity();
@@ -262,7 +267,13 @@ public class TblAdminUserEntity implements java.io.Serializable {
 	public void setTrueName(String trueName) {
 		this.trueName = trueName;
 	}
-    
-    
-    
+
+	public String getRedirctUrl() {
+		return redirctUrl;
+	}
+
+	public void setRedirctUrl(String redirctUrl) {
+		this.redirctUrl = redirctUrl;
+	}
+            
 }

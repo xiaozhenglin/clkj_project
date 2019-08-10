@@ -15,6 +15,7 @@ import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.service.ICompanyGropService;
 import com.changlan.point.service.ICompanyInfoService;
@@ -84,6 +85,17 @@ public class ComPanyServiceImpl implements ICompanyInfoService{
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<TblCompanyEntity> getAll(Integer companyId) {
+		Map map = new HashMap();
+		List<TblCompanyEntity> list = new ArrayList<TblCompanyEntity>();
+		if(companyId != null) {
+			map.put("companyId", new ParamMatcher(companyId));
+		}
+		list = crudService.findByMoreFiled(TblCompanyEntity.class, map, true);
+		return list;
 	}
 	
 }

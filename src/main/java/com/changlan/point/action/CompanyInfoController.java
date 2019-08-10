@@ -17,6 +17,7 @@ import com.changlan.common.entity.TblFunInfoEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
+import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
@@ -32,16 +33,26 @@ public class CompanyInfoController extends BaseController{
 	@Autowired
 	private ICompanyInfoService companyInfoService;
 	
+	//@RequestMapping("/list")
+	//public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
+		//List<CompanyDetail> list = companyInfoService.companyList(company);
+		//List<CompanyVo> result = new ArrayList<CompanyVo>();
+		//for(CompanyDetail detail : list) {
+			//CompanyVo vo = new CompanyVo(detail.getCompany());
+			//result.add(vo);
+		//}
+		//return success(result);
+	//}
+	
 	@RequestMapping("/list")
-	public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
-		List<CompanyDetail> list = companyInfoService.companyList(company);
-		List<CompanyVo> result = new ArrayList<CompanyVo>();
-		for(CompanyDetail detail : list) {
-			CompanyVo vo = new CompanyVo(detail.getCompany());
-			result.add(vo);
-		}
-		return success(result);
+	public ResponseEntity<Object>  lineList(Integer companyId) throws Exception { 
+		//List<CompanyDetail> list = companyInfoService.companyList(company);
+		List<TblCompanyEntity> list = companyInfoService.getAll(companyId);
+		return success(list);
 	}
+	
+	
+	
 	
 	@RequestMapping("/save")
 	@Transactional
@@ -69,6 +80,6 @@ public class CompanyInfoController extends BaseController{
 		}
 		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_COMPANY WHERE COMPANY_ID = " +entity.getCompanyId() , true);
 		return success(delete);
-	} 
+	}
 	
 }

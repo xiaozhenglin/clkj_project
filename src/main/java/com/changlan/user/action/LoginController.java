@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -34,8 +35,10 @@ import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.FastjsonUtil;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SM2Util;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.VerifyCodeUtil;
+import com.changlan.point.pojo.RedirectType;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.UserErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -94,9 +97,22 @@ public class LoginController extends BaseController{
 			return success(UserErrorType.LOGIN_ERROR.getCode(),UserErrorType.LOGIN_ERROR.getMsg(),false,null); 
 		}
 		TblAdminUserEntity user = (TblAdminUserEntity)list.get(0);
+		
+		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+    	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.get(4,TblSystemVarEntity.class,true);
+    	String url = TblSystemVar.getSystemValue();
+    	if(RedirectType.MANAGER_BACK_GROUD.toString().equals(url)){  //管理后台
+    		user.setRedirctUrl(RedirectType.MANAGER_BACK_GROUD.getUrl());
+    	}
+    	if(RedirectType.MONITOR_SCREEN.toString().equals(url)){    //监控大屏
+    		user.setRedirctUrl(RedirectType.MONITOR_SCREEN.getUrl());
+    	}
+    	if(RedirectType.MONITOR_CENTER.toString().equals(url)){   //监控中心
+    		user.setRedirctUrl(RedirectType.MONITOR_CENTER.getUrl());
+    	}
 		addUserInfoToSession(user);
 		logger.info("用户登入"+ user.getName());
-		return success(user.getAdminUserId()); 
+		return success(user); 
 	}
 	
 	private void addUserInfoToSession(TblAdminUserEntity user) {
