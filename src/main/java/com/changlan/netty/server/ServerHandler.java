@@ -203,6 +203,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 //    	System.out.println(e.getMessage());  //远程主机强迫关闭了一个现有的连接。
 //    	ctx.close(); //加的部分
     	//只要有异常就全部抛出
+     	changePointStatus(channel,PointStatus.OUT_CONNECT);
         throw new Exception(e); 
     }
 

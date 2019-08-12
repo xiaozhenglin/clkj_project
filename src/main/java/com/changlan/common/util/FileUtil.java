@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class FileUtil {
 
@@ -308,6 +309,18 @@ public class FileUtil {
 		System.out.println(fileNameNotSuffix);
 		String fileSuffix = FileUtil.getFileSuffix(file);
 		System.out.println(fileSuffix); 
+		
+		try {
+			Map<String, String> loadProperties = FileUtil.loadProperties(new File("F:\\work\\test_project\\src\\main\\resources\\application.yml"));
+			Set<Entry<String,String>> entrySet = loadProperties.entrySet();
+			for(Entry entry : entrySet) {
+				System.out.println(entry.getKey() + " = " + entry.getValue());
+			}
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 
