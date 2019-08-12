@@ -1,5 +1,6 @@
 package com.changlan.netty;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -7,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.changlan.common.configuration.SmsCatConfiguration;
+import com.changlan.common.entity.TblSystemVarEntity;
+import com.changlan.common.pojo.ParamMatcher;
+import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.server.ServerIniterHandler;
@@ -39,8 +44,17 @@ public class HttpNettyServer extends Thread{
 	                           .childHandler(new WebSocketChannelInitializer());
 	            
 	            try {
-	            	ChannelFuture channelFuture = serverBootstrap.bind(NettyConfiguration.getHttpNettyPort()).sync();
-	            	logger.info("启动http服务器端口"+NettyConfiguration.getHttpNettyPort());
+	            	ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+	            	Map map = new HashMap();
+	            	map.clear();
+	         		map.put("systemCode", new ParamMatcher("http_netty_server_port"));
+	            	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,map,true);//系统变量得到netty_server_port
+	            	String port = TblSystemVar.getSystemValue();
+	            	Integer httpNettyPort =  Integer.parseInt(port);
+	            	//ChannelFuture channelFuture = serverBootstrap.bind(NettyConfiguration.getHttpNettyPort()).sync();
+	            	ChannelFuture channelFuture = serverBootstrap.bind(httpNettyPort).sync();
+	            	//logger.info("启动http服务器端口"+NettyConfiguration.getHttpNettyPort());
+	            	logger.info("启动http服务器端口"+httpNettyPort);
 					channelFuture.channel().closeFuture().sync();
 				} catch (InterruptedException e) {
 					e.printStackTrace();

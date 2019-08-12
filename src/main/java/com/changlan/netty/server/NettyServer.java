@@ -1,5 +1,6 @@
 package com.changlan.netty.server;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,6 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.changlan.common.entity.TblSystemVarEntity;
+import com.changlan.common.pojo.ParamMatcher;
+import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.pojo.NettyConfiguration;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -70,8 +75,17 @@ public class NettyServer extends Thread{
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         try {
             //绑定服务端口监听
-            Channel channel = bootstrap.bind(NettyConfiguration.nettyPort).sync().channel(); 
-            logger.info("启动tcp服务器端口: " + NettyConfiguration.nettyPort);
+        	ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+        	Map map = new HashMap();
+        	map.clear();
+     		map.put("systemCode", new ParamMatcher("netty_server_port"));
+        	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,map,true);//系统变量得到netty_server_port
+        	String port = TblSystemVar.getSystemValue();
+        	Integer nettyPort =  Integer.parseInt(port);
+            //Channel channel = bootstrap.bind(NettyConfiguration.nettyPort).sync().channel(); 
+        	Channel channel = bootstrap.bind(nettyPort).sync().channel(); 
+            //logger.info("启动tcp服务器端口: " + NettyConfiguration.nettyPort);
+        	logger.info("启动tcp服务器端口: " + nettyPort);
             // 这行必须要
             channel.closeFuture().sync();
         } catch (InterruptedException e) {
