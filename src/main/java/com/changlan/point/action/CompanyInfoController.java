@@ -33,16 +33,19 @@ public class CompanyInfoController extends BaseController{
 	@Autowired
 	private ICompanyInfoService companyInfoService;
 	
-	//@RequestMapping("/list")
-	//public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
+	@RequestMapping("/listTree")
+	public ResponseEntity<Object>  lineList(TblCompanyEntity company) throws Exception { 
 		//List<CompanyDetail> list = companyInfoService.companyList(company);
-		//List<CompanyVo> result = new ArrayList<CompanyVo>();
+		List<TblCompanyEntity> list = companyInfoService.getAll(company.getCompanyId());
+		List<CompanyVo> result = new ArrayList<CompanyVo>();
 		//for(CompanyDetail detail : list) {
+		for(TblCompanyEntity detail : list) {
 			//CompanyVo vo = new CompanyVo(detail.getCompany());
-			//result.add(vo);
-		//}
-		//return success(result);
-	//}
+			CompanyVo vo = new CompanyVo(detail);
+			result.add(vo);
+		}
+		return success(result);
+	}
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  lineList(Integer companyId) throws Exception { 
