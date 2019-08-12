@@ -663,11 +663,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
-		/*
-		 * TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
-		 * if(currentUser!=null) {
-		 * entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 }
-		 */
+		
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		if(currentUser!=null) {
+			  entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 
+		}
+		 
 		entity.setPointName(commandDefault.getPointName());
 		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
 		entity.setSendCommandId(commandDefault.getSendCommandId()); //发送的默认指令Id
@@ -695,6 +696,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	public TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
+		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		if(currentUser!=null) {
+			  entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 
+		}		
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
 		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别
 		entity.setSendCommandId(commandDefault.getSendCommandId()); //发送的默认指令Id
