@@ -33,6 +33,12 @@ public class TblSystemVarEntity implements Serializable {
 
 	@Column(name="RECORD_USER")
 	private String recordUser; //用户id
+	
+	@Column(name="DATA_TYPE")
+	private String dataType;//数据类型
+	
+	@Column(name="DEFAULT_VALUE")
+	private String defaultValue;//数据类型
 
 	public Integer getSystemId() {
 		return systemId;
@@ -72,6 +78,23 @@ public class TblSystemVarEntity implements Serializable {
 
 	public void setRecordUser(String recordUser) {
 		this.recordUser = recordUser;
-	}			
+	}
 
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}			
+    
+	
 }

@@ -66,6 +66,14 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     @Column(name = "INDICATOR_CATEGORY"  )
     private Integer indicatorCategory; //指标类别
     
+    /** COMMANDContent */
+    @Column(name = "PREVIOUS_COMMAND_CONTENT"   )
+    private String previousCommandContent;
+    
+    /** COMMANDName */
+    @Column(name = "PREVIOUS_COMMAND_NAME"  )
+    private String previousCommandName;
+    
     @Transient
    	private String  pointName;
     @Transient
@@ -159,8 +167,21 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 		this.commandCategoryName = commandCategoryName;
 	}
 
-	
-	
+	public String getPreviousCommandContent() {
+		return previousCommandContent;
+	}
+
+	public void setPreviousCommandContent(String previousCommandContent) {
+		this.previousCommandContent = previousCommandContent;
+	}
+
+	public String getPreviousCommandName() {
+		return previousCommandName;
+	}
+
+	public void setPreviousCommandName(String previousCommandName) {
+		this.previousCommandName = previousCommandName;
+	}
 
   
 }

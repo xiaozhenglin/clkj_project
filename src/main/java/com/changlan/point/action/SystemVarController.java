@@ -77,30 +77,7 @@ public class SystemVarController extends BaseController{
 		//tblSystemVar.setSystemId(4);
 		//tblSystemVar.setSystemCode("redirect_url");
 		//tblSystemVar.setSystemValue("管理后台");
-		if(tblSystemVar.getSystemCode().equals("language")) {   //设置语言
-			if(tblSystemVar.getSystemValue()!=null) {
-				if(tblSystemVar.getSystemValue().equals(LanguageType.CHINESE.getName())){  //中文
-					tblSystemVar.setSystemValue(LanguageType.CHINESE.toString());
-				}
-				if(tblSystemVar.getSystemValue().equals(LanguageType.ENGLISH.getName())){  //英文
-					tblSystemVar.setSystemValue(LanguageType.ENGLISH.toString());
-				}
-			}
-		}
 		
-		if(tblSystemVar.getSystemCode().equals("redirect_url")) {   //设置登录默认跳转的页面
-			if(tblSystemVar.getSystemCode()!=null) {
-				if(tblSystemVar.getSystemValue().equals(RedirectType.MANAGER_BACK_GROUD.getCode())){    //管理后台
-					tblSystemVar.setSystemValue(RedirectType.MANAGER_BACK_GROUD.toString());
-				}
-				if(tblSystemVar.getSystemValue().equals(RedirectType.MONITOR_SCREEN.getCode())){    //监控大屏
-					tblSystemVar.setSystemValue(RedirectType.MONITOR_SCREEN.toString());
-				}
-				if(tblSystemVar.getSystemValue().equals(RedirectType.MONITOR_CENTER.getCode())){   //监控中心
-					tblSystemVar.setSystemValue(RedirectType.MONITOR_CENTER.toString());
-				}
-			}
-		}
 				
 		TblSystemVarEntity update = (TblSystemVarEntity) crudService.update(tblSystemVar,true); 
 		if(update ==null) {

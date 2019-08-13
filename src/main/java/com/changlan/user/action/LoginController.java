@@ -101,13 +101,13 @@ public class LoginController extends BaseController{
 		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
     	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.get(4,TblSystemVarEntity.class,true);
     	String url = TblSystemVar.getSystemValue();
-    	if(RedirectType.MANAGER_BACK_GROUD.toString().equals(url)){  //管理后台
+    	if(RedirectType.MANAGER_BACK_GROUD.getCode().equals(url)){  //管理后台
     		user.setRedirctUrl(RedirectType.MANAGER_BACK_GROUD.getUrl());
     	}
-    	if(RedirectType.MONITOR_SCREEN.toString().equals(url)){    //监控大屏
+    	if(RedirectType.MONITOR_SCREEN.getCode().equals(url)){    //监控大屏
     		user.setRedirctUrl(RedirectType.MONITOR_SCREEN.getUrl());
     	}
-    	if(RedirectType.MONITOR_CENTER.toString().equals(url)){   //监控中心
+    	if(RedirectType.MONITOR_CENTER.getCode().equals(url)){   //监控中心
     		user.setRedirctUrl(RedirectType.MONITOR_CENTER.getUrl());
     	}
 		addUserInfoToSession(user);
