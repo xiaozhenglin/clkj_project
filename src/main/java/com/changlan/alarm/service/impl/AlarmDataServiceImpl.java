@@ -96,11 +96,12 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 			map.put("alarmDate", new ParamMatcher(entity.getBegin(),entity.getEnd()));
 		}
 		if(StringUtil.isNotEmpty(entity.getDownStatus())   ) {
-			if(entity.getDownStatus().equals(AlarmDownType.DOWN.toString())) {
-				map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
-			}else {
-				map.put("downStatus", new ParamMatcher(MatcheType.NOT_EQUALS,AlarmDownType.DOWN.toString()));
-			}
+//			if(entity.getDownStatus().equals(AlarmDownType.DOWN.toString())) {
+//				map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
+//			}else {
+//				map.put("downStatus", new ParamMatcher(MatcheType.NOT_EQUALS,AlarmDownType.DOWN.toString()));
+//			}
+			map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
 		}
 		Page datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true, pageable);
 		
