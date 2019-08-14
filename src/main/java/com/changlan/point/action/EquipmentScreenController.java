@@ -267,7 +267,7 @@ public class EquipmentScreenController extends BaseController {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				TblIndicatorValueEntity find = (TblIndicatorValueEntity)crudService.get(indicatorId,TblIndicatorValueEntity.class,true);
 				if(find.getName().indexOf("DST")>-1) {
-					List<TemperatureDtsDataDetail> listTemperatureData = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId()); 
+					List<TemperatureDtsDataDetail> listTemperatureData = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId(),null); 
 					CommonDataTableVO vo = new CommonDataTableVO();
 					CommonDataTableVO value = vo.CommonTemperatureDSTDataTableVO(indicatorId, listTemperatureData);
 					result.add(value);

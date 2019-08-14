@@ -13,6 +13,7 @@ import com.changlan.common.util.SqlUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.other.entity.PartialDischargeEntity;
 import com.changlan.point.dao.IMonitorScreenDao;
+import com.changlan.point.entity.AppCountEntity;
 import com.changlan.point.entity.LineMonitorCountEntity;
 import com.changlan.point.entity.PointCountEntity;
 import com.changlan.point.entity.ScreenPointEntity;
@@ -99,6 +100,40 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 	}
 
 	
+	@Override
+	public List<AppCountEntity> queryBack(ScreenQuery query) {		
+		em.clear();		
+		String paramQuery = "";
+		if(query.getPointId()!=null) {
+			 paramQuery = " and  point_id = "+ query.getPointId();
+		}
+		if(query.getLineId()!=null) {
+			 paramQuery = " and  line_id = "+ query.getLineId();
+		}
+		if(query.getChannelId()!=null) {
+			 paramQuery = " and  channel_id = "+ query.getChannelId();
+		}
+		String sql =" SELECT * from ( "
+				+ "  ( select count(*) AS alarm_total from tbl_point_alam_data where 1=1  " +  paramQuery +   " )  AS alarm_total "
+				+"  ,( select count(*) AS alarm_deal from tbl_point_alam_data  where tbl_point_alam_data.down_status = 'DOWN' " +  paramQuery +  " )  AS alarm_deal "
+				+"  ,( select count(*) AS alarm_not_deal from tbl_point_alam_data  where tbl_point_alam_data.down_status != 'DOWN'  " + paramQuery +  " )  AS alarm_not_deal "
+				+"  ,( select count(*) AS point_total from  tbl_points where 1=1 " + paramQuery +  " )  AS point_total "
+				+"  ,( select count(*) AS point_online from  tbl_points  where STATUS!='OUT_CONNECT'  " + paramQuery +  " )  AS point_online "
+				+"  ,( select count(*) AS point_not_online from  tbl_points  where STATUS='OUT_CONNECT'  " + paramQuery + " )  AS point_not_online "				
+				+ " ,( select count(*) AS huanliu_points_total from tbl_points  where  POINT_CATAGORY_ID = 1) AS huanliu_points_total"
+				+ " ,( select count(*) AS jufang_points_total from tbl_points  where  POINT_CATAGORY_ID = 8)  AS jufang_points_total"
+				+ " ,( select count(*) AS guangqian_points_total from tbl_points  where  POINT_CATAGORY_ID = 9)  AS guangqian_points_total"
+				+ " ,( select count(*) AS line_total from tbl_lines)  AS line_total"
+				+ " ,( select count(*) AS line35_total from tbl_lines  where DIANYA_LEVEL ='35KV') AS line35_total"
+				+ " ,( select count(*) AS line110_total from tbl_lines  where DIANYA_LEVEL ='110KV') AS line110_total"
+				+ " ,( select count(*) AS line220_total from tbl_lines  where DIANYA_LEVEL ='220KV') AS line220_total"
+				+ " ,( select count(*) AS channel_total from tbl_company_channel )  AS channel_total"
+				+ " ,( select count(*) AS shipin_total from tbl_company_channel where  find_in_set('4', MONITOR_IDS) ) AS shipin_total "
+				+ " ,(  select count(*) AS jingai_total from tbl_company_channel where  find_in_set('1', MONITOR_IDS) ) AS jingai_total"
+				+ " ,(  select count(*) AS huanjing_total from tbl_company_channel where  find_in_set('3', MONITOR_IDS))  AS huanjing_total" + ") ";
+		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),AppCountEntity.class);
+		return createNativeQuery.getResultList(); 
+	}
 	
 
 }

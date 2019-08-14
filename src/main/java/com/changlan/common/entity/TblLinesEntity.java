@@ -89,6 +89,9 @@ public class TblLinesEntity implements java.io.Serializable {
     @Column(name = "PICTURL_ADDRESS"   )
     private String picture_address;
     
+    @Column(name = "DIANYA_LEVEL"   )
+    private String dianyaLever; //电压等级
+    
     /**
      * 获取lineId
      * 
@@ -281,6 +284,15 @@ public class TblLinesEntity implements java.io.Serializable {
 	public void setPicture_address(String picture_address) {
 		this.picture_address = picture_address;
 	}
-    
-        
+
+	public String getDianyaLever() {
+		return dianyaLever;
+	}
+
+	public void setDianyaLever(String dianyaLever) {
+		this.dianyaLever = dianyaLever;
+	}
+
+	
+    	        
 }

@@ -5,8 +5,10 @@ public class ScreenQuery {
 	private String pointName;
 	private Integer LineId;
 	private Integer pointId;
+	private Integer channelId;
 	private String pointNameOrLineName;
 	private Integer isCorner;
+	private String dianyaLever;
 
 	public Long begin;
 	public Long end;
@@ -60,6 +62,19 @@ public class ScreenQuery {
 	public void setIsCorner(Integer isCorner) {
 		this.isCorner = isCorner;
 	}
+	public Integer getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
+	public String getDianyaLever() {
+		return dianyaLever;
+	}
+	public void setDianyaLever(String dianyaLever) {
+		this.dianyaLever = dianyaLever;
+	}
+	
 	
 	
 }

@@ -3,6 +3,7 @@ package com.changlan.point.dao;
 
 import java.util.List;
 
+import com.changlan.point.entity.AppCountEntity;
 import com.changlan.point.entity.LineMonitorCountEntity;
 import com.changlan.point.entity.PointCountEntity;
 import com.changlan.point.entity.ScreenPointEntity;
@@ -16,4 +17,5 @@ public interface IMonitorScreenDao {
 	
 	List<LineMonitorCountEntity> queryLine(ScreenQuery query);
 
+    List<AppCountEntity> queryBack(ScreenQuery query);
 }

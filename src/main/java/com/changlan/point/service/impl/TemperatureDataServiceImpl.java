@@ -28,6 +28,7 @@ import com.changlan.common.util.StringUtil;
 import com.changlan.point.dao.ITemperatureDataDao;
 import com.changlan.point.pojo.TemperatureDataDetail;
 import com.changlan.point.pojo.TemperatureDtsDataDetail;
+import com.changlan.point.pojo.TemperatureDtsQuery;
 import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.ITemperatureDataService;
 
@@ -137,9 +138,9 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 	}
 	
 	@Override
-	public List<TemperatureDtsDataDetail> getDtsTable(Date begin, Date end, Integer indicator, Integer pointId){
+	public List<TemperatureDtsDataDetail> getDtsTable(Date begin, Date end, Integer indicator, Integer pointId,Integer refPointDataId){
 		List<TemperatureDtsDataDetail> result = new ArrayList<TemperatureDtsDataDetail>();
-		List<TblTemperatureDTSDataEntity> list = temperatureDataDao.getDtsTableData(begin,end,indicator,pointId); 
+		List<TblTemperatureDTSDataEntity> list = temperatureDataDao.getDtsTableData(begin,end,indicator,pointId,refPointDataId); 
 		
 		//封装信息
 		if(!ListUtil.isEmpty(list)) {
@@ -151,6 +152,12 @@ public class TemperatureDataServiceImpl implements ITemperatureDataService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<TblTemperatureDTSDataEntity> table(TemperatureDtsQuery query) {
+		List<TblTemperatureDTSDataEntity> list = temperatureDataDao.Table(query); 
+		return list;
 	}
 	
 

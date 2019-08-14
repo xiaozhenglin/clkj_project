@@ -9,6 +9,7 @@ public class TemperatureDataQuery {
 	private Integer categroryId;//指标类别
 	private String indicatorIds;
 	private Integer pointId;
+	private Integer refPointDataId;
 	
 	public Long getBegin() {
 		return begin;
@@ -40,5 +41,12 @@ public class TemperatureDataQuery {
 	public void setPointId(Integer pointId) {
 		this.pointId = pointId;
 	}
-
+	public Integer getRefPointDataId() {
+		return refPointDataId;
+	}
+	public void setRefPointDataId(Integer refPointDataId) {
+		this.refPointDataId = refPointDataId;
+	}
+    
+	
 }

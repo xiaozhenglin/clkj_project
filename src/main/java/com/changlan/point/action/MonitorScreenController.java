@@ -17,6 +17,7 @@ import com.changlan.common.util.ListUtil;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.other.pojo.PartialDischargeQuery;
 import com.changlan.point.dao.IMonitorScreenDao;
+import com.changlan.point.entity.AppCountEntity;
 import com.changlan.point.entity.LineMonitorCountEntity;
 import com.changlan.point.entity.PointCountEntity;
 import com.changlan.point.entity.ScreenPointEntity;
@@ -82,4 +83,10 @@ public class MonitorScreenController extends BaseController {
 		return success( new LineMonitorCountEntity());
 	}
 	
+	@RequestMapping("/queryBack") 
+	public ResponseEntity<Object>  queryBack(ScreenQuery query) {
+		List<AppCountEntity> list = monitorScreenDao.queryBack(query); 
+		
+		return success( list);
+	}
 }

@@ -15,22 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.changlan.common.action.BaseController;
-import com.changlan.common.entity.TblAlarmDownRecordEntity;
-import com.changlan.common.entity.TblPoinDataEntity;
+
 import com.changlan.common.entity.TblTemperatureDTSDataEntity;
-import com.changlan.common.entity.TblTemperatureDataEntity;
+
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.indicator.service.IIndicatoryValueService;
 
-import com.changlan.point.pojo.PointDataDetail;
-import com.changlan.point.pojo.PointDataQuery;
-import com.changlan.point.pojo.PointQuery;
+
 import com.changlan.point.pojo.TemperatureDataDetail;
 import com.changlan.point.pojo.TemperatureDataQuery;
 import com.changlan.point.pojo.TemperatureDtsDataDetail;
+import com.changlan.point.pojo.TemperatureDtsQuery;
 import com.changlan.point.pojo.TemperatureQuery;
 import com.changlan.point.service.IPointCategoryService;
 import com.changlan.point.service.ITemperatureDataService;
@@ -39,6 +37,7 @@ import com.changlan.point.vo.PoinDataVo;
 import com.changlan.point.vo.TemperatureDataDtsTableVO;
 import com.changlan.point.vo.TemperatureDataTableVO;
 import com.changlan.point.vo.TemperatureDataVo;
+import com.changlan.point.vo.TemperatureDtsDataVo;
 import com.changlan.user.pojo.LoginUser;
 
 
@@ -58,6 +57,38 @@ public class TemperatureController extends BaseController{
 	@Autowired
 	private IPointCategoryService categoryService;
 	
+	public ICrudService getCrudService() {
+		return crudService;
+	}
+
+	public void setCrudService(ICrudService crudService) {
+		this.crudService = crudService;
+	}
+
+	public ITemperatureDataService getTemperatureDataService() {
+		return temperatureDataService;
+	}
+
+	public void setTemperatureDataService(ITemperatureDataService temperatureDataService) {
+		this.temperatureDataService = temperatureDataService;
+	}
+
+	public IIndicatoryValueService getIndicatorValueService() {
+		return indicatorValueService;
+	}
+
+	public void setIndicatorValueService(IIndicatoryValueService indicatorValueService) {
+		this.indicatorValueService = indicatorValueService;
+	}
+
+	public IPointCategoryService getCategoryService() {
+		return categoryService;
+	}
+
+	public void setCategoryService(IPointCategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
+
 	//非数据图表使用数据
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(TemperatureQuery query) {
@@ -69,6 +100,13 @@ public class TemperatureController extends BaseController{
 		}
 		return success(new PageImpl(result, getPage(), pointDatas.getTotalElements()));
 	}
+	
+	@RequestMapping("/listTableDts") 
+	public ResponseEntity<Object>  listTableDts(TemperatureDtsQuery query) {		
+		List<TblTemperatureDTSDataEntity> list = temperatureDataService.table(query); 
+		return success(list);
+	}
+	
 	
 	//数据图表
 		@RequestMapping("/table") 
@@ -105,7 +143,7 @@ public class TemperatureController extends BaseController{
 			//遍历 指标
 			for(Integer indicatorId : indicators) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
-				List<TemperatureDtsDataDetail> list = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId()); 
+				List<TemperatureDtsDataDetail> list = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId(),query.getRefPointDataId()); 
 				TemperatureDataDtsTableVO vo = new TemperatureDataDtsTableVO(indicatorId,list);
 				result.add(vo);
 			}
