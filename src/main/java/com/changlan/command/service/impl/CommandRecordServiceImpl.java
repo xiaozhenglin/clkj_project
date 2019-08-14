@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.changlan.command.dao.ICommandRecordDao;
 import com.changlan.command.pojo.CommandProtolDetail;
 import com.changlan.command.pojo.CommandRecordDetail;
+import com.changlan.command.pojo.ContainSendCommands;
 import com.changlan.command.pojo.ProtocolInfo;
 import com.changlan.command.service.ICommandDefaultService;
 import com.changlan.command.service.ICommandRecordService;
@@ -182,12 +183,48 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    	}
 	  	}
 	  	
+	  	List<ContainSendCommands> containSendCommands = recordDetail.getContainSendCommands();
+	  	if(!ListUtil.isEmpty(containSendCommands)) {
+	  		for(ContainSendCommands sendCommand : containSendCommands) {
+	  			//String protocolId = sendCommand.getProtocolId();
+	  			//String sendContent = sendCommand.getCommandContent();
+	  			TblPointsEntity tblpoint = (TblPointsEntity)crudService.get(sendCommand.getPointId(), TblPointsEntity.class, true);
+	  			TblPointSendCommandEntity  tblPointSendCommand = (TblPointSendCommandEntity)crudService.get(sendCommand.getSendCommandId(), TblPointsEntity.class, true);
+	  			if(!tblPointSendCommand.getSystem_start().contentEquals("yes")) {
+	  				saveAndSubSend(tblpoint,tblPointSendCommand,sendCommand);
+	  			}else {
+	  				try {
+						Thread.sleep(sendCommand.getIntervalTime());
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	  			}
+	  		}
+	  	}
 	  	
 	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
 	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault(),deviceDataValue);
 	  	}
 		return result;
 	}
+	
+	private void saveAndSubSend(TblPointsEntity point, TblPointSendCommandEntity  data, ContainSendCommands sendCommand) { 
+		
+		data.setSystem_start("yes");
+		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
+		System.out.println(update.getSendCommandId());
+		
+		//保存记录 并加锁
+		TblCommandRecordEntity record = updateServerRecord(update,point.getPointRegistPackage()); 
+		//执行发送
+		try {
+			nettyService.serverSendMessage(point.getPointRegistPackage(), update.getCommandContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	
     
 	private DeviceData saveDeviceData(String value, TblPointsEntity point,TblCommandProtocolEntity protocol,TblCommandRecordEntity record) {
 		DeviceData entity = new DeviceData(); 
@@ -597,6 +634,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	private void saveAndSend(TblPointsEntity point, String sendContent) { 
 		TblPointSendCommandEntity data = new TblPointSendCommandEntity();
+		data.setSystem_start("yes");
 		data.setCommandCatagoryId(7);
 		data.setCommandContent(sendContent);
 		data.setCommandName("获取幅值相位");

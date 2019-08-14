@@ -13,4 +13,5 @@ public interface ICommandDefaultService {
 
 	List<CommandDefaultDetail> commandList(TblPointSendCommandEntity command);   
  
+	List<TblPointSendCommandEntity> commandRefList(TblPointSendCommandEntity command);
 }

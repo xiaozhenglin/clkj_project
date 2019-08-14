@@ -20,12 +20,14 @@ public class CommandDefaultDetail {
 	private List<ProtocolInfo> currentDataProtocol;  //当前解析数据的协议
 	private TblPointsEntity  point ;  //一个监控点
 	private TblCommandCategoryEntity category; // 指令类别
+	private List<ContainSendCommands> containSendCommands;
 	
 	public CommandDefaultDetail(TblPointSendCommandEntity commandDefault) {
 		this.commandDefault =commandDefault;
 		this.currentDataProtocol = getDataProtocol(commandDefault);
 		this.category = getCategory(commandDefault.getCommandCatagoryId());
 		this.point = getPoint(commandDefault.getPointId());
+		this.containSendCommands = getSendCommands(commandDefault);
 //		指标类别this.indicatorCategory = getIndicatorCategory(commandDefault.getIndicatorCategory());
 	}
 	
@@ -45,6 +47,36 @@ public class CommandDefaultDetail {
 			TblCommandProtocolEntity entity = (TblCommandProtocolEntity)crudService.get(protocolId, TblCommandProtocolEntity.class, true);
 			ProtocolInfo info = new ProtocolInfo(entity);
 			list.add(info);
+		}
+		return list;
+	}
+	
+	private List<ContainSendCommands> getSendCommands(TblPointSendCommandEntity commandDefault) {
+		List<ContainSendCommands> list = new ArrayList<ContainSendCommands>();
+		ICrudService crudService = SpringUtil.getICrudService(); 
+		String sendCommandIds = commandDefault.getPreviousSendCommandIds(); 
+		if(StringUtil.isNotEmpty(sendCommandIds)) {
+			List<String> stringToList = StringUtil.stringToList(sendCommandIds); 
+			for(String str : stringToList) {
+				Integer sendCommandId = Integer.parseInt(str);
+				TblPointSendCommandEntity entity = (TblPointSendCommandEntity)crudService.get(sendCommandId, TblPointSendCommandEntity.class, true);
+				ContainSendCommands info = new ContainSendCommands();
+				info.setCommandContent(entity.getCommandContent());
+				info.setSendCommandId(entity.getSendCommandId());
+				info.setCommandName(entity.getCommandName());
+				info.setPointId(entity.getPointId());
+				info.setProtocolId(entity.getProtocolId());
+				if(StringUtil.isNotEmpty(entity.getSystem_start())) {
+					info.setSystem_start(entity.getSystem_start());
+				}
+				if(entity.getIntervalTime()!=null) {
+					info.setIntervalTime(entity.getIntervalTime());
+				}
+				if(StringUtil.isNotEmpty(entity.getIs_controller())) {
+					info.setIs_controller(entity.getIs_controller());
+				}
+				list.add(info);
+			}
 		}
 		return list;
 	}
@@ -118,6 +150,14 @@ public class CommandDefaultDetail {
 		this.point = point;
 	}
 
+	public List<ContainSendCommands> getContainSendCommands() {
+		return containSendCommands;
+	}
+
+	public void setContainSendCommands(List<ContainSendCommands> containSendCommands) {
+		this.containSendCommands = containSendCommands;
+	}
+
 //	public TblIndicatorCategoriesEntity getIndicatorCategory() {
 //		return indicatorCategory;
 //	}
@@ -125,6 +165,7 @@ public class CommandDefaultDetail {
 //	public void setIndicatorCategory(TblIndicatorCategoriesEntity indicatorCategory) {
 //		this.indicatorCategory = indicatorCategory;
 //	}
+	
 	
 	
 }

@@ -15,6 +15,7 @@ public class ChannelVO {
 	
 	private Integer channelId;
 	private String  title;
+	private String  easy_vedio_url;
 	private List<MonitorSystemVO> MonitorSystemVOs = new ArrayList<MonitorSystemVO>(); //三级包含多条线路信息
 	  
 	public ChannelVO() {
@@ -24,8 +25,9 @@ public class ChannelVO {
 	public ChannelVO(TblCompanyChannelEntity entity) { 
 		this.channelId = entity.getChannelId();
 		this.title = entity.getName();
-		
-		  List<TblMonitorSystemEntity> list = getMonitorSystem();
+		this.easy_vedio_url = entity.getEasy_vedio_url();
+		String monitorIds = entity.getMonitor_ids();
+		  List<TblMonitorSystemEntity> list = getMonitorSystem(monitorIds);
 		  for(TblMonitorSystemEntity monitor : list)
 		  {
 			  MonitorSystemVO VO = new MonitorSystemVO(monitor);
@@ -33,12 +35,19 @@ public class ChannelVO {
 		 
 	}
 
-	private List<TblMonitorSystemEntity> getMonitorSystem() {
+	private List<TblMonitorSystemEntity> getMonitorSystem(String monitorIds) {
 		IMonitorSystemService service = SpringUtil.getBean(IMonitorSystemService.class);
-		TblMonitorSystemEntity entity = new TblMonitorSystemEntity();
+		String [] monitorArray = monitorIds.split(",");
 		//entity.setChannelId(channelId);
-		List<TblMonitorSystemEntity> all = service.getAll(entity); 
-		return all;
+		List<TblMonitorSystemEntity> list = new ArrayList<TblMonitorSystemEntity>();
+		list.clear();
+		for(String monitor : monitorArray) {		
+			TblMonitorSystemEntity entity = new TblMonitorSystemEntity();
+			entity.setMonitorId(Integer.parseInt(monitor));
+			List<TblMonitorSystemEntity> all = service.getAll(entity); 
+			list.add(all.get(0));
+		}
+		return list;
 	}
 
 	public String getTitle() {
@@ -61,6 +70,15 @@ public class ChannelVO {
 
 	public void setMonitorSystemVOs(List<MonitorSystemVO> monitorSystemVOs) {
 		MonitorSystemVOs = monitorSystemVOs;
+	}
+
+	public String getEasy_vedio_url() {
+		return easy_vedio_url;
+	}
+
+	public void setEasy_vedio_url(String easy_vedio_url) {
+		this.easy_vedio_url = easy_vedio_url;
 	}	  
-	  
+	 
+	
 }

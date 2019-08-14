@@ -15,6 +15,7 @@ import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.StringUtil;
 
 @Service
 public class CommandDefaultServiceImpl implements ICommandDefaultService {
@@ -73,6 +74,41 @@ public class CommandDefaultServiceImpl implements ICommandDefaultService {
 			TblPointSendCommandEntity entity = (TblPointSendCommandEntity)o;
 			CommandDefaultDetail detail = new CommandDefaultDetail(entity);
 			result.add(detail);
+		}
+		return result;
+	}
+	
+	@Override
+	public List<TblPointSendCommandEntity> commandRefList(TblPointSendCommandEntity command) {
+		List<TblPointSendCommandEntity> result = new ArrayList<TblPointSendCommandEntity>();
+		result.clear();
+		String sendCommandIds = command.getPreviousSendCommandIds(); 
+		if(StringUtil.isNotEmpty(sendCommandIds)) {
+			List<String> stringToList = StringUtil.stringToList(sendCommandIds); 
+			for(String str : stringToList) {
+				Map map = new HashMap();
+				if(command !=null) {
+					if(StringUtil.isNotEmpty(str)){
+						map.put("sendCommandId", new ParamMatcher(Integer.parseInt(str)));
+					}
+					if(command.getIndicatorCategory()!=null) {
+						map.put("indicatorCategory", new ParamMatcher(command.getIndicatorCategory()));
+					}
+					if(command.getPointId()!=null) {
+						map.put("pointId", new ParamMatcher(command.getPointId()));
+					}
+					if(command.getCommandCatagoryId()!=null) {
+						map.put("commandCatagoryId", new ParamMatcher(command.getCommandCatagoryId()));
+					}
+				}
+				List<Object> all = crudService.findByMoreFiled(TblPointSendCommandEntity.class, map, true);
+				//封装信息
+				for(Object o : all ) {
+					TblPointSendCommandEntity entity = (TblPointSendCommandEntity)o;
+					result.add(entity);
+				}
+			}
+			
 		}
 		return result;
 	}

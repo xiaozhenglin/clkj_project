@@ -74,6 +74,16 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     @Column(name = "PREVIOUS_COMMAND_NAME"  )
     private String previousCommandName;
     
+    @Column(name = "PREVIOUS_SEND_COMMAND_IDS"  )
+    private String previousSendCommandIds;
+  
+    
+    @Column(name = "SYSTEM_START"  )
+    private String system_start;
+    
+    @Column(name = "IS_CONTROLLER"  )
+    private String is_controller;
+    
     @Transient
    	private String  pointName;
     @Transient
@@ -183,5 +193,29 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 		this.previousCommandName = previousCommandName;
 	}
 
+	public String getPreviousSendCommandIds() {
+		return previousSendCommandIds;
+	}
+
+	public void setPreviousSendCommandIds(String previousSendCommandIds) {
+		this.previousSendCommandIds = previousSendCommandIds;
+	}
+
+	public String getSystem_start() {
+		return system_start;
+	}
+
+	public void setSystem_start(String system_start) {
+		this.system_start = system_start;
+	}
+
+	public String getIs_controller() {
+		return is_controller;
+	}
+
+	public void setIs_controller(String is_controller) {
+		this.is_controller = is_controller;
+	}
+	
   
 }

@@ -58,6 +58,15 @@ public class CommandDefaultSendController extends BaseController{
 		return success(result);
 	}
 	
+	@RequestMapping("/listDefaultDetail")
+	public ResponseEntity<Object>  listDefaultDetail(TblPointSendCommandEntity command) {
+		//command.setPreviousSendCommandIds("1,2,3");
+		List<TblPointSendCommandEntity> list = commandDefaultService.commandRefList(command);		
+		return success(list);
+	}
+	
+	
+	
 	@RequestMapping("/delete")
 	public ResponseEntity<Object>  delete(TblPointSendCommandEntity entity) throws MyDefineException { 
 		//entity.setSendCommandId(74);
