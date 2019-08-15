@@ -27,7 +27,9 @@ public class UserOperationVO {
 		TblAdminUserEntity user = object.getUser();
 		
 		this.userId = entity.getUserId();
-		this.userName = user.getName();
+		if(user!=null) {
+			this.userName = user.getName();
+		}
 		this.userOperationId = entity.getUserOperationId();
 		this.recordTime = entity.getRecordTime();
 		this.fromIp = entity.getFromIp();
