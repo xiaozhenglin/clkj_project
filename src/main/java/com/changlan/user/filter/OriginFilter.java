@@ -193,7 +193,7 @@ public class OriginFilter   implements Filter {
 
 	private boolean needVerifyUserPermission(String requestURI) { 
     	String notRequireAuthorityUrl = UserAuthorityUrlConfig.getNotRequireAuthorityUrl(); 
-    	if(notRequireAuthorityUrl.indexOf(requestURI) >-1 ) { 
+    	if(notRequireAuthorityUrl.toUpperCase().indexOf(requestURI.toUpperCase()) >-1 ) { 
     		return false;
     	}
 		return true;
