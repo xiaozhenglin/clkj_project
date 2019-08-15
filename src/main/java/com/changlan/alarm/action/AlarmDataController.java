@@ -55,7 +55,7 @@ public class AlarmDataController extends  BaseController{
 		return success(new PageImpl(result, getPage(), details.getTotalElements()));
 //		Page<TblAlarmDataDetail> details = alarmDataService.getPage(entity,getPage());
 //		return success(details);
-	}
+	} 
 	
 //	未加权限
 //	@RequestMapping("/info")
@@ -64,6 +64,19 @@ public class AlarmDataController extends  BaseController{
 //		return success(detail);
 //	}
 	
+	//修改为已读状态
+	@RequestMapping("/already/read") 
+	public ResponseEntity<Object>  read(TblPointAlamDataEntity entity) throws Exception { 
+		if(entity.getAlarmId()!=null) {
+			TblPointAlamDataEntity alarmData = (TblPointAlamDataEntity)crudService.get(entity.getAlarmId(), TblPointAlamDataEntity.class, true);
+			alarmData.setDownStatus(AlarmDownType.ALREADY_READ.toString());
+			Object update = crudService.update(alarmData, true);
+			return success(update);
+		}
+		return success(null); 
+	}
+	
+	 
 	//监控点数据报警进行处理记录
 	@RequestMapping("/down/record") 
 	public ResponseEntity<Object>  downRecord(TblAlarmDownRecordEntity entity) throws Exception { 
