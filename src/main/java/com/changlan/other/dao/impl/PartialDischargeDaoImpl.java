@@ -38,13 +38,13 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Object list(PartialDischargeQuery query) {
 		em.clear();
-		String sql ="select devicesettings.deviceId AS deviceId,channelsettings.channel_number AS channel_number,channelsettings.location AS location,realtimedata.amplitude AS amplitude,realtimedata.frequency AS frequency,realtimedata.energy AS energy,realtimedata.updatetime AS updatetime,realtimedata.alarm_amplitude_frequency AS alarm_amplitude_frequency, channelsettings.location_detail,devicesettings.point_id,tbl_points.POINT_NAME "
-				+ " from ((devicesettings join channelsettings on ((channelsettings.deviceSetting_id = devicesettings.id))) join realtimedata on((channelsettings.id = realtimedata.channelSettings_id)))"
-				+ " LEFT JOIN TBL_POINTS on  TBL_POINTS.POINT_ID = devicesettings.point_id "
+		String sql ="select DEVICESETTINGS.DEVICEID AS deviceId,CHANNELSETTINGS.CHANNEL_NUMBER AS channel_number,CHANNELSETTINGS.LOCATION AS location,REALTIMEDATA.AMPLITUDE AS amplitude,REALTIMEDATA.FREQUENCY AS frequency,REALTIMEDATA.ENERGY AS energy,REALTIMEDATA.UPDATETIME AS updatetime,REALTIMEDATA.ALARM_AMPLITUDE_FREQUENCY AS alarm_amplitude_frequency, CHANNELSETTINGS.LOCATION_DETAIL,DEVICESETTINGS.POINT_ID,TBL_POINTS.POINT_NAME "
+				+ " from ((DEVICESETTINGS join CHANNELSETTINGS on ((CHANNELSETTINGS.DEVICESETTING_ID = DEVICESETTINGS.ID))) join REALTIMEDATA on((CHANNELSETTINGS.ID = REALTIMEDATA.CHANNELSETTINGS_ID)))"
+				+ " LEFT JOIN TBL_POINTS on  TBL_POINTS.POINT_ID = DEVICESETTINGS.POINT_ID "
 				+ " WHERE 1=1 ";
 		if(query.getPointId()!=null) {
 			//因为是左连接，所以判断监控点名称是空值就不要。
-			sql +=" AND devicesettings.point_id ="+query.getPointId() + " AND TBL_POINTS.POINT_NAME IS NOT NULL ";
+			sql +=" AND DEVICESETTINGS.POINT_ID ="+query.getPointId() + " AND TBL_POINTS.POINT_NAME IS NOT NULL ";
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql.toString()),PartialDischargeEntity.class);
 		return createNativeQuery.getResultList(); 
@@ -53,16 +53,16 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Object table(PartialDischargeQuery query) {
 		em.clear();
-		String sql = "SELECT deviceData.* from deviceData INNER  JOIN channelSettings on deviceData.channelSettings_id = channelSettings.id WHERE 1=1 " ;
+		String sql = "SELECT DEVICEDATA.* from DEVICEDATA INNER  JOIN CHANNELSETTINGS on DEVICEDATA.CHANNELSETTINGS_ID = CHANNELSETTINGS.ID WHERE 1=1 " ;
 		if(query.getChannelSettings_id()!=null) {
-			sql+= " AND deviceData.channelSettings_id = "+query.getChannelSettings_id();
+			sql+= " AND DEVICEDATA.CHANNELSETTINGS_ID = "+query.getChannelSettings_id();
 		}
 		if(query.getPointId()!=null) {
-			sql+=" AND deviceData.POINT_ID = "+query.getPointId();
+			sql+=" AND DEVICEDATA.POINT_ID = "+query.getPointId();
 		}
 		
 		if(StringUtil.isNotEmpty(query.getRecord_id())) {
-			sql+=" AND deviceData.record_id = "+ "'" + query.getRecord_id() + "'";
+			sql+=" AND DEVICEDATA.RECORD_ID = "+ "'" + query.getRecord_id() + "'";
 		}
 //		if(query.getPointId()!=null) {
 //			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
@@ -70,9 +70,9 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 		if(query.getBegin()!=null && query.getEnd()!=null) {
 			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
 			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
-			sql+=" AND deviceData.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
+			sql+=" AND DEVICEDATA.CREATETIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
 		}
-		sql+= " ORDER BY deviceData.createtime DESC ";
+		sql+= " ORDER BY DEVICEDATA.CREATETIME DESC ";
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),DeviceData.class);
 		return createNativeQuery.getResultList();
 	}
@@ -80,18 +80,18 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Page<DeviceDataSpecial> table(PartialDischargeQuery query,Pageable page) {
 		em.clear();
-		String sql = "SELECT deviceDataSpecial.* from deviceDataSpecial  WHERE 1=1 " ;
+		String sql = "SELECT DEVICEDATASPECIAL.* FROM DEVICEDATASPECIAL  WHERE 1=1 " ;
 		/*
 		 * if(query.getChannelSettings_id()!=null) { sql+=
 		 * " AND deviceDataSpecial.channelSettings_id = "+query.getChannelSettings_id();
 		 * }
 		 */
 		if(query.getPointId()!=null) {
-			sql+=" AND deviceDataSpecial.POINT_ID = "+query.getPointId();
+			sql+=" AND DEVICEDATASPECIAL.POINT_ID = "+query.getPointId();
 		}
 		
 		if(StringUtil.isNotEmpty(query.getRecord_id())) {
-			sql+=" AND deviceDataSpecial.record_id = "+ "'" + query.getRecord_id() + "'";
+			sql+=" AND DEVICEDATASPECIAL.RECORD_ID = "+ "'" + query.getRecord_id() + "'";
 		}
 //		if(query.getPointId()!=null) {
 //			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
@@ -99,9 +99,9 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 		if(query.getBegin()!=null && query.getEnd()!=null) {
 			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
 			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
-			sql+=" AND deviceDataSpecial.createtime BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
+			sql+=" AND DEVICEDATASPECIAL.CREATETIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
 		}
-		sql+= " ORDER BY deviceDataSpecial.createtime DESC ";
+		sql+= " ORDER BY DEVICEDATASPECIAL.CREATETIME DESC ";
 		
 		Query nativeQuery = em.createNativeQuery(sql.toString(),DeviceDataSpecial.class);
 	       // nativeQuery = setParam(nativeQuery, param);
@@ -121,12 +121,12 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 	@Override
 	public Object channelSettingList(PartialDischargeQuery query) {
 		em.clear();
-		String sql = "SELECT channelSettings.*  from channelSettings " ;
+		String sql = "SELECT CHANNELSETTINGS.*  FROM CHANNELSETTINGS " ;
 		if(query.getPointId()!=null) {
-			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();
+			sql+=" INNER JOIN DEVICESETTINGS ON CHANNELSETTINGS.DEVICESETTING_ID = DEVICESETTINGS.ID AND DEVICESETTINGS.POINT_ID = "+query.getPointId();
 		}
 		if(query.getChannelSettings_id()!=null) {
-			sql+=" WHERE 1=1 AND channelSettings.id = "+query.getChannelSettings_id();
+			sql+=" WHERE 1=1 AND CHANNELSETTINGS.ID = "+query.getChannelSettings_id();
 		}
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),SimpleEntity.class);
 		return createNativeQuery.getResultList();

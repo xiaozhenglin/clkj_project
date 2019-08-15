@@ -20,16 +20,18 @@ import com.changlan.common.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="devicedatacoll")
+@Table(name="DEVICEDATACOLL")
 public class DeviceDataColl implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "POINT_DATA_ID", unique = true )
-    private Integer pointDataId;	
+    private Integer pointDataId;
+	
+	@Column(name="RECORD_ID")
 	private String record_id; //一个设备 其中的一个通道主键id
 		
 
-			
+	@Column(name="PHASE_NO")		
 	private String phase_no;  //A,B,C相位
 	
 	@Column(name = "RECORD_TIME", nullable = true)

@@ -33,7 +33,7 @@ public class PartDischargeDataDaoImpl implements IPartDischargeDataDao{
 	@Override
 	public List<DeviceDataColl> getTableData(Date begin, Date end,Integer indicatorId,Integer pointId) {
 		em.clear();
-		StringBuffer sql = new StringBuffer("SELECT * FROM devicedatacoll A WHERE A.VALUE IS NOT NULL  ");
+		StringBuffer sql = new StringBuffer("SELECT * FROM DEVICEDATACOLL A WHERE A.VALUE IS NOT NULL  ");
 		Map map = new HashMap();
 		if(indicatorId!=null) {
 			sql.append(" AND INDICATOR_ID = :indicatorId ");

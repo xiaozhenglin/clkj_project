@@ -20,24 +20,33 @@ import com.changlan.common.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="devicedata")
+@Table(name="DEVICEDATA")
 public class DeviceData implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="ID")
 	private Integer id;	
+	@Column(name="CHANNELSETTINGS_ID")
 	private Integer channelSettings_id; //一个设备 其中的一个通道主键id
+	@Column(name="AMPLITUDE")
 	private Float amplitude; //幅值
+	@Column(name="FREQUENCY")
 	private Integer frequency; //频次
+	@Column(name="ENERGY")
 	private Integer energy; //总能量
+	@Column(name="ALARM_AMPLITUDE")
 	private Integer alarm_amplitude; //幅值报警
+	@Column(name="ALARM_AMPLITUDE_FREQUENCY")
 	private Integer alarm_amplitude_frequency; //报警幅值频次  
+	@Column(name="CREATETIME")
 	private Date createtime; //创建时间
+	@Column(name="PHASE")
 	private Float phase; // 相位
 	@Column(name="POINT_ID")
 	private Integer pointId;
-	
+	@Column(name="PHASE_NO")
 	private String phase_no;
-	
+	@Column(name="RECORD_ID")
 	private String record_id;
 	@Transient	
 	private String pointName;//余数
