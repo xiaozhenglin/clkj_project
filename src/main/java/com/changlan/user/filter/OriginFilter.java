@@ -126,7 +126,7 @@ public class OriginFilter   implements Filter {
     	}
     	for(Object object : all) {
     		TblFunInfoEntity funInfo = (TblFunInfoEntity)object;
-    		if(funInfo.getAddress().indexOf(requestURI)>-1) {
+    		if(funInfo.getAddress().toUpperCase().indexOf(requestURI.toUpperCase())>-1) {
     			return true;
     		}
     	}
@@ -161,7 +161,7 @@ public class OriginFilter   implements Filter {
     	UserFunctionInfo findAll = service.findOne(user);  
     	List<TblFunInfoEntity> functions = findAll.getFunctions();
     	for(TblFunInfoEntity functionInfo : functions) {
-    		if(functionInfo.getAddress().indexOf(requestUrl)>-1) {
+    		if(functionInfo.getAddress().toUpperCase().indexOf(requestUrl.toUpperCase())>-1) {
     			return true;
     		}
     	}
