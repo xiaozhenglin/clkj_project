@@ -6,6 +6,7 @@ public class ScreenQuery {
 	private Integer LineId;
 	private Integer pointId;
 	private Integer channelId;
+	private String channelName;  //隧道名称
 	private String pointNameOrLineName;
 	private Integer isCorner;
 	private String dianyaLever;
@@ -74,6 +75,14 @@ public class ScreenQuery {
 	public void setDianyaLever(String dianyaLever) {
 		this.dianyaLever = dianyaLever;
 	}
+	public String getChannelName() {
+		return channelName;
+	}
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
+	
+	
 	
 	
 	

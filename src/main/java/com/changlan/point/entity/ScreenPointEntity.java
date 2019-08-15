@@ -18,6 +18,8 @@ public class ScreenPointEntity {
 	private Integer line_id;  
 	private String line_name;
 	
+	private String name;
+	
 	private String principal;
 	private String company;
 	private String phones;
@@ -159,7 +161,12 @@ public class ScreenPointEntity {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	
-
 		
 }
