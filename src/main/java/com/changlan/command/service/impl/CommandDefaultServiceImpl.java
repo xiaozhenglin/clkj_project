@@ -67,6 +67,9 @@ public class CommandDefaultServiceImpl implements ICommandDefaultService {
 			if(command.getCommandCatagoryId()!=null) {
 				map.put("commandCatagoryId", new ParamMatcher(command.getCommandCatagoryId()));
 			}
+			if(StringUtil.isNotEmpty(command.getIs_controller())) {
+				map.put("is_controller", new ParamMatcher(command.getIs_controller()));
+			}
 		}
 		List<Object> all = crudService.findByMoreFiled(TblPointSendCommandEntity.class, map, true);
 		//封装信息

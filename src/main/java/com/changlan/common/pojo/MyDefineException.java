@@ -19,6 +19,7 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.user.config.UserAuthorityUrlConfig;
 import com.changlan.user.constrant.UserModuleConst;
+import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserErrorType;
 import com.changlan.user.service.IUserOpertaionService;
 
@@ -95,7 +96,7 @@ public class MyDefineException extends Exception{
 			   	 }
 			   	 String curdName = tblFunInfo.getFun_category();
 			   	 TblUserOperationEntity userOperation = new TblUserOperationEntity();
-		   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
+		   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
 		   		 service.save(userOperation);
 		   	 }else {
 		   		 String funcName ="数据库菜单表未知";

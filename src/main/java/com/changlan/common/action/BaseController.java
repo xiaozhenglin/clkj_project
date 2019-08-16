@@ -180,7 +180,7 @@ public class BaseController {
 		   	 }
 		   	 String curdName = tblFunInfo.getFun_category();
 		   	 TblUserOperationEntity userOperation = new TblUserOperationEntity();
-	   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
+	   		 userOperation = new TblUserOperationEntity(null, new Date(), fromIp, LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
 	   		 service.save(userOperation);
 	   	 }else {
 	   		 String funcName ="数据库菜单表未知";

@@ -56,6 +56,7 @@ import com.changlan.other.entity.DeviceData;
 import com.changlan.other.entity.DeviceDataColl;
 import com.changlan.other.entity.DeviceDataSpecial;
 import com.changlan.point.service.IPointDefineService;
+import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
 
 @Service
@@ -183,15 +184,31 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    	}
 	  	}
 	  	
+	  	TblPointSendCommandEntity sendCommandDetail = recordDetail.getCommandDefault();
+	  	if(sendCommandDetail.getIs_controller().contentEquals("1")) {   //若为控制类指令 
+	  		 if(record.getCommandContent().contentEquals(record.getBackContent())) {   //控制指令内容和返回指令内容一致， 说明控制类指令起效果。
+	  			sendCommandDetail.setSystem_start("yes");  		  //成功控制	
+	  		 }else {
+	  			sendCommandDetail.setSystem_start("no"); 
+	  		 }
+	  		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(sendCommandDetail, true);
+	  	}
+	  	
 	  	List<ContainSendCommands> containSendCommands = recordDetail.getContainSendCommands();
 	  	if(!ListUtil.isEmpty(containSendCommands)) {
 	  		for(ContainSendCommands sendCommand : containSendCommands) {
 	  			//String protocolId = sendCommand.getProtocolId();
 	  			//String sendContent = sendCommand.getCommandContent();
 	  			TblPointsEntity tblpoint = (TblPointsEntity)crudService.get(sendCommand.getPointId(), TblPointsEntity.class, true);
-	  			TblPointSendCommandEntity  tblPointSendCommand = (TblPointSendCommandEntity)crudService.get(sendCommand.getSendCommandId(), TblPointsEntity.class, true);
+	  			TblPointSendCommandEntity  tblPointSendCommand = (TblPointSendCommandEntity)crudService.get(sendCommand.getSendCommandId(), TblPointSendCommandEntity.class, true);
 	  			if(!tblPointSendCommand.getSystem_start().contentEquals("yes")) {
 	  				saveAndSubSend(tblpoint,tblPointSendCommand,sendCommand);
+	  				try {
+						Thread.sleep(sendCommand.getIntervalTime());
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 	  			}else {
 	  				try {
 						Thread.sleep(sendCommand.getIntervalTime());
@@ -702,9 +719,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
 		
-		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		TblAdminUserEntity currentUser = LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME);  
 		if(currentUser!=null) {
-			  entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 
+			  entity.setAdminUserId(LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId());//记录操作人 
 		}
 		 
 		entity.setPointName(commandDefault.getPointName());
@@ -734,9 +751,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	public TblCommandRecordEntity updateClientRecord(TblPointSendCommandEntity commandDefault, String ip) {
 		//保存用户操作指令
 		TblCommandRecordEntity entity = new TblCommandRecordEntity();
-		TblAdminUserEntity currentUser = LoginUser.getCurrentUser();
+		TblAdminUserEntity currentUser = LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME);
 		if(currentUser!=null) {
-			  entity.setAdminUserId(LoginUser.getCurrentUser().getAdminUserId());//记录操作人 
+			  entity.setAdminUserId(LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId());//记录操作人 
 		}		
 		entity.setPointId(commandDefault.getPointId()); //设置监控点id
 		entity.setCommandCatagoryId(commandDefault.getCommandCatagoryId());  //指令类别

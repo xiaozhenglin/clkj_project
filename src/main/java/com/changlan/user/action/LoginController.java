@@ -120,6 +120,7 @@ public class LoginController extends BaseController{
 //		session.setMaxInactiveInterval(1*60);//设置无操作60秒后失效
 		session.setAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME,user);
 		LoginUser.map.put(user.getAdminUserId(), user);
+		LoginUser.map.put(UserModuleConst.USER_SESSION_ATTRIBUTENAME, user);
 	}
 
 	@RequestMapping("/logout")
