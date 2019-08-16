@@ -6,6 +6,7 @@ import java.util.List;
 import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblMonitorSystemEntity;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.service.ILineService;
@@ -30,7 +31,7 @@ public class ChannelVO {
 		  List<TblMonitorSystemEntity> list = getMonitorSystem(monitorIds);
 		  for(TblMonitorSystemEntity monitor : list)
 		  {
-			  MonitorSystemVO VO = new MonitorSystemVO(monitor);
+			  MonitorSystemVO VO = new MonitorSystemVO(monitor,channelId);
 			  MonitorSystemVOs.add(VO); }
 		 
 	}
@@ -45,7 +46,9 @@ public class ChannelVO {
 			TblMonitorSystemEntity entity = new TblMonitorSystemEntity();
 			entity.setMonitorId(Integer.parseInt(monitor));
 			List<TblMonitorSystemEntity> all = service.getAll(entity); 
-			list.add(all.get(0));
+			if(!ListUtil.isEmpty(all)) {
+				list.add(all.get(0));
+			}
 		}
 		return list;
 	}

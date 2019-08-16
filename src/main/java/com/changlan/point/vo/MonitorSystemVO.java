@@ -20,24 +20,43 @@ public class MonitorSystemVO {
 		
 	}
 	
-	public MonitorSystemVO(TblMonitorSystemEntity monitor) { 
+//	public MonitorSystemVO(TblMonitorSystemEntity monitor) { 
+//		this.monitorSystemId = monitor.getMonitorId();
+//		this.title = monitor.getName();
+//		List<LineDetail>  list = getLines(monitor.getMonitorId());
+//		for(LineDetail detail : list) {
+//			ChannelLineVO VO = new ChannelLineVO(detail);
+//			companyLinesVOs.add(VO);
+//		}
+//	}
+
+
+	public MonitorSystemVO(TblMonitorSystemEntity monitor, Integer channelId) { 
 		this.monitorSystemId = monitor.getMonitorId();
 		this.title = monitor.getName();
-		List<LineDetail>  list = getLines(monitor.getMonitorId());
+		List<LineDetail>  list = getLinesByMonitorIdAndChannelId(monitor.getMonitorId(),channelId);
 		for(LineDetail detail : list) {
 			ChannelLineVO VO = new ChannelLineVO(detail);
 			companyLinesVOs.add(VO);
 		}
 	}
 
-
-	private List<LineDetail> getLines(Integer monitorId) {
+	private List<LineDetail> getLinesByMonitorIdAndChannelId(Integer monitorId, Integer channelId) {
 		ILineService lineService = SpringUtil.getBean(ILineService.class);
 		TblLinesEntity entity = new TblLinesEntity();
 		entity.setMonitorId(monitorId);
+		entity.setChannelId(channelId);
 		List<LineDetail> all = lineService.getAll(entity); 
 		return all;
 	}
+
+//	private List<LineDetail> getLines(Integer monitorId) {
+//		ILineService lineService = SpringUtil.getBean(ILineService.class);
+//		TblLinesEntity entity = new TblLinesEntity();
+//		entity.setMonitorId(monitorId);
+//		List<LineDetail> all = lineService.getAll(entity); 
+//		return all;
+//	}
 
 	public Integer getMonitorSystemId() {
 		return monitorSystemId;

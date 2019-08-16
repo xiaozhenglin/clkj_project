@@ -64,6 +64,9 @@ public class LineServiceImpl implements ILineService{
 		if(StringUtil.isNotEmpty(entity.getLineName())) {
 			map.put("lineName", new ParamMatcher(MatcheType.LIKE,entity.getLineName()));
 		}
+		if(entity.getChannelId()!=null) {
+			map.put("channelId", new ParamMatcher(entity.getChannelId()));
+		}
 		List<Object> all =  crudService.findByMoreFiled(TblLinesEntity.class, map, true);
 		
 		//根据用户权限二次筛选  去除掉用户不能查看的线路

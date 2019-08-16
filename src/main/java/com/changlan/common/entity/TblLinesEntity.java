@@ -92,6 +92,8 @@ public class TblLinesEntity implements java.io.Serializable {
     @Column(name = "DIANYA_LEVEL"   )
     private String dianyaLever; //电压等级
     
+    @Column(name = "CHANNEL_ID"   )
+    private Integer channelId; //电压等级
     /**
      * 获取lineId
      * 
@@ -291,6 +293,14 @@ public class TblLinesEntity implements java.io.Serializable {
 
 	public void setDianyaLever(String dianyaLever) {
 		this.dianyaLever = dianyaLever;
+	}
+
+	public Integer getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
 	}
 
 	
