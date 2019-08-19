@@ -5,7 +5,7 @@ public enum AlarmDataType {
 	UP_LEVER_ALARM("上限报警"),
 	DOWN_LEVER_ELEARLY_ALARM("下限预警"),
 	DOWN_LEVER_ALARM("下限预警"),
-	ELEARLY_ALARM("预警"),
+	EARLY_ALARM("预警"),
 	ALARM("报警");
 	
 	private String name;

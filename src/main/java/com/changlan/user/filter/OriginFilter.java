@@ -151,7 +151,7 @@ public class OriginFilter   implements Filter {
     	 String isSuccess = "失败";
     	 String operationType = "越权";
     	 String curdName = tblFunInfo.getFun_category();
-		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, user.getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
+		 TblUserOperationEntity userOperation = new TblUserOperationEntity(null, new Date(), fromIp, LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId(), requestURI,funcName,isSuccess,operationType,curdName);
 		 service.save(userOperation);
 	}
 
