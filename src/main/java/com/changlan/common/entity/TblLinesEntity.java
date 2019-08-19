@@ -21,6 +21,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import com.changlan.point.pojo.LineStatus;
@@ -94,6 +96,13 @@ public class TblLinesEntity implements java.io.Serializable {
     
     @Column(name = "CHANNEL_ID"   )
     private Integer channelId; //电压等级
+    
+    @Column(name = "IS_CONTROL_LINE"   )
+    private String is_control_line; //是否作用于隧道
+    
+    @Transient
+    private String channelName;
+    
     /**
      * 获取lineId
      * 
@@ -118,6 +127,14 @@ public class TblLinesEntity implements java.io.Serializable {
 
 	public void setMonitorId(Integer monitorId) {
 		this.monitorId = monitorId;
+	}
+		
+	public String getIs_control_line() {
+		return is_control_line;
+	}
+
+	public void setIs_control_line(String is_control_line) {
+		this.is_control_line = is_control_line;
 	}
 
 	/**
@@ -303,6 +320,15 @@ public class TblLinesEntity implements java.io.Serializable {
 		this.channelId = channelId;
 	}
 
+	public String getChannelName() {
+		return channelName;
+	}
+
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
+
+	
 	
     	        
 }

@@ -62,6 +62,9 @@ public class AnalysisDataUtil {
 		case 9: 
 			//获取局放频次,能量,幅值全采集
 			return PartDischargeAnalysis(backContent,protocol);
+		case 10: 
+			//
+			return WaterHeigthAnalysis(backContent,protocol);
 		default:
 			break;
 		}
@@ -87,6 +90,31 @@ public class AnalysisDataUtil {
 			int value = new BigDecimal(decimalConvert).intValue(); 
 			//9.26
 			//Object ca = canculate(value,canculateRule); 
+			BigDecimal canculate = new BigDecimal(value); 
+			list.add(canculate);
+		}
+		return list;
+	}
+	
+	private static List<BigDecimal> WaterHeigthAnalysis(String backContent, TblCommandProtocolEntity protocol) {
+		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
+		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
+		Integer beginByte = protocol.getBeginByte(); //开始位置
+		Integer dataByte = protocol.getDataByte(); //结束位置
+		//解析数据
+		//下标值为位置数减去1   6   11-1=10
+		Integer begin = beginByte-1;
+		Integer end = dataByte -1;
+		if(begin<backContent.length()) {
+			//00 00 00 75  7-15
+			String channelValue = backContent.substring(begin, end); 
+			//1897
+			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
+			//1897
+			int value = new BigDecimal(decimalConvert).intValue(); 
+			//9.26
+			Object ca = canculate(value,canculateRule); 
 			BigDecimal canculate = new BigDecimal(value); 
 			list.add(canculate);
 		}

@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.configuration.UploadConfiguration;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblDvdEntity;
@@ -31,6 +34,7 @@ import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
@@ -70,6 +74,10 @@ public class LineController extends BaseController{
 //			uploadImg(entity.getLineId(),entity.getPicture_address());
 //		}
 		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
+				
+    	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
+    	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称
+    	
 //		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());
 			TblLinesEntity update = (TblLinesEntity)crudService.update(entity, true); 			

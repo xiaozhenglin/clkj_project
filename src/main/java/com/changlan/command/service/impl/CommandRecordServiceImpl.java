@@ -174,7 +174,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol,Integer.parseInt("0")); 
 		        				result.add(value);
 	        				}
-	        			}else if(categoryNmae.indexOf("模拟量")>-1){
+	        			}else if((categoryNmae.indexOf("模拟量")>-1)||((categoryNmae.indexOf("水泵")>-1))){
 	        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
 	        				result.add(saveData);
 	        			}

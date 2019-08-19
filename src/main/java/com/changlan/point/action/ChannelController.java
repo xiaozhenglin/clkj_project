@@ -1,7 +1,9 @@
 package com.changlan.point.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -14,9 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblAlarmRuleEntity;
 import com.changlan.common.entity.TblCompanyChannelEntity;
+import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblMonitorSystemEntity;
+import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
@@ -71,6 +76,15 @@ public class ChannelController extends BaseController{
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  companyGropList(TblCompanyChannelEntity entity) {
 		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);
+		for(TblCompanyChannelEntity channel:list) {
+			//String channelName = crudService.
+			ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+	    	Map map = new HashMap();
+	    	map.clear();
+	 		map.put("companyId", new ParamMatcher(channel.getCompanyId()));
+	 		TblCompanyEntity TblCompany  =  (TblCompanyEntity) crudService.findOneByMoreFiled(TblCompanyEntity.class,map,true);
+	 		channel.setCompanyName(TblCompany.getName());
+		}
 		return success(list);
 	}
 	

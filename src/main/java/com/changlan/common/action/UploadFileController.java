@@ -11,7 +11,9 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,9 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.changlan.common.configuration.UploadConfiguration;
+import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.LogFileDetail;
 import com.changlan.common.pojo.MyDefineException;
+import com.changlan.common.pojo.ParamMatcher;
+import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.FileUtil;
+import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
 import com.changlan.user.pojo.UserErrorType;
@@ -41,6 +47,8 @@ import com.changlan.user.pojo.UserErrorType;
 @RestController
 public class UploadFileController extends BaseController{
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	private  ICrudService crudService;
 
 //	@Autowired
 //	private  ResourceLoader resourceLoader;
@@ -54,7 +62,13 @@ public class UploadFileController extends BaseController{
 	public ResponseEntity<Object> uploadImg(MultipartFile file) throws Exception{
 		logger.info(file.getOriginalFilename()); 
 //		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
-		String newRealpath = UploadConfiguration.getUploadPath() + "/" + file.getOriginalFilename();
+		//String newRealpath = UploadConfiguration.getUploadPath() + "/" + file.getOriginalFilename();
+		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+    	Map map = new HashMap();
+    	map.clear();
+ 		map.put("systemCode", new ParamMatcher("fileUploadPath"));
+    	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,map,true);
+		String  newRealpath  =  TblSystemVar.getSystemValue()  + "/" + file.getOriginalFilename();
 		File newFile = new File(newRealpath); 
 		try {
 			file.transferTo(newFile);

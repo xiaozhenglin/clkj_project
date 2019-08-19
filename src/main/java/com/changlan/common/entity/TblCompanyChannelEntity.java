@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "TBL_COMPANY_CHANNEL")
@@ -27,6 +28,9 @@ public class TblCompanyChannelEntity implements java.io.Serializable {
 
     @Column(name = "EASY_VEDIO_URL"   )
     private String easy_vedio_url;
+    
+    @Transient
+    private String companyName;
     
 	public Integer getChannelId() {
 		return channelId;
@@ -66,6 +70,14 @@ public class TblCompanyChannelEntity implements java.io.Serializable {
 
 	public void setEasy_vedio_url(String easy_vedio_url) {
 		this.easy_vedio_url = easy_vedio_url;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
         
     
