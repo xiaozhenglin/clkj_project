@@ -20,7 +20,7 @@ import com.changlan.netty.service.INettyService;
 @Component
 public class ScheduleConfiguration {
 	
-		@Scheduled(cron = "0/30 * * * * ?")
+		@Scheduled(cron = "0 30 * * * ?")
 		public void work() {
 			INettyService nettyService = SpringUtil.getBean(INettyService.class); 
 			//查找报警数据 
