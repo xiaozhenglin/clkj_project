@@ -78,12 +78,14 @@ public class ChannelController extends BaseController{
 		List<TblCompanyChannelEntity> list = channelService.getAllChannel(entity);
 		for(TblCompanyChannelEntity channel:list) {
 			//String channelName = crudService.
-			ICrudService crudService = SpringUtil.getBean(ICrudService.class);
-	    	Map map = new HashMap();
-	    	map.clear();
-	 		map.put("companyId", new ParamMatcher(channel.getCompanyId()));
-	 		TblCompanyEntity TblCompany  =  (TblCompanyEntity) crudService.findOneByMoreFiled(TblCompanyEntity.class,map,true);
-	 		channel.setCompanyName(TblCompany.getName());
+			if(channel.getCompanyId()!=null) {
+				ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+		    	Map map = new HashMap();
+		    	map.clear();
+		 		map.put("companyId", new ParamMatcher(channel.getCompanyId()));
+		 		TblCompanyEntity TblCompany  =  (TblCompanyEntity) crudService.findOneByMoreFiled(TblCompanyEntity.class,map,true);
+		 		channel.setCompanyName(TblCompany.getName());
+			}
 		}
 		return success(list);
 	}

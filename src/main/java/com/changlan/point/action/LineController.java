@@ -33,6 +33,7 @@ import com.changlan.common.entity.TblMonitorSystemEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
 import com.changlan.common.entity.TblPointCategoryEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
@@ -77,6 +78,12 @@ public class LineController extends BaseController{
 				
     	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
     	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称
+    	Map centerMap = new HashMap();
+		centerMap.clear();	    	
+		centerMap.put("systemCode", new ParamMatcher("longLatiDefault"));
+    	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,centerMap,true);//系统变量得到longLatiDefault
+    	//String port = TblSystemVar.getSystemValue();
+    	entity.setCenterAddress(TblSystemVar.getSystemValue());
     	
 //		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());

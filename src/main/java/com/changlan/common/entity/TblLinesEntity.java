@@ -97,13 +97,15 @@ public class TblLinesEntity implements java.io.Serializable {
     @Column(name = "CHANNEL_ID"   )
     private Integer channelId; //电压等级
     
-    @Column(name = "IS_CONTROL_LINE"   )
-    private String is_control_line; //是否作用于隧道
+    @Column(name = "IS_CONTROL_CHANNEL"   )
+    private String is_control_channel; //是否作用于隧道
     
     @Transient
     private String channelName;
+          
     
-    /**
+   
+	/**
      * 获取lineId
      * 
      * @return lineId
@@ -129,12 +131,14 @@ public class TblLinesEntity implements java.io.Serializable {
 		this.monitorId = monitorId;
 	}
 		
-	public String getIs_control_line() {
-		return is_control_line;
+	
+
+	public String getIs_control_channel() {
+		return is_control_channel;
 	}
 
-	public void setIs_control_line(String is_control_line) {
-		this.is_control_line = is_control_line;
+	public void setIs_control_channel(String is_control_channel) {
+		this.is_control_channel = is_control_channel;
 	}
 
 	/**
