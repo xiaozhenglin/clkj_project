@@ -1,7 +1,5 @@
 package com.changlan.point.service.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +8,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
-import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -94,17 +90,13 @@ public class LineServiceImpl implements ILineService{
 		//封装公司线路信息
 		for(Object o : all) {
 			TblLinesEntity line = (TblLinesEntity)o;
-			if(line.getChannelId()!=null) {
-				ICrudService crudService = SpringUtil.getBean(ICrudService.class);
-		    	Map mapLine = new HashMap();
-		    	mapLine.clear();
-		    	
-		    	mapLine.put("channelId", new ParamMatcher(line.getChannelId()));
-				TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.findOneByMoreFiled(TblCompanyChannelEntity.class,mapLine,true);
-		    	//TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
-		    	line.setChannelName(TblCompanyChannel.getName());
-			}
-	    							    	
+			ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+	    	Map mapLine = new HashMap();
+	    	mapLine.clear();
+	    	mapLine.put("channelId", new ParamMatcher(line.getChannelId()));
+			TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.findOneByMoreFiled(TblCompanyChannelEntity.class,mapLine,true);
+	    	//TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
+	    	line.setChannelName(TblCompanyChannel.getName());
 			LineDetail detail = new LineDetail(line);
 			list.add(detail);
 		}

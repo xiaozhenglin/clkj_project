@@ -23,6 +23,7 @@ import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.controller.NettyController;
+import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.IPointDefineService;
@@ -46,7 +47,7 @@ public class MyTask extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			logger.info("运行定时器"); 
+			logger.info("运行定时器发送指令》》》》"+commandDefault.getCommandContent()); 
 			Integer pointId = commandDefault.getPointId(); 
 			IPointDefineService service  =  SpringUtil.getBean(IPointDefineService.class);
 			TblPointsEntity pointDefine = service.getByRegistPackageOrId(pointId, null); 
@@ -55,6 +56,15 @@ public class MyTask extends TimerTask {
 			}
 			if( StringUtil.isEmpty(pointDefine.getPointRegistPackage()) ) {
 				throw new MyDefineException(PoinErrorType.POINT_REGISTPACKAGE_IS_NULL);
+			}
+			//判断 设备是否已经 连接并 发送注册包
+			if(NettyServer.channelMap.isEmpty()) {
+				return;
+//				throw new MyDefineException(PoinErrorType.POINT_NOT_REGIST);
+			}
+			if(NettyServer.channelMap.get(pointDefine.getPointRegistPackage())==null) {
+//				throw new MyDefineException(PoinErrorType.POINT_NOT_REGIST);
+				return;
 			}
 			//是否能发送
 			if(NettyController.canSendRecord(pointDefine.getPointRegistPackage())) {

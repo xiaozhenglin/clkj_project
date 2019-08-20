@@ -18,7 +18,8 @@ public enum PoinErrorType {
 	SEND_CRC_ERROR("N003","发送的指令不符合CRC校验"),
 	RECEIVE_CRC_ERROR("N004","接受的指令不符合CRC校验"), 
 	COMPANY_CHANNEL_NAME_EXIST("P013","通道名称重复"),
-	LINE_CANNOT_CREATE("P014","非电缆本体监控不能建立线路");
+	LINE_CANNOT_CREATE("P014","非电缆本体监控不能建立线路"),
+	POINT_NOT_REGIST("N005","设备未注册");
 	
 	private String code;
 	private String name;

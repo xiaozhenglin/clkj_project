@@ -54,9 +54,11 @@ public class AdminplatApplication implements ApplicationRunner {
 		
 		
 		new NettyServer().start(); //启动netty服务器
-		new HttpNettyServer().start();
-// 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  // 启动循环发送指令任务
-//		nettyService.task(); 
+		new HttpNettyServer().start(); //启动httpNetty服务器
+		
+		Thread.sleep(3000);
+ 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  
+		nettyService.task(); // 系统启动，开始指令发送
 		
 		// 初始化短信猫
 //		ISmsCatService catService = SpringUtil.getBean(ISmsCatService.class);

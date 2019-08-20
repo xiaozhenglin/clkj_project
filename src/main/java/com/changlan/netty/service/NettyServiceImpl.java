@@ -258,7 +258,10 @@ public class NettyServiceImpl implements INettyService{
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(null); 
+		TblPointSendCommandEntity command = new TblPointSendCommandEntity();
+		command.setIs_controller("0");
+		command.setSystem_start("yes");
+		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(command); 
 		for(CommandDefaultDetail data : commandList) {
 			try {
 				//每个数据延时0.5秒按顺序开启定时任务
@@ -268,16 +271,19 @@ public class NettyServiceImpl implements INettyService{
 			}
 			TblCommandCategoryEntity category = data.getCategory(); 
 			//温度检测为 本机client向服务器发送 ， 电流电压为本机server向机器发送指令
-			if(category.getCategoryNmae().indexOf("温度")==-1 && category.getCategoryNmae().indexOf("局放") == -1) {
+//			if(category.getCategoryNmae().indexOf("温度")==-1 && category.getCategoryNmae().indexOf("局放") == -1) {
 				TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
-				Integer intervalTime = commandDefault.getIntervalTime();
-				if(intervalTime!=null) {
+				Integer intervalTime = 3600;
+				if(commandDefault.getIntervalTime()!=null) {
+					intervalTime = commandDefault.getIntervalTime();
+				}
+//				if(intervalTime!=null) {
 					MyTask task = new MyTask(commandDefault);
 					Timer timer = new Timer();
 					//循环执行定时器
 					timer.schedule(task, 0, intervalTime*1000);
-				}
-			}
+//				}
+//			}
 		}
 	}
 
