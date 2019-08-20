@@ -64,11 +64,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel channel = context.channel();
         logger.info("ServerHandler类channelRead方法接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
+    		 s = s.trim();
         	 if(s.indexOf("messageBox")>-1) {
         		setMessageBoxChannel(s,channel);
         	 }else if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1 || s.indexOf("33413130303230303031464A445430443041")>-1) {
              	//设置注册包
-        		s = s.trim();
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);
              }else {

@@ -233,7 +233,7 @@ public class StringUtil extends StringUtils {
         String content ="CLKJ00000000018092362005";
         
         System.out.println(content.indexOf("CLKJ00000000018092362005"));
-        System.out.println("CLKJ00000000018092362005\n".trim().length()); 
+        System.out.println("CLKJ00000000018092362005\n ".trim().length()); 
         
 //		if(content.indexOf("温度")==-1 && content.indexOf("局放") == -1) {
 //			System.out.println("筛选");
