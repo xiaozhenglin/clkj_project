@@ -33,12 +33,16 @@ public class UserFunctionServiceImpl implements IUserFunctionService{
 		List<TblUserFunctionEntity> list = crudService.findByMoreFiled(TblUserFunctionEntity.class, map, true);
 		
 		List<TblFunInfoEntity> functions = new ArrayList<TblFunInfoEntity>();
+	
 		for(TblUserFunctionEntity userFunction : list) {
         	//获取权限详情
     		map.clear();
     		map.put("funcId", new ParamMatcher(userFunction.getFuncId()));
-    		TblFunInfoEntity findOneByMoreFiled = (TblFunInfoEntity)crudService.findOneByMoreFiled(TblFunInfoEntity.class,map,true);
-    		functions.add(findOneByMoreFiled);
+    		List findOneByMoreFiled2 = crudService.findByMoreFiled(TblFunInfoEntity.class,map,true); 
+    		if(!ListUtil.isEmpty(findOneByMoreFiled2)) {
+    			TblFunInfoEntity findOneByMoreFiled = (TblFunInfoEntity)findOneByMoreFiled2.get(0);
+    			functions.add(findOneByMoreFiled);
+    		}
 		}
 		return new UserFunctionInfo(user, functions); 
 	}

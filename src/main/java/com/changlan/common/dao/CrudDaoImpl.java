@@ -31,6 +31,7 @@ import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.util.DaoUtil;
 import com.changlan.common.util.DateUtil;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 
 
@@ -271,8 +272,11 @@ public class CrudDaoImpl implements ICrudDao{
         		query.setParameter(list.get(i), value);
         	}
         }
-        Object result= query.getSingleResult();
-        return result;
+        List resultList = query.getResultList(); 
+        if(ListUtil.isEmpty(list)) {
+        	return null;
+        }
+        return resultList.get(0); 
 	}
 
 	@Override

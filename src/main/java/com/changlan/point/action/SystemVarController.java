@@ -78,8 +78,10 @@ public class SystemVarController extends BaseController{
 		//tblSystemVar.setSystemCode("redirect_url");
 		//tblSystemVar.setSystemValue("管理后台");
 		
-				
-		TblSystemVarEntity update = (TblSystemVarEntity) crudService.update(tblSystemVar,true); 
+		//tblSystemVar.get
+		TblSystemVarEntity systemVar = (TblSystemVarEntity) crudService.get(tblSystemVar.getSystemId(), TblSystemVarEntity.class, true);
+		systemVar.setSystemValue(tblSystemVar.getSystemValue());
+		TblSystemVarEntity update = (TblSystemVarEntity) crudService.update(systemVar,true); 
 		if(update ==null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}
