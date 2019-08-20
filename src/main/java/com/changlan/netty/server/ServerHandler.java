@@ -68,6 +68,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         		setMessageBoxChannel(s,channel);
         	 }else if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1 || s.indexOf("33413130303230303031464A445430443041")>-1) {
              	//设置注册包
+        		s = s.trim();
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);
              }else {
