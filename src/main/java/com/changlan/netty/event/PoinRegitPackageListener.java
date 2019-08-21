@@ -27,35 +27,37 @@ public class PoinRegitPackageListener implements ApplicationListener<PointRegist
 			if(entity==null) {
 				return ;
 			}
-			PointStatus currentStatus = source.getStatus();
-			PointStatus agoStatus = null;
-			if(StringUtil.isEmpty(entity.getStatus())) {
-				changeStatus(entity,currentStatus);
-			}else {
-				agoStatus = PointStatus.valueOf(entity.getStatus());
+			PointStatus status = source.getStatus();
+			if(status!=null) {
+				changeStatus(entity, status); 
 			}
-			if(entity !=null && agoStatus == null) {
-				changeStatus(entity,currentStatus);
-				return;
-			}
-			if(agoStatus == PointStatus.OUT_CONNECT && currentStatus != PointStatus.OUT_CONNECT) {
-				changeStatus(entity,currentStatus);
-				return;
-			}
-			
-			if(agoStatus == PointStatus.CONNECT && currentStatus!=PointStatus.CONNECT ) {
-				changeStatus(entity,currentStatus);
-				return;
-			}
-			
-			if(agoStatus == PointStatus.DATA_CAN_IN && (currentStatus==PointStatus.DATA_CAN_NOT_IN ||currentStatus==PointStatus.OUT_CONNECT )) {
-				changeStatus(entity,currentStatus);
-				return;
-			}
-			
-			if(agoStatus == PointStatus.DATA_CAN_NOT_IN && (currentStatus!=PointStatus.CONNECT)) {
-				changeStatus(entity,currentStatus);
-			}
+//			PointStatus agoStatus = null;
+		
+//			else {
+//				agoStatus = PointStatus.valueOf(entity.getStatus());
+//			}
+//			if(entity !=null && agoStatus == null) {
+//				changeStatus(entity,currentStatus);
+//				return;
+//			}
+//			if(agoStatus == PointStatus.OUT_CONNECT && currentStatus != PointStatus.OUT_CONNECT) {
+//				changeStatus(entity,currentStatus);
+//				return;
+//			}
+//			
+//			if(agoStatus == PointStatus.CONNECT && currentStatus!=PointStatus.CONNECT ) {
+//				changeStatus(entity,currentStatus);
+//				return;
+//			}
+//			
+//			if(agoStatus == PointStatus.DATA_CAN_IN && (currentStatus==PointStatus.DATA_CAN_NOT_IN ||currentStatus==PointStatus.OUT_CONNECT )) {
+//				changeStatus(entity,currentStatus);
+//				return;
+//			}
+//			
+//			if(agoStatus == PointStatus.DATA_CAN_NOT_IN && (currentStatus!=PointStatus.CONNECT)) {
+//				changeStatus(entity,currentStatus);
+//			}
 		}
 	}
 
