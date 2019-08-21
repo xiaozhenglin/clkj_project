@@ -30,7 +30,7 @@ public class UserOperationController extends BaseController{
 	@Autowired
 	private IUserOpertaionService userOperationService;
 	
-	@RequestMapping("/admimn/user/operation/list")
+	@RequestMapping("/admin/user/operation/list")
 	public ResponseEntity<Object>  loginError(UserOperationQuery query) throws Exception {
 		TblAdminUserEntity userIsLogin = userIsLogin(); 
 		if(!isSuperAdminUser(userIsLogin.getAdminUserId())) {

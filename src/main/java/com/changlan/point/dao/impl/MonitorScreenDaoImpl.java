@@ -69,7 +69,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 			sql += " AND channel.`NAME` LIKE '%" +  query.getChannelName() + "%' " ;;
 		}
 		if(StringUtil.isNotEmpty(query.getPointNameOrLineName())) {
-			sql += " AND ( line.LINE_NAME LIKE '%" +  query.getPointNameOrLineName() + "%'  or  point.POINT_NAME LIKE '%" +  query.getPointNameOrLineName() + "%' ) " ;
+			sql += " AND ( line.LINE_NAME LIKE '%" +  query.getPointNameOrLineName() + "%'  or  point.POINT_NAME LIKE '%" +  query.getPointNameOrLineName() + "%'  or channel.`NAME` LIKE '%" +  query.getPointNameOrLineName() + "%'  ) " ;
 		}
 		if(query.getIsCorner()!=null) {
 			sql += " AND point.IS_CORNER = "+query.getIsCorner();
@@ -129,14 +129,17 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 				+ " ,( select count(*) AS huanliu_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 1 " + pointQuery +  " ) AS huanliu_points_total"
 				+ " ,( select count(*) AS jufang_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 8  " + pointQuery +  " )  AS jufang_points_total"
 				+ " ,( select count(*) AS guangqian_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 9 " + pointQuery +  " )  AS guangqian_points_total"
+				+ " ,( select count(*) AS cewen_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 10 " + pointQuery +  " )  AS cewen_points_total"
 				+ " ,( select count(*) AS line_total from TBL_LINES where 1=1" + lineQuery +  " )  AS line_total"
 				+ " ,( select count(*) AS line35_total from TBL_LINES  where DIANYA_LEVEL ='35KV' " + lineQuery +  " ) AS line35_total"
 				+ " ,( select count(*) AS line110_total from TBL_LINES  where DIANYA_LEVEL ='110KV' " + lineQuery +  " ) AS line110_total"
 				+ " ,( select count(*) AS line220_total from TBL_LINES  where DIANYA_LEVEL ='220KV' " + lineQuery +  " ) AS line220_total"
+				+ " ,( select count(*) AS line500_total from TBL_LINES  where DIANYA_LEVEL ='500KV' " + lineQuery +  " ) AS line500_total"
 				+ " ,( select count(*) AS channel_total from TBL_COMPANY_CHANNEL where 1=1" + channelQuery +  " )  AS channel_total"
 				+ " ,( select count(*) AS shipin_total from TBL_COMPANY_CHANNEL where  find_in_set('4', MONITOR_IDS)  " + channelQuery +  " ) AS shipin_total "
 				+ " ,(  select count(*) AS jingai_total from TBL_COMPANY_CHANNEL where  find_in_set('1', MONITOR_IDS)  " + channelQuery +  " ) AS jingai_total"
-				+ " ,(  select count(*) AS huanjing_total from TBL_COMPANY_CHANNEL where  find_in_set('3', MONITOR_IDS) " + channelQuery +  " )  AS huanjing_total" + ") ";
+				+ " ,(  select count(*) AS paifeng_total from TBL_COMPANY_CHANNEL where  find_in_set('2', MONITOR_IDS)  " + channelQuery +  " ) AS paifeng_total"
+				+ " ,(  select count(*) AS paishui_total from TBL_COMPANY_CHANNEL where  find_in_set('3', MONITOR_IDS) " + channelQuery +  " )  AS paishui_total" + ") ";
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),AppCountEntity.class);
 		return createNativeQuery.getResultList(); 
 	}
