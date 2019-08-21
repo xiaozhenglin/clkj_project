@@ -143,10 +143,10 @@ public class LineServiceImpl implements ILineService{
 			}
 		}
 //		System.out.println(onLine);
-		BigDecimal totalLine = new BigDecimal(all.size());
-//		System.out.println(totalLine.toString()); 
-		BigDecimal divide = new BigDecimal(onLine).divide(totalLine,2, RoundingMode.HALF_UP);
-		return 	divide.toString();
+//		BigDecimal totalLine = new BigDecimal(all.size());
+////		System.out.println(totalLine.toString()); 
+//		BigDecimal divide = new BigDecimal(onLine).divide(totalLine,2, RoundingMode.HALF_UP);
+		return 	onLine.toString();
 	}
 
 
@@ -157,7 +157,7 @@ public class LineServiceImpl implements ILineService{
 		map.put("lineId", new ParamMatcher(lineId));
 		List<TblPointsEntity> all = crudService.findByMoreFiled(TblPointsEntity.class, map, true);
 		for(TblPointsEntity  points : all) {
-			if(points.getStatus().indexOf(PointStatus.CONNECT.toString())>-1) {
+			if(points.getStatus().equalsIgnoreCase(PointStatus.CONNECT.toString())) {
 				return LineStatus.ON_LINE.toString();
 			}
 		}
