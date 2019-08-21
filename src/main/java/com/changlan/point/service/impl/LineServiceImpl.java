@@ -1,5 +1,7 @@
 package com.changlan.point.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,10 +114,39 @@ public class LineServiceImpl implements ILineService{
 				line.setStatus(status);
 //			}
 			line.setImageInMap("LINE-" + line.getStatus());
+			
+			line.setOnLineRatio(getOnLineRatio(line.getLineId()));
+			
 			LineDetail detail = new LineDetail(line);
 			list.add(detail);
 		}
 		return list;
+	}
+
+	/* 
+	 * 在线率
+	 */
+	@Override
+	public String getOnLineRatio(Integer lineId) {
+		Integer onLine = 0; 
+		
+		Map map = new HashMap();
+		map.put("lineId", new ParamMatcher(lineId));
+		List<TblPointsEntity> all = crudService.findByMoreFiled(TblPointsEntity.class, map, true);
+		if(ListUtil.isEmpty(all)) {
+			return "0";
+		}
+		for(TblPointsEntity  points : all) {
+//			System.out.println(points.getStatus());
+			if(points.getStatus().equalsIgnoreCase(PointStatus.CONNECT.toString())) {
+				onLine++;
+			}
+		}
+//		System.out.println(onLine);
+		BigDecimal totalLine = new BigDecimal(all.size());
+//		System.out.println(totalLine.toString()); 
+		BigDecimal divide = new BigDecimal(onLine).divide(totalLine,2, RoundingMode.HALF_UP);
+		return 	divide.toString();
 	}
 
 

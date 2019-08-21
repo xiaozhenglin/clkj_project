@@ -12,6 +12,8 @@ public interface ILineService {
 
 	List<LineDetail> getAll(TblLinesEntity entity);
 
-	String getLineStatus(Integer lineId);    
+	String getLineStatus(Integer lineId);
+
+	String getOnLineRatio(Integer lineId);     
 
 }
