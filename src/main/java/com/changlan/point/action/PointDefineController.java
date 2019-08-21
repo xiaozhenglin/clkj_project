@@ -113,7 +113,7 @@ public class PointDefineController extends BaseController{
 			throw new MyDefineException(PoinErrorType.POINT_NOT_EXIST);
 		}
 		Boolean delete = crudService.deleteBySql("DELETE FROM TBL_POINTS where POINT_ID="+companyEntity.getPointId(), true);
-		return success(delete);
+		return success(delete); 
 	}
 	
 }

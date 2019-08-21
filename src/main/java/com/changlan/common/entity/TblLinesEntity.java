@@ -103,7 +103,11 @@ public class TblLinesEntity implements java.io.Serializable {
     @Transient
     private String channelName;
           
+    @Column(name = "ON_LINE_RATIO"   )
+    private String onLineRatio;  //在线率
     
+    @Column(name = "IMAGE_IN_MAP"   )
+    private String imageInMap;  //在地图中的图标名称
    
 	/**
      * 获取lineId
@@ -332,6 +336,23 @@ public class TblLinesEntity implements java.io.Serializable {
 		this.channelName = channelName;
 	}
 
+	public String getOnLineRatio() {
+		return onLineRatio;
+	}
+
+	public void setOnLineRatio(String onLineRatio) {
+		this.onLineRatio = onLineRatio;
+	}
+
+	public String getImageInMap() {
+		return imageInMap;
+	}
+
+	public void setImageInMap(String imageInMap) {
+		this.imageInMap = imageInMap;
+	}
+
+	
 	
 	
     	        

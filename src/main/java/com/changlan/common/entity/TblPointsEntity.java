@@ -112,6 +112,12 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "PICTURE_URL"    )
     private String picture_url;
+    
+    @Column(name = "POINT_TYPE"    )
+    private String pointType;
+    
+    @Column(name = "IMAGE_IN_MAP"    )
+    private String imageInMap;
 
 	public Integer getPointId() {
 		return pointId;
@@ -287,6 +293,22 @@ public class TblPointsEntity implements java.io.Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public String getPointType() {
+		return pointType;
+	}
+
+	public void setPointType(String pointType) {
+		this.pointType = pointType;
+	}
+
+	public String getImageInMap() {
+		return imageInMap;
+	}
+
+	public void setImageInMap(String imageInMap) {
+		this.imageInMap = imageInMap;
 	}
     	
 	

@@ -51,6 +51,8 @@ public class PointDefineVO {
 	private String  lineName; //线路名称
 	private Integer lineId;	//线路id
 	private String  lineAddress; //线路地址
+	private String pointType;
+	private String ImageInMap;
 
 
 	public PointDefineVO() {
@@ -82,6 +84,10 @@ public class PointDefineVO {
 		    }
 			if(StringUtil.isNotEmpty(point.getImage())) {
 				this.image = point.getImage();
+			}
+			this.pointType = point.getPointType();
+			if(StringUtil.isNotEmpty(pointType)) {
+				this.ImageInMap = pointType + "-" + point.getStatus().toUpperCase(); 
 			}
 		}
 		
@@ -367,6 +373,26 @@ public class PointDefineVO {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+
+	public String getPointType() {
+		return pointType;
+	}
+
+
+	public void setPointType(String pointType) {
+		this.pointType = pointType;
+	}
+
+
+	public String getImageInMap() {
+		return ImageInMap;
+	}
+
+
+	public void setImageInMap(String imageInMap) {
+		ImageInMap = imageInMap;
 	}
 
 

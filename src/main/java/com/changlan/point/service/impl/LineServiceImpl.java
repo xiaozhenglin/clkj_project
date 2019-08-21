@@ -13,6 +13,7 @@ import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
 import com.changlan.common.entity.TblLinesEntity;
+import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.MatcheType;
 import com.changlan.common.pojo.ParamMatcher;
@@ -22,13 +23,20 @@ import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.LineDetail;
+import com.changlan.point.pojo.LineStatus;
+import com.changlan.point.pojo.PointInfoDetail;
+import com.changlan.point.pojo.PointStatus;
 import com.changlan.point.service.ILineService;
+import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.pojo.LoginUser;
 
 @Service
 public class LineServiceImpl implements ILineService{
 	@Autowired
 	private ICrudService crudService;
+	
+	@Autowired
+	IPointDefineService pointDefineService;
 	
 	@Override
 	public Boolean existName(TblLinesEntity entity) {
@@ -90,17 +98,39 @@ public class LineServiceImpl implements ILineService{
 		//封装公司线路信息
 		for(Object o : all) {
 			TblLinesEntity line = (TblLinesEntity)o;
-			ICrudService crudService = SpringUtil.getBean(ICrudService.class);
-	    	Map mapLine = new HashMap();
-	    	mapLine.clear();
-	    	mapLine.put("channelId", new ParamMatcher(line.getChannelId()));
-			TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.findOneByMoreFiled(TblCompanyChannelEntity.class,mapLine,true);
-	    	//TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
-	    	line.setChannelName(TblCompanyChannel.getName());
+			if(line.getChannelId()!=null) {
+				ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+		    	Map mapLine = new HashMap();
+		    	mapLine.clear();
+		    	mapLine.put("channelId", new ParamMatcher(line.getChannelId()));
+				TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.findOneByMoreFiled(TblCompanyChannelEntity.class,mapLine,true);
+		    	//TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
+		    	line.setChannelName(TblCompanyChannel.getName());
+			}
+//			if(StringUtil.isNotEmpty(line.getStatus())) { 
+				String status = getLineStatus(line.getLineId());
+				line.setStatus(status);
+//			}
+			line.setImageInMap("LINE-" + line.getStatus());
 			LineDetail detail = new LineDetail(line);
 			list.add(detail);
 		}
 		return list;
+	}
+
+
+	@Override
+	public String getLineStatus(Integer lineId) {
+		String status = LineStatus.OUT_LINE.toString();
+		Map map = new HashMap();
+		map.put("lineId", new ParamMatcher(lineId));
+		List<TblPointsEntity> all = crudService.findByMoreFiled(TblPointsEntity.class, map, true);
+		for(TblPointsEntity  points : all) {
+			if(points.getStatus().indexOf(PointStatus.CONNECT.toString())>-1) {
+				return LineStatus.ON_LINE.toString();
+			}
+		}
+		return status;
 	}
 
 }

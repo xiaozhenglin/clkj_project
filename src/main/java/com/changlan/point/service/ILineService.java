@@ -10,6 +10,8 @@ public interface ILineService {
 
 	Boolean existName(TblLinesEntity entity);
 
-	List<LineDetail> getAll(TblLinesEntity entity);   
+	List<LineDetail> getAll(TblLinesEntity entity);
+
+	String getLineStatus(Integer lineId);    
 
 }
