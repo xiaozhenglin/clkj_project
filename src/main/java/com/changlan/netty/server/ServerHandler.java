@@ -81,7 +81,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
          			//开启解析事件
          			SpringUtil.getApplicationContext().publishEvent(new CommandCallBackEvent(commandRecordId,registPackage,s));
          		}
-             	changePointStatus(channel,PointStatus.DATA_CAN_IN);
+//             	changePointStatus(channel,PointStatus.DATA_CAN_IN);
              }
         }
         context.flush(); //加的部分
@@ -170,7 +170,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         final EventLoop eventLoop = ctx.channel().eventLoop();
         Channel  channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
-        changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
+//        changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
         logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +registPackage );
     }
 
