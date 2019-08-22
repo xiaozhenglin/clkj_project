@@ -38,6 +38,7 @@ import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
 import com.changlan.common.pojo.MatcheType;
@@ -58,6 +59,7 @@ import com.changlan.other.entity.DeviceDataSpecial;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
+import com.changlan.user.pojo.UserErrorType;
 
 @Service
 public class CommandRecordServiceImpl implements ICommandRecordService{
@@ -136,8 +138,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    		String backContent = record.getBackContent();
 	    		String reciveAddressCode = backContent.substring(0,0+2);
 	    		String addressCode = protocol.getAddressCode(); 
+	    		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(record.getSendCommandId(), TblPointSendCommandEntity.class, true);
+	    		String isControl = commandDefault.getIs_controller();
 	    		//地址码匹配
-	    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode)) ) {
+	    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode) && isControl.contentEquals("0")) ) {
 	    			//解析数据
 	        		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
 	        		if(!ListUtil.isEmpty(data) ) {
@@ -186,10 +190,13 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	
 	  	TblPointSendCommandEntity sendCommandDetail = recordDetail.getCommandDefault();
 	  	if(sendCommandDetail.getIs_controller().contentEquals("1")) {   //若为控制类指令 
-	  		 if(record.getCommandContent().contentEquals(record.getBackContent())) {   //控制指令内容和返回指令内容一致， 说明控制类指令起效果。
+	  		 if(record.getCommandContent().substring(0, 2).contentEquals(record.getBackContent().substring(0, 2))) {   //控制指令内容和返回指令内容一致， 说明控制类指令起效果。
 	  			sendCommandDetail.setSystem_start("yes");  		  //成功控制	
 	  		 }else {
 	  			sendCommandDetail.setSystem_start("no"); 
+	  			String error = sendCommandDetail.getCommandName() + "失败";
+	  			result.add(error);
+	  			return result; 
 	  		 }
 	  		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(sendCommandDetail, true);
 	  	}
@@ -210,6 +217,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 						e.printStackTrace();
 					}
 	  			}else {
+	  				//sendCommand.setMsg(sendCommand.getCommandName() + "失败");
 	  				try {
 						Thread.sleep(sendCommand.getIntervalTime());
 					} catch (InterruptedException e) {
@@ -650,7 +658,38 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	}
 	
 	private void saveAndSend(TblPointsEntity point, String sendContent) { 
-		TblPointSendCommandEntity data = new TblPointSendCommandEntity();
+		Map map = new HashMap();
+    	map.clear();
+ 		map.put("pointId", new ParamMatcher(point.getPointId()));
+ 		List<TblCommandProtocolEntity> protocols  =  (List<TblCommandProtocolEntity>) crudService.findByMoreFiled(TblCommandProtocolEntity.class,map,true);
+ 		String protocolA= "";
+		String protocolB= "";
+		String protocolC= "";
+ 		for(TblCommandProtocolEntity protocol : protocols) { 			
+ 			if(protocol.getDataType().indexOf("局放A")>-1||protocol.getDataType().indexOf("局放a")>-1) {
+ 				if(protocolA.contentEquals("")){
+ 					protocolA = protocolA + protocol.getProtocolId(); 
+ 				}else {
+ 					protocolA = protocolA + "," + protocol.getProtocolId(); 
+ 				}
+ 			}
+ 			if(protocol.getDataType().indexOf("局放B")>-1||protocol.getDataType().indexOf("局放b")>-1) {
+ 				if(protocolB.contentEquals("")){
+ 					protocolB = protocolB + protocol.getProtocolId(); 
+ 				}else {
+ 					protocolB = protocolB + "," + protocol.getProtocolId();
+ 				}
+ 			}
+ 			if(protocol.getDataType().indexOf("局放C")>-1||protocol.getDataType().indexOf("局放c")>-1) {
+ 				if(protocolC.contentEquals("")){
+ 					protocolC = protocolC + protocol.getProtocolId(); 
+ 				}else {
+ 					protocolC = protocolC + "," + protocol.getProtocolId(); 
+ 				}
+ 			}
+ 		}
+ 		
+		TblPointSendCommandEntity data = new TblPointSendCommandEntity();		
 		data.setSystem_start("yes");
 		data.setCommandCatagoryId(7);
 		data.setCommandContent(sendContent);
@@ -658,12 +697,17 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		data.setPointId(point.getPointId()); 
 		data.setPointName(point.getPointName());
 		String phase_type = (String)SessionUtil.storage.get( point.getPointId() + "phase_no");//获取是A还是B还是C相
+		
+		
 		if("A".equals(phase_type)) {
-			data.setProtocolId("17,14,20");
+			//data.setProtocolId("17,14,20");
+			data.setProtocolId(protocolA);
 		}else if("B".equals(phase_type)){
-			data.setProtocolId("18,15,21");
+			//data.setProtocolId("18,15,21");
+			data.setProtocolId(protocolB);
 		}else {
-			data.setProtocolId("19,16,22");
+			//data.setProtocolId("19,16,22");
+			data.setProtocolId(protocolC);
 		}
 		
 		
@@ -706,6 +750,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		for(Object o : all) {
 			TblCommandRecordEntity record = (TblCommandRecordEntity)o;
 			TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(record.getSendCommandId(), TblPointSendCommandEntity.class, true);
+			TblPointsEntity point = (TblPointsEntity)crudService.get(record.getPointId(), TblPointsEntity.class, true);
+			record.setPointName(point.getPointName());
 			CommandRecordDetail detail = new CommandRecordDetail(record,commandDefault);
 			result.add(detail);
 		}
