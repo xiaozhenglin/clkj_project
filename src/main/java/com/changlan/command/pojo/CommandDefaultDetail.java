@@ -3,6 +3,8 @@ package com.changlan.command.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bouncycastle.util.StringList;
+
 import com.changlan.command.service.IProtocolService;
 import com.changlan.common.entity.TblCommandCategoryEntity;
 import com.changlan.common.entity.TblCommandProtocolEntity;
@@ -10,6 +12,7 @@ import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.point.service.IPointDefineService;
@@ -42,11 +45,16 @@ public class CommandDefaultDetail {
 		ICrudService crudService = SpringUtil.getICrudService(); 
 		String protocolIds = commandDefault.getProtocolId(); 
 		List<String> stringToList = StringUtil.stringToList(protocolIds); 
-		for(String str : stringToList) {
-			Integer protocolId = Integer.parseInt(str);
-			TblCommandProtocolEntity entity = (TblCommandProtocolEntity)crudService.get(protocolId, TblCommandProtocolEntity.class, true);
-			ProtocolInfo info = new ProtocolInfo(entity);
-			list.add(info);
+		if(!ListUtil.isEmpty(stringToList)) {
+			for(String str : stringToList) {
+				//System.out.println(str);
+				if(StringUtil.isNotEmpty(str)) {
+					Integer protocolId = Integer.parseInt(str);
+					TblCommandProtocolEntity entity = (TblCommandProtocolEntity)crudService.get(protocolId, TblCommandProtocolEntity.class, true);
+					ProtocolInfo info = new ProtocolInfo(entity);
+					list.add(info);
+				}
+			}
 		}
 		return list;
 	}
