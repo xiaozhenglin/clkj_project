@@ -199,11 +199,13 @@ public class CRC16M {
 //		   byte[] sbuf = CRC16M.getSendBuf(cmdStr.substring(0,cmdStr.length()-4));
 //		   boolean equalsIgnoreCase = cmdStr.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
 //		   System.out.println(equalsIgnoreCase);
-		   String content="0103040000003D3BE2"; 
+		   String content="010300000012C5C7"; 
 		   byte[] sbuf2 = CRC16M.getSendBuf(content.substring(0,content.length()-4));
 		   
+		   //获取原字符串 后四位校验码
 		   String trim = CRC16M.getBufHexStr(sbuf2).trim();
 		   System.out.println(trim);
+		   
 		   boolean equalsIgnoreCase = content.equalsIgnoreCase(trim); 
 		   System.out.println(equalsIgnoreCase);
 //		   String channelValue = cmdStr2.substring(6, 10); 

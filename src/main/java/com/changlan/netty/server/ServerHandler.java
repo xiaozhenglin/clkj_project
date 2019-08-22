@@ -171,6 +171,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         Channel  channel = ctx.channel();
         String registPackage = getRegistPackageByChannel(channel); 
 //        changePointStatus(channel,PointStatus.DATA_CAN_NOT_IN);
+        
+        changePointStatus(channel,PointStatus.OUT_CONNECT);
         logger.info("[" + channel.remoteAddress() + "]"+" 断开 channelInactive &" +registPackage );
     }
 
