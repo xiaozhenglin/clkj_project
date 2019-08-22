@@ -15,7 +15,10 @@ public class ProtocolInfo {
 	public ProtocolInfo(TblCommandProtocolEntity entity) {
 		this.protocol = entity;
 //		this.category = getCategory(entity.getCommandCatagoryId());
-		this.indicators = getIndicator(entity.getIndicatorId());
+		if(entity.getIndicatorId()!=null) {
+			System.out.println(entity.getIndicatorId());
+			this.indicators = getIndicator(entity.getIndicatorId());
+		}
 	}
 	
 	//指令类别
