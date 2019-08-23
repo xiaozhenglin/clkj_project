@@ -273,7 +273,7 @@ public class NettyServiceImpl implements INettyService{
 			//温度检测为 本机client向服务器发送 ， 电流电压为本机server向机器发送指令
 //			if(category.getCategoryNmae().indexOf("温度")==-1 && category.getCategoryNmae().indexOf("局放") == -1) {
 				TblPointSendCommandEntity commandDefault = data.getCommandDefault(); 
-				Integer intervalTime = 3600;
+				Integer intervalTime = commandDefault.getIntervalTime();
 				if(commandDefault.getIntervalTime()!=null) {
 					intervalTime = commandDefault.getIntervalTime();
 				}
