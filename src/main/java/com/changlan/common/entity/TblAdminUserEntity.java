@@ -87,6 +87,12 @@ public class TblAdminUserEntity implements java.io.Serializable {
     
     @Transient	
 	private String redirctUrl ; //跳转地址
+    
+    @Transient	
+	private String companyName ;
+    
+    @Transient	
+	private String userGroupName ; 
 
     public TblAdminUserEntity(TblAdminUserEntity user) {
     	TblAdminUserEntity entity = new TblAdminUserEntity();
@@ -275,5 +281,22 @@ public class TblAdminUserEntity implements java.io.Serializable {
 	public void setRedirctUrl(String redirctUrl) {
 		this.redirctUrl = redirctUrl;
 	}
-            
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
+	}
+       
+	
 }

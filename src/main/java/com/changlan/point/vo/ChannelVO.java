@@ -8,6 +8,7 @@ import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblMonitorSystemEntity;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.SpringUtil;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.LineDetail;
 import com.changlan.point.service.ILineService;
 import com.changlan.point.service.IMonitorSystemService;
@@ -26,7 +27,9 @@ public class ChannelVO {
 	public ChannelVO(TblCompanyChannelEntity entity) { 
 		this.channelId = entity.getChannelId();
 		this.title = entity.getName();
-		this.easy_vedio_url = entity.getEasy_vedio_url();
+		if(StringUtil.isNotEmpty(entity.getEasy_vedio_url())) {
+			this.easy_vedio_url = entity.getEasy_vedio_url();
+		}
 		String monitorIds = entity.getMonitor_ids();
 		  List<TblMonitorSystemEntity> list = getMonitorSystem(monitorIds);
 		  for(TblMonitorSystemEntity monitor : list)

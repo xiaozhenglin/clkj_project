@@ -15,7 +15,8 @@ public class UserDetail {
 	public UserDetail(TblAdminUserEntity user) {
 		super();
 		this.userGroup = getGroup(user.getUserGroupId());
-		this.user = user;
+		//this.user = user;
+		this.user = getUserDetail(user.getAdminUserId());
 //		IUserRoleService userRoleService = SpringUtil.getBean(IUserRoleService.class);
 //		UserRoleDetail all = userRoleService.getOne(user.getAdminUserId()); 
 //		if(all !=null ) {
@@ -35,6 +36,13 @@ public class UserDetail {
 	public TblAdminUserEntity getUser() {
 		return user;
 	}
+	
+	public TblAdminUserEntity getUserDetail(String userId) {
+		ICrudService crudService = SpringUtil.getICrudService();
+		return (TblAdminUserEntity)crudService.get(userId, TblAdminUserEntity.class, true);
+				//return user;
+	}
+	
 	public void setUser(TblAdminUserEntity user) {
 		this.user = user;
 	}

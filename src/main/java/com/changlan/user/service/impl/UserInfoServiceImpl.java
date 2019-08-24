@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TBLUserRoleEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblCompanyGroupEntity;
+import com.changlan.common.entity.TblUserGroupEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
@@ -63,6 +65,14 @@ public class UserInfoServiceImpl implements IUserInfoService{
 			List<Object> list = crudService.getAll(TblAdminUserEntity.class, true); 
 			for(Object o : list) {
 				TblAdminUserEntity userEntity = (TblAdminUserEntity)o;
+				if(userEntity.getUserGroupId()!=null) {
+					TblUserGroupEntity userGroup = (TblUserGroupEntity)crudService.get(userEntity.getUserGroupId(), TblUserGroupEntity.class, true);
+					userEntity.setUserGroupName(userGroup.getName());
+				}
+				if(userEntity.getCompanyId()!=null) {
+					TblCompanyEntity company = (TblCompanyEntity)crudService.get(userEntity.getCompanyId(), TblCompanyEntity.class, true);
+					userEntity.setCompanyName(company.getName());
+				}
 				UserDetail userDetail = new UserDetail(userEntity);
 				userList.add(userDetail);
 			}

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TBLRoleDefineEntity;
 import com.changlan.common.entity.TblAdminUserEntity;
+import com.changlan.common.entity.TblCompanyEntity;
+import com.changlan.common.entity.TblUserGroupEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
@@ -78,6 +80,14 @@ public class UserInfoController extends BaseController{
 			if(exist){
 				throw new MyDefineException(UserErrorType.USER_NAME_EXIST);
 			}
+			if(updateUser.getUserGroupId()!=null) {
+				TblUserGroupEntity userGroup = (TblUserGroupEntity)crudService.get(updateUser.getUserGroupId(), TblUserGroupEntity.class, true);
+				updateUser.setUserGroupName(userGroup.getName());
+			}
+		    if(updateUser.getCompanyId()!=null) {
+				TblCompanyEntity company = (TblCompanyEntity)crudService.get(updateUser.getCompanyId(), TblCompanyEntity.class, true);
+				updateUser.setCompanyName(company.getName());
+		    }
 			TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(updateUser, true); 
 			if(save == null) {
 				throw new MyDefineException(UserErrorType.EDIT_ERROR);
