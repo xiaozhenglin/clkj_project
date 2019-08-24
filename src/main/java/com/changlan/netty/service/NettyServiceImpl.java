@@ -80,7 +80,8 @@ public class NettyServiceImpl implements INettyService{
 		   NettyController.map.remove(registPackage);
 		   throw new MyDefineException(PoinErrorType.SEND_CRC_ERROR); 
 	   }
-		
+	   logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+message + "操作记录commandRecordId ");
+
 		//registPackage 对应的通道
  		Iterator<Entry<Object, Channel>> iterator = NettyServer.channelMap.entrySet().iterator();
  		Boolean sendSuccess = false;
@@ -99,6 +100,7 @@ public class NettyServiceImpl implements INettyService{
  			}
  		}	
  		if(!sendSuccess) {
+ 			 logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+message + " 失败" );
  			throw new MyDefineException(PoinErrorType.CHANNEL_IS_NOT_ACTIVE); 
  		}
 	}

@@ -778,7 +778,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//将记录id保存到会话，当有返回消息时保存起来
 		TblCommandRecordEntity update = (TblCommandRecordEntity)crudService.update(entity, true); 
 //		String registPackage = getRegistPackage(entity.getPointId());
-		logger.info("第二步发送指令 注册包：registPackage：" +registPackage+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
+		logger.info("第二步预发送指令 注册包：registPackage：" +registPackage+ "指令内容："+commandDefault.getCommandContent() + "操作记录commandRecordId " + update.getCommandRecordId());
 		if(update != null) {
 			//加锁,一个监控点同时只能发送一个指令，接受指令就会解锁
 			NettyController.map.put(registPackage, update.getCommandRecordId());
