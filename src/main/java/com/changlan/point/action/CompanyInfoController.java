@@ -21,6 +21,7 @@ import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.point.pojo.CompanyDetail;
 import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.service.ICompanyInfoService;
+import com.changlan.point.vo.CompanyVedioVo;
 import com.changlan.point.vo.CompanyVo;
 
 @RestController
@@ -46,6 +47,21 @@ public class CompanyInfoController extends BaseController{
 		}
 		return success(result);
 	}
+	
+	@RequestMapping("/listVedioTree")
+	public ResponseEntity<Object>  lineVedioList(TblCompanyEntity company) throws Exception { 
+		//List<CompanyDetail> list = companyInfoService.companyList(company);
+		List<TblCompanyEntity> list = companyInfoService.getAll(company.getCompanyId());
+		List<CompanyVedioVo> result = new ArrayList<CompanyVedioVo>();
+		//for(CompanyDetail detail : list) {
+		for(TblCompanyEntity detail : list) {
+			//CompanyVo vo = new CompanyVo(detail.getCompany());
+			CompanyVedioVo vo = new CompanyVedioVo(detail);
+			result.add(vo);
+		}
+		return success(result);
+	}
+	
 	
 	@RequestMapping("/list")
 	public ResponseEntity<Object>  lineList(Integer companyId) throws Exception { 
