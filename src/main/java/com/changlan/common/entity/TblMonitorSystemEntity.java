@@ -19,6 +19,8 @@ public class TblMonitorSystemEntity {
 	 @Column(name = "NAME", unique = true )
 	 private String name;
 	 
+	 private String easy_vedio_url;
+	 
 	// @Column(name = "CHANNEL_ID", unique = true )
 	// private Integer channelId;
 
@@ -36,6 +38,14 @@ public class TblMonitorSystemEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getEasy_vedio_url() {
+		return easy_vedio_url;
+	}
+
+	public void setEasy_vedio_url(String easy_vedio_url) {
+		this.easy_vedio_url = easy_vedio_url;
 	}
 
 	/*
