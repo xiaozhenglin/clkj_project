@@ -75,8 +75,14 @@ public class LoginController extends BaseController{
 		map.put("name", new ParamMatcher(name));
 		map.put("pass", new ParamMatcher(pass));
 		map.put("removeFlage", new ParamMatcher(0)); //被删除的将无法登陆
+		HttpServletRequest request = getReqeust();
+	   	//String requestURI = request.getRequestURI();
+	   	String fromIp = request.getRemoteHost();
+	   	String code = fromIp.replace(".", "");
 		HttpSession session = getSession(); 
-		String generalCode = ((String) session.getAttribute("verifyCode")); 
+		
+		String generalCode = ((String) session.getAttribute("verifyCode"+code)); 
+				
 		//验证码为空
 		if(verifyCode == null || "".equals(verifyCode.trim())){
 			return success(UserErrorType.VERIFIED_NULL.getCode(),UserErrorType.VERIFIED_NULL.getMsg(),false,null); 
@@ -114,6 +120,28 @@ public class LoginController extends BaseController{
 		return success(user); 
 	}
 	
+	@RequestMapping("/loginApp")
+	public ResponseEntity<Object>  loginApp(String name,String pass){
+		Map map = new HashMap();
+		map.put("name", new ParamMatcher(name));
+		map.put("pass", new ParamMatcher(pass));
+		map.put("removeFlage", new ParamMatcher(0)); //被删除的将无法登陆
+		HttpSession session = getSession(); 
+		String generalCode = ((String) session.getAttribute("verifyCode")); 
+		//验证码为空
+						
+		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
+		if(ListUtil.isEmpty(list)) {  
+			//没找到抛出异常
+			return success(UserErrorType.LOGIN_ERROR.getCode(),UserErrorType.LOGIN_ERROR.getMsg(),false,null); 
+		}
+		TblAdminUserEntity user = (TblAdminUserEntity)list.get(0);				
+		addUserInfoToSession(user);
+		logger.info("用户登入"+ user.getName());
+		return success(user); 
+	}
+	
+	
 	private void addUserInfoToSession(TblAdminUserEntity user) {
 		HttpSession session = getSession(); 
 //		session.setMaxInactiveInterval(1*60);//设置无操作60秒后失效
@@ -143,12 +171,20 @@ public class LoginController extends BaseController{
 		response.setDateHeader("Expires", 0);
 		response.setContentType("image/jpeg");
 		String verifyCode = VerifyCodeUtil.generateVerifyCode(4,"");
+		HttpServletRequest request = getReqeust();
+	   	//String requestURI = request.getRequestURI();
+	   	String fromIp = request.getRemoteHost();
+	   	String code = fromIp.replace(".", "");
         
 		logger.info("生成的验证码为："+ verifyCode.toUpperCase());
-		session.removeAttribute("verifyCode");
+		session.removeAttribute("verifyCode"+code);
 		session.removeAttribute("codeTime");
 
-		session.setAttribute("verifyCode", verifyCode.toUpperCase());
+		//session.setAttribute("verifyCode", verifyCode.toUpperCase());
+	
+	   	session.setAttribute("verifyCode" + code, verifyCode.toUpperCase());
+		
+		
 		LocalDateTime time = LocalDateTime.now().plusSeconds(60);//增加60秒时间超时
 		session.setAttribute("codeTime", time);
 		// 生成图片
@@ -156,6 +192,25 @@ public class LoginController extends BaseController{
 	    OutputStream out = response.getOutputStream();
 		VerifyCodeUtil.outputImage(w, h, out, verifyCode);		
 		return success(true);
+	}
+	
+	@RequestMapping("/getVerifyCode")
+	public ResponseEntity<Object>  getVerifyCode() throws IOException{
+		HttpSession session = getSession(); 
+		HttpServletResponse response = getResponse();
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("image/jpeg");
+		String verifyCode = VerifyCodeUtil.generateVerifyCode(4,"");        
+		logger.info("生成的验证码为："+ verifyCode.toUpperCase());
+		session.removeAttribute("verifyCode");
+		session.removeAttribute("codeTime");
+
+		session.setAttribute("verifyCode", verifyCode.toUpperCase());
+		LocalDateTime time = LocalDateTime.now().plusSeconds(60);//增加60秒时间超时
+		session.setAttribute("codeTime", time);
+		return success(verifyCode);
 	}
 	
 }

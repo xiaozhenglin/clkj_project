@@ -37,11 +37,12 @@ public class ChannelLineVedioVO {
 		List<TblPointsEntity> list = crudService.findByMoreFiled(TblPointsEntity.class, map, true);		
 		this.points = list;
 		for(TblPointsEntity point : list) {
-			/*
-			 * if(StringUtil.isNotEmpty(this.easy_vedio_url)) { this.easy_vedio_url =
-			 * point.getVideo_url(); break; }
-			 */
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
+			
+			if(StringUtil.isNotEmpty(this.easy_vedio_url)) {
+				if(StringUtil.isNotEmpty(point.getVideo_url())) {
+					this.easy_vedio_url = point.getVideo_url();
+				}				 
+			}else if(StringUtil.isNotEmpty(point.getVideo_url())) {
 				this.easy_vedio_url = this.easy_vedio_url + "," + point.getVideo_url();
 			}
 		}

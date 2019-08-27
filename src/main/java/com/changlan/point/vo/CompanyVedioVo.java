@@ -33,9 +33,10 @@ public class CompanyVedioVo {
 		for(TblCompanyChannelEntity entity : channels) {
 			ChannelVedioVO vo  = new ChannelVedioVO(entity);
 			if(StringUtil.isEmpty(this.easy_vedio_url)) {
-				this.easy_vedio_url = vo.getEasy_vedio_url();
-			}
-			if(StringUtil.isNotEmpty(vo.getEasy_vedio_url())) {
+				if(StringUtil.isNotEmpty(vo.getEasy_vedio_url())) {
+					this.easy_vedio_url = vo.getEasy_vedio_url();
+				}
+			}else if(StringUtil.isNotEmpty(vo.getEasy_vedio_url())) {
 				this.easy_vedio_url = this.easy_vedio_url + "," + vo.getEasy_vedio_url();
 			}
 			List<MonitorSystemVedioVO> systemList  = vo.getMonitorSystemVOs();
@@ -45,7 +46,9 @@ public class CompanyVedioVo {
 				}
 				List<ChannelLineVedioVO> channelList  = system.getCompanyLinesVOs();
 				for(ChannelLineVedioVO channel : channelList) {
-					this.easy_vedio_url = this.easy_vedio_url + "," + channel.getEasy_vedio_url();
+					if(StringUtil.isNotEmpty(channel.getEasy_vedio_url())) {
+						this.easy_vedio_url = this.easy_vedio_url + "," + channel.getEasy_vedio_url();
+					}
 				}
 			}
 			//List<TblPointsEntity> list = vo.getMonitorSystemVOs()
