@@ -58,6 +58,7 @@ public class EquipmentScreenDaoImpl  implements IEquipmentScreenDao {
 	@Override
 	public List<Object> queryPartDischargeIndicatorList(CommonDataQuery query) {
 		em.clear();	
+		query.setIndicatorIds("26");
 		String sql ="select distinct(t.INDICATOR_ID) from DEVICEDATACOLL t  where 1 =1 " ;
 		if(query.getPointId() != null) {
 			sql  += " and t.POINT_ID = " +  "'" + query.getPointId() + "'";

@@ -70,7 +70,7 @@ public class UserInfoServiceImpl implements IUserInfoService{
 					userEntity.setUserGroupName(userGroup.getName());
 				}
 				if(userEntity.getCompanyId()!=null) {
-					TblCompanyEntity company = (TblCompanyEntity)crudService.get(userEntity.getCompanyId(), TblCompanyEntity.class, true);
+					TblCompanyEntity company = (TblCompanyEntity)crudService.get(Integer.parseInt(userEntity.getCompanyId()), TblCompanyEntity.class, true);
 					userEntity.setCompanyName(company.getName());
 				}
 				UserDetail userDetail = new UserDetail(userEntity);

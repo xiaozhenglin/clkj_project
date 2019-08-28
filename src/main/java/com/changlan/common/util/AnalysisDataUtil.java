@@ -73,6 +73,7 @@ public class AnalysisDataUtil {
 
 	private static List<BigDecimal> PartDischargeAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -98,6 +99,7 @@ public class AnalysisDataUtil {
 	
 	private static List<BigDecimal> WaterHeigthAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -124,6 +126,7 @@ public class AnalysisDataUtil {
 
 	private static List<BigDecimal> firstAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -149,6 +152,7 @@ public class AnalysisDataUtil {
 	
 	private static List<BigDecimal> secondAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 		Integer beginByte = protocol.getBeginByte(); //开始位置
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制 
 		Integer dataByte = protocol.getDataByte(); //转为进制后一个数据的位置  5
@@ -171,6 +175,7 @@ public class AnalysisDataUtil {
 	
 	private static List<BigDecimal> temperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 //		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -198,6 +203,7 @@ public class AnalysisDataUtil {
 	//菲博泰温度采集多个温度数据
 	private static List<BigDecimal> getTemperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
+		list.clear();
 //		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -230,7 +236,7 @@ public class AnalysisDataUtil {
     //获取频次，幅值,能量
 	private static List<BigDecimal> partialDischarge(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
-		
+		list.clear();
 		int  k = backContent.length()-8;
 		String frequency = backContent.substring(k, k+4);
 		frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 

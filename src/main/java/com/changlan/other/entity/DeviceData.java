@@ -47,14 +47,15 @@ public class DeviceData implements Serializable {
 	@Column(name="PHASE_NO")
 	private String phase_no;
 	@Column(name="RECORD_ID")
-	private String record_id;
-	@Transient	
-	private String pointName;//余数
-	@Transient	
+	private Integer record_id;
+	
+	@Column(name="POINT_NAME")	
+	private String pointName;//
+	@Column(name="SUPERIMPOSED_PHASE")	
 	private Float SuperimposedPhase; //叠加相位
-	@Transient	
+	@Column(name="QUOTIENT")
 	private Float quotient ; //商数
-	@Transient	
+	@Column(name="REMAINDER")	
 	private Float Remainder;//余数
 	
 	
@@ -90,11 +91,11 @@ public class DeviceData implements Serializable {
 	}
 	
 			
-	public String getRecord_id() {
+	public Integer getRecord_id() {
 		return record_id;
 	}
 
-	public void setRecord_id(String record_id) {
+	public void setRecord_id(Integer record_id) {
 		this.record_id = record_id;
 	}
 
@@ -196,7 +197,6 @@ public class DeviceData implements Serializable {
 	public void setPointName(String pointName) {
 		this.pointName = pointName;
 	}
-	
-	
+		
 	
 }

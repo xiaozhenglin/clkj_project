@@ -81,6 +81,7 @@ public class UploadFileController extends BaseController{
 		
 	@RequestMapping(value = "/admin/downLogFile")
 	public ResponseEntity<Object> downLogFile(String filePath) throws Exception{
+		//System.out.println(filePath);
 		HttpServletResponse response = getResponse();
 		HttpServletRequest request = getReqeust();
 		try {

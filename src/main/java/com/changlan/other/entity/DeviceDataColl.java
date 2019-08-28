@@ -28,8 +28,16 @@ public class DeviceDataColl implements Serializable {
     private Integer pointDataId;
 	
 	@Column(name="RECORD_ID")
-	private String record_id; //一个设备 其中的一个通道主键id
+	private Integer record_id; //一个设备 其中的一个通道主键id
 		
+
+	public Integer getRecord_id() {
+		return record_id;
+	}
+
+	public void setRecord_id(Integer record_id) {
+		this.record_id = record_id;
+	}
 
 	@Column(name="PHASE_NO")		
 	private String phase_no;  //A,B,C相位
@@ -76,13 +84,7 @@ public class DeviceDataColl implements Serializable {
 		this.pointDataId = pointDataId;
 	}
 
-	public String getRecord_id() {
-		return record_id;
-	}
-
-	public void setRecord_id(String record_id) {
-		this.record_id = record_id;
-	}
+	
 
 	
 

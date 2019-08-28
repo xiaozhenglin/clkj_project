@@ -74,10 +74,11 @@ public class LineController extends BaseController{
 //		if(StringUtil.isNotEmpty(entity.getPicture_address())){
 //			uploadImg(entity.getLineId(),entity.getPicture_address());
 //		}
-		TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
-				
-    	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
-    	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称
+		//TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
+		if(entity.getChannelId()!=null)	{	
+	    	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
+	    	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称
+		}
     	Map centerMap = new HashMap();
 		centerMap.clear();	    	
 		centerMap.put("systemCode", new ParamMatcher("longLatiDefault"));

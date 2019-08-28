@@ -126,8 +126,8 @@ public class LoginController extends BaseController{
 		map.put("name", new ParamMatcher(name));
 		map.put("pass", new ParamMatcher(pass));
 		map.put("removeFlage", new ParamMatcher(0)); //被删除的将无法登陆
-		HttpSession session = getSession(); 
-		String generalCode = ((String) session.getAttribute("verifyCode")); 
+		//HttpSession session = getSession(); 
+		//String generalCode = ((String) session.getAttribute("verifyCode")); 
 		//验证码为空
 						
 		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 

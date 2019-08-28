@@ -26,7 +26,7 @@ public class CommonDataTableVO {
 	private String visualType; 
 	private String picture_url;   //静态页面路径 
 	private String video_url;
-	private String record_id;
+	private Integer record_id;
 	
 	private String unit; //指标单位
 	private List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
@@ -274,7 +274,7 @@ public class CommonDataTableVO {
 	
 			vo.setIndicatorName(indicatorValue.getName());
 			
-			if(StringUtil.isNotEmpty(pointData.getRecord_id())) {
+			if(pointData.getRecord_id()!=null) {
 				vo.setRecord_id(pointData.getRecord_id());
 			}
 			vo.setUnit(indicatorValue.getUnit());
@@ -312,7 +312,7 @@ public class CommonDataTableVO {
 	
 			vo.setIndicatorName(indicatorValue.getName());
 			
-			if(StringUtil.isNotEmpty(pointData.getRecord_id())) {
+			if(pointData.getRecord_id()!=null) {
 				vo.setRecord_id(pointData.getRecord_id());
 			}
 			vo.setUnit(indicatorValue.getUnit());
@@ -396,11 +396,13 @@ public class CommonDataTableVO {
 		this.video_url = video_url;
 	}
 
-	public String getRecord_id() {
+	
+
+	public Integer getRecord_id() {
 		return record_id;
 	}
 
-	public void setRecord_id(String record_id) {
+	public void setRecord_id(Integer record_id) {
 		this.record_id = record_id;
 	}
 

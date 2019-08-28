@@ -68,12 +68,13 @@ public class EquipmentScreenController extends BaseController {
 	@RequestMapping("/currentPointInfo") 
 	public ResponseEntity<Object>  currentPointInfoDisplay(CommonDataQuery query) {
 		List<CommonDataTableVO> result = getCurrentPointInfo(query);
-						
+		query =null;				
 		return success(result);
 	}
 	
 	private List<CommonDataTableVO> getCurrentPointInfo(CommonDataQuery query){
 		List<CommonDataTableVO> result = new ArrayList<CommonDataTableVO>();
+		result.clear();
 		Date begin = null  ;
 		Date end = null;
 		if(query.getBegin()!=null && query.getEnd()!=null) {
@@ -232,12 +233,13 @@ public class EquipmentScreenController extends BaseController {
 	@RequestMapping("/historyPointInfo") 
 	public ResponseEntity<Object>  historyPointInfoDisplay(CommonDataQuery query) {
 		List<CommonDataTableVO> result = getHistoryPointInfo(query);
-				
+		query =null;		
 		return success(result);
 	}
 	
 	private List<CommonDataTableVO> getHistoryPointInfo(CommonDataQuery query){
 		List<CommonDataTableVO> result = new ArrayList<CommonDataTableVO>();
+		result.clear();
 		Date begin = null  ;
 		Date end = null;
 		if(query.getBegin()!=null && query.getEnd()!=null) {

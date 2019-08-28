@@ -80,10 +80,11 @@ public class PartialDischargeController extends BaseController{
 //		List<PointInfoDetail> all = pointDefineService.getAll(point);
 		
 		List<DeviceData> list = (List<DeviceData>)partialDischargeService.table(query); 
-		for(int i =0;i<list.size();i++) {
-			list.get(i).setCaculate();
-			list.get(i).setPointName();
-		}
+		//for(int i =0;i<list.size();i++) {
+			//list.get(i).setCaculate();
+			//list.get(i).setPointName();
+		//}
+		query = null;
 		return success(list);
 	}
 	 

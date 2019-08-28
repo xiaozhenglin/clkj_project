@@ -61,7 +61,7 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 			sql+=" AND DEVICEDATA.POINT_ID = "+query.getPointId();
 		}
 		
-		if(StringUtil.isNotEmpty(query.getRecord_id())) {
+		if(query.getRecord_id()!=null) {
 			sql+=" AND DEVICEDATA.RECORD_ID = "+ "'" + query.getRecord_id() + "'";
 		}
 //		if(query.getPointId()!=null) {
@@ -90,7 +90,7 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 			sql+=" AND DEVICEDATASPECIAL.POINT_ID = "+query.getPointId();
 		}
 		
-		if(StringUtil.isNotEmpty(query.getRecord_id())) {
+		if(query.getRecord_id()!=null) {
 			sql+=" AND DEVICEDATASPECIAL.RECORD_ID = "+ "'" + query.getRecord_id() + "'";
 		}
 //		if(query.getPointId()!=null) {

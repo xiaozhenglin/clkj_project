@@ -56,6 +56,7 @@ import com.changlan.netty.service.NettyServiceImpl;
 import com.changlan.other.entity.DeviceData;
 import com.changlan.other.entity.DeviceDataColl;
 import com.changlan.other.entity.DeviceDataSpecial;
+import com.changlan.point.pojo.PointStatus;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
@@ -118,6 +119,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		TblCommandCategoryEntity category = recordDetail.getCategory();
 		//监控点信息
 	  	TblPointsEntity point = recordDetail.getPoint();
+	  	TblPointsEntity pointUpdate = (TblPointsEntity) crudService.get(recordDetail.getPoint().getPointId(), TblPointsEntity.class, true);
+	  	pointUpdate.setStatus(PointStatus.CONNECT.toString());
+	  	crudService.update(pointUpdate,true);
 	  	//记录信息
 	  	TblCommandRecordEntity record = recordDetail.getRecord();
 	  	List<ProtocolInfo> currentDataProtocol = recordDetail.getCurrentDataProtocol(); 
@@ -238,7 +242,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 		data.setSystem_start("yes");
 		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
-		System.out.println(update.getSendCommandId());
+		//System.out.println(update.getSendCommandId());
 		
 		//保存记录 并加锁
 		TblCommandRecordEntity record = updateServerRecord(update,point.getPointRegistPackage()); 
@@ -292,7 +296,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         
         SessionUtil.storage.put(point.getPointId() + "jfTwo", "no");
         
-        System.out.println("saveDeviceData " + SessionUtil.storage.get(point.getPointId() + "phase_no"));
+        //System.out.println("saveDeviceData " + SessionUtil.storage.get(point.getPointId() + "phase_no"));
         				
 		//crudService.save(entity, true);
 		return entity;
@@ -385,7 +389,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		String commandContent = record.getCommandContent();
 		
 		
-		System.out.println(substring); 
+		//System.out.println(substring); 
+		logger.info(substring);
 		String substringcopy = substring;
 		long curTime = new Date().getTime();
 		float maxPhase = 0;
@@ -419,13 +424,13 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		if(SessionUtil.storage.get(point.getPointId() + "jfTwo").equals("no")) {
 			DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
 			dataSpecial.setAmplitude(maxAmplitude);
-			dataSpecial.setCommond_record_id(record.getSendCommandId());
+			dataSpecial.setCommond_record_id(record.getCommandRecordId());
 			dataSpecial.setEnergy(energy);
 			dataSpecial.setPhase(maxPhase);
 			dataSpecial.setPointId(record.getPointId());
 			dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			dataSpecial.setCreatetime(new Date());
-			dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
+			dataSpecial.setRecord_id(String.valueOf(dataSpecial.getId()));
 			dataSpecial.setFrequency(frequencyMax);
 			crudService.save(dataSpecial, true);
 		
@@ -447,10 +452,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 				dataColl.setPointName(point.getPointName());
 				dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 				dataColl.setRecordTime(new Date());
-				dataColl.setRecord_id((String)SessionUtil.storage.get( point.getPointId() + "phase_no")+String.valueOf(curTime));
+				dataColl.setRecord_id(dataSpecial.getId());
 				//dataColl.setValue(String.valueOf(maxPhase));   //
-				SessionUtil.storage.put(point.getPointId() + "record_id", (String)SessionUtil.storage.get( point.getPointId() +"phase_no")+String.valueOf(curTime));
-				dataColl.setValue(indexs[i]);
+				SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getRecord_id());
+				dataColl.setValue(indexs[i%3]);
 				dataColl.setIndicatorId(protocol.getIndicatorId());
 				dataColl.setProtocolId(protocol.getProtocolId());
 				TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
@@ -468,10 +473,12 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			DeviceData data = new DeviceData();
 			String amplitude = substring.substring(i, i+4);
 			amplitude = StringUtil.decimalConvert(amplitude, 16, 10, null); 
-			System.out.println("幅值"+amplitude); 
+			//System.out.println("幅值"+amplitude); 
+			logger.info("幅值"+amplitude);
 			String phase = substring.substring(i+4, i+8);
 			phase = StringUtil.decimalConvert(phase, 16, 10, null); 
-			System.out.println("相位"+phase); 
+			//System.out.println("相位"+phase); 
+			logger.info("相位"+phase);
 			data.setChannelSettings_id(14);
 			
 			data.setAmplitude(Float.parseFloat(amplitude));//幅值
@@ -479,10 +486,29 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setCreatetime(new Date()); 
 			data.setPointId(point.getPointId()); 
 			
-			System.out.println(SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			//System.out.println(SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			logger.info("所属相位"+SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
-			data.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "record_id"));
+			//data.setRecord_id(Integer.parseInt((String)SessionUtil.storage.get(point.getPointId() + "record_id")));
+			
+			
+			
+			BigDecimal fuzhi = new BigDecimal(amplitude); 
+			BigDecimal diejiaXiShu = new BigDecimal(1000); 
+			BigDecimal xiangwei = new BigDecimal(phase); 
+			
+			BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);			
+			//this.quotient = shang.floatValue();
+			data.setQuotient(shang.floatValue());
+			
+			BigDecimal yushu = xiangwei.divideAndRemainder(diejiaXiShu)[1];
+			//this.Remainder = yushu.floatValue();
+			data.setRemainder(yushu.floatValue());
+			
+			BigDecimal diejiaXiangWei = yushu.divide(diejiaXiShu).multiply(new BigDecimal(360));			
+			//this.SuperimposedPhase = diejiaXiangWei.floatValue();
+			data.setSuperimposedPhase(diejiaXiangWei.floatValue());
 			crudService.update(data, true);
 			result.add(data);
 	
@@ -505,16 +531,20 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		List<Object> result = new ArrayList<Object>();
 		
 		String substring = record.getBackContent().substring(10);
-		System.out.println(substring); 
+		//System.out.println(substring); 
+		logger.info(substring);
 		String substringcopy = substring;
 		long curTime = new Date().getTime();
 		
 		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
-		dataSpecial.setCommond_record_id(record.getSendCommandId());
+		dataSpecial.setCommond_record_id(record.getCommandRecordId());
 		dataSpecial.setPointId(record.getPointId());
 		dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 		dataSpecial.setCreatetime(new Date());
-		dataSpecial.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
+		dataSpecial.setRecord_id(String.valueOf(dataSpecial.getId()));
+		
+		crudService.save(dataSpecial, true);
+		SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
 		
 		for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
@@ -531,9 +561,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			dataColl.setPointName(point.getPointName());
 			dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			dataColl.setRecordTime(new Date());
-			dataColl.setRecord_id((String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime));
+			dataColl.setRecord_id(dataSpecial.getId());
 			
-			SessionUtil.storage.put(point.getPointId() + "record_id", (String)SessionUtil.storage.get(point.getPointId() + "phase_no")+String.valueOf(curTime)); //设置好 record_id
+			//SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
 			SessionUtil.storage.put(point.getPointId() + "jfTwo", "yes");
 		    
 		    String protocolName  = protocol.getDataType();		    		    
@@ -558,8 +588,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			crudService.save(dataColl, true);
 			result.add(dataColl);
 		}								
-		crudService.save(dataSpecial, true);						
-		//SessionUtil.storage.remove("phase_no");
+		crudService.update(dataSpecial, true);						
+		//SessionUtil.storage.remove(point.getPointId() + "phase_no");
 		return result;
 	}
 	
@@ -580,19 +610,33 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 				e.printStackTrace();
 			}
 		}else if(pinci >122 && pinci <= 244) {
-			String trim  ="0114070600010000007A4507";
-			saveAndSend(point,trim); //0-121的数据 也就是122个
-			try {
-				Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			String trim  ="0114070600010000007B84C7";
+			Thread thread1 = new Thread(){		           
+	            public void run(){		              
+	                    saveAndSend(point,trim);		                   		              
+	            }
+	        };
+	        thread1.start();
 			Integer more = 244-pinci;
-			String command2 = "011407060001007B" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
+			String command2 = "011407060001007C" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
 			//计算crc校验 的结果
 			byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
 			String trim2= CRC16M.getBufHexStr(sbuf2).trim();
-			saveAndSend(point,trim2);
+			Thread thread2 = new Thread(){		           
+	            public void run(){
+	               
+	                    try {
+	                    	Thread.sleep(3*1000);
+	                    	thread1.join();
+	                    	saveAndSend(point,trim2);
+	                    }catch (InterruptedException e){
+	                    	e.printStackTrace();
+	                    }
+	                   
+	                
+	            }
+	        };
+	        thread2.start();
 		}
 	}
 	
@@ -612,7 +656,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 		String backContent = record.getBackContent();
 		backContent = backContent.substring(6,backContent.length()-4);
-		System.out.println(backContent);
+		//System.out.println(backContent);
+		logger.info(backContent);
 		
 		/*
 		 * DeviceData data = new DeviceData(); //data.setChannelSettings_id();
@@ -622,7 +667,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		while(i<=backContent.length()-4) {
 			String frequency = backContent.substring(i, i+4);
 			frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
-			System.out.println("频次"+frequency); 
+			//System.out.println("频次"+frequency); 
+			logger.info("频次"+frequency);
 			Integer pinci = Integer.parseInt(frequency)*2;
 			
 			//一次最多采集122个，所以要分批次采集
@@ -638,7 +684,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 					e.printStackTrace();
 				}
 			}else if(pinci >122 && pinci <= 244) {
-				String trim  ="0114070600010000007A4507";
+				String trim  ="0114070600010000007B84C7";
 				saveAndSend(point,trim); //0-121的数据 也就是122个
 				try {
 					Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
@@ -646,7 +692,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 					e.printStackTrace();
 				}
 				Integer more = 244-pinci;
-				String command2 = "011407060001007B" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
+				String command2 = "011407060001007C" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
 				//计算crc校验 的结果
 				byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
 				String trim2= CRC16M.getBufHexStr(sbuf2).trim();
@@ -712,7 +758,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 		
 		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
-		System.out.println(update.getSendCommandId());
+		//System.out.println(update.getSendCommandId());
+		logger.info("SendCommandId" + update.getSendCommandId());
 		
 		//保存记录 并加锁
 		TblCommandRecordEntity record = updateServerRecord(update,point.getPointRegistPackage()); 
