@@ -65,15 +65,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         logger.info("ServerHandler类channelRead方法接收内容"+s);
         if(StringUtil.isNotEmpty(s)&&s.length()>=4) {
     		 s = s.trim();
-        	 if(s.indexOf("messageBox")>-1) {
-        		setMessageBoxChannel(s,channel);
-        	 }else if(s.indexOf("CLKJ")>-1 || s.indexOf("FBT")>-1 || s.indexOf("33413130303230303031464A445430443041")>-1) {
+        	 if(s.indexOf("CLKJ")>-1) {
              	//设置注册包
              	setPackageChannel(s,channel);
              	changePointStatus(channel,PointStatus.CONNECT);
              }else {
                  //保存返回值信息 并 解锁
              	String registPackage = getRegistPackageByChannel(channel); 
+             	if(StringUtil.isEmpty(registPackage)) {
+             		//关闭
+             		channel.close();
+             	}
          		INettyService nettyService = SpringUtil.getBean(INettyService.class);
          		Integer commandRecordId = nettyService.saveReturnMessage(registPackage,s);  
          		logger.info("第三步：[" + channel.remoteAddress() + "]保存返回数据 "+s+ "到操作记录的commandRecordId："+commandRecordId);
@@ -87,10 +89,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         context.flush(); //加的部分
     }
     
-    private void setMessageBoxChannel(String s, Channel channel) {
-    	 NettyServer.messageChannelMap.put(s, channel); 
-   	  	 logger.info("第一步:消息弹框接受注册包 [" + channel.remoteAddress() + "]:"+ s + " 长度 "+s.length()+"\n");
-	}
+//    private void setMessageBoxChannel(String s, Channel channel) {
+//    	 NettyServer.messageChannelMap.put(s, channel); 
+//   	  	 logger.info("第一步:消息弹框接受注册包 [" + channel.remoteAddress() + "]:"+ s + " 长度 "+s.length()+"\n");
+//	}
 
 	private void setPackageChannel(String registPackage, Channel channel) {
     	  NettyServer.channelMap.put(registPackage, channel); 
