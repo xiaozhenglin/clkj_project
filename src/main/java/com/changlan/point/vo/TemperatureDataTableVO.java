@@ -30,7 +30,7 @@ public class TemperatureDataTableVO {
 			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
 			this.indicatorCode = indicatorValue.getIndicatorCode();
 			this.indicatorName = indicatorValue.getName();
-			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
+			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getIndicatorId());
 			results.add(vo);
 		}
 	}

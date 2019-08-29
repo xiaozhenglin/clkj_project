@@ -30,7 +30,7 @@ public class PartDischargeDataTableVO {
 			this.indicatorCode = indicatorValue.getIndicatorCode();
 			this.indicatorName = indicatorValue.getName();
 			this.unit = indicatorValue.getUnit();
-			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
+			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
 			results.add(vo);
 		}
 	}

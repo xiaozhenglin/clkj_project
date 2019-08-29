@@ -30,7 +30,7 @@ public class PoinDataTableVO {
 			this.indicatorName = indicatorValue.getName();
 			this.unit = indicatorValue.getUnit();
 			this.visualType = indicatorValue.getVisualType();
-			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime());
+			IndicatorValueVO vo = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getIndicatorId());
 			results.add(vo);
 		}
 	}

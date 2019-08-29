@@ -55,6 +55,7 @@ public class PartDischargeDataDaoImpl implements IPartDischargeDataDao{
 			Entry<String, String> next = iterator.next(); 
 			createNativeQuery.setParameter(next.getKey(), next.getValue()); 
 		}
+		System.out.println(sql);
 		List<DeviceDataColl> resultList = createNativeQuery.getResultList(); 
 		if(!ListUtil.isEmpty(resultList)) {
 			return resultList;

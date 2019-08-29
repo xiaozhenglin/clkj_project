@@ -72,7 +72,7 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
 			sql+=" AND DEVICEDATA.CREATETIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" ;
 		}
-		sql+= " ORDER BY DEVICEDATA.CREATETIME DESC ";
+		sql+= " ORDER BY DEVICEDATA.CREATETIME DESC LIMIT 0,2000 ";
 		Query createNativeQuery = em.createNativeQuery(sql.toString(),DeviceData.class);
 		return createNativeQuery.getResultList();
 	}

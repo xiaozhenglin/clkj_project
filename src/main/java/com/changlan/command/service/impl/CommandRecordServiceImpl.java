@@ -195,7 +195,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  	TblPointSendCommandEntity sendCommandDetail = recordDetail.getCommandDefault();
 	  	if(sendCommandDetail.getIs_controller().contentEquals("1")) {   //若为控制类指令 
 	  		 if(record.getCommandContent().substring(0, 2).contentEquals(record.getBackContent().substring(0, 2))) {   //控制指令内容和返回指令内容一致， 说明控制类指令起效果。
-	  			sendCommandDetail.setSystem_start("yes");  		  //成功控制	
+	  			sendCommandDetail.setSystem_start("no");  		  //成功控制	
 	  		 }else {
 	  			sendCommandDetail.setSystem_start("no"); 
 	  			String error = sendCommandDetail.getCommandName() + "失败";
@@ -240,7 +240,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	private void saveAndSubSend(TblPointsEntity point, TblPointSendCommandEntity  data, ContainSendCommands sendCommand) { 
 		
-		data.setSystem_start("yes");
+		data.setSystem_start("no");
 		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
 		//System.out.println(update.getSendCommandId());
 		
@@ -490,9 +490,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			logger.info("所属相位"+SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
-			//data.setRecord_id(Integer.parseInt((String)SessionUtil.storage.get(point.getPointId() + "record_id")));
-			
-			
+			if((Integer)SessionUtil.storage.get(point.getPointId() + "record_id")!=null){
+				data.setRecord_id((Integer)SessionUtil.storage.get(point.getPointId() + "record_id"));
+			}
+						
 			
 			BigDecimal fuzhi = new BigDecimal(amplitude); 
 			BigDecimal diejiaXiShu = new BigDecimal(1000); 
@@ -545,7 +546,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 		crudService.save(dataSpecial, true);
 		SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
-		
+
 		for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 		    //解析数据
@@ -736,7 +737,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
  		}
  		
 		TblPointSendCommandEntity data = new TblPointSendCommandEntity();		
-		data.setSystem_start("yes");
+		data.setSystem_start("no");
 		data.setCommandCatagoryId(7);
 		data.setCommandContent(sendContent);
 		data.setCommandName("获取幅值相位");

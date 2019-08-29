@@ -5,16 +5,17 @@ import java.util.Date;
 public class IndicatorValueVO {
 	private String value; //指标值
 	private Date recordTime; //记录时间
-	
-	
-	public IndicatorValueVO(String value, Date recordTime) {
+	private Integer id;
+				
+	public IndicatorValueVO(String value, Date recordTime, Integer id) {
 		super();
 		this.value = value;
 		this.recordTime = recordTime;
-//		this.indicatorCode = indicatorCode;
+		if(id!=null) {
+			this.id = id;
+		}
 	}
 
-	
 	public IndicatorValueVO() {
 		super();
 	}
@@ -32,6 +33,15 @@ public class IndicatorValueVO {
 		this.recordTime = recordTime;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	
 //	public String getIndicatorCode() {
 //		return indicatorCode;
 //	}
