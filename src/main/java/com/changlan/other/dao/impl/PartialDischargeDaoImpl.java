@@ -63,6 +63,8 @@ public class PartialDischargeDaoImpl implements IPartialDischargeDao{
 		
 		if(query.getRecord_id()!=null) {
 			sql+=" AND DEVICEDATA.RECORD_ID = "+ "'" + query.getRecord_id() + "'";
+		}else {
+			return null;
 		}
 //		if(query.getPointId()!=null) {
 //			sql+=" INNER JOIN devicesettings on channelSettings.deviceSetting_id = devicesettings.id and devicesettings.point_id = "+query.getPointId();

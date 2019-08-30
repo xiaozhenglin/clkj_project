@@ -1,12 +1,15 @@
 package com.changlan.command.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.script.ScriptException;
 import javax.servlet.http.HttpSession;
@@ -304,17 +307,16 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	//设置相位 
 	private void savePhaseNo(String value,TblCommandProtocolEntity protocol) {
-		
-		              
+				              
         int beginByte = protocol.getBeginByte();
-            
-        if(beginByte<31) {                           	
-        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "A");
-        }else if (beginByte<55) {
-        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "B");
-        }else{
-        	SessionUtil.storage.put(protocol.getPointId() +  "phase_no", "C");
-        }
+         
+	        if(beginByte<31) {                           	
+	        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "A");
+	        }else if (beginByte<55) {
+	        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "B");
+	        }else{
+	        	SessionUtil.storage.put(protocol.getPointId() +  "phase_no", "C");
+	        }        
                        					
 	}
 
@@ -487,8 +489,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setPointId(point.getPointId()); 
 			
 			//System.out.println(SessionUtil.storage.get(point.getPointId() + "phase_no"));
-			logger.info("所属相位"+SessionUtil.storage.get(point.getPointId() + "phase_no"));
-			data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			//logger.info("所属相位"+SessionUtil.storage.get(point.getPointId() + "phase_no"));
+			//data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
 			if((Integer)SessionUtil.storage.get(point.getPointId() + "record_id")!=null){
 				data.setRecord_id((Integer)SessionUtil.storage.get(point.getPointId() + "record_id"));
@@ -499,9 +501,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			BigDecimal diejiaXiShu = new BigDecimal(1000); 
 			BigDecimal xiangwei = new BigDecimal(phase); 
 			
-			BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);			
+			//BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);
+			BigDecimal shang = xiangwei.divide(diejiaXiShu,2, RoundingMode.HALF_UP);
 			//this.quotient = shang.floatValue();
 			data.setQuotient(shang.floatValue());
+			
 			
 			BigDecimal yushu = xiangwei.divideAndRemainder(diejiaXiShu)[1];
 			//this.Remainder = yushu.floatValue();
@@ -536,23 +540,29 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		logger.info(substring);
 		String substringcopy = substring;
 		long curTime = new Date().getTime();
+										  
+		DeviceDataSpecial deviceDataSpecialA = createDeviceDataSpecial(record);
+		DeviceDataSpecial deviceDataSpecialB = createDeviceDataSpecial(record);
+		DeviceDataSpecial deviceDataSpecialC = createDeviceDataSpecial(record);
 		
-		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
-		dataSpecial.setCommond_record_id(record.getCommandRecordId());
-		dataSpecial.setPointId(record.getPointId());
-		dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
-		dataSpecial.setCreatetime(new Date());
-		dataSpecial.setRecord_id(String.valueOf(dataSpecial.getId()));
-		
-		crudService.save(dataSpecial, true);
-		SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
-
 		for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 		    //解析数据
 		    List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
 		    
 		    savePhaseNo(data.get(0).toString(),protocol);  //取得 相位 , 是否 为 A相, B相,C相 
+		    
+		    String protocolName  = protocol.getDataType();
+		    
+		    DeviceDataSpecial dataSpecial = deviceDataSpecialA;
+		    
+		    if(protocolName.indexOf("A")>-1||protocolName.indexOf("a")>-1) {
+		    	 dataSpecial = (DeviceDataSpecial) crudService.get(deviceDataSpecialA.getId(), DeviceDataSpecial.class, true);		    	
+		    }else if(protocolName.indexOf("B")>-1||protocolName.indexOf("b")>-1) {
+		    	 dataSpecial = (DeviceDataSpecial) crudService.get(deviceDataSpecialB.getId(), DeviceDataSpecial.class, true);		    	
+		    }else {
+		    	 dataSpecial = (DeviceDataSpecial) crudService.get(deviceDataSpecialC.getId(), DeviceDataSpecial.class, true);		    	
+		    }
 		    
 
 		    DeviceDataColl dataColl = new DeviceDataColl(); 
@@ -563,15 +573,18 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			dataColl.setRecordTime(new Date());
 			dataColl.setRecord_id(dataSpecial.getId());
-			
-			//SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
+			if(Integer.parseInt(data.get(0).toString())>2) {
+				SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
+			}
 			SessionUtil.storage.put(point.getPointId() + "jfTwo", "yes");
 		    
-		    String protocolName  = protocol.getDataType();		    		    
+		   // String protocolName  = protocol.getDataType();	
+		   
+			String phase_no = (String)SessionUtil.storage.get(point.getPointId() + "phase_no");
 		    if(protocolName.indexOf("频次")>-1) {
 		    	dataSpecial.setFrequency(Integer.parseInt(data.get(0).toString()));
 		    	dataColl.setValue(data.get(0).toString());
-		    	sendFrequent(point,data.get(0).toString());  ////得到频次
+		    	sendFrequent(point,data.get(0).toString(),phase_no);  ////得到频次
 		    }else if (protocolName.indexOf("幅值")>-1) {
 		    	dataSpecial.setAmplitude(Float.parseFloat(data.get(0).toString()));
 		    	dataSpecial.setPhase(Float.parseFloat(data.get(0).toString()));
@@ -579,7 +592,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		    }else {   //能量值
 		    	dataSpecial.setEnergy(Integer.parseInt(data.get(0).toString()));
 		    	dataColl.setValue(data.get(0).toString());
-		    }		    
+		    }
+		    dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 		    dataColl.setIndicatorId(protocol.getIndicatorId());
 			dataColl.setProtocolId(protocol.getProtocolId());
 			TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
@@ -588,57 +602,106 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			
 			crudService.save(dataColl, true);
 			result.add(dataColl);
+			crudService.update(dataSpecial, true);	
 		}								
-		crudService.update(dataSpecial, true);						
+							
 		//SessionUtil.storage.remove(point.getPointId() + "phase_no");
 		return result;
 	}
 	
-	//计算频次后发送
-	public void sendFrequent(TblPointsEntity point,String frequency) {
-		Integer pinci = Integer.parseInt(frequency)*2;
+	
+	public DeviceDataSpecial createDeviceDataSpecial(TblCommandRecordEntity record) {
 		
-		//一次最多采集122个，所以要分批次采集
-		if(pinci >0 && pinci <= 122) {
-			String command = "0114070600010000" +  StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; 
-			//计算crc校验 的结果
-			byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
-			String trim = CRC16M.getBufHexStr(sbuf).trim();
-			saveAndSend(point, trim); 
-			try {
-				Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}else if(pinci >122 && pinci <= 244) {
-			String trim  ="0114070600010000007B84C7";
-			Thread thread1 = new Thread(){		           
-	            public void run(){		              
-	                    saveAndSend(point,trim);		                   		              
-	            }
-	        };
-	        thread1.start();
-			Integer more = 244-pinci;
-			String command2 = "011407060001007C" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
-			//计算crc校验 的结果
-			byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
-			String trim2= CRC16M.getBufHexStr(sbuf2).trim();
-			Thread thread2 = new Thread(){		           
-	            public void run(){
-	               
-	                    try {
-	                    	Thread.sleep(3*1000);
-	                    	thread1.join();
-	                    	saveAndSend(point,trim2);
-	                    }catch (InterruptedException e){
-	                    	e.printStackTrace();
-	                    }
-	                   
-	                
-	            }
-	        };
-	        thread2.start();
+		DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
+		dataSpecial.setCommond_record_id(record.getCommandRecordId());
+		dataSpecial.setPointId(record.getPointId());
+		//dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
+		dataSpecial.setCreatetime(new Date());
+		dataSpecial.setRecord_id(String.valueOf(dataSpecial.getId()));
+		dataSpecial.setFrequency(0);
+		dataSpecial.setAmplitude(0f);
+		dataSpecial.setEnergy(0);		
+		crudService.save(dataSpecial, true);
+		return dataSpecial;
+		
+	}
+	
+	
+	//计算频次后发送
+	public void sendFrequent(TblPointsEntity point,String frequency ,String phase_no) {
+		Integer pinci = Integer.parseInt(frequency)*2;
+		logger.info("幅值相位频次数 : " +pinci);
+		String channelId = "";
+		if(phase_no.contentEquals("B")) {
+			 channelId = "0002";
+		}else if(phase_no.contentEquals("C")) {
+			 channelId = "0003";
+		}else {
+			 channelId = "0001";
 		}
+		
+		int count=1;
+	    int pkgsum=122;
+	    int sum = pinci/pkgsum;
+	   
+	    ExecutorService executorService = Executors.newSingleThreadExecutor();
+	    
+	    for(int i = 0; i <= sum ;i++) {
+	    	String starts=StringUtil.decimalConvert(String.valueOf(i*pkgsum), 10, 16, 4);  //寄存器开发位置
+	    	String pkgcount="";      //每个指令读取多少长度
+	    	if(i==count){
+	    	    pkgcount=pinci-pkgsum*i+"";   //最后一次的读取长度
+	    	   }else{
+	    	    pkgcount=pkgsum+"";
+	    	   }
+	    	pkgcount=StringUtil.decimalConvert(String.valueOf(pkgcount), 10, 16, 4);  //寄存器开发位置
+	    	
+	    	String cmdStr= "01140706" +channelId + starts+pkgcount;
+	    	//logger.info("cmdStr one : " +cmdStr);
+	    	byte[] sbuf = CRC16M.getSendBuf(cmdStr);
+	    	String cmdStrTwo = CRC16M.getBufHexStr(sbuf).trim();
+	    	logger.info("cmdStr : " +cmdStrTwo);
+	    	
+	    	
+	    	Thread thread = new Thread(new Runnable() {
+	            @Override
+	            public void run() {	            	
+	            	try {
+	            		saveAndSend(point, cmdStrTwo); 
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            }
+	        });	    	
+	    	executorService.submit(thread)	;   	    		    		    		    			    		    	
+	    }
+	    executorService.shutdown();
+	    
+		//一次最多采集122个，所以要分批次采集
+		/*
+		 * if(pinci >0 && pinci <= 122) { String command = "0114070600010000" +
+		 * StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; //计算crc校验
+		 * 的结果 byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
+		 * String trim = CRC16M.getBufHexStr(sbuf).trim(); saveAndSend(point, trim); try
+		 * { Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息 } catch (InterruptedException
+		 * e) { e.printStackTrace(); } }else if(pinci >122 && pinci <= 244) { String
+		 * trim ="0114070600010000007B84C7"; Thread thread1 = new Thread(){ public void
+		 * run(){ saveAndSend(point,trim); } }; thread1.start(); Integer more =
+		 * 244-pinci; String command2 = "011407060001007C" +
+		 * StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; //计算crc校验
+		 * 的结果 byte[] sbuf2 =
+		 * CRC16M.getSendBuf(command2.substring(0,command2.length()-4)); String trim2=
+		 * CRC16M.getBufHexStr(sbuf2).trim(); Thread thread2 = new Thread(){ public void
+		 * run(){
+		 * 
+		 * try { Thread.sleep(3*1000); thread1.join(); saveAndSend(point,trim2); }catch
+		 * (InterruptedException e){ e.printStackTrace(); }
+		 * 
+		 * 
+		 * } }; thread2.start(); }
+		 */
 	}
 	
 	

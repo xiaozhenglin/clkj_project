@@ -122,7 +122,7 @@ public class EquipmentScreenController extends BaseController {
 		}
 		
 		List<Object> listPartDischargeIndicators = (List<Object>)equipmentScreenDao.queryPartDischargeIndicatorList(query);
-		List<Integer> indicatorsPartDischargeList = getIndicatorList(query.getCategroryId(),query.getIndicatorIds(),listPartDischargeIndicators);
+		List<Integer> indicatorsPartDischargeList = getPartIndicatorList(query.getCategroryId(),query.getIndicatorIds(),listPartDischargeIndicators);
 		if(indicatorsPartDischargeList.size()!=0) {
 			//遍历 指标
 			for(Integer indicatorId : indicatorsPartDischargeList) {
@@ -284,7 +284,8 @@ public class EquipmentScreenController extends BaseController {
 		}
 		
 		List<Object> listPartDischargeIndicators = (List<Object>)equipmentScreenDao.queryPartDischargeIndicatorList(query);
-		List<Integer> indicatorsPartDischargeList = getIndicatorList(query.getCategroryId(),query.getIndicatorIds(),listPartDischargeIndicators);
+		List<Integer> indicatorsPartDischargeList = getPartIndicatorList(query.getCategroryId(),query.getIndicatorIds(),listPartDischargeIndicators);
+		
 		if(indicatorsPartDischargeList.size()!=0) {
 			//遍历 指标
 			for(Integer indicatorId : indicatorsPartDischargeList) {
@@ -343,6 +344,59 @@ public class EquipmentScreenController extends BaseController {
 		}
 		
 		return list;
+	}
+	
+	
+	private List<Integer> getPartIndicatorList(Integer categoryId, String indicatorId ,List<Object> listPointIndicators) {
+		List<Integer> indicatorsList = new ArrayList<Integer>();
+		for(Object o : listPointIndicators ) {
+			Object [] obj = (Object[]) o;
+			
+			Integer indicator = Integer.parseInt(obj[1].toString());
+			
+			TblIndicatorValueEntity  tblIndicatorValue = (TblIndicatorValueEntity) crudService.get(indicator,TblIndicatorValueEntity.class, true);
+			//indicatorsList.add(Integer.parseInt(obj[1].toString()));
+			if(tblIndicatorValue.getName().indexOf("幅值")>-1) { //只展示有幅值的局放指标
+				indicatorsList.add(indicator);
+			}
+		}
+		
+		List<Integer> list = new ArrayList<Integer>();
+		//只有符合条件的indicatorId 才传入 计算
+		if(StringUtil.isEmpty(indicatorId) && categoryId ==null) {
+			
+			return indicatorsList;
+			
+		}
+		
+		// 指标值id不为空
+				if(StringUtil.isNotEmpty(indicatorId)) {
+					for(Integer o : indicatorsList ) {
+						if(o==Integer.parseInt(indicatorId)) {  //只有符合条件的indicatorId 才传入 计算
+							List<IndiCatorValueDetail> all = indicatorValueService.getAll(Integer.parseInt(indicatorId), null);
+							for(IndiCatorValueDetail detail : all) {
+								list.add(detail.getIndicatorValue().getIndicatorId());
+							}
+						}
+						return list;
+					}						
+				}
+				
+				//指标类别不为空  	
+				if(categoryId!=null) {
+					List<IndiCatorValueDetail> all = indicatorValueService.getAll(null, categoryId); 
+					for(IndiCatorValueDetail detail : all) {
+						
+						Integer IndicatorIdTmp =  detail.getIndicatorValue().getIndicatorId();
+						for(Integer o : indicatorsList ) {
+							if(o==IndicatorIdTmp) {  //只有符合条件的indicatorId 才传入 计算
+								list.add(detail.getIndicatorValue().getIndicatorId());
+							}
+						}
+					}
+					return list;
+				}
+		return list;				
 	}
 	
 	private void setResponseHeader(HttpServletResponse response, String fileName) {

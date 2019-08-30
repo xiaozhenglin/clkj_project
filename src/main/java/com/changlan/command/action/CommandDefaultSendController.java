@@ -22,6 +22,7 @@ import com.changlan.common.entity.TblIndicatorCategoriesEntity;
 import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.StringUtil;
 import com.changlan.point.pojo.PoinErrorType;
 
 @RestController
@@ -38,6 +39,10 @@ public class CommandDefaultSendController extends BaseController{
 		Boolean existName = commandDefaultService.existName(entity); 
 		if(existName) {
 			throw new MyDefineException(PoinErrorType.NAME_EXIST);
+		}
+		entity.setSystem_start("yes");
+		if(StringUtil.isEmpty(entity.getSystem_start())) {
+			entity.setIs_controller("0");
 		}
 		TblPointSendCommandEntity update = commandDefaultService.save(entity); 
 		if(update ==null) {
