@@ -234,10 +234,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	  			}
 	  		}
 	  	}
-	  	
-	  	if(category.getCategoryNmae().indexOf("局放频次采集")>-1){
-	  		return savePartialDischargeCommand(point,record,recordDetail.getCommandDefault(),deviceDataValue);
-	  	}
+	  		  	
 		return result;
 	}
 	
@@ -501,8 +498,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			BigDecimal diejiaXiShu = new BigDecimal(1000); 
 			BigDecimal xiangwei = new BigDecimal(phase); 
 			
-			//BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);
-			BigDecimal shang = xiangwei.divide(diejiaXiShu,2, RoundingMode.HALF_UP);
+			BigDecimal shang = xiangwei.divideToIntegralValue(diejiaXiShu);
+			//BigDecimal shang = xiangwei.divide(diejiaXiShu,2, RoundingMode.HALF_UP);
 			//this.quotient = shang.floatValue();
 			data.setQuotient(shang.floatValue());
 			
@@ -636,8 +633,10 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			 channelId = "0002";
 		}else if(phase_no.contentEquals("C")) {
 			 channelId = "0003";
-		}else {
+		}else if(phase_no.contentEquals("A")){
 			 channelId = "0001";
+		}else {
+			return;
 		}
 		
 		int count=1;
@@ -661,21 +660,27 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    	byte[] sbuf = CRC16M.getSendBuf(cmdStr);
 	    	String cmdStrTwo = CRC16M.getBufHexStr(sbuf).trim();
 	    	logger.info("cmdStr : " +cmdStrTwo);
-	    	
+	    	int dangqian = i;
 	    	
 	    	Thread thread = new Thread(new Runnable() {
 	            @Override
-	            public void run() {	            	
-	            	try {
-	            		saveAndSend(point, cmdStrTwo); 
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+	            public void run() {	            		            	
+	            		saveAndSend(point, cmdStrTwo); 		            		
 	            }
 	        });	    	
-	    	executorService.submit(thread)	;   	    		    		    		    			    		    	
+	    	executorService.submit(thread)	;	
+			
+			 if(dangqian>0){ 
+				 
+				  try {
+					Thread.sleep(3*1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
+			 }
+			 
 	    }
 	    executorService.shutdown();
 	    
@@ -707,65 +712,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	
 	
-	/**
-	 * 根据频次计算 需要发送的采集指令 , 保存指令并发送
-	 * @param point
-	 * @param record
-	 * @param sendCommand 
-	 * @return
-	 */
-	private List<Object> savePartialDischargeCommand(TblPointsEntity point, TblCommandRecordEntity record, TblPointSendCommandEntity sendCommand,DeviceData  deviceData) {
-		List<Object> result = new ArrayList<Object>();
-		String commandContent = record.getCommandContent();
-		
-		String backContent = record.getBackContent();
-		backContent = backContent.substring(6,backContent.length()-4);
-		//System.out.println(backContent);
-		logger.info(backContent);
-		
-		/*
-		 * DeviceData data = new DeviceData(); //data.setChannelSettings_id();
-		 * data.setPointId(point.getPointId()); crudService.update(data, true);
-		 */
-		int i = 0 ;
-		while(i<=backContent.length()-4) {
-			String frequency = backContent.substring(i, i+4);
-			frequency = StringUtil.decimalConvert(frequency, 16, 10, null); 
-			//System.out.println("频次"+frequency); 
-			logger.info("频次"+frequency);
-			Integer pinci = Integer.parseInt(frequency)*2;
-			
-			//一次最多采集122个，所以要分批次采集
-			if(pinci >0 && pinci <= 122) {
-				String command = "0114070600010000" +  StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; 
-				//计算crc校验 的结果
-				byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
-				String trim = CRC16M.getBufHexStr(sbuf).trim();
-				saveAndSend(point, trim); 
-				try {
-					Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}else if(pinci >122 && pinci <= 244) {
-				String trim  ="0114070600010000007B84C7";
-				saveAndSend(point,trim); //0-121的数据 也就是122个
-				try {
-					Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				Integer more = 244-pinci;
-				String command2 = "011407060001007C" +  StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; 
-				//计算crc校验 的结果
-				byte[] sbuf2 = CRC16M.getSendBuf(command2.substring(0,command2.length()-4));
-				String trim2= CRC16M.getBufHexStr(sbuf2).trim();
-				saveAndSend(point,trim2);
-			}
-			i = i+4;
-		}
-		return null;
-	}
+	
 	
 	private void saveAndSend(TblPointsEntity point, String sendContent) { 
 		Map map = new HashMap();
