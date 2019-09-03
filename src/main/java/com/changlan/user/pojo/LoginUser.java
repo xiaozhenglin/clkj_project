@@ -26,7 +26,9 @@ public class LoginUser {
 //    public static void remove() {
 //    	localUser.remove();
 //    }
-//    
+//  
+	public static Map<String,String> loginAppMap = new HashMap();  //app登陆信息处理
+	
 	public static Map<String,TblAdminUserEntity> map = new HashMap();
 	
     public static  TblAdminUserEntity getCurrentUser() {

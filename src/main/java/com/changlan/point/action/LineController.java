@@ -75,16 +75,19 @@ public class LineController extends BaseController{
 //			uploadImg(entity.getLineId(),entity.getPicture_address());
 //		}
 		//TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
+		entity = (TblLinesEntity) crudService.get(entity.getLineId(), TblLinesEntity.class, true);
 		if(entity.getChannelId()!=null)	{	
 	    	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
 	    	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称
 		}
-    	Map centerMap = new HashMap();
-		centerMap.clear();	    	
-		centerMap.put("systemCode", new ParamMatcher("longLatiDefault"));
-    	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,centerMap,true);//系统变量得到longLatiDefault
-    	//String port = TblSystemVar.getSystemValue();
-    	entity.setCenterAddress(TblSystemVar.getSystemValue());
+		if(StringUtil.isEmpty(entity.getCenterAddress())) {
+	    	Map centerMap = new HashMap();
+			centerMap.clear();	    	
+			centerMap.put("systemCode", new ParamMatcher("longLatiDefault"));
+	    	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,centerMap,true);//系统变量得到longLatiDefault
+	    	//String port = TblSystemVar.getSystemValue();
+	    	entity.setCenterAddress(TblSystemVar.getSystemValue());
+		}
     	
 //		if(tblMonitorSystem.getName().indexOf("本体")>-1) {					
 			entity.setAddTime(new Date());

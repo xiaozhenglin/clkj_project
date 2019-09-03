@@ -93,6 +93,9 @@ public class TblAdminUserEntity implements java.io.Serializable {
     
     @Transient	
 	private String userGroupName ; 
+   
+    @Transient
+    private String userid;
 
     public TblAdminUserEntity(TblAdminUserEntity user) {
     	TblAdminUserEntity entity = new TblAdminUserEntity();
@@ -297,6 +300,13 @@ public class TblAdminUserEntity implements java.io.Serializable {
 	public void setUserGroupName(String userGroupName) {
 		this.userGroupName = userGroupName;
 	}
-       
-	
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+    		
 }

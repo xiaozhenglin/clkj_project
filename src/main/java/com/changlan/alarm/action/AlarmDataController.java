@@ -3,6 +3,7 @@ package com.changlan.alarm.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,12 @@ import com.changlan.common.entity.TBLAlarmCategoryEntity;
 import com.changlan.common.entity.TblAlarmDownRecordEntity;
 import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointAlamDataEntity;
+import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.PageUtil;
+import com.changlan.common.util.StringUtil;
+import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.PointDataDetail;
 import com.changlan.point.vo.PoinDataVo;
 import com.changlan.user.pojo.LoginUser;
@@ -79,10 +83,24 @@ public class AlarmDataController extends  BaseController{
 	 
 	//监控点数据报警进行处理记录
 	@RequestMapping("/down/record") 
-	public ResponseEntity<Object>  downRecord(TblAlarmDownRecordEntity entity) throws Exception { 
+	public ResponseEntity<Object>  downRecord(TblAlarmDownRecordEntity entity ,String userid) throws Exception { 
 		if(entity.getAlarmDataId()!=null) {
 			entity.setRecordTime(new Date());
-			entity.setRecordUser(userIsLogin().getAdminUserId());
+			if(StringUtil.isNotEmpty(userIsLogin().getAdminUserId())) {
+				entity.setRecordUser(userIsLogin().getAdminUserId());
+			}else {
+				Iterator iter =  LoginUser.loginAppMap.entrySet().iterator();
+				while (iter.hasNext()) {
+					    Map.Entry entry = (Map.Entry) iter.next();
+					    //Object key = entry.getKey();
+					    String value = (String) entry.getValue();
+					    if(value == userid) {
+					    	break;
+					    }else {
+					    	throw new MyDefineException(PoinErrorType.APP_ILLEGAL_LOGIN);
+					    }
+				}
+			}
 			TblAlarmDownRecordEntity update = (TblAlarmDownRecordEntity)crudService.update(entity, true); 
 			TblPointAlamDataEntity alarmData = (TblPointAlamDataEntity)crudService.get(entity.getAlarmDataId(), TblPointAlamDataEntity.class, true);
 			alarmData.setAlarmDownRecordId(update.getAlamDownRecordId());

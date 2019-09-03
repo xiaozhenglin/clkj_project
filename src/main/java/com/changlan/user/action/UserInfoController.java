@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
+import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserDetail;
@@ -72,9 +74,22 @@ public class UserInfoController extends BaseController{
 	
 	@RequestMapping("/edit")
 	@Transactional
-	public ResponseEntity<Object>  edit(TblAdminUserEntity updateUser) throws Exception{
+	public ResponseEntity<Object>  edit(TblAdminUserEntity updateUser ,String userid) throws Exception{
 		//只允许管理员和用户修改自己的信息
 		TblAdminUserEntity user = super.userIsLogin();
+		if(super.userIsLogin()==null) {
+			Iterator iter =  LoginUser.loginAppMap.entrySet().iterator();
+			while (iter.hasNext()) {
+				    Map.Entry entry = (Map.Entry) iter.next();
+				    //Object key = entry.getKey();
+				    String value = (String) entry.getValue();
+				    if(value == userid) {
+				    	break;
+				    }else {
+				    	throw new MyDefineException(PoinErrorType.APP_ILLEGAL_LOGIN);
+				    }
+			}
+		}
 		if(isSuperAdminUser(user.getAdminUserId()) ||  user.getAdminUserId().equalsIgnoreCase(updateUser.getAdminUserId()) ) { 
 			Boolean exist = userInfoService.existName(updateUser);
 			if(exist){

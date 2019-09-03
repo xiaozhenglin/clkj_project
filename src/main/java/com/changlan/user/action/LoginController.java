@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblSystemVarEntity;
 import com.changlan.common.pojo.BaseResult;
 import com.changlan.common.pojo.MatcheType;
+import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.pojo.SM2KeyPair;
 import com.changlan.common.service.ICrudService;
@@ -38,6 +40,7 @@ import com.changlan.common.util.SM2Util;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.VerifyCodeUtil;
+import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.point.pojo.RedirectType;
 import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.UserErrorType;
@@ -121,10 +124,11 @@ public class LoginController extends BaseController{
 	}
 	
 	@RequestMapping("/loginApp")
-	public ResponseEntity<Object>  loginApp(String name,String pass){
+	public ResponseEntity<Object>  loginApp(String name,String pass,String userid){
 		Map map = new HashMap();
 		map.put("name", new ParamMatcher(name));
 		map.put("pass", new ParamMatcher(pass));
+		//map.put("userid", new ParamMatcher(userid));
 		map.put("removeFlage", new ParamMatcher(0)); //被删除的将无法登陆
 		//HttpSession session = getSession(); 
 		//String generalCode = ((String) session.getAttribute("verifyCode")); 
@@ -136,9 +140,54 @@ public class LoginController extends BaseController{
 			return success(UserErrorType.LOGIN_ERROR.getCode(),UserErrorType.LOGIN_ERROR.getMsg(),false,null); 
 		}
 		TblAdminUserEntity user = (TblAdminUserEntity)list.get(0);				
-		addUserInfoToSession(user);
+		//addUserInfoToSession(user);
 		logger.info("用户登入"+ user.getName());
+		logger.info("用户userid"+ userid);
+		user.setUserid(user.getAdminUserId());
+		LoginUser.loginAppMap.put(user.getAdminUserId(), user.getAdminUserId());
 		return success(user); 
+	}
+	
+	
+	@RequestMapping("/resetPass")
+	public ResponseEntity<Object>  resetPass(String oldpass, String newpass, String userid){
+		if(StringUtil.isEmpty(newpass)) {
+			return success(UserErrorType.EDIT_ERROR.getCode(),UserErrorType.EDIT_ERROR.getMsg(),false,null); 
+		}
+        if(StringUtil.isEmpty(oldpass)) {
+        	return success(UserErrorType.EDIT_ERROR.getCode(),UserErrorType.EDIT_ERROR.getMsg(),false,null); 
+		}
+        if(newpass.equals(oldpass)) {
+        	return success(UserErrorType.SAME_ERROR.getCode(),UserErrorType.SAME_ERROR.getMsg(),false,null); 
+        }
+		
+        if(StringUtil.isEmpty(userid)) {        
+			return success(UserErrorType.USER_NOT_LOGIN.getCode(),UserErrorType.USER_NOT_LOGIN.getMsg(),false,null); 
+		}
+		Iterator iter =  LoginUser.loginAppMap.entrySet().iterator();
+		String key ="";
+		while (iter.hasNext()) {
+			    Map.Entry entry = (Map.Entry) iter.next();
+			    key = (String)entry.getKey();
+			    //String value = (String) entry.getValue();			    
+		}
+		
+		Map map = new HashMap();
+		map.put("adminUserId", new ParamMatcher(key));
+		map.put("pass", new ParamMatcher(oldpass));
+								
+		List<TblAdminUserEntity> list = crudService.findByMoreFiled(TblAdminUserEntity.class, map, true); 
+		if(ListUtil.isEmpty(list)) {  
+			//没找到抛出异常
+			return success(UserErrorType.LOGIN_ERROR.getCode(),UserErrorType.LOGIN_ERROR.getMsg(),false,null); 
+		}
+		TblAdminUserEntity user = (TblAdminUserEntity)list.get(0);				
+		//addUserInfoToSession(user);
+		user.setPass(newpass);
+		TblAdminUserEntity save = (TblAdminUserEntity)crudService.update(user, true); 
+		logger.info("修改登陆密码"+ save.getName());
+		
+		return success(save); 
 	}
 	
 	
@@ -158,6 +207,7 @@ public class LoginController extends BaseController{
 			session.removeAttribute(UserModuleConst.USER_SESSION_ATTRIBUTENAME); 
 			logger.info("用户登出"+ user.getName());
 			LoginUser.map.remove(user.getAdminUserId(),user);
+			//LoginUser.loginAppMap.remove(user.getAdminUserId());
 		}
 		return success(true);
 	}

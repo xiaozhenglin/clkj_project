@@ -144,7 +144,8 @@ public class AnalysisDataUtil {
 			int value = new BigDecimal(decimalConvert).intValue(); 
 			//9.26
 			Object ca = canculate(value,canculateRule); 
-			BigDecimal canculate = new BigDecimal(ca.toString()); 
+			BigDecimal canculateOne = new BigDecimal(ca.toString());
+			BigDecimal canculate =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
 			list.add(canculate);
 		}
 		return list;
