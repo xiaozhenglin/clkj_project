@@ -266,8 +266,8 @@ public class NettyServiceImpl implements INettyService{
 		List<CommandDefaultDetail> commandList = commandDefaultService.commandList(command); 
 		for(CommandDefaultDetail data : commandList) {
 			try {
-				//每个数据延时0.5秒按顺序开启定时任务
-				Thread.sleep(500);
+				//每个数据延时3秒按顺序开启定时任务 
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -75,7 +75,9 @@ public class LineController extends BaseController{
 //			uploadImg(entity.getLineId(),entity.getPicture_address());
 //		}
 		//TblMonitorSystemEntity tblMonitorSystem = (TblMonitorSystemEntity)crudService.get(entity.getMonitorId(), TblMonitorSystemEntity.class, true);
-		entity = (TblLinesEntity) crudService.get(entity.getLineId(), TblLinesEntity.class, true);
+		if(entity.getLineId() != null) {
+			entity = (TblLinesEntity) crudService.get(entity.getLineId(), TblLinesEntity.class, true);
+		}
 		if(entity.getChannelId()!=null)	{	
 	    	TblCompanyChannelEntity TblCompanyChannel  =  (TblCompanyChannelEntity) crudService.get(entity.getChannelId(),TblCompanyChannelEntity.class,true);
 	    	entity.setChannelName(TblCompanyChannel.getName()); //得到通道名称

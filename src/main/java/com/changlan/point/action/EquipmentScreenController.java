@@ -17,6 +17,7 @@ import com.changlan.alarm.vo.ScreenAlarmMessageBoxVO;
 import com.changlan.common.action.BaseController;
 import com.changlan.common.entity.TblIndicatorValueEntity;
 import com.changlan.common.service.ICrudService;
+import com.changlan.common.util.DateUtil;
 import com.changlan.common.util.ExcelUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
@@ -80,6 +81,9 @@ public class EquipmentScreenController extends BaseController {
 		if(query.getBegin()!=null && query.getEnd()!=null) {
 			begin = new Date(query.getBegin());
 			end =  new Date(query.getEnd());	
+		}else {
+			begin = DateUtil.yesterDay(new Date());
+			end = new Date();
 		}
 		//query.setPointId(1);  //测试数据
 		
@@ -245,6 +249,9 @@ public class EquipmentScreenController extends BaseController {
 		if(query.getBegin()!=null && query.getEnd()!=null) {
 			begin = new Date(query.getBegin());
 			end =  new Date(query.getEnd());	
+		}else {
+			begin = DateUtil.yesterDay(new Date());
+			end = new Date();
 		}
 		//query.setPointId(1);  //测试数据
 		

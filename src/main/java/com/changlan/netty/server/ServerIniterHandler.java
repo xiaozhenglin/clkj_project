@@ -7,6 +7,7 @@ import com.changlan.netty.pojo.MyDecoder;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -21,6 +22,7 @@ public class ServerIniterHandler extends ChannelInitializer<SocketChannel> {
         //管道注册handler 
         ChannelPipeline pipeline = socketChannel.pipeline();
         //编码通道处理
+        //pipeline.addLast(new LengthFieldBasedFrameDecoder(1024,0,4));
         pipeline.addLast("decode", new MyDecoder());
         //转码通道处理
         pipeline.addLast("encode", new StringEncoder());

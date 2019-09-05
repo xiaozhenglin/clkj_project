@@ -136,9 +136,19 @@ public class DateUtil {
         }
         return listDate;
     }
+    
+    public static Date yesterDay(Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+        return calendar.getTime();
+    }
+
 
     public static void main(String[] args) {
     	String formatSeconds = formatSeconds(46797148); 
     	System.out.println(formatSeconds); 
+    	System.out.println(new Date());
+    	System.out.println(yesterDay(new Date()));
 	}
 }
