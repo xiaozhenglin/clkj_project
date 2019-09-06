@@ -22,6 +22,8 @@ public interface IPointDataService {
 	Page<PointDataDetail> getAll(PointQuery entity, Pageable page);
 
 	//检点数据图表形式
-	List<PointDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);      
+	List<PointDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);   
+	
+	List<PointDataDetail> getTableOne(Date begin, Date end, Integer indicator,Integer pointId);
 
 }

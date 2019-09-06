@@ -93,7 +93,7 @@ public class EquipmentScreenController extends BaseController {
 		//遍历 指标
 			for(Integer indicatorId : indicatorsPointList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
-				List<PointDataDetail> listPointData = pointDataService.getTable(begin,end,indicatorId,query.getPointId()); 
+				List<PointDataDetail> listPointData = pointDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
 				CommonDataTableVO vo = new CommonDataTableVO();
 				CommonDataTableVO value = vo.CommonPoinDataTableVOSinger(indicatorId, listPointData);
 				result.add(value);
@@ -117,7 +117,7 @@ public class EquipmentScreenController extends BaseController {
 				 * 
 				 * }else {
 				 */			
-					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
+					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
 					CommonDataTableVO vo = new CommonDataTableVO();
 					CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
 					result.add(value);
@@ -131,7 +131,7 @@ public class EquipmentScreenController extends BaseController {
 			//遍历 指标
 			for(Integer indicatorId : indicatorsPartDischargeList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
-				List<PartDischargeDataDetail> listPartDischargeData = partDischargeDataService.getTable(begin,end,indicatorId,query.getPointId()); 
+				List<PartDischargeDataDetail> listPartDischargeData = partDischargeDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
 				CommonDataTableVO vo = new CommonDataTableVO();
 				CommonDataTableVO value = vo.CommonPartDischargeDataTableVOSinger(indicatorId, listPartDischargeData);
 				result.add(value);

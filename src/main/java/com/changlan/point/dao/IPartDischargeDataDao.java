@@ -11,4 +11,6 @@ public interface IPartDischargeDataDao {
 	
 	//获取表格数据
 	List<DeviceDataColl> getTableData(Date begin, Date end,Integer indicators, Integer pointId);   
+	
+	List<DeviceDataColl> getTableDataOne(Date begin, Date end,Integer indicatorId,Integer pointId);
 }

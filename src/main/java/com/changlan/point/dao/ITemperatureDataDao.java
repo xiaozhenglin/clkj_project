@@ -17,4 +17,6 @@ public interface ITemperatureDataDao {
 	List<TblTemperatureDTSDataEntity> getDtsTableData(Date begin, Date end,Integer indicatorId,Integer pointId,Integer refPointDataId);
 
 	List<TblTemperatureDTSDataEntity> Table(TemperatureDtsQuery query);
+	
+	List<TblTemperatureDataEntity> getTableDataOne(Date begin, Date end,Integer indicatorId,Integer pointId);
 }

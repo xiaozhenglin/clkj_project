@@ -25,6 +25,8 @@ public interface IPartDischargeDataService {
 	Page<PartDischargeDataDetail> getAll(PartDischargeQuery entity, Pageable page);
 
 	//检点数据图表形式
-	List<PartDischargeDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);      
+	List<PartDischargeDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);  
+	
+	List<PartDischargeDataDetail> getTableOne(Date begin, Date end, Integer indicator,Integer pointId);
 
 }

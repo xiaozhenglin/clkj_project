@@ -132,5 +132,22 @@ public class PointDataServiceImpl implements IPointDataService{
 		}
 		return result;
 	}
+	
+	@Override
+	public List<PointDataDetail> getTableOne(Date begin, Date end, Integer indicator,Integer pointId) {
+		List<PointDataDetail> result = new ArrayList<PointDataDetail>();
+		List<TblPoinDataEntity> list = pointDataDao.getTableDataOne(begin,end,indicator,pointId); 
+		
+		//封装信息
+		if(!ListUtil.isEmpty(list)) {
+			for(TblPoinDataEntity entity : list) {
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+//				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+				PointDataDetail detail = new PointDataDetail(entity, point, null);
+				result.add(detail);
+			}
+		}
+		return result;
+	}
 
 }

@@ -205,7 +205,7 @@ public class AnalysisDataUtil {
 	private static List<BigDecimal> getTemperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
 		list.clear();
-//		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
+		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
 		Integer dataByte = protocol.getDataByte(); //结束位置
@@ -225,8 +225,11 @@ public class AnalysisDataUtil {
 				int first = end+2*i;
 				String value = backContent.substring(first, first + 2);
 				String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
-				BigDecimal canculate = new BigDecimal(temperatureData);
-				list.add(canculate);
+				int canculate = new BigDecimal(temperatureData).intValue();
+				Object ca = canculate(canculate,canculateRule); 
+				BigDecimal canculateOne = new BigDecimal(ca.toString());
+				BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+				list.add(canculateValue);
 			}
 			/*
 			 * BigDecimal canculate = new BigDecimal(decimalConvert); list.add(canculate);

@@ -31,7 +31,9 @@ public interface ITemperatureDataService {
 	List<TblTemperatureDTSDataEntity> table(TemperatureDtsQuery query); 
 
 	//检点数据图表形式
-	List<TemperatureDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);   
+	List<TemperatureDataDetail> getTable(Date begin, Date end, Integer indicator, Integer pointId);  
+	
+	List<TemperatureDataDetail> getTableOne(Date begin, Date end, Integer indicator, Integer pointId);
 	
 	List<TemperatureDtsDataDetail> getDtsTable(Date begin, Date end, Integer indicator, Integer pointId ,Integer refPointDataId);
 

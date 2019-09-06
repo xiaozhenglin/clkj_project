@@ -133,5 +133,22 @@ public class PartDischargeDataServiceImpl implements IPartDischargeDataService{
 		}
 		return result;
 	}
+	
+	@Override
+	public List<PartDischargeDataDetail> getTableOne(Date begin, Date end, Integer indicator,Integer pointId) {
+		List<PartDischargeDataDetail> result = new ArrayList<PartDischargeDataDetail>();
+		List<DeviceDataColl> list = partDischargeDataDao.getTableDataOne(begin,end,indicator,pointId); 
+		
+		//封装信息
+		if(!ListUtil.isEmpty(list)) {
+			for(DeviceDataColl entity : list) {
+				TblPointsEntity point  = (TblPointsEntity)crudService.get(entity.getPointId(), TblPointsEntity.class, true);
+//				TblLinesEntity line = (TblLinesEntity)crudService.get(point.getLineId(), TblLinesEntity.class, true);
+				PartDischargeDataDetail detail = new PartDischargeDataDetail(entity, point, null);
+				result.add(detail);
+			}
+		}
+		return result;
+	}
 
 }
