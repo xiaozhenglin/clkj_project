@@ -275,18 +275,18 @@ public class EquipmentScreenController extends BaseController {
 			for(Integer indicatorId : indicatorsTemperatureList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				TblIndicatorValueEntity find = (TblIndicatorValueEntity)crudService.get(indicatorId,TblIndicatorValueEntity.class,true);
-				if(find.getName().indexOf("DST")>-1) {
-					List<TemperatureDtsDataDetail> listTemperatureData = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId(),null); 
-					CommonDataTableVO vo = new CommonDataTableVO();
-					CommonDataTableVO value = vo.CommonTemperatureDSTDataTableVO(indicatorId, listTemperatureData);
-					result.add(value);
+				//if(find.getName().indexOf("DTS")>-1) {
+					//List<TemperatureDtsDataDetail> listTemperatureData = temperatureDataService.getDtsTable(begin,end,indicatorId,query.getPointId(),null); 
+					//CommonDataTableVO vo = new CommonDataTableVO();
+					//CommonDataTableVO value = vo.CommonTemperatureDSTDataTableVO(indicatorId, listTemperatureData);
+					//result.add(value);
 					
-				}else {				
+				//}else {				
 					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
 					CommonDataTableVO vo = new CommonDataTableVO();
-					CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
+					CommonDataTableVO value = vo.CommonTemperatureDataTableVO(indicatorId, listTemperatureData);
 					result.add(value);
-				}
+				//}
 			}
 		}
 		

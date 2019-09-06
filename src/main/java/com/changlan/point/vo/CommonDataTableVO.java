@@ -213,8 +213,13 @@ public class CommonDataTableVO {
 				vo.setVideo_url(point.getVideo_url());
 		    }
 			
-			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
-			results.add(value);
+			if(indicatorValue.getName().indexOf("DTS")>-1) {//分布式光纤测温
+				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getPointDataId());
+				results.add(value);
+			}else {
+				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
+				results.add(value);
+			}
 		}
 		vo.setResults(results);
 		return vo;
