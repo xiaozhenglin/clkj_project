@@ -48,6 +48,7 @@ public class IndicatorValueServiceImpl implements IIndicatoryValueService{
 	@Override
 	public Boolean existName(TblIndicatorValueEntity entity) {
 		Map map = new HashMap();
+		map.put("indicatorCode", new ParamMatcher(entity.getIndicatorCode()));
 		map.put("name", new ParamMatcher(entity.getName()));
 		List<TblIndicatorValueEntity> list = crudService.findByMoreFiled(TblIndicatorValueEntity.class, map, true); 
 		

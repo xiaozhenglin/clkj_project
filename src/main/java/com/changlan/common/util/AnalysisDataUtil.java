@@ -127,6 +127,7 @@ public class AnalysisDataUtil {
 	private static List<BigDecimal> firstAnalysis(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
 		list.clear();
+		Integer neddCanculate =  protocol.getNeddCanculate();
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -143,10 +144,16 @@ public class AnalysisDataUtil {
 			//1897
 			int value = new BigDecimal(decimalConvert).intValue(); 
 			//9.26
-			Object ca = canculate(value,canculateRule); 
-			BigDecimal canculateOne = new BigDecimal(ca.toString());
-			BigDecimal canculate =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-			list.add(canculate);
+			if(neddCanculate == 1) {
+				Object ca = canculate(value,canculateRule); 
+				BigDecimal canculateOne = new BigDecimal(ca.toString());
+				BigDecimal canculate =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+				list.add(canculate);
+			}else {
+				BigDecimal canculateOne = new BigDecimal(value);
+				BigDecimal canculate =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+				list.add(canculate);
+			}
 		}
 		return list;
 	}
@@ -205,6 +212,7 @@ public class AnalysisDataUtil {
 	private static List<BigDecimal> getTemperature(String backContent, TblCommandProtocolEntity protocol) {
 		List<BigDecimal> list = new ArrayList<BigDecimal>();
 		list.clear();
+		Integer neddCanculate =  protocol.getNeddCanculate();
 		String canculateRule = protocol.getCanculateRule(); 	//计算规则 
 		int binaryValue = protocol.getBinaryValue(); //转为 多少进制
 		Integer beginByte = protocol.getBeginByte(); //开始位置
@@ -222,14 +230,21 @@ public class AnalysisDataUtil {
 			int length = Integer.parseInt(decimalConvert)/2;
 			
 			for (int i =0 ; i< length; i++) {
-				int first = end+2*i;
-				String value = backContent.substring(first, first + 2);
+				int first = end+4*i;
+				String value = backContent.substring(first, first + 4);
 				String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
 				int canculate = new BigDecimal(temperatureData).intValue();
-				Object ca = canculate(canculate,canculateRule); 
-				BigDecimal canculateOne = new BigDecimal(ca.toString());
-				BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-				list.add(canculateValue);
+				if(neddCanculate==1) {
+					Object ca = canculate(canculate,canculateRule); 
+					BigDecimal canculateOne = new BigDecimal(ca.toString());
+					System.out.println(canculateOne);
+					BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+					list.add(canculateValue);
+				}else {
+					BigDecimal canculateOne = new BigDecimal(canculate);
+					BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+					list.add(canculateValue);
+				}
 			}
 			/*
 			 * BigDecimal canculate = new BigDecimal(decimalConvert); list.add(canculate);
