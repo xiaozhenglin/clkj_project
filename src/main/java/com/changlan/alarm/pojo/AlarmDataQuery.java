@@ -6,6 +6,7 @@ public class AlarmDataQuery extends TblPointAlamDataEntity{
 	
 	private Long begin;
 	private Long end;
+	private String pointNameOrLineNameOrChannelName;
 	
 	public Long getBegin() {
 		return begin;
@@ -20,4 +21,11 @@ public class AlarmDataQuery extends TblPointAlamDataEntity{
 		this.end = end;
 	}
 	
+	public String getPointNameOrLineNameOrChannelName() {
+		return pointNameOrLineNameOrChannelName;
+	}
+	public void setPointNameOrLineNameOrChannelName(String pointNameOrLineNameOrChannelName) {
+		this.pointNameOrLineNameOrChannelName = pointNameOrLineNameOrChannelName;
+	}
+			
 }
