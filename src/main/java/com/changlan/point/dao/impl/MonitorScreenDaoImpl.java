@@ -38,9 +38,9 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 				+ "  ( select count(*) AS alarm_total from TBL_POINT_ALAM_DATA where 1=1  " +  paramQuery +   " )  AS alarm_total "
 				+"  ,( select count(*) AS alarm_deal from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.DOWN_STATUS = 'DOWN' " +  paramQuery +  " )  AS alarm_deal "
 				+"  ,( select count(*) AS alarm_not_deal from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.DOWN_STATUS != 'DOWN'  " + paramQuery +  " )  AS alarm_not_deal "
-				+"  ,( select count(*) AS point_total from  TBL_POINTS where 1=1 " + paramQuery +  " )  AS point_total "
-				+"  ,( select count(*) AS point_online from  TBL_POINTS  where STATUS!='OUT_CONNECT'  " + paramQuery +  " )  AS point_online "
-				+"  ,( select count(*) AS point_not_online from  TBL_POINTS  where STATUS='OUT_CONNECT'  " + paramQuery + " )  AS point_not_online "
+				+"  ,( select count(*) AS point_total from  TBL_POINTS where 1=1 and (IS_CORNER!= 1 or IS_CORNER is null)" + paramQuery +  " )  AS point_total "
+				+"  ,( select count(*) AS point_online from  TBL_POINTS  where STATUS!='OUT_CONNECT' and (IS_CORNER!= 1 or IS_CORNER is null) " + paramQuery +  " )  AS point_online "
+				+"  ,( select count(*) AS point_not_online from  TBL_POINTS  where STATUS='OUT_CONNECT' and (IS_CORNER!= 1 or IS_CORNER is null) " + paramQuery + " )  AS point_not_online "
 				+ " ,( select count(*) AS early_alarm from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.ALARM_TYPE != 'ALARM'  " + paramQuery +  " )  AS early_alarm"
 				+ " ,( select count(*) AS alarm from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.ALARM_TYPE = 'ALARM'  " + paramQuery +  " )  AS alarm ) ";
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql),PointCountEntity.class);
@@ -92,7 +92,7 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 		if(query.getPointId()!=null) {
 			 paramQuery = " and  POINT_ID = "+ query.getPointId();
 		}
-		String sql =" select * from ( ( select count(*) AS point_total from  TBL_POINTS where 1=1  )  AS point_total ,  "
+		String sql =" select * from ( ( select count(*) AS point_total from  TBL_POINTS where 1=1 and (IS_CORNER!= 1 or IS_CORNER is null) )  AS point_total ,  "
 				+ "( select count(*) AS line_total from  TBL_LINES   where 1=1    )  AS line_total ,   " 
 				+  "( select count(*)  AS operation_total from TBL_USER_OPERATION  where 1=1  )  AS operation_total ,  "
 				+  "( select count(*)  AS success_count from TBL_USER_OPERATION  where OPERATION_TYPE = " + "'" + OperationDataType.SUCCESS.getName() + "'" + "  )AS success_count , "
@@ -123,9 +123,9 @@ public class MonitorScreenDaoImpl implements IMonitorScreenDao{
 				+ "  ( select count(*) AS alarm_total from TBL_POINT_ALAM_DATA where 1=1  " +  pointQuery +   " )  AS alarm_total "
 				+"  ,( select count(*) AS alarm_deal from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.DOWN_STATUS = 'DOWN' " +  pointQuery +  " )  AS alarm_deal "
 				+"  ,( select count(*) AS alarm_not_deal from TBL_POINT_ALAM_DATA  where TBL_POINT_ALAM_DATA.DOWN_STATUS != 'DOWN'  " + pointQuery +  " )  AS alarm_not_deal "
-				+"  ,( select count(*) AS point_total from  TBL_POINTS where 1=1 " + pointQuery +  " )  AS point_total "
-				+"  ,( select count(*) AS point_online from  TBL_POINTS  where STATUS!='OUT_CONNECT'  " + pointQuery +  " )  AS point_online "
-				+"  ,( select count(*) AS point_not_online from  TBL_POINTS  where STATUS='OUT_CONNECT'  " + pointQuery + " )  AS point_not_online "				
+				+"  ,( select count(*) AS point_total from  TBL_POINTS where 1=1 and (IS_CORNER!= 1 or IS_CORNER is null) " + pointQuery +  " )  AS point_total "
+				+"  ,( select count(*) AS point_online from  TBL_POINTS  where STATUS!='OUT_CONNECT' and (IS_CORNER!= 1 or IS_CORNER is null) " + pointQuery +  " )  AS point_online "
+				+"  ,( select count(*) AS point_not_online from  TBL_POINTS  where STATUS='OUT_CONNECT' and (IS_CORNER!= 1 or IS_CORNER is null) " + pointQuery + " )  AS point_not_online "				
 				+ " ,( select count(*) AS huanliu_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 1 " + pointQuery +  " ) AS huanliu_points_total"
 				+ " ,( select count(*) AS jufang_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 8  " + pointQuery +  " )  AS jufang_points_total"
 				+ " ,( select count(*) AS guangqian_points_total from TBL_POINTS  where  POINT_CATAGORY_ID = 9 " + pointQuery +  " )  AS guangqian_points_total"
