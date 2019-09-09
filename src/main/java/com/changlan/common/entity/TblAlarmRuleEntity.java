@@ -44,16 +44,16 @@ public class TblAlarmRuleEntity implements java.io.Serializable {
     private Integer alarmCategoryId;
     
     @Column(name = "TOP_LIMIT"   )
-    private Integer topLimit;
+    private Float topLimit;
     
     @Column(name = "LOWER_LIMIT"   )
-    private Integer lowerLimit;
+    private Float lowerLimit;
     
     @Column(name = "TOP_ALARM"   )
-    private Integer topAlarm;	
+    private Float topAlarm;	
     
     @Column(name = "LOWER_ALARM"   )
-    private Integer lowerAlarm;	
+    private Float lowerAlarm;	
     
     @Column(name = "NORMAL"   )
     private Integer normal = 0;	
@@ -97,35 +97,35 @@ public class TblAlarmRuleEntity implements java.io.Serializable {
 		this.alarmCategoryId = alarmCategoryId;
 	}
 
-	public Integer getTopLimit() {
+	public Float getTopLimit() {
 		return topLimit;
 	}
 
-	public void setTopLimit(Integer topLimit) {
+	public void setTopLimit(Float topLimit) {
 		this.topLimit = topLimit;
 	}
 
-	public Integer getLowerLimit() {
+	public Float getLowerLimit() {
 		return lowerLimit;
 	}
 
-	public void setLowerLimit(Integer lowerLimit) {
+	public void setLowerLimit(Float lowerLimit) {
 		this.lowerLimit = lowerLimit;
 	}
 
-	public Integer getTopAlarm() {
+	public Float getTopAlarm() {
 		return topAlarm;
 	}
 
-	public void setTopAlarm(Integer topAlarm) {
+	public void setTopAlarm(Float topAlarm) {
 		this.topAlarm = topAlarm;
 	}
 
-	public Integer getLowerAlarm() {
+	public Float getLowerAlarm() {
 		return lowerAlarm;
 	}
 
-	public void setLowerAlarm(Integer lowerAlarm) {
+	public void setLowerAlarm(Float lowerAlarm) {
 		this.lowerAlarm = lowerAlarm;
 	}
 

@@ -171,10 +171,10 @@ public class AlarmServiceImpl implements IAlarmService{
 	//计算值是否有预警或者报警
 	public Boolean canculateAlarm(int intValue, TblPoinDataEntity data, TblAlarmRuleEntity rule,Integer constractDataId) {
 		Boolean haveAlarm = false;
-		Integer topAlarm = rule.getTopAlarm();
-		Integer lowerAlarm = rule.getLowerAlarm();
-		Integer topLimit = rule.getTopLimit(); 
-		Integer lowerLimit = rule.getLowerLimit(); 
+		Float topAlarm = rule.getTopAlarm();
+		Float lowerAlarm = rule.getLowerAlarm();
+		Float topLimit = rule.getTopLimit(); 
+		Float lowerLimit = rule.getLowerLimit(); 
 		// 低于最低限 高于最高限度
 		if(intValue< lowerAlarm || intValue>topAlarm) {
 			//报警
@@ -288,10 +288,10 @@ public class AlarmServiceImpl implements IAlarmService{
 
 	private Object canculateAlarm(int intValue, TblTemperatureDataEntity data, TblAlarmRuleEntity rule) {
 		Boolean haveAlarm = false;
-		Integer topAlarm = rule.getTopAlarm();
-		Integer lowerAlarm = rule.getLowerAlarm();
-		Integer topLimit = rule.getTopLimit(); 
-		Integer lowerLimit = rule.getLowerLimit(); 
+		Float topAlarm = rule.getTopAlarm();
+		Float lowerAlarm = rule.getLowerAlarm();
+		Float topLimit = rule.getTopLimit(); 
+		Float lowerLimit = rule.getLowerLimit(); 
 		// 低于最低限 高于最高限度
 		if(intValue< lowerAlarm || intValue>topAlarm) {
 			//报警数据表添加数据
