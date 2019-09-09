@@ -61,14 +61,15 @@ public class UploadFileController extends BaseController{
 	@RequestMapping(value = "/admin/uploadImg")
 	public ResponseEntity<Object> uploadImg(MultipartFile file) throws Exception{
 		logger.info(file.getOriginalFilename()); 
-//		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
+		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
 		//String newRealpath = UploadConfiguration.getUploadPath() + "/" + file.getOriginalFilename();
 		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
     	Map map = new HashMap();
     	map.clear();
  		map.put("systemCode", new ParamMatcher("fileUploadPath"));
     	TblSystemVarEntity TblSystemVar  =  (TblSystemVarEntity) crudService.findOneByMoreFiled(TblSystemVarEntity.class,map,true);
-		String  newRealpath  =  TblSystemVar.getSystemValue()  + "/" + file.getOriginalFilename();
+		//String  newRealpath  =  TblSystemVar.getSystemValue()  + "/" + file.getOriginalFilename();
+    	String  newRealpath  =  TblSystemVar.getSystemValue()  + "/" + newImageName;
 		File newFile = new File(newRealpath); 
 		try {
 			file.transferTo(newFile);
