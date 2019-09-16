@@ -118,6 +118,9 @@ public class TblPointsEntity implements java.io.Serializable {
     
     @Column(name = "IMAGE_IN_MAP"    )
     private String imageInMap;
+    
+    @Column(name = "SNAP_URL"    )
+    private String snap_url;
 
 	public Integer getPointId() {
 		return pointId;

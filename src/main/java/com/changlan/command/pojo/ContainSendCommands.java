@@ -24,9 +24,13 @@ public class ContainSendCommands implements Serializable{
 	private Integer intervalTime;
 	private String protocolId;
 	private String msg;
-						
+	private String visualType;
+	private String exceptionCommandId;
+	private String exceptionValue;
+							
 	public ContainSendCommands(Integer sendCommandId, String commandContent, String commandName, Integer pointId,
-			String system_start, String is_controller, Integer intervalTime, String msg) {
+			String system_start, String is_controller, Integer intervalTime, String protocolId, String msg,
+			String visualType) {
 		super();
 		this.sendCommandId = sendCommandId;
 		this.commandContent = commandContent;
@@ -35,13 +39,14 @@ public class ContainSendCommands implements Serializable{
 		this.system_start = system_start;
 		this.is_controller = is_controller;
 		this.intervalTime = intervalTime;
+		this.protocolId = protocolId;
 		this.msg = msg;
+		this.visualType = visualType;
 	}
 
 	public ContainSendCommands() {
 		super();
 	}
-
 	
 	public String getProtocolId() {
 		return protocolId;
@@ -103,6 +108,29 @@ public class ContainSendCommands implements Serializable{
 	public void setIntervalTime(Integer intervalTime) {
 		this.intervalTime = intervalTime;
 	}
-	
-	
+
+	public String getVisualType() {
+		return visualType;
+	}
+
+	public void setVisualType(String visualType) {
+		this.visualType = visualType;
+	}
+
+	public String getExceptionCommandId() {
+		return exceptionCommandId;
+	}
+
+	public void setExceptionCommandId(String exceptionCommandId) {
+		this.exceptionCommandId = exceptionCommandId;
+	}
+
+	public String getExceptionValue() {
+		return exceptionValue;
+	}
+
+	public void setExceptionValue(String exceptionValue) {
+		this.exceptionValue = exceptionValue;
+	}
+			
 }

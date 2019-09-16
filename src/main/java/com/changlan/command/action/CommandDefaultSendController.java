@@ -43,6 +43,8 @@ public class CommandDefaultSendController extends BaseController{
 		entity.setSystem_start("yes");
 		if(StringUtil.isEmpty(entity.getSystem_start())) {
 			entity.setIs_controller("0");
+		}else {
+			entity.setIs_controller("0");
 		}
 		TblPointSendCommandEntity update = commandDefaultService.save(entity); 
 		if(update ==null) {

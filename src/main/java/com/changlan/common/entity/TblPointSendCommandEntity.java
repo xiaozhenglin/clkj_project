@@ -84,6 +84,15 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
     @Column(name = "IS_CONTROLLER"  )
     private String is_controller;
     
+    @Column(name = "PREVIOUS_VISUAL_TYPE"  )
+    private String previousVisualType;
+    
+    @Column(name = "EXCEPTION_COMMAND_IDS"  )
+    private String exceptionCommandIds;
+    
+    @Column(name = "EXCEPTION_VALUE"  )
+    private String exceptionValue;
+    
     @Transient
    	private String  pointName;
     @Transient
@@ -216,6 +225,29 @@ public class TblPointSendCommandEntity implements java.io.Serializable {
 	public void setIs_controller(String is_controller) {
 		this.is_controller = is_controller;
 	}
-	
-  
+
+	public String getPreviousVisualType() {
+		return previousVisualType;
+	}
+
+	public void setPreviousVisualType(String previousVisualType) {
+		this.previousVisualType = previousVisualType;
+	}
+
+	public String getExceptionCommandIds() {
+		return exceptionCommandIds;
+	}
+
+	public void setExceptionCommandIds(String exceptionCommandIds) {
+		this.exceptionCommandIds = exceptionCommandIds;
+	}
+
+	public String getExceptionValue() {
+		return exceptionValue;
+	}
+
+	public void setExceptionValue(String exceptionValue) {
+		this.exceptionValue = exceptionValue;
+	}
+	    
 }

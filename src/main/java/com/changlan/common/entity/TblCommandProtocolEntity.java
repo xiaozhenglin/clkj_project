@@ -96,7 +96,8 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
     @Column(name = "NOT_NEGATIVE"  )
     private Integer notNegative;
     
-  
+    @Column(name = "VALUE"  )
+    private String value;
       
     @Transient
   	private String  pointName;
@@ -284,6 +285,13 @@ public class TblCommandProtocolEntity implements java.io.Serializable {
 		this.commandCategoryName = commandCategoryName;
 	}
 
-  
+	public String getValue() {
+		return value;
+	}
 
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+    
 }

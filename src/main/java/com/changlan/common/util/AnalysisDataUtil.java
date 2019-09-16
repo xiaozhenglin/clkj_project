@@ -228,23 +228,42 @@ public class AnalysisDataUtil {
 			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
             
 			int length = Integer.parseInt(decimalConvert)/2;
-			
-			for (int i =0 ; i< length; i++) {
-				int first = end+4*i;
-				String value = backContent.substring(first, first + 4);
-				String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
-				int canculate = new BigDecimal(temperatureData).intValue();
-				if(neddCanculate==1) {
-					Object ca = canculate(canculate,canculateRule); 
-					BigDecimal canculateOne = new BigDecimal(ca.toString());
-					System.out.println(canculateOne);
-					BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-					list.add(canculateValue);
-				}else {
+			if(protocol.getDataType().indexOf("温度")>-1) {							
+				for (int i =0 ; i< length; i++) {
+					int first = end+4*i;
+					String value = backContent.substring(first, first + 4);
+					String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
+					int canculate = new BigDecimal(temperatureData).intValue();
+					if(neddCanculate==1) {
+						Object ca = canculate(canculate,canculateRule); 
+						BigDecimal canculateOne = new BigDecimal(ca.toString());
+						log.info("canculateOne" + canculateOne);
+						BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+						list.add(canculateValue);
+					}else {
+						BigDecimal canculateOne = new BigDecimal(canculate);
+						BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
+						list.add(canculateValue);
+					}
+				}
+			}else { //非光纤测温数据
+				for (int i =0 ; i< length; i++) {
+					int first = end+4*i;
+					String value = backContent.substring(first, first + 4);
+					String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
+					int canculate = new BigDecimal(temperatureData).intValue();
+					
 					BigDecimal canculateOne = new BigDecimal(canculate);
 					BigDecimal canculateValue  =  canculateOne.setScale(2,BigDecimal.ROUND_HALF_DOWN);
 					list.add(canculateValue);
+					ICrudService crudService = SpringUtil.getICrudService();
+					
+					TblCommandProtocolEntity  command = (TblCommandProtocolEntity) crudService.get(protocol.getProtocolId(), TblCommandProtocolEntity.class, true);
+					command.setValue(temperatureData);
+					crudService.update(command, true);
+							
 				}
+				
 			}
 			/*
 			 * BigDecimal canculate = new BigDecimal(decimalConvert); list.add(canculate);

@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +62,10 @@ public class UploadFileController extends BaseController{
 	@RequestMapping(value = "/admin/uploadImg")
 	public ResponseEntity<Object> uploadImg(MultipartFile file) throws Exception{
 		logger.info(file.getOriginalFilename()); 
-		String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
+		long dateTime = new Date().getTime();
+		Random random = new Random(2);
+		//String newImageName = UUIDUtil.getUUID() + file.getOriginalFilename();
+		String newImageName = "CLKJ" + String.valueOf(dateTime) + String.valueOf(random.nextInt()) + file.getOriginalFilename();
 		//String newRealpath = UploadConfiguration.getUploadPath() + "/" + file.getOriginalFilename();
 		ICrudService crudService = SpringUtil.getBean(ICrudService.class);
     	Map map = new HashMap();
@@ -155,6 +159,8 @@ public class UploadFileController extends BaseController{
 		for(File file2 : fileList) {
 			System.out.println(file2.getAbsolutePath() + "-----"+ file2.getName()+ "-----" + df.format(new Date(file2.lastModified()))); 
 		}
+		
+		System.out.println(String.valueOf(new Random(2).nextInt()));
 	}
 	
 }
