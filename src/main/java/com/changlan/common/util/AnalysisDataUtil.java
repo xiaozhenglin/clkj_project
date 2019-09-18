@@ -231,6 +231,9 @@ public class AnalysisDataUtil {
 			if(protocol.getDataType().indexOf("温度")>-1) {							
 				for (int i =0 ; i< length; i++) {
 					int first = end+4*i;
+					if(first + 4 > backContent.length()) {
+						break;
+					}
 					String value = backContent.substring(first, first + 4);
 					String temperatureData = StringUtil.decimalConvert(value, 16, binaryValue, null); 
 					int canculate = new BigDecimal(temperatureData).intValue();

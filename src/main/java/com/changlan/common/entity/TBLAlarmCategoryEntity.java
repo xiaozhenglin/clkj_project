@@ -18,6 +18,9 @@ public class TBLAlarmCategoryEntity {
 	
     @Column(name = "NAME", unique = true )
 	private String name;
+    
+    @Column(name = "EXCEPTION_DESC"   )
+    private String exceptionDesc;
 
 	public Integer getAlarmCategoryId() {
 		return alarmCategoryId;
@@ -34,7 +37,13 @@ public class TBLAlarmCategoryEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-    
-    
 
+	public String getExceptionDesc() {
+		return exceptionDesc;
+	}
+
+	public void setExceptionDesc(String exceptionDesc) {
+		this.exceptionDesc = exceptionDesc;
+	}
+    
 }

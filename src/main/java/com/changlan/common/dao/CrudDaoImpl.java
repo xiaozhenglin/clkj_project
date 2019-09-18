@@ -251,7 +251,7 @@ public class CrudDaoImpl implements ICrudDao{
 	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" EXIST :" +list.get(i); 
 				break;
 			case LIKE:
-	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i) + "'%'";
+	        	sql+=" and "+getColumnNameByField(clazz,list.get(i))+" like '%' :" +list.get(i).trim() + "'%'";
 				break;
 			case BETWEEN:
 				String begin = DateUtil.formatDate(matcher.getBegin(),"yyyy-MM-dd HH:mm:ss");

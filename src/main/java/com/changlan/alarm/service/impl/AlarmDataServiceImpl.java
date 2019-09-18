@@ -31,6 +31,7 @@ import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
+import com.changlan.point.pojo.PointInfoDetail;
 
 @Service
 public class AlarmDataServiceImpl implements IAlarmDataService {
@@ -87,7 +88,8 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 	public Page<TblAlarmDataDetail> getPage(AlarmDataQuery entity, Pageable pageable) {
 		Page<TblAlarmDataDetail> result ;
 		List<TblAlarmDataDetail> list = new ArrayList<TblAlarmDataDetail>();
-		List<TblAlarmDataDetail> detailList  = new ArrayList<TblAlarmDataDetail>() ;
+		list.clear();
+		Page<TblAlarmDataDetail> detailList  ;
 		Map map = new HashMap();
 		if(entity.getAlarmId() != null) {
 			map.put("alarmId", new ParamMatcher(entity.getAlarmId()));
@@ -111,88 +113,91 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 //			}
 			map.put("downStatus", new ParamMatcher(entity.getDownStatus()));
 		}
-		
-		if(StringUtil.isNotEmpty(entity.getPointNameOrLineNameOrChannelName())){
-			String common = entity.getPointNameOrLineNameOrChannelName();
-			
-			Map channelMap = new HashMap();			
-			channelMap.put("name", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
-			List<TblCompanyChannelEntity> listChannel = crudService.findByMoreFiled(TblCompanyChannelEntity.class, channelMap, true);
-			for(TblCompanyChannelEntity channel :listChannel) {
-				Map lineMap = new HashMap();			
-				lineMap.put("channelId", new ParamMatcher(channel.getChannelId()));
-				List<TblLinesEntity> listLine = crudService.findByMoreFiled(TblLinesEntity.class, lineMap, true); 
-				for(TblLinesEntity line :listLine) {
-					Map pointMap = new HashMap();			
-					pointMap.put("lineId", new ParamMatcher(line.getLineId()));
-					List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
-					for(TblPointsEntity point:listPoints) {
-						if(point.getPointId() !=null) {
-							map.put("pointId", new ParamMatcher(point.getPointId()));
-						}
-						 detailList = dealPage(entity, map);
-						 for(TblAlarmDataDetail o:detailList) {
-							 list.add(o);
-						 }
-					}
-				}
-			}
-			if(ListUtil.isEmpty(listChannel)) {
-				Map lineMap = new HashMap();			
-				lineMap.put("lineName", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
-				List<TblLinesEntity> listLine = crudService.findByMoreFiled(TblLinesEntity.class, lineMap, true); 
-				for(TblLinesEntity line :listLine) {
-					Map pointMap = new HashMap();			
-					pointMap.put("lineId", new ParamMatcher(line.getLineId()));
-					List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
-					for(TblPointsEntity point:listPoints) {
-						if(point.getPointId() !=null) {
-							map.put("pointId", new ParamMatcher(point.getPointId()));
-						}
-						 detailList = dealPage(entity, map);
-						 for(TblAlarmDataDetail o:detailList) {
-							 list.add(o);
-						 }
-					}
-				}
+		if(entity.getPointId()!=null) {
+			map.put("pointId", new ParamMatcher(entity.getPointId()));
+		}else {
 				
-				if(ListUtil.isEmpty(listLine)) {
-					Map pointMap = new HashMap();
-					if(entity.getPointNameOrLineNameOrChannelName() !=null) {
-						pointMap.put("pointName", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
-					}
-					List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
-					for(TblPointsEntity point:listPoints) {
-						if(point.getPointId() !=null) {
-							map.put("pointId", new ParamMatcher(point.getPointId()));
+			if(StringUtil.isNotEmpty(entity.getPointNameOrLineNameOrChannelName())){
+				String common = entity.getPointNameOrLineNameOrChannelName();
+				
+				Map channelMap = new HashMap();			
+				channelMap.put("name", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
+				List<TblCompanyChannelEntity> listChannel = crudService.findByMoreFiled(TblCompanyChannelEntity.class, channelMap, true);
+				for(TblCompanyChannelEntity channel :listChannel) {
+					Map lineMap = new HashMap();			
+					lineMap.put("channelId", new ParamMatcher(channel.getChannelId()));
+					List<TblLinesEntity> listLine = crudService.findByMoreFiled(TblLinesEntity.class, lineMap, true); 
+					for(TblLinesEntity line :listLine) {
+						Map pointMap = new HashMap();			
+						pointMap.put("lineId", new ParamMatcher(line.getLineId()));
+						List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
+						for(TblPointsEntity point:listPoints) {
+							if(point.getPointId() !=null) {
+								map.put("pointId", new ParamMatcher(point.getPointId()));
+							}
+							 detailList = dealPage(entity, map,pageable);
+							 for(TblAlarmDataDetail o:detailList) {
+								 list.add(o);
+							 }
 						}
-						 detailList = dealPage(entity, map);
-						 for(TblAlarmDataDetail o:detailList) {
-							 list.add(o);
-						 }
 					}
 				}
+				if(ListUtil.isEmpty(listChannel)) {
+					Map lineMap = new HashMap();			
+					lineMap.put("lineName", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
+					List<TblLinesEntity> listLine = crudService.findByMoreFiled(TblLinesEntity.class, lineMap, true); 
+					for(TblLinesEntity line :listLine) {
+						Map pointMap = new HashMap();			
+						pointMap.put("lineId", new ParamMatcher(line.getLineId()));
+						List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
+						for(TblPointsEntity point:listPoints) {
+							if(point.getPointId() !=null) {
+								map.put("pointId", new ParamMatcher(point.getPointId()));
+							}
+							 detailList = dealPage(entity, map,pageable);
+							 for(TblAlarmDataDetail o:detailList) {
+								 list.add(o);
+							 }
+						}
+					}
+					
+					if(ListUtil.isEmpty(listLine)) {
+						Map pointMap = new HashMap();
+						if(entity.getPointNameOrLineNameOrChannelName() !=null) {
+							pointMap.put("pointName", new ParamMatcher(MatcheType.LIKE,entity.getPointNameOrLineNameOrChannelName()));
+						}
+						List<TblPointsEntity> listPoints = crudService.findByMoreFiled(TblPointsEntity.class, pointMap, true); 
+						for(TblPointsEntity point:listPoints) {
+							if(point.getPointId() !=null) {
+								map.put("pointId", new ParamMatcher(point.getPointId()));
+							}
+							 detailList = dealPage(entity, map,pageable);
+							 for(TblAlarmDataDetail o:detailList) {
+								 list.add(o);
+							 }
+						}
+					}
+					
+				}				
 				
 			}
-			
-			
 		}
 		if(ListUtil.isEmpty(list)) {
-			detailList = dealPage(entity, map);
+			detailList = dealPage(entity, map,pageable);
 			 for(TblAlarmDataDetail o:detailList) {
 				 list.add(o);
 			 }
 		}
-		
-		
+					
 		result = new PageImpl<TblAlarmDataDetail>(list, pageable, list.size());
 		return result;
 	}
 	
-	public List<TblAlarmDataDetail> dealPage(AlarmDataQuery entity, Map map ){
+	public Page<TblAlarmDataDetail> dealPage(AlarmDataQuery entity, Map map ,Pageable pageable){
+		
 		List<TblAlarmDataDetail> list = new ArrayList<TblAlarmDataDetail>();
 		list.clear();
-		List<TblPointAlamDataEntity> datas = crudService.findByMoreFiled(TblPointAlamDataEntity.class, map, true);
+		Page<TblPointAlamDataEntity> datas = crudService.findByMoreFiledAndPage(TblPointAlamDataEntity.class, map, true,pageable);
 		
 		for(Object o : datas) {
 			TblPointAlamDataEntity alarmData =(TblPointAlamDataEntity)o;
@@ -209,7 +214,7 @@ public class AlarmDataServiceImpl implements IAlarmDataService {
 			list.add(detail);
 		}
 		
-		return list;
+		return new PageImpl<TblAlarmDataDetail>(list, pageable, datas.getTotalElements());
 	}
 
 	@Override

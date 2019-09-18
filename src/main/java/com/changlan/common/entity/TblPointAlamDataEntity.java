@@ -90,6 +90,9 @@ public class TblPointAlamDataEntity implements java.io.Serializable {
     
     @Transient
 	private String  unit; //指标单位
+    
+    @Transient
+   	private String  ruleName; //指标单位
 
 	/**
      * 获取alarmId
