@@ -81,10 +81,9 @@ public class EquipmentScreenController extends BaseController {
 		if(query.getBegin()!=null && query.getEnd()!=null) {
 			begin = new Date(query.getBegin());
 			end =  new Date(query.getEnd());	
-		}else {
-			begin = DateUtil.yesterDay(new Date());
-			end = new Date();
-		}
+		} /*
+			 * else { begin = DateUtil.yesterDay(new Date()); end = new Date(); }
+			 */
 		//query.setPointId(1);  //测试数据
 		
 		List<Object> listPointIndicators = (List<Object>)equipmentScreenDao.queryPointIndicatorList(query);
@@ -94,9 +93,11 @@ public class EquipmentScreenController extends BaseController {
 			for(Integer indicatorId : indicatorsPointList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				List<PointDataDetail> listPointData = pointDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
-				CommonDataTableVO vo = new CommonDataTableVO();
+				CommonDataTableVO vo = new CommonDataTableVO();				
 				CommonDataTableVO value = vo.CommonPoinDataTableVOSinger(indicatorId, listPointData);
-				result.add(value);
+				if(value!=null) {
+					result.add(value);
+				}
 			}
 		}
 		
@@ -120,7 +121,9 @@ public class EquipmentScreenController extends BaseController {
 					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
 					CommonDataTableVO vo = new CommonDataTableVO();
 					CommonDataTableVO value = vo.CommonTemperatureDataTableVOSinger(indicatorId, listTemperatureData);
-					result.add(value);
+					if(value!=null) {
+						result.add(value);
+					}
 				//}
 			}
 		}
@@ -132,9 +135,11 @@ public class EquipmentScreenController extends BaseController {
 			for(Integer indicatorId : indicatorsPartDischargeList) {
 				//根据指标id,监控点Id 和 时间 筛选得到的数据
 				List<PartDischargeDataDetail> listPartDischargeData = partDischargeDataService.getTableOne(begin,end,indicatorId,query.getPointId()); 
-				CommonDataTableVO vo = new CommonDataTableVO();
+				CommonDataTableVO vo = new CommonDataTableVO();				
 				CommonDataTableVO value = vo.CommonPartDischargeDataTableVOSinger(indicatorId, listPartDischargeData);
-				result.add(value);
+				if(value!=null) {
+					result.add(value);
+				}
 			}
 		}
 		return result;
@@ -264,7 +269,9 @@ public class EquipmentScreenController extends BaseController {
 				List<PointDataDetail> listPointData = pointDataService.getTable(begin,end,indicatorId,query.getPointId()); 
 				CommonDataTableVO vo = new CommonDataTableVO();
 				CommonDataTableVO value = vo.CommonPoinDataTableVO(indicatorId, listPointData);
-				result.add(value);
+				if(value!=null) {
+					result.add(value);
+				}
 			}
 		}
 		
@@ -285,7 +292,9 @@ public class EquipmentScreenController extends BaseController {
 					List<TemperatureDataDetail> listTemperatureData = temperatureDataService.getTable(begin,end,indicatorId,query.getPointId()); 
 					CommonDataTableVO vo = new CommonDataTableVO();
 					CommonDataTableVO value = vo.CommonTemperatureDataTableVO(indicatorId, listTemperatureData);
-					result.add(value);
+					if(value!=null) {
+						result.add(value);
+					}
 				//}
 			}
 		}
@@ -300,7 +309,9 @@ public class EquipmentScreenController extends BaseController {
 				List<PartDischargeDataDetail> listPartDischargeData = partDischargeDataService.getTable(begin,end,indicatorId,query.getPointId()); 
 				CommonDataTableVO vo = new CommonDataTableVO();
 				CommonDataTableVO value = vo.CommonPartDischargeDataTableVO(indicatorId, listPartDischargeData);
-				result.add(value);
+				if(value!=null) {
+					result.add(value);
+				}
 			}
 		}
 		return result;
@@ -317,7 +328,7 @@ public class EquipmentScreenController extends BaseController {
 			
 			TblIndicatorValueEntity  tblIndicatorValue = (TblIndicatorValueEntity) crudService.get(indicator,TblIndicatorValueEntity.class, true);
 			//indicatorsList.add(Integer.parseInt(obj[1].toString()));
-			if(!(tblIndicatorValue.getName().indexOf("光纤断纤")>-1||tblIndicatorValue.getName().indexOf("线缆长度")>-1)) { //断纤， 光纤长度 不展示 
+			if(!(tblIndicatorValue.getName().indexOf("断纤")>-1||tblIndicatorValue.getName().indexOf("线缆长度")>-1)) { //断纤， 光纤长度 不展示 
 				indicatorsList.add(indicator);
 			}
 		}

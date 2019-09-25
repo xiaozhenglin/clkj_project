@@ -9,6 +9,7 @@ import com.changlan.common.entity.TblPoinDataEntity;
 import com.changlan.common.entity.TblPointsEntity;
 import com.changlan.common.entity.TblTemperatureDTSDataEntity;
 import com.changlan.common.entity.TblTemperatureDataEntity;
+import com.changlan.common.util.ListUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.indicator.pojo.IndiCatorValueDetail;
 import com.changlan.other.entity.DeviceDataColl;
@@ -35,48 +36,55 @@ public class CommonDataTableVO {
 		CommonDataTableVO vo = new CommonDataTableVO();
 		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 		//this.indicatorId = indicatorId;
-		vo.setIndicatorId(indicatorId);
-		for(PointDataDetail dataDetail : dataDetails ) {
-			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
-			TblPoinDataEntity pointData = dataDetail.getPointData(); 
-			TblPointsEntity point = dataDetail.getPoint(); 
-			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
+		if(!ListUtil.isEmpty(dataDetails)) {
+			for(PointDataDetail dataDetail : dataDetails ) {
+				vo.setIndicatorId(indicatorId);
+				IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
+				TblPoinDataEntity pointData = dataDetail.getPointData(); 
+				TblPointsEntity point = dataDetail.getPoint(); 
+				TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
+				
+				vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+				vo.setVisualType(indicatorValue.getVisualType()); 
+				vo.setIndicatorCode(indicatorValue.getIndicatorCode());
 			
-			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
-			vo.setVisualType(indicatorValue.getVisualType()); 
-			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-		
-			vo.setIndicatorName(indicatorValue.getName());
-			
-			vo.setUnit(indicatorValue.getUnit());
-		    
-			if(StringUtil.isNotEmpty(point.getPointName())) {
-				vo.setPointName(point.getPointName());
+				vo.setIndicatorName(indicatorValue.getName());
+				
+				vo.setUnit(indicatorValue.getUnit());
+			    
+				if(StringUtil.isNotEmpty(point.getPointName())) {
+					vo.setPointName(point.getPointName());
+				}
+				if(StringUtil.isNotEmpty(point.getIndicators())) {
+					vo.setIndicators(point.getIndicators());
+				}
+							
+				if(StringUtil.isNotEmpty(point.getPicture_url())) {
+					vo.setPicture_url(point.getPicture_url());
+				}
+				if(StringUtil.isNotEmpty(point.getVideo_url())) {
+					vo.setVideo_url(point.getVideo_url());
+			    }
+				
+				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime() ,indicatorValue.getIndicatorId() );
+				results.add(value);
+				vo.setResults(results);
+				
 			}
-			if(StringUtil.isNotEmpty(point.getIndicators())) {
-				vo.setIndicators(point.getIndicators());
-			}
-						
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
-			
-			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime() ,indicatorValue.getIndicatorId() );
-			results.add(value);
+		}else {
+			vo = null;
 		}
-		vo.setResults(results);
 		return vo;
 	}
 	
 	public CommonDataTableVO CommonPoinDataTableVOSinger(Integer indicatorId,List<PointDataDetail> dataDetails) {
-		CommonDataTableVO vo = new CommonDataTableVO();
-		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
-		//this.indicatorId = indicatorId;
-		vo.setIndicatorId(indicatorId);
-		PointDataDetail dataDetail = dataDetails.get(0) ;  //得到第一条数据 
+		if(!ListUtil.isEmpty(dataDetails)) {
+			CommonDataTableVO vo = new CommonDataTableVO();
+			List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
+			//this.indicatorId = indicatorId;
+			vo.setIndicatorId(indicatorId);
+	
+			PointDataDetail dataDetail = dataDetails.get(0) ;  //得到第一条数据 
 			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
 			TblPoinDataEntity pointData = dataDetail.getPointData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
@@ -104,16 +112,20 @@ public class CommonDataTableVO {
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
 		
-		vo.setResults(results);
-		return vo;
+			vo.setResults(results);
+			return vo;
+		}
+		return null;
 	}
 	
 	public CommonDataTableVO  CommonTemperatureDataTableVOSinger(Integer indicatorId,List<TemperatureDataDetail> dataDetails) {
-		CommonDataTableVO vo = new CommonDataTableVO();
-		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
-		//this.indicatorId = indicatorId;
-		vo.setIndicatorId(indicatorId);
-		TemperatureDataDetail dataDetail = dataDetails.get(0);
+		if(!ListUtil.isEmpty(dataDetails)) {
+			CommonDataTableVO vo = new CommonDataTableVO();
+			List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
+			//this.indicatorId = indicatorId;
+			vo.setIndicatorId(indicatorId);
+		
+			TemperatureDataDetail dataDetail = dataDetails.get(0);
 			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
 			TblTemperatureDataEntity pointData = dataDetail.getTemperatureData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
@@ -143,15 +155,19 @@ public class CommonDataTableVO {
 		
 		vo.setResults(results);
 		return vo;
+		}
+		return null;
 		
 	}
 	
 	public CommonDataTableVO  CommonTemperatureDSTDataTableVOSinger(Integer indicatorId,List<TemperatureDtsDataDetail> dataDetails) {
-		CommonDataTableVO vo = new CommonDataTableVO();
-		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
-		//this.indicatorId = indicatorId;
-		vo.setIndicatorId(indicatorId);
-		TemperatureDtsDataDetail dataDetail = dataDetails.get(0);
+		if(!ListUtil.isEmpty(dataDetails)) {
+			CommonDataTableVO vo = new CommonDataTableVO();
+			List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
+			//this.indicatorId = indicatorId;
+			vo.setIndicatorId(indicatorId);
+	
+			TemperatureDtsDataDetail dataDetail = dataDetails.get(0);
 			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
 			TblTemperatureDTSDataEntity pointData = dataDetail.getTemperatureData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
@@ -179,8 +195,10 @@ public class CommonDataTableVO {
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
 		
-		vo.setResults(results);
-		return vo;
+			vo.setResults(results);
+			return vo;
+		}
+		return null;
 		
 	}
 	
@@ -188,40 +206,45 @@ public class CommonDataTableVO {
 		CommonDataTableVO vo = new CommonDataTableVO();
 		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
 		//this.indicatorId = indicatorId;
-		vo.setIndicatorId(indicatorId);
-		for(TemperatureDataDetail dataDetail : dataDetails ) {
-			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
-			TblTemperatureDataEntity pointData = dataDetail.getTemperatureData(); 
-			TblPointsEntity point = dataDetail.getPoint(); 
-			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
-			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
-			vo.setVisualType(indicatorValue.getVisualType()); 
-			vo.setIndicatorName(indicatorValue.getName());
-		
-			vo.setUnit(indicatorValue.getUnit());
-			if(StringUtil.isNotEmpty(point.getPointName())) {
-				vo.setPointName(point.getPointName());
-			}
-			if(StringUtil.isNotEmpty(point.getIndicators())) {
-				vo.setIndicators(point.getIndicators());
-			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
+		if(!ListUtil.isEmpty(dataDetails)) {
+			for(TemperatureDataDetail dataDetail : dataDetails ) {
+				vo.setIndicatorId(indicatorId);
+				IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
+				TblTemperatureDataEntity pointData = dataDetail.getTemperatureData(); 
+				TblPointsEntity point = dataDetail.getPoint(); 
+				TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
+				vo.setIndicatorCode(indicatorValue.getIndicatorCode());
+				vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+				vo.setVisualType(indicatorValue.getVisualType()); 
+				vo.setIndicatorName(indicatorValue.getName());
 			
-			if(indicatorValue.getName().indexOf("DTS")>-1) {//分布式光纤测温
-				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getPointDataId());
-				results.add(value);
-			}else {
-				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
-				results.add(value);
+				vo.setUnit(indicatorValue.getUnit());
+				if(StringUtil.isNotEmpty(point.getPointName())) {
+					vo.setPointName(point.getPointName());
+				}
+				if(StringUtil.isNotEmpty(point.getIndicators())) {
+					vo.setIndicators(point.getIndicators());
+				}
+				if(StringUtil.isNotEmpty(point.getPicture_url())) {
+					vo.setPicture_url(point.getPicture_url());
+				}
+				if(StringUtil.isNotEmpty(point.getVideo_url())) {
+					vo.setVideo_url(point.getVideo_url());
+			    }
+				
+				if(indicatorValue.getName().indexOf("DTS")>-1) {//分布式光纤测温
+					IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getPointDataId());
+					results.add(value);
+				}else {
+					IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
+					results.add(value);
+				}
+				vo.setResults(results);
+				//return vo;
 			}
+		}else {
+			vo = null;
 		}
-		vo.setResults(results);
 		return vo;
 		
 	}
@@ -267,46 +290,53 @@ public class CommonDataTableVO {
 	public CommonDataTableVO  CommonPartDischargeDataTableVO(Integer indicatorId,List<PartDischargeDataDetail> dataDetails) {
 		CommonDataTableVO vo = new CommonDataTableVO();
 		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
-		vo.setIndicatorId(indicatorId);
-		for(PartDischargeDataDetail dataDetail : dataDetails ) {
-			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
-			DeviceDataColl pointData = dataDetail.getDeviceDataCollData(); 
-			TblPointsEntity point = dataDetail.getPoint(); 
-			TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
-			vo.setIndicatorId(indicatorValue.getIndicatorId()); 
-			vo.setVisualType(indicatorValue.getVisualType()); 
-			vo.setIndicatorCode(indicatorValue.getIndicatorCode());
-	
-			vo.setIndicatorName(indicatorValue.getName());
-			
-			//if(pointData.getRecord_id()!=null) {
-				//vo.setRecord_id(pointData.getRecord_id());
-			//}
-			vo.setUnit(indicatorValue.getUnit());
-			if(StringUtil.isNotEmpty(point.getPointName())) {
-				vo.setPointName(point.getPointName());
+		if(!ListUtil.isEmpty(dataDetails)) {
+			for(PartDischargeDataDetail dataDetail : dataDetails ) {
+				vo.setIndicatorId(indicatorId);
+				IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
+				DeviceDataColl pointData = dataDetail.getDeviceDataCollData(); 
+				TblPointsEntity point = dataDetail.getPoint(); 
+				TblIndicatorValueEntity indicatorValue = valueDetail.getIndicatorValue(); 
+				vo.setIndicatorId(indicatorValue.getIndicatorId()); 
+				vo.setVisualType(indicatorValue.getVisualType()); 
+				vo.setIndicatorCode(indicatorValue.getIndicatorCode());
+		
+				vo.setIndicatorName(indicatorValue.getName());
+				
+				//if(pointData.getRecord_id()!=null) {
+					//vo.setRecord_id(pointData.getRecord_id());
+				//}
+				vo.setUnit(indicatorValue.getUnit());
+				if(StringUtil.isNotEmpty(point.getPointName())) {
+					vo.setPointName(point.getPointName());
+				}
+				if(StringUtil.isNotEmpty(point.getIndicators())) {
+					vo.setIndicators(point.getIndicators());
+				}
+				if(StringUtil.isNotEmpty(point.getPicture_url())) {
+					vo.setPicture_url(point.getPicture_url());
+				}
+				if(StringUtil.isNotEmpty(point.getVideo_url())) {
+					vo.setVideo_url(point.getVideo_url());
+			    }
+				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
+				results.add(value);
+				vo.setResults(results);
+				
 			}
-			if(StringUtil.isNotEmpty(point.getIndicators())) {
-				vo.setIndicators(point.getIndicators());
-			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
-			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
-			results.add(value);
+		}else {
+			vo = null;
 		}
-		vo.setResults(results);
 		return vo;
 	}
 	
 	public CommonDataTableVO  CommonPartDischargeDataTableVOSinger(Integer indicatorId,List<PartDischargeDataDetail> dataDetails) {
-		CommonDataTableVO vo = new CommonDataTableVO();
-		List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
-		vo.setIndicatorId(indicatorId);
-		PartDischargeDataDetail dataDetail = dataDetails.get(0);
+		if(!ListUtil.isEmpty(dataDetails)) {
+			CommonDataTableVO vo = new CommonDataTableVO();
+			List<IndicatorValueVO> results =  new ArrayList<IndicatorValueVO>();
+			vo.setIndicatorId(indicatorId);
+		
+			PartDischargeDataDetail dataDetail = dataDetails.get(0);
 			IndiCatorValueDetail valueDetail = dataDetail.getValueDetail(); 
 			DeviceDataColl pointData = dataDetail.getDeviceDataCollData(); 
 			TblPointsEntity point = dataDetail.getPoint(); 
@@ -336,8 +366,10 @@ public class CommonDataTableVO {
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
 			results.add(value);
 		
-		vo.setResults(results);
-		return vo;
+			vo.setResults(results);
+			return vo;
+		}
+		return null;
 	}
 
 
