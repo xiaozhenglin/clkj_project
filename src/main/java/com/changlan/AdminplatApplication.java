@@ -36,7 +36,10 @@ import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.service.ISmsCatService;
-
+import com.changlan.common.configuration.DataSourceConfig;
+import com.changlan.common.configuration.PrimaryConfig;
+import com.changlan.common.configuration.SecondaryConfig;
+ 
 
 @SpringBootApplication
 @EnableScheduling

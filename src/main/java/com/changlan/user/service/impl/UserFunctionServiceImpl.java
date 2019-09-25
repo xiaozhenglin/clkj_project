@@ -66,7 +66,7 @@ public class UserFunctionServiceImpl implements IUserFunctionService{
 	@Transactional
 	public Boolean merge(String adminUserId, List<String> functionIds) {
 		//删除旧数据
-		removeOld(adminUserId);
+		//removeOld(adminUserId);
 		for(String funcId : functionIds) {
 			Integer id = Integer.parseInt(funcId);
 			TblUserFunctionEntity entity = new TblUserFunctionEntity();

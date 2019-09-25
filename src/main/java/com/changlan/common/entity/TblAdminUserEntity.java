@@ -73,7 +73,7 @@ public class TblAdminUserEntity implements java.io.Serializable {
     
     /** copanyId */
     @Column(name = "COMPANY_ID"   )
-    private String companyId;
+    private Integer companyId;
     
     /** copanyId */
     @Column(name = "LINE_ID"   )
@@ -178,12 +178,12 @@ public class TblAdminUserEntity implements java.io.Serializable {
     public void setUserGroupId(Integer userGroupId) {
         this.userGroupId = userGroupId;
     }
-
-    public String getCompanyId() {
+    
+	public Integer getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(String companyId) {
+	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
 	}
 

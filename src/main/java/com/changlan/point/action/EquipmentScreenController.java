@@ -311,7 +311,15 @@ public class EquipmentScreenController extends BaseController {
 		List<Integer> indicatorsList = new ArrayList<Integer>();
 		for(Object o : listPointIndicators ) {
 			Object [] obj = (Object[]) o;
-			indicatorsList.add(Integer.parseInt(obj[1].toString()));
+			//indicatorsList.add(Integer.parseInt(obj[1].toString()));
+			
+            Integer indicator = Integer.parseInt(obj[1].toString());
+			
+			TblIndicatorValueEntity  tblIndicatorValue = (TblIndicatorValueEntity) crudService.get(indicator,TblIndicatorValueEntity.class, true);
+			//indicatorsList.add(Integer.parseInt(obj[1].toString()));
+			if(!(tblIndicatorValue.getName().indexOf("光纤断纤")>-1||tblIndicatorValue.getName().indexOf("线缆长度")>-1)) { //断纤， 光纤长度 不展示 
+				indicatorsList.add(indicator);
+			}
 		}
 		
 		List<Integer> list = new ArrayList<Integer>();

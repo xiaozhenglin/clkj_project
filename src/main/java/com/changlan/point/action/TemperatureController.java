@@ -93,7 +93,7 @@ public class TemperatureController extends BaseController{
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(TemperatureQuery query) {
 		List<TemperatureDataVo> result = new ArrayList<TemperatureDataVo>();
-		Page<TemperatureDataDetail> pointDatas = temperatureDataService.getAll(query,getPage());
+		Page<TemperatureDataDetail> pointDatas = temperatureDataService.getAll(query,getPageAndOrderBy("RECORD_TIME"));
 		for(TemperatureDataDetail detail : pointDatas) {
 			TemperatureDataVo  vo = new TemperatureDataVo(detail);
 			result.add(vo);

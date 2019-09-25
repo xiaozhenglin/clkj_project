@@ -30,7 +30,7 @@ public class EquipmentScreenDaoImpl  implements IEquipmentScreenDao {
 		}
 		if(query.getBegin()!=null && query.getEnd() !=null ) {
 			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
-			String endDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
 			sql += (" AND t.RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql));
@@ -47,7 +47,7 @@ public class EquipmentScreenDaoImpl  implements IEquipmentScreenDao {
 		}
 		if(query.getBegin()!=null && query.getEnd() !=null ) {
 			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
-			String endDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
 			sql += (" AND t.RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql));
@@ -65,7 +65,7 @@ public class EquipmentScreenDaoImpl  implements IEquipmentScreenDao {
 		}
 		if(query.getBegin()!=null && query.getEnd() !=null ) {
 			String beginDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
-			String endDate = DateUtil.formatDate(query.getBegin(), "yyyy-MM-dd HH:mm:ss"); 
+			String endDate = DateUtil.formatDate(query.getEnd(), "yyyy-MM-dd HH:mm:ss"); 
 			sql += (" AND t.RECORD_TIME BETWEEN '"+beginDate+"'" + " AND '"+ endDate + "'" );
 		}
 		Query createNativeQuery = em.createNativeQuery(SqlUtil.addRowId(sql));
