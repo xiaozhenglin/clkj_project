@@ -15,5 +15,7 @@ public interface IUserFunctionService {
 	List<UserFunctionInfo> findALLPersions();
 
 	//添加或者修改用户的权限
-	Boolean merge(String adminUserId, List<String> functionIds);  
+	Boolean merge(String adminUserId, List<String> functionIds);
+
+	Boolean mergeRole(String roleId, List<String> functionIds);  
 }

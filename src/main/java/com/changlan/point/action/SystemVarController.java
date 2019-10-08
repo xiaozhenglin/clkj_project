@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.StandardServletEnvironment;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.yaml.snakeyaml.Yaml;
 
 import com.changlan.common.action.BaseController;
@@ -44,6 +46,7 @@ import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.BigDecimalUtil;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.MessageUtils;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.point.pojo.CompanyDetail;
@@ -65,6 +68,7 @@ public class SystemVarController extends BaseController{
 	@RequestMapping("/list") 
 	public ResponseEntity<Object>  list(Integer systemId) throws FileNotFoundException, UnsupportedEncodingException {
 		Map map = new HashMap();
+		String  key = MessageUtils.get("user.welcome");
 		if(systemId!=null) {
 			map.put("systemId", new ParamMatcher(systemId));
 		}
@@ -82,6 +86,10 @@ public class SystemVarController extends BaseController{
 		TblSystemVarEntity systemVar = (TblSystemVarEntity) crudService.get(tblSystemVar.getSystemId(), TblSystemVarEntity.class, true);
 		systemVar.setSystemValue(tblSystemVar.getSystemValue());
 		TblSystemVarEntity update = (TblSystemVarEntity) crudService.update(systemVar,true); 
+		if(update.getSystemValue().equals("ENGLISH")) {
+			SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+	        localeResolver.setDefaultLocale(Locale.US);
+		}
 		if(update ==null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}

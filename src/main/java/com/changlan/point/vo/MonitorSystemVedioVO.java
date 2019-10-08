@@ -15,7 +15,8 @@ public class MonitorSystemVedioVO {
 	private Integer monitorSystemId;
     private String  title;
     private String  easy_vedio_url; //视频地址,以逗号分隔
-	private List<ChannelLineVedioVO> companyLinesVOs = new ArrayList<ChannelLineVedioVO>(); //三级包含多条线路信息
+    private String  snap_url;
+	//private List<ChannelLineVedioVO> companyLinesVOs = new ArrayList<ChannelLineVedioVO>(); //三级包含多条线路信息
 	
 	public MonitorSystemVedioVO(Integer monitorSystemId, List<ChannelLineVO> companyLinesVOs) {
 		this.monitorSystemId = monitorSystemId;
@@ -38,11 +39,12 @@ public class MonitorSystemVedioVO {
 		this.title = monitor.getName();
 		if(StringUtil.isNotEmpty(monitor.getEasy_vedio_url())) {
 			this.easy_vedio_url = monitor.getEasy_vedio_url();
+			this.snap_url = monitor.getSnap_url();
 		}
 		List<LineDetail>  list = getLinesByMonitorIdAndChannelId(monitor.getMonitorId(),channelId);
 		for(LineDetail detail : list) {
 			ChannelLineVedioVO VO = new ChannelLineVedioVO(detail);
-			companyLinesVOs.add(VO);
+			//companyLinesVOs.add(VO);
 		}
 	}
 
@@ -79,13 +81,6 @@ public class MonitorSystemVedioVO {
 		this.title = title;
 	}
 
-	public List<ChannelLineVedioVO> getCompanyLinesVOs() {
-		return companyLinesVOs;
-	}
-
-	public void setCompanyLinesVOs(List<ChannelLineVedioVO> companyLinesVOs) {
-		this.companyLinesVOs = companyLinesVOs;
-	}
 
 	public String getEasy_vedio_url() {
 		return easy_vedio_url;
@@ -93,6 +88,14 @@ public class MonitorSystemVedioVO {
 
 	public void setEasy_vedio_url(String easy_vedio_url) {
 		this.easy_vedio_url = easy_vedio_url;
+	}
+
+	public String getSnap_url() {
+		return snap_url;
+	}
+
+	public void setSnap_url(String snap_url) {
+		this.snap_url = snap_url;
 	}
 	
 	

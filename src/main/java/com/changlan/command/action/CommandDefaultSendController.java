@@ -2,6 +2,7 @@ package com.changlan.command.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import javax.transaction.Transactional;
 
@@ -23,6 +24,7 @@ import com.changlan.common.entity.TblPointSendCommandEntity;
 import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.StringUtil;
+import com.changlan.netty.pojo.MyTask;
 import com.changlan.point.pojo.PoinErrorType;
 
 @RestController
@@ -34,6 +36,11 @@ public class CommandDefaultSendController extends BaseController{
 	@Autowired
 	private ICommandDefaultService commandDefaultService;
 
+	/**
+	 * @param entity
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/save")
 	public ResponseEntity<Object>  save(TblPointSendCommandEntity entity) throws Exception {
 		Boolean existName = commandDefaultService.existName(entity); 
@@ -46,7 +53,17 @@ public class CommandDefaultSendController extends BaseController{
 		}else {
 			entity.setIs_controller("0");
 		}
+		if(entity.getIntervalTime()==null) {	//为空默认设置值		
+			entity.setIntervalTime(120*1000);
+		}
 		TblPointSendCommandEntity update = commandDefaultService.save(entity); 
+		/*
+		 * if((entity.getSystem_start().equals("yes"))&&(entity.getIs_controller().
+		 * equals("0"))) { MyTask task = new MyTask(entity); Timer timer = new Timer();
+		 * //循环执行定时器 if(entity.getIntervalTime()!=null) { Integer intervalTime =
+		 * entity.getIntervalTime(); timer.schedule(task, 0, intervalTime*1000); }else {
+		 * timer.schedule(task, 0, 120*1000); } }
+		 */
 		if(update ==null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);
 		}

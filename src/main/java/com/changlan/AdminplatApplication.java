@@ -31,14 +31,12 @@ import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.netty.HttpNettyServer;
 import com.changlan.netty.pojo.MyTask;
+import com.changlan.netty.pojo.MyTaskThread;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.netty.server.NettyServer;
 import com.changlan.netty.service.INettyService;
 import com.changlan.point.service.IPointDefineService;
 import com.changlan.user.service.ISmsCatService;
-import com.changlan.common.configuration.DataSourceConfig;
-import com.changlan.common.configuration.PrimaryConfig;
-import com.changlan.common.configuration.SecondaryConfig;
  
 
 @SpringBootApplication
@@ -59,9 +57,13 @@ public class AdminplatApplication implements ApplicationRunner {
 		new NettyServer().start(); //启动netty服务器
 		new HttpNettyServer().start(); //启动httpNetty服务器
 		
-		Thread.sleep(3000);
- 		INettyService nettyService = SpringUtil.getBean(INettyService.class);  
-		nettyService.task(); // 系统启动，开始指令发送
+		Thread.sleep(9000);
+		
+		new MyTaskThread().start();
+		
+		//Thread.sleep(3000);
+ 		//INettyService nettyService = SpringUtil.getBean(INettyService.class);  
+		//nettyService.task(); // 系统启动，开始指令发送
 		
 		// 初始化短信猫
 //		ISmsCatService catService = SpringUtil.getBean(ISmsCatService.class);

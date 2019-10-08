@@ -122,6 +122,14 @@ public class TblPointsEntity implements java.io.Serializable {
     @Column(name = "SNAP_URL"    )
     private String snap_url;
 
+	public String getSnap_url() {
+		return snap_url;
+	}
+
+	public void setSnap_url(String snap_url) {
+		this.snap_url = snap_url;
+	}
+
 	public Integer getPointId() {
 		return pointId;
 	}

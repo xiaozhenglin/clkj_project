@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.StandardServletEnvironment;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.yaml.snakeyaml.Yaml;
 
 import com.changlan.common.action.BaseController;
@@ -40,6 +42,7 @@ import com.changlan.common.pojo.MyDefineException;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.BigDecimalUtil;
 import com.changlan.common.util.ListUtil;
+import com.changlan.common.util.MessageUtils;
 import com.changlan.common.util.StringUtil;
 import com.changlan.netty.pojo.NettyConfiguration;
 import com.changlan.point.pojo.CompanyDetail;
@@ -83,10 +86,12 @@ public class VarController extends BaseController{
 	public ResponseEntity<Object>  list(String path) throws FileNotFoundException, UnsupportedEncodingException {
 		Yaml yml = new Yaml();
 		//String ymlPath =  VarController.class.getResource("/").getPath().substring(1)  + "application.yml" ;
-		//String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;
+		//String ymlPath =  Thread.currentThread().getContextClassLoader().getResource("").getPath().toString()+ "application.yml" ;		
 		String ymlPath = path + "application.yml" ;
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(ymlPath),"UTF-8");
 		Map map = yml.loadAs(reader, Map.class);
+		
+		//String  key = MessageUtils.get("user.welcome");
 		return success(map);
 	
 	}

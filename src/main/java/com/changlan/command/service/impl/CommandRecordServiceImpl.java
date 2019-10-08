@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpSession;
 import javax.swing.plaf.ListUI;
@@ -69,6 +72,7 @@ import com.changlan.user.pojo.UserErrorType;
 public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	private static Logger logger = LoggerFactory.getLogger(CommandRecordServiceImpl.class);
+	public static ScriptEngine jse = new ScriptEngineManager().getEngineByName("JavaScript");
 	
 	@Autowired
 	private ICrudService crudService;
@@ -114,7 +118,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 
 	@Override
 	@Transactional
-	public List<Object> anylysisData(CommandRecordDetail recordDetail) {
+	public List<Object> anylysisData(CommandRecordDetail recordDetail)  {
 		List<Object> result = new ArrayList<Object>();
 //		List<TblPoinDataEntity> currentAndVoltage = new ArrayList<>(); 
 //		List<TblTemperatureDataEntity> temperature = new ArrayList<>(); 
@@ -135,8 +139,14 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		  		return savePartialDischarge(point,record,deviceDataValue,currentDataProtocol);
 		  	}
 	  		if(category.getCategoryNmae().indexOf("局放全采集")>-1) {
-		  		return  saveDeviceDataTotal(point,record,deviceDataValue,currentDataProtocol);				
+		  		try {
+					return  saveDeviceDataTotal(point,record,deviceDataValue,currentDataProtocol);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
+	  		
 	  		for(ProtocolInfo protocolInfo : currentDataProtocol) {
 	    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
@@ -147,10 +157,18 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    		String addressCode = protocol.getAddressCode(); 
 	    		TblPointSendCommandEntity commandDefault = (TblPointSendCommandEntity)crudService.get(record.getSendCommandId(), TblPointSendCommandEntity.class, true);
 	    		String isControl = commandDefault.getIs_controller();
+	    		logger.info("reciveAddressCode" + reciveAddressCode);
+	    		logger.info("addressCode" + addressCode);
+	    		logger.info("isControl" + isControl);
 	    		//地址码匹配
 	    		if(StringUtil.isEmpty(addressCode)||(StringUtil.isNotEmpty(addressCode) && protocol.getAddressCode().equals(reciveAddressCode) && isControl.contentEquals("0")) ) {
 	    			//解析数据
-	        		List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+	    			List<BigDecimal> data = new ArrayList<BigDecimal>();
+	    			if(!(protocol.getDataType().indexOf("相DTS温度")>-1)) {
+	    				data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+	    			}else{
+        				return saveDtss(point, record, protocol);
+        			}
 	        		if(!ListUtil.isEmpty(data) ) {
 	        			//一个监控点的具体指标的值
 	        			BigDecimal bigDecimal = data.get(0);
@@ -166,25 +184,39 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	        				result.add(deviceDataValue);
 	        			}
 	        			
+	        			if(protocol.getDataType().indexOf("断纤")>-1) {
+	      	  			  try {
+	      					return  saveDtsTotal(point,record,currentDataProtocol);
+	      				} catch (InterruptedException e) {
+	      					// TODO Auto-generated catch block
+	      					e.printStackTrace();
+	      				}
+	      	  		   }
+	        			
+	        			
+	        			
 	        			if(categoryNmae.indexOf("温度")>-1) {
-	        				if(data.size()>1) {
+	        				//if(data.size()>1) {
 	        					//BigDecimal temList =
 	        					//String temList = StringUtils.join(data.toArray(),",");
-	        					BigDecimal temValue = new BigDecimal(0);
-	        					for(int i = 0; i < data.size() ; i++) {
-	        						temValue = temValue.add(data.get(i));
-	        					}
-	        					BigDecimal avgValue =	temValue.divide(new BigDecimal(data.size()));
-	        					TblTemperatureDataEntity aveValue = saveTemperatureData(avgValue.toString(),point,protocol,Integer.parseInt("0")); 
+							/*
+							 * BigDecimal temValue = new BigDecimal(0); for(int i = 0; i < data.size() ;
+							 * i++) { temValue = temValue.add(data.get(i)); } BigDecimal avgValue =
+							 * temValue.divide(new BigDecimal(data.size()),2, RoundingMode.HALF_UP);
+							 * TblTemperatureDataEntity aveValue =
+							 * saveTemperatureData(avgValue.toString(),point,protocol,Integer.parseInt("0"))
+							 * ;
+							 * 
+							 * for(int j = 0 ;j < data.size() ; j++) { TblTemperatureDTSDataEntity value =
+							 * saveTemperatureDtsData(data.get(j).toString(),point,protocol,new
+							 * Integer(j),aveValue.getPointDataId()); result.add(value); }
+							 */
 	        					
-	        					for(int j = 0 ;j < data.size() ; j++) {
-	        						TblTemperatureDTSDataEntity value = saveTemperatureDtsData(data.get(j).toString(),point,protocol,new Integer(j),aveValue.getPointDataId()); 
-		        					result.add(value);
-	        					}
-	        				}else {
+	        					
+	        				//}else {	        					
 		        				TblTemperatureDataEntity value = saveTemperatureData(bigDecimal.toString(),point,protocol,Integer.parseInt("0")); 
 		        				result.add(value);
-	        				}
+	        				//}
 	        			}else if((categoryNmae.indexOf("模拟量")>-1)||((categoryNmae.indexOf("水泵")>-1))){
 	        				TblPoinDataEntity saveData = saveData(bigDecimal.toString(),point,protocol); 
 	        				result.add(saveData);
@@ -294,7 +326,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
         	SessionUtil.storage.put(point.getPointId() + "phase_no", "C");
         }
         
-        SessionUtil.storage.put(point.getPointId() + "jfTwo", "no");
+       // SessionUtil.storage.put(point.getPointId() + "jfTwo", "no");
         
         //System.out.println("saveDeviceData " + SessionUtil.storage.get(point.getPointId() + "phase_no"));
         				
@@ -307,9 +339,9 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 				              
         int beginByte = protocol.getBeginByte();
          
-	        if(beginByte<31) {                           	
+	        if(beginByte>6 && beginByte<31) {                           	
 	        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "A");
-	        }else if (beginByte<55) {
+	        }else if (beginByte>30 && beginByte<55) {
 	        	SessionUtil.storage.put(protocol.getPointId() + "phase_no", "B");
 	        }else{
 	        	SessionUtil.storage.put(protocol.getPointId() +  "phase_no", "C");
@@ -420,52 +452,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		
 		
 		
-		if(SessionUtil.storage.get(point.getPointId() + "jfTwo").equals("no")) {
-			DeviceDataSpecial dataSpecial = new DeviceDataSpecial();  
-			dataSpecial.setAmplitude(maxAmplitude);
-			dataSpecial.setCommond_record_id(record.getCommandRecordId());
-			dataSpecial.setEnergy(energy);
-			dataSpecial.setPhase(maxPhase);
-			dataSpecial.setPointId(record.getPointId());
-			dataSpecial.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
-			dataSpecial.setCreatetime(new Date());
-			dataSpecial.setRecord_id(String.valueOf(dataSpecial.getId()));
-			dataSpecial.setFrequency(frequencyMax);
-			crudService.save(dataSpecial, true);
-		
-			String [] indexs = {String.valueOf(frequencyMax), String.valueOf(maxPhase),String.valueOf(energy) };  //设置好 频次、 相位、能量值
-			
-			//for(ProtocolInfo protocolInfo : currentDataProtocol) {
-		    for(int i = 0; i < currentDataProtocol.size(); i++)  {  
-		    	ProtocolInfo protocolInfo = currentDataProtocol.get(i);
-				TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
-	    		if(protocol == null || protocol.getPointId()!=record.getPointId() ) {
-	        		return null;
-	        	}
-				
-				DeviceDataColl dataColl = new DeviceDataColl();  
-				//dataColl.setAmplitude(maxAmplitude);
-				dataColl.setCommond_record_id(record.getSendCommandId());
-		
-				dataColl.setPointId(record.getPointId());
-				dataColl.setPointName(point.getPointName());
-				dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
-				dataColl.setRecordTime(new Date());
-				dataColl.setRecord_id(dataSpecial.getId());
-				//dataColl.setValue(String.valueOf(maxPhase));   //
-				SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getRecord_id());
-				dataColl.setValue(indexs[i%3]);
-				dataColl.setIndicatorId(protocol.getIndicatorId());
-				dataColl.setProtocolId(protocol.getProtocolId());
-				TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(protocol.getIndicatorId(), TblIndicatorValueEntity.class, true);
-				dataColl.setCategroryId(indicator.getCategoryId());
-				dataColl.setPointCatagoryId(point.getPointCatagoryId());
-				
-				crudService.save(dataColl, true);
-										
-							
-			}
-		}
+
 		
 		int i = 0 ;
 		while(i<=substring.length()-8) {
@@ -484,13 +471,13 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			data.setPhase(Float.parseFloat(phase));//相位
 			data.setCreatetime(new Date()); 
 			data.setPointId(point.getPointId()); 
-			
+			logger.info("接受record_id"+ SessionUtil.storage.get(point.getPointId() + "record_id" + (String)SessionUtil.storage.get(point.getPointId() + "phase_no1")));
 			//System.out.println(SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//logger.info("所属相位"+SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			//data.setRecord_id((String)SessionUtil.storage.get("phase_no") + String.valueOf(curTime));
-			if((Integer)SessionUtil.storage.get(point.getPointId() + "record_id")!=null){
-				data.setRecord_id((Integer)SessionUtil.storage.get(point.getPointId() + "record_id"));
+			if((Integer)SessionUtil.storage.get(point.getPointId() + "record_id" + (String)SessionUtil.storage.get(point.getPointId() + "phase_no1"))!=null){
+				data.setRecord_id((Integer)SessionUtil.storage.get(point.getPointId() + "record_id" + (String)SessionUtil.storage.get(point.getPointId() + "phase_no1")));
 			}
 						
 			
@@ -520,15 +507,224 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		return result;
 	}
 	
+	private List<Object> saveDtss(TblPointsEntity point, TblCommandRecordEntity record,TblCommandProtocolEntity protocol){
+		List<Object> result = new ArrayList<Object>();
+		List<BigDecimal> data = new ArrayList<BigDecimal>();
+		//if(!(protocol.getDataType().indexOf("线缆温度")>-1)) {
+		data = AnalysisDataUtil.getData(record.getBackContent(),protocol);
+		//data = getTemperature(record.getBackContent(),protocol); 
+		String type = record.getBackContent().substring(12, 14);
+		
+		if(SessionUtil.storage.get(point.getPointId()  +"ref_record_id" + type)==null) {
+			BigDecimal temValue = new BigDecimal(0);
+			for(int i = 0; i < data.size() ; i++) {
+				temValue = temValue.add(data.get(i));
+			}
+			BigDecimal avgValue =	temValue.divide(new BigDecimal(data.size()),2, RoundingMode.HALF_UP);
+			TblTemperatureDataEntity aveKValue = saveTemperatureData(avgValue.toString(),point,protocol,Integer.parseInt("0")); 
+			
+			for(int j = 0 ;j < data.size() ; j++) {
+				TblTemperatureDTSDataEntity value = saveTemperatureDtsData(data.get(j).toString(),point,protocol,new Integer(j+1),aveKValue.getPointDataId()); 
+				result.add(value);
+			}
+			return result;
+		}
+		//BigDecimal avgValue =	temValue.divide(new BigDecimal(data.size()),2, RoundingMode.HALF_UP);
+		//TblTemperatureDataEntity aveValue = saveTemperatureData(avgValue.toString(),point,protocol,Integer.parseInt("0")); 
+		String ref_record_id = (String) SessionUtil.storage.get(point.getPointId()  + "ref_record_id" + type);
+		String start_id = (String) SessionUtil.storage.get(point.getPointId() +  "start_id" + type);
+		for(int j = 0 ;j < data.size() ; j++) {
+			TblTemperatureDTSDataEntity value = saveTemperatureDtsData(data.get(j).toString(),point,protocol,new Integer(j) + Integer.parseInt(start_id),Integer.parseInt(ref_record_id)); 
+			result.add(value);
+		}
+		String sum = (String) SessionUtil.storage.get(point.getPointId()  + "sum_dts" + type);
+		int sumInt = Integer.parseInt(sum);
+		int startInt = Integer.parseInt(start_id);
+		int count = startInt/100;
+		if(count == sumInt) {
+			Map map = new HashMap();
+	    	map.clear();
+	 		map.put("pointId", new ParamMatcher(point.getPointId()));
+	 		map.put("refPointDataId", new ParamMatcher(Integer.parseInt(ref_record_id)));
+	 		TblTemperatureDataEntity temperature  =   (TblTemperatureDataEntity) crudService.get(Integer.parseInt(ref_record_id),TblTemperatureDataEntity.class,true);//得到未更新平均温度的 温度 数据表 
+	 		List<TblTemperatureDTSDataEntity> dtsList  =  (List<TblTemperatureDTSDataEntity>) crudService.findByMoreFiled(TblTemperatureDTSDataEntity.class,map,true);
+	 		BigDecimal dtsTotal = new BigDecimal(0);
+	 		for(TblTemperatureDTSDataEntity dts :dtsList) {
+	 			dtsTotal = dtsTotal.add(new BigDecimal(dts.getValue()));
+	 		}
+	 		BigDecimal avgValue =	dtsTotal.divide(new BigDecimal(dtsList.size()),2, RoundingMode.HALF_UP);
+	 		temperature.setValue(avgValue.toString());
+	 		crudService.update(temperature, true);
+		}
+		 
+		
+		return result;
+	}
+	
+	private List<Object> saveDtsTotal(TblPointsEntity point, TblCommandRecordEntity record,List<ProtocolInfo> currentDataProtocol) throws InterruptedException {
+		String commandContent = record.getCommandContent();
+		String type = commandContent.substring(12, 14);
+		
+		List<Object> result = new ArrayList<Object>();
+		List<BigDecimal> data = new ArrayList<BigDecimal>();
+		for(ProtocolInfo protocolInfo : currentDataProtocol) {
+    		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
+		    data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
+		    
+		    TblTemperatureDataEntity aveValue = saveTemperatureData(data.get(0).toString(),point,protocol,Integer.parseInt("0")); 
+		    TblTemperatureDataEntity temperatureData = saveEarlyTemperatureData(point,protocol,0,type);
+		    result.add(temperatureData);
+		    SessionUtil.storage.put(point.getPointId() + "ref_record_id"+ type , String.valueOf(temperatureData.getPointDataId()));
+		    
+		    
+		    int count = 1;
+		    int length = data.get(0).intValue();
+		    int duan = 100;
+		    int sum = length/duan;
+		    SessionUtil.storage.put(point.getPointId()  + "sum_dts"+ type, String.valueOf(sum));
+		    Thread[] thread = new Thread[sum+1];
+		    for(int i = 0; i <= sum ;i++) {
+		    	String starts=StringUtil.decimalConvert(String.valueOf(i*duan+1), 10, 16, 4);
+		    	String pkgcount="";      //每个指令读取多少长度
+		    	if(i==count){
+		    	    pkgcount=length-duan*i+"";   //最后一次的读取长度
+		    	   }else{
+		    	    pkgcount=duan+"";
+		    	   }
+		    	pkgcount=StringUtil.decimalConvert(String.valueOf(pkgcount), 10, 16, 4);  //寄存器开发位置
+		    	String cmdStr= "021800000006"+ type + "04"  + starts + pkgcount;
+		    	
+		    	byte[] sbuf = CRC16M.getSendBuf(cmdStr);
+		    	String cmdStrTwo = CRC16M.getBufHexStr(sbuf).trim();
+		    	logger.info("cmdStr : " +cmdStrTwo);
+		    	int dangqian = i;
+		    	if(dangqian==0) {
+			    	thread[i] = new Thread(new Runnable() {
+			            @Override
+			            public void run() {	
+			            	    logger.info("Thread.currentThread().getName():" + Thread.currentThread().getName());
+			            	    SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(dangqian*duan+1));
+			            	    saveDtsSend(point, cmdStrTwo); 
+			            	    
+			            }
+			        },"ThreadDts" + type + i);	
+			    	thread[i].start();
+		    	}else {
+		    		//Thread.sleep(3*1000);
+		    		
+		    		thread[i] = new Thread(new Runnable() {
+			            @Override
+			            public void run() {	
+			            	    logger.info("Thread.currentThread().getName():" + Thread.currentThread().getName());
+			            	    try {
+			            	    	Thread.sleep(3*dangqian*1000);
+									thread[dangqian-1].join();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+			            	    SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(dangqian*duan+1));
+			            	    saveDtsSend(point, cmdStrTwo); 		            		
+			            }
+			        },"ThreadDts" + type + i);
+		    		//thread[dangqian-1].join(3*1000);
+		    		thread[i].start();
+		    	}
+		    	
+		    	//saveDtsSend(point,cmdStrTwo);
+		    }
+		}
+		return result;
+	}
+	
+	private TblTemperatureDataEntity saveEarlyTemperatureData( TblPointsEntity point,TblCommandProtocolEntity protocol,Integer distinct,String type) {
+		String code = "";
+		if(type.equals("01")) {
+			code = "A相DTS温度";
+		}else if(type.equals("02")) {
+			code = "B相DTS温度";
+		}else {
+			code = "C相DTS温度";
+		}
+		Map map = new HashMap();
+    	map.clear();
+ 		map.put("pointId", new ParamMatcher(point.getPointId()));
+ 		map.put("dataType", new ParamMatcher(MatcheType.LIKE,code));
+ 		
+ 		List<TblCommandProtocolEntity> indicatorValue  =  (List<TblCommandProtocolEntity>) crudService.findByMoreFiled(TblCommandProtocolEntity.class,map,true);
+		
+		TblTemperatureDataEntity entity = new TblTemperatureDataEntity(); 
+		entity.setPointId(point.getPointId()); 
+		entity.setPointName(point.getPointName());
+		//entity.setIndicatorId(protocol.getIndicatorId()); 
+		entity.setIndicatorId(indicatorValue.get(0).getIndicatorId());  
+		entity.setValue("0.1"); 
+		entity.setRecordTime(new Date()); 
+		entity.setProtocolId(indicatorValue.get(0).getProtocolId());  //数据来源协议id
+		TblIndicatorValueEntity indicator = (TblIndicatorValueEntity)crudService.get(indicatorValue.get(0).getIndicatorId(), TblIndicatorValueEntity.class, true);
+		entity.setCategroryId(indicator.getCategoryId()); //指标类别
+		entity.setPointCatagoryId(point.getPointCatagoryId()); //监控系统类别
+		entity.setIsAlarm(0); 
+		entity.setIsEarlyWarning(0); 
+		entity.setRangeSize(distinct);
+		crudService.save(entity, true);
+		return entity;
+	}
+	
+	
+	private void saveDtsSend(TblPointsEntity point, String sendContent) {
+		String dtsCode = sendContent.substring(12, 14);
+		String code = "";
+		if(dtsCode.equals("01")) {
+			code = "A相DTS温度";
+		}else if(dtsCode.equals("02")) {
+			code = "B相DTS温度";
+		}else {
+			code = "C相DTS温度";
+		}
+		TblPointSendCommandEntity data = new TblPointSendCommandEntity();		
+		data.setSystem_start("no");
+		data.setCommandCatagoryId(8);
+		data.setCommandContent(sendContent);
+		data.setCommandName("获取分布式光纤温度数据");
+		data.setPointId(point.getPointId()); 
+		data.setPointName(point.getPointName());
+		Map map = new HashMap();
+    	map.clear();
+ 		map.put("pointId", new ParamMatcher(point.getPointId()));
+ 		map.put("dataType", new ParamMatcher(MatcheType.LIKE,code));
+ 		
+ 		List<TblCommandProtocolEntity> indicatorValue  =  (List<TblCommandProtocolEntity>) crudService.findByMoreFiled(TblCommandProtocolEntity.class,map,true);
+		
+		data.setProtocolId(String.valueOf(indicatorValue.get(0).getProtocolId()));  //A相DTS温度
+		data.setIs_controller("0");
+		
+		
+		
+		TblPointSendCommandEntity update = (TblPointSendCommandEntity)crudService.update(data, true);
+		//System.out.println(update.getSendCommandId());
+		logger.info("SendCommandId" + update.getSendCommandId());
+		
+		
+		//保存记录 并加锁
+		TblCommandRecordEntity record = updateServerRecord(update,point.getPointRegistPackage()); 
+		//执行发送
+		try {
+				nettyService.serverSendMessage(point.getPointRegistPackage(), update.getCommandContent());
+			} catch (Exception e) {
+					e.printStackTrace();
+			} 
+	}
 	
 	
 	/**
 	 * @param point
 	 * @param record
 	 * @return 保存局放采集全量数据 DeviceDataColl,DeviceDataSpecial
+	 * @throws InterruptedException 
 	 *  
 	 */
-	private List<Object> saveDeviceDataTotal(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData,List<ProtocolInfo> currentDataProtocol) {
+	private List<Object> saveDeviceDataTotal(TblPointsEntity point, TblCommandRecordEntity record,DeviceData  deviceData,List<ProtocolInfo> currentDataProtocol) throws InterruptedException {
 		
 		List<Object> result = new ArrayList<Object>();
 		
@@ -539,14 +735,23 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		long curTime = new Date().getTime();
 										  
 		DeviceDataSpecial deviceDataSpecialA = createDeviceDataSpecial(record);
-		DeviceDataSpecial deviceDataSpecialB = createDeviceDataSpecial(record);
-		DeviceDataSpecial deviceDataSpecialC = createDeviceDataSpecial(record);
+		SessionUtil.storage.put(point.getPointId() + "record_id" + "A" , deviceDataSpecialA.getId()); //设置好 record_id
 		
+		DeviceDataSpecial deviceDataSpecialB = createDeviceDataSpecial(record);
+		SessionUtil.storage.put(point.getPointId() + "record_id" + "B" , deviceDataSpecialB.getId()); //设置好 record_id
+		
+		DeviceDataSpecial deviceDataSpecialC = createDeviceDataSpecial(record);
+		SessionUtil.storage.put(point.getPointId() + "record_id" + "C", deviceDataSpecialC.getId()); //设置好 record_id
+		
+		logger.info(""+ SessionUtil.storage.get(point.getPointId() + "record_id" + "A"));
+		logger.info(""+SessionUtil.storage.get(point.getPointId() + "record_id" + "B"));
+		logger.info(""+SessionUtil.storage.get(point.getPointId() + "record_id" + "C"));
 		for(ProtocolInfo protocolInfo : currentDataProtocol) {
     		TblCommandProtocolEntity protocol = protocolInfo.getProtocol(); 
 		    //解析数据
 		    List<BigDecimal> data = AnalysisDataUtil.getData(record.getBackContent(),protocol); 
 		    
+		    logger.info("局放采集到的数值: " +data.get(0).toString());
 		    savePhaseNo(data.get(0).toString(),protocol);  //取得 相位 , 是否 为 A相, B相,C相 
 		    
 		    String protocolName  = protocol.getDataType();
@@ -570,10 +775,8 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 			dataColl.setPhase_no((String)SessionUtil.storage.get(point.getPointId() + "phase_no"));
 			dataColl.setRecordTime(new Date());
 			dataColl.setRecord_id(dataSpecial.getId());
-			if(Integer.parseInt(data.get(0).toString())>2) {
-				SessionUtil.storage.put(point.getPointId() + "record_id", dataSpecial.getId()); //设置好 record_id
-			}
-			SessionUtil.storage.put(point.getPointId() + "jfTwo", "yes");
+			
+			
 		    
 		   // String protocolName  = protocol.getDataType();	
 		   
@@ -625,16 +828,22 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	
 	
 	//计算频次后发送
-	public void sendFrequent(TblPointsEntity point,String frequency ,String phase_no) {
+	public void sendFrequent(TblPointsEntity point,String frequency ,String phase_no) throws InterruptedException {
 		Integer pinci = Integer.parseInt(frequency)*2;
+		if(pinci == 0) {
+			return;
+		}
 		logger.info("幅值相位频次数 : " +pinci);
 		String channelId = "";
 		if(phase_no.contentEquals("B")) {
 			 channelId = "0002";
+			 SessionUtil.storage.put(point.getPointId() + "phase_no1","B");
 		}else if(phase_no.contentEquals("C")) {
 			 channelId = "0003";
+			 SessionUtil.storage.put(point.getPointId() + "phase_no1","C");
 		}else if(phase_no.contentEquals("A")){
 			 channelId = "0001";
+			 SessionUtil.storage.put(point.getPointId() + "phase_no1","A");
 		}else {
 			return;
 		}
@@ -643,9 +852,11 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    int pkgsum=122;
 	    int sum = pinci/pkgsum;
 	   
-	    ExecutorService executorService = Executors.newSingleThreadExecutor();
-	    
+	   
+	    //ExecutorService executorService = Executors.newSingleThreadExecutor();
+	    Thread[] thread = new Thread[sum+1];
 	    for(int i = 0; i <= sum ;i++) {
+	    	
 	    	String starts=StringUtil.decimalConvert(String.valueOf(i*pkgsum), 10, 16, 4);  //寄存器开发位置
 	    	String pkgcount="";      //每个指令读取多少长度
 	    	if(i==count){
@@ -661,54 +872,40 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 	    	String cmdStrTwo = CRC16M.getBufHexStr(sbuf).trim();
 	    	logger.info("cmdStr : " +cmdStrTwo);
 	    	int dangqian = i;
-	    	
-	    	Thread thread = new Thread(new Runnable() {
-	            @Override
-	            public void run() {	            		            	
-	            		saveAndSend(point, cmdStrTwo); 		            		
-	            }
-	        });	    	
-	    	executorService.submit(thread)	;	
-			
-			 if(dangqian>0){ 
-				 
-				  try {
-					Thread.sleep(3*1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				
-			 }
+	    	if(dangqian==0) {
+		    	thread[i] = new Thread(new Runnable() {
+		            @Override
+		            public void run() {	
+		            	    logger.info("Thread.currentThread().getName():" + Thread.currentThread().getName());
+		            		saveAndSend(point, cmdStrTwo);
+		            		logger.info("0次 cmdStr : " +cmdStrTwo);
+		            }
+		        },"Thread" + channelId + i);	
+	    	}else {
+	    		thread[i] = new Thread(new Runnable() {
+		            @Override
+		            public void run() {	
+		            	    logger.info("Thread.currentThread().getName():" + Thread.currentThread().getName());
+		            	    try {
+		            	    	Thread.sleep(3*dangqian*1000);
+								thread[dangqian-1].join();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		            	    saveAndSend(point, cmdStrTwo); 	
+		            	    logger.info( dangqian + "次 cmdStr : " +cmdStrTwo);
+		            }
+		        },"Thread" + channelId + i);
+	    	}
+	    							
+	    	thread[i].start();
+	    		    		    		    		
 			 
 	    }
-	    executorService.shutdown();
-	    
-		//一次最多采集122个，所以要分批次采集
-		/*
-		 * if(pinci >0 && pinci <= 122) { String command = "0114070600010000" +
-		 * StringUtil.decimalConvert(pinci.toString(), 10, 16, 4) + "4507" ; //计算crc校验
-		 * 的结果 byte[] sbuf = CRC16M.getSendBuf(command.substring(0,command.length()-4));
-		 * String trim = CRC16M.getBufHexStr(sbuf).trim(); saveAndSend(point, trim); try
-		 * { Thread.sleep(3000); //第二条发的时候间隔是3秒钟 ，防止收不到消息 } catch (InterruptedException
-		 * e) { e.printStackTrace(); } }else if(pinci >122 && pinci <= 244) { String
-		 * trim ="0114070600010000007B84C7"; Thread thread1 = new Thread(){ public void
-		 * run(){ saveAndSend(point,trim); } }; thread1.start(); Integer more =
-		 * 244-pinci; String command2 = "011407060001007C" +
-		 * StringUtil.decimalConvert(more.toString(), 10, 16, 4) + "4507" ; //计算crc校验
-		 * 的结果 byte[] sbuf2 =
-		 * CRC16M.getSendBuf(command2.substring(0,command2.length()-4)); String trim2=
-		 * CRC16M.getBufHexStr(sbuf2).trim(); Thread thread2 = new Thread(){ public void
-		 * run(){
-		 * 
-		 * try { Thread.sleep(3*1000); thread1.join(); saveAndSend(point,trim2); }catch
-		 * (InterruptedException e){ e.printStackTrace(); }
-		 * 
-		 * 
-		 * } }; thread2.start(); }
-		 */
-	}
+	    	    		
 	
+	}
 	
 	
 	
@@ -753,7 +950,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		data.setCommandName("获取幅值相位");
 		data.setPointId(point.getPointId()); 
 		data.setPointName(point.getPointName());
-		String phase_type = (String)SessionUtil.storage.get( point.getPointId() + "phase_no");//获取是A还是B还是C相
+		String phase_type = (String)SessionUtil.storage.get(point.getPointId() + "phase_no1");//获取是A还是B还是C相
 		
 		
 		if("A".equals(phase_type)) {
@@ -777,6 +974,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		//执行发送
 		try {
 			nettyService.serverSendMessage(point.getPointRegistPackage(), update.getCommandContent());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -880,6 +1078,5 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 //		return null;
 //	}
 	
-	
-
+		
 }

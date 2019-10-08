@@ -61,16 +61,27 @@ public class UserFunctionController extends BaseController{
 	
 	
 	@RequestMapping("/func/save")
-	public ResponseEntity<Object>  userAddFunction(String funcIds,String adminUserId) throws Exception {  
+	public ResponseEntity<Object>  userAddFunction(String funcIds,String adminUserId,String roleId) throws Exception {  
 		TblAdminUserEntity user = super.userIsLogin();
 		if(isSuperAdminUser(user.getAdminUserId())) { 
 			List<String> functionIds = StringUtil.stringToList(funcIds, ","); 
-			Boolean save = userFunctionService.merge(adminUserId,functionIds);
+			Boolean save = false;
+			if(StringUtil.isEmpty(adminUserId)) {
+			    save = userFunctionService.merge(adminUserId,functionIds);
+			}else {
+				String adminUserIdNotSuper = LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId();
+				save = userFunctionService.merge(adminUserIdNotSuper,functionIds);
+			}
 			if(!save) {
 				throw new MyDefineException(UserErrorType.SAVE_ERROR.getCode(), UserErrorType.SAVE_ERROR.getMsg(), false, null);
 			}
 			return success(UserModuleConst.EDIT_SUCCESS);
 		}
+		if(StringUtil.isEmpty(roleId)) {
+			List<String> functionIds = StringUtil.stringToList(funcIds, ","); 
+			Boolean save = userFunctionService.mergeRole(roleId,functionIds);
+		}
+		
 		throw new MyDefineException(UserErrorType.ONLY_SUPER_SAVE_OTHER.getCode(), UserErrorType.ONLY_SUPER_SAVE_OTHER.getMsg(), false, null);
 	} 
 	

@@ -1,7 +1,9 @@
 package com.changlan.point.vo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 
@@ -9,6 +11,7 @@ import com.changlan.common.entity.TblCompanyChannelEntity;
 import com.changlan.common.entity.TblCompanyEntity;
 import com.changlan.common.entity.TblLinesEntity;
 import com.changlan.common.entity.TblPointsEntity;
+import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
@@ -21,6 +24,7 @@ public class CompanyVedioVo {
     private Integer companyId;
     private String  title;
     private String  easy_vedio_url; //视频地址,以逗号分隔
+    private String  snap_url;  //快照地址
 	private List<ChannelVedioVO> ChannelVOS = new ArrayList<ChannelVedioVO>(); //二级包含多条通道信息
 
 	public CompanyVedioVo(TblCompanyEntity company) {
@@ -32,22 +36,46 @@ public class CompanyVedioVo {
 		
 		for(TblCompanyChannelEntity entity : channels) {
 			ChannelVedioVO vo  = new ChannelVedioVO(entity);
-			if(StringUtil.isEmpty(this.easy_vedio_url)) {
-				if(StringUtil.isNotEmpty(vo.getEasy_vedio_url())) {
-					this.easy_vedio_url = vo.getEasy_vedio_url();
-				}
+			if(StringUtil.isEmpty(this.easy_vedio_url)) {				
+				this.easy_vedio_url = vo.getEasy_vedio_url();
+				this.snap_url = vo.getSnap_url();
 			}else if(StringUtil.isNotEmpty(vo.getEasy_vedio_url())) {
 				this.easy_vedio_url = this.easy_vedio_url + "," + vo.getEasy_vedio_url();
+				this.snap_url = this.snap_url + "," + vo.getSnap_url();
+			}
+			
+			if(StringUtil.isEmpty(this.easy_vedio_url)) {
+				this.easy_vedio_url = "";
+				this.snap_url = "";
 			}
 			List<MonitorSystemVedioVO> systemList  = vo.getMonitorSystemVOs();
 			for(MonitorSystemVedioVO system : systemList) {
 				if(StringUtil.isNotEmpty(system.getEasy_vedio_url())) {
 					this.easy_vedio_url = this.easy_vedio_url + "," + system.getEasy_vedio_url();
+					this.snap_url = this.snap_url + "," + system.getSnap_url();
 				}
-				List<ChannelLineVedioVO> channelList  = system.getCompanyLinesVOs();
-				for(ChannelLineVedioVO channel : channelList) {
-					if(StringUtil.isNotEmpty(channel.getEasy_vedio_url())) {
-						this.easy_vedio_url = this.easy_vedio_url + "," + channel.getEasy_vedio_url();
+				Integer monitorId = system.getMonitorSystemId();
+				Integer channelId = entity.getChannelId();
+				List<LineDetail> lineList  = getLinesByMonitorIdAndChannelId(monitorId,channelId); //system.getCompanyLinesVOs();
+				for(LineDetail line : lineList) {
+					Map map = new HashMap();
+					if(line.getLine().getLineId()!=null) {
+						map.put("lineId", new ParamMatcher(line.getLine().getLineId()));
+					}
+					ICrudService crudService = SpringUtil.getBean(ICrudService.class);
+					List<TblPointsEntity> points = crudService.findByMoreFiled(TblPointsEntity.class, map, true);		
+					for(TblPointsEntity point : points) {
+						if(StringUtil.isNotEmpty(this.easy_vedio_url)){
+							if(StringUtil.isNotEmpty(point.getVideo_url())) {
+								this.easy_vedio_url = this.easy_vedio_url + "," + point.getVideo_url();
+								this.snap_url = this.snap_url + "," + point.getSnap_url();
+							}
+						}else {
+							if(StringUtil.isNotEmpty(point.getVideo_url())) {
+								this.easy_vedio_url =  point.getVideo_url();
+								this.snap_url =  point.getSnap_url();
+							}
+						}
 					}
 				}
 			}
@@ -64,6 +92,16 @@ public class CompanyVedioVo {
 		entity.setCompanyId(company.getCompanyId()); 
 		return channelService.getAllChannel(entity);
 	}
+	
+	private List<LineDetail> getLinesByMonitorIdAndChannelId(Integer monitorId,Integer channelId) {
+		ILineService lineService = SpringUtil.getBean(ILineService.class);
+		TblLinesEntity entity = new TblLinesEntity();
+		entity.setMonitorId(monitorId);
+		entity.setChannelId(channelId);
+		List<LineDetail> all = lineService.getAll(entity); 
+		return all;
+	}
+
 
 
 	public Integer getCompanyId() {
@@ -97,5 +135,14 @@ public class CompanyVedioVo {
 	public void setEasy_vedio_url(String easy_vedio_url) {
 		this.easy_vedio_url = easy_vedio_url;
 	}
-	    
+
+	public String getSnap_url() {
+		return snap_url;
+	}
+
+	public void setSnap_url(String snap_url) {
+		this.snap_url = snap_url;
+	}
+	  
+	
 }

@@ -267,7 +267,7 @@ public class NettyServiceImpl implements INettyService{
 		for(CommandDefaultDetail data : commandList) {
 			try {
 				//每个数据延时3秒按顺序开启定时任务 
-				Thread.sleep(3000);
+				Thread.sleep(9000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -279,12 +279,12 @@ public class NettyServiceImpl implements INettyService{
 				if(commandDefault.getIntervalTime()!=null) {
 					intervalTime = commandDefault.getIntervalTime();
 				}
-//				if(intervalTime!=null) {
+				if(intervalTime!=null) {
 					MyTask task = new MyTask(commandDefault);
 					Timer timer = new Timer();
 					//循环执行定时器
 					timer.schedule(task, 0, intervalTime*1000);
-//				}
+				}
 //			}
 		}
 	}

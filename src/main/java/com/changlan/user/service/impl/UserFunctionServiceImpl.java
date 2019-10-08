@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.changlan.common.entity.TblAdminUserEntity;
 import com.changlan.common.entity.TblFunInfoEntity;
+import com.changlan.common.entity.TblRoleFunctionEntity;
 import com.changlan.common.entity.TblUserFunctionEntity;
 import com.changlan.common.pojo.ParamMatcher;
 import com.changlan.common.service.ICrudService;
 import com.changlan.common.util.ListUtil;
+import com.changlan.user.constrant.UserModuleConst;
 import com.changlan.user.pojo.LoginUser;
 import com.changlan.user.pojo.UserFunctionInfo;
 import com.changlan.user.service.IUserFunctionService;
@@ -71,6 +73,22 @@ public class UserFunctionServiceImpl implements IUserFunctionService{
 			Integer id = Integer.parseInt(funcId);
 			TblUserFunctionEntity entity = new TblUserFunctionEntity();
 			entity.setAdminUserId(adminUserId);
+			entity.setFuncId(id); 
+			crudService.update(entity, true);
+		}
+		return true;
+	}
+	
+	@Override
+	@Transactional
+	public Boolean mergeRole(String roleId, List<String> functionIds) {
+		//删除旧数据
+		//removeOld(adminUserId);
+		for(String funcId : functionIds) {
+			Integer id = Integer.parseInt(funcId);
+			TblRoleFunctionEntity entity = new TblRoleFunctionEntity();
+			String adminUserId= LoginUser.map.get(UserModuleConst.USER_SESSION_ATTRIBUTENAME).getAdminUserId();
+			entity.setRoleId(Integer.parseInt(roleId));
 			entity.setFuncId(id); 
 			crudService.update(entity, true);
 		}
