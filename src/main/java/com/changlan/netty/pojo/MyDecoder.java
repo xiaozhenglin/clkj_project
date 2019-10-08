@@ -40,7 +40,7 @@ public class MyDecoder extends ByteToMessageDecoder {
         	   String bytesToHexString = bytesToHexString(b).trim();
         	   //out.add(bytesToHexString);
         	   logger.info("MyDecoder类接收前内容"+bytesToHexString);
-        	   if(bytesToHexString.startsWith("01")) {
+        	   
 	        	   String length = bytesToHexString.substring(4, 6);
 	        	   String count = StringUtil.decimalConvert(length, 16, 10, null); 
 	        	   logger.info("MyDecoder从报文中计算出的长度"+count);
@@ -61,9 +61,7 @@ public class MyDecoder extends ByteToMessageDecoder {
 	    	       }else {
 	    	    	   throw new MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); 
 	    	       }
-        	   }else {
-        		   out.add(bytesToHexString);                  //针对modbus TCP 数据 ，不进行crc检验
-        	   }
+        	   
            }
        }
    }
