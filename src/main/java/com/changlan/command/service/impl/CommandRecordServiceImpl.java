@@ -597,13 +597,14 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 		    	byte[] sbuf = CRC16M.getSendBuf(cmdStr);
 		    	String cmdStrTwo = CRC16M.getBufHexStr(sbuf).trim();
 		    	logger.info("cmdStr : " +cmdStrTwo);
+		    	SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(i*duan+1));
 		    	int dangqian = i;
 		    	if(dangqian==0) {
 			    	thread[i] = new Thread(new Runnable() {
 			            @Override
 			            public void run() {	
 			            	    logger.info("Thread.currentThread().getName():" + Thread.currentThread().getName());
-			            	    SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(dangqian*duan+1));
+			            	   
 			            	    saveDtsSend(point, cmdStrTwo); 
 			            	    
 			            }
@@ -623,7 +624,7 @@ public class CommandRecordServiceImpl implements ICommandRecordService{
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-			            	    SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(dangqian*duan+1));
+			            	   //SessionUtil.storage.put(point.getPointId()  + "start_id" + type, String.valueOf(dangqian*duan+1));
 			            	    saveDtsSend(point, cmdStrTwo); 		            		
 			            }
 			        },"ThreadDts" + type + i);

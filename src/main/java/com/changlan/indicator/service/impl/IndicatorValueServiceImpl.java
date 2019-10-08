@@ -33,7 +33,7 @@ import com.changlan.point.service.IPointDefineService;
 @Service
 public class IndicatorValueServiceImpl implements IIndicatoryValueService{
 	
-	private static Logger log = LoggerFactory.getLogger(CommandRecordServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(IndicatorValueServiceImpl.class);
 	
 	@Autowired
 	private ICrudService crudService;
