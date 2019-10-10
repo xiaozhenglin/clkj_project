@@ -30,6 +30,7 @@ spring:
       url: jdbc:mysql://192.168.33.30:3306/newdatasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&validationQuery=SELECT 1
       username: user1
       password: Mysql@2008
+      continue-on-error: true
       tomcat:
         max-active: 500
         max-idle: 10
@@ -49,7 +50,9 @@ spring:
         max-idle: 10
         min-idle: 5
         initial-size: 5
-
+        
+    messages:
+    basename: i18n/messages #相对路径 开头请勿添加斜杠
 
 #   上传服务器配置
 #  datasource:
