@@ -25,8 +25,8 @@ public class CommonDataTableVO {
 	private String indicatorCode; //指标吗
 	private String indicatorName; //指标名称
 	private String visualType; 
-	private String picture_url;   //静态页面路径 
-	private String video_url;
+	//private String picture_url;   //静态页面路径 
+	//private String video_url;
 	//private Integer record_id;
 	
 	private String unit; //指标单位
@@ -59,12 +59,7 @@ public class CommonDataTableVO {
 					vo.setIndicators(point.getIndicators());
 				}
 							
-				if(StringUtil.isNotEmpty(point.getPicture_url())) {
-					vo.setPicture_url(point.getPicture_url());
-				}
-				if(StringUtil.isNotEmpty(point.getVideo_url())) {
-					vo.setVideo_url(point.getVideo_url());
-			    }
+				
 				
 				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime() ,indicatorValue.getIndicatorId() );
 				results.add(value);
@@ -102,12 +97,6 @@ public class CommonDataTableVO {
 				vo.setIndicators(point.getIndicators());
 			}
 			
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
 			
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
@@ -143,12 +132,7 @@ public class CommonDataTableVO {
 			if(StringUtil.isNotEmpty(point.getIndicators())) {
 				vo.setIndicators(point.getIndicators());
 			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
+			
 			
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
@@ -185,12 +169,7 @@ public class CommonDataTableVO {
 			if(StringUtil.isNotEmpty(point.getIndicators())) {
 				vo.setIndicators(point.getIndicators());
 			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
+			
 			
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
@@ -225,12 +204,7 @@ public class CommonDataTableVO {
 				if(StringUtil.isNotEmpty(point.getIndicators())) {
 					vo.setIndicators(point.getIndicators());
 				}
-				if(StringUtil.isNotEmpty(point.getPicture_url())) {
-					vo.setPicture_url(point.getPicture_url());
-				}
-				if(StringUtil.isNotEmpty(point.getVideo_url())) {
-					vo.setVideo_url(point.getVideo_url());
-			    }
+				
 				
 				if(indicatorValue.getName().indexOf("DTS")>-1) {//分布式光纤测温
 					IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getPointDataId());
@@ -271,12 +245,7 @@ public class CommonDataTableVO {
 			if(StringUtil.isNotEmpty(point.getIndicators())) {
 				vo.setIndicators(point.getIndicators());
 			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
+			
 			
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),indicatorValue.getIndicatorId());
 			results.add(value);
@@ -313,12 +282,7 @@ public class CommonDataTableVO {
 				if(StringUtil.isNotEmpty(point.getIndicators())) {
 					vo.setIndicators(point.getIndicators());
 				}
-				if(StringUtil.isNotEmpty(point.getPicture_url())) {
-					vo.setPicture_url(point.getPicture_url());
-				}
-				if(StringUtil.isNotEmpty(point.getVideo_url())) {
-					vo.setVideo_url(point.getVideo_url());
-			    }
+				
 				IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
 				results.add(value);
 				vo.setResults(results);
@@ -357,12 +321,7 @@ public class CommonDataTableVO {
 			if(StringUtil.isNotEmpty(point.getIndicators())) {
 				vo.setIndicators(point.getIndicators());
 			}
-			if(StringUtil.isNotEmpty(point.getPicture_url())) {
-				vo.setPicture_url(point.getPicture_url());
-			}
-			if(StringUtil.isNotEmpty(point.getVideo_url())) {
-				vo.setVideo_url(point.getVideo_url());
-		    }
+			
 			IndicatorValueVO value = new IndicatorValueVO(pointData.getValue(), pointData.getRecordTime(),pointData.getRecord_id());
 			results.add(value);
 		
@@ -417,21 +376,7 @@ public class CommonDataTableVO {
 		this.unit = unit;
 	}
 
-	public String getPicture_url() {
-		return picture_url;
-	}
-
-	public void setPicture_url(String picture_url) {
-		this.picture_url = picture_url;
-	}
-
-	public String getVideo_url() {
-		return video_url;
-	}
-
-	public void setVideo_url(String video_url) {
-		this.video_url = video_url;
-	}
+	
 
 	
 

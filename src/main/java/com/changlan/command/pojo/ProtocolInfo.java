@@ -16,7 +16,7 @@ public class ProtocolInfo {
 		this.protocol = entity;
 //		this.category = getCategory(entity.getCommandCatagoryId());
 		if(entity.getIndicatorId()!=null) {
-			System.out.println(entity.getIndicatorId());
+			//System.out.println(entity.getIndicatorId());
 			this.indicators = getIndicator(entity.getIndicatorId());
 		}
 	}

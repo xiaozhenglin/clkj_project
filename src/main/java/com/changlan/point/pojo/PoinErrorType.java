@@ -20,7 +20,8 @@ public enum PoinErrorType {
 	COMPANY_CHANNEL_NAME_EXIST("P013","通道名称重复"),
 	LINE_CANNOT_CREATE("P014","非电缆本体监控不能建立线路"),
 	POINT_NOT_REGIST("N005","设备未注册"),
-	APP_ILLEGAL_LOGIN("N006","app非法操作");
+	APP_ILLEGAL_LOGIN("N006","app非法操作"),
+	FILE_NOT_FOUND("N006","没有那个文件或目录");
 	
 	private String code;
 	private String name;

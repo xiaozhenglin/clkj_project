@@ -43,10 +43,10 @@ public class CommandDefaultSendController extends BaseController{
 	 */
 	@RequestMapping("/save")
 	public ResponseEntity<Object>  save(TblPointSendCommandEntity entity) throws Exception {
-		Boolean existName = commandDefaultService.existName(entity); 
-		if(existName) {
-			throw new MyDefineException(PoinErrorType.NAME_EXIST);
-		}
+		/*
+		 * Boolean existName = commandDefaultService.existName(entity); if(existName) {
+		 * throw new MyDefineException(PoinErrorType.NAME_EXIST); }
+		 */
 		entity.setSystem_start("yes");
 		if(StringUtil.isEmpty(entity.getSystem_start())) {
 			entity.setIs_controller("0");

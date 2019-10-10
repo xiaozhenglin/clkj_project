@@ -43,6 +43,7 @@ import com.changlan.common.util.FileUtil;
 import com.changlan.common.util.SpringUtil;
 import com.changlan.common.util.StringUtil;
 import com.changlan.common.util.UUIDUtil;
+import com.changlan.point.pojo.PoinErrorType;
 import com.changlan.user.pojo.UserErrorType;
 
 @RestController
@@ -89,9 +90,15 @@ public class UploadFileController extends BaseController{
 		//System.out.println(filePath);
 		HttpServletResponse response = getResponse();
 		HttpServletRequest request = getReqeust();
+		if(StringUtil.isEmpty(filePath)) {
+			return success(null);
+		}
 		try {
-			File file = new File(filePath);
+			File file = new File(filePath);			
 			InputStream inputStream = new FileInputStream(file);
+			if(file==null) {
+				return success(null);
+			}
             OutputStream outputStream = response.getOutputStream();       
             //指明为下载
             response.setContentType("application/x-download");         
@@ -101,7 +108,7 @@ public class UploadFileController extends BaseController{
             IOUtils.copy(inputStream, outputStream);
             outputStream.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        	throw new MyDefineException(PoinErrorType.FILE_NOT_FOUND);
         } catch (IOException e) {
             e.printStackTrace();
         }

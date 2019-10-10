@@ -95,6 +95,7 @@ public class MyTask extends TimerTask {
 
 	
 	public static void main(String[] args) {
+		System.out.println(1/100);
 		MyTask task = new MyTask();
 		Timer timer = new Timer();
 		timer.schedule(task,0,1000);

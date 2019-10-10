@@ -71,13 +71,18 @@ public class MyTaskThread extends Thread {
 						if(commandDefault.getIntervalTime()!=null) {
 							intervalTime = commandDefault.getIntervalTime();
 						}
+						
+						ICrudService crudService = SpringUtil.getICrudService();
+						TblPointsEntity point = (TblPointsEntity) crudService.get(commandDefault.getPointId(), TblPointsEntity.class, true);
+						if(point.getStatus().equals("CONNECT")) {
 						//logger.info(commandDefault.getCommandContent() + "休眠时间（秒）" + intervalTime);
-						if(intervalTime!=null) {							
-						    //sleep(intervalTime*1000);
-							sendCommandDefault(commandDefault);							
-						}else {
-							//sleep(120*1000);
-							sendCommandDefault(commandDefault);
+							if(intervalTime!=null) {							
+							    //sleep(intervalTime*1000);
+								sendCommandDefault(commandDefault);							
+							}else {
+								//sleep(120*1000);
+								sendCommandDefault(commandDefault);
+							}
 						}
 				}
 			}
