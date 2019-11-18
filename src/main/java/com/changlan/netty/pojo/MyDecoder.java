@@ -40,28 +40,25 @@ public class MyDecoder extends ByteToMessageDecoder {
         	   String bytesToHexString = bytesToHexString(b).trim();
         	   //out.add(bytesToHexString);
         	   logger.info("MyDecoder类接收前内容"+bytesToHexString);
-        	   
-	        	   String length = bytesToHexString.substring(4, 6);
-	        	   String count = StringUtil.decimalConvert(length, 16, 10, null); 
-	        	   logger.info("MyDecoder从报文中计算出的长度"+count);
-	        	   int k = Integer.parseInt(count)  + 5;
-	        	   System.out.println(buffer.readableBytes());
-	        	   if(b.length<k) {
-	        		   buffer.resetReaderIndex();
-	        		   return ;
-	        	   }
-	        	   
-	        	   
-	        	   //logger.info("MyDecoder类接收内容后"+bytesToHexString);
-	        	   byte[] sbuf = CRC16M.getSendBuf(bytesToHexString.substring(0,bytesToHexString.length()-4));
-	        	   boolean equalsIgnoreCase = bytesToHexString.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim()); 
-	        	   logger.info("MyDecoder类接收后内容"+CRC16M.getBufHexStr(sbuf).trim());
-	        	   if(equalsIgnoreCase){
-	        		   out.add(bytesToHexString);
-	    	       }else {
-	    	    	   throw new MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); 
-	    	       }
-        	   
+				/*
+				 * if(bytesToHexString.startsWith("01")) { String length =
+				 * bytesToHexString.substring(4, 6); String count =
+				 * StringUtil.decimalConvert(length, 16, 10, null);
+				 * logger.info("MyDecoder从报文中计算出的长度"+count); int k = Integer.parseInt(count) +
+				 * 5; System.out.println(buffer.readableBytes()); if(b.length<k) {
+				 * buffer.resetReaderIndex(); return ; }
+				 * 
+				 * 
+				 * //logger.info("MyDecoder类接收内容后"+bytesToHexString); byte[] sbuf =
+				 * CRC16M.getSendBuf(bytesToHexString.substring(0,bytesToHexString.length()-4));
+				 * boolean equalsIgnoreCase =
+				 * bytesToHexString.equalsIgnoreCase(CRC16M.getBufHexStr(sbuf).trim());
+				 * logger.info("MyDecoder类接收后内容"+CRC16M.getBufHexStr(sbuf).trim());
+				 * if(equalsIgnoreCase){ out.add(bytesToHexString); }else { throw new
+				 * MyDefineException(PoinErrorType.RECEIVE_CRC_ERROR); } }else {
+				 */
+        		   out.add(bytesToHexString);                  //针对modbus TCP 数据 ，不进行crc检验
+        	   //}
            }
        }
    }

@@ -158,11 +158,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        Channel channel = ctx.channel();
+        Channel channel = ctx.channel();       
         boolean active = channel.isActive();
         if (active) {
+        	 ctx.fireChannelActive();
         	 logger.info("[" + channel.remoteAddress() + "] is online channelActive");
         } else {
+        	 ctx.fireChannelInactive();
         	 logger.info("[" + channel.remoteAddress() + "] is offline channelActive");
         }
     }
@@ -189,6 +191,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 				String registPackage = getRegistPackageByChannel(channel); 
 	        	changePointStatus(channel,PointStatus.OUT_CONNECT);
 	            logger.info("[" + channel.remoteAddress() + "]"+channel+" 心跳监测 未收到回复 &" +registPackage );
+			}else if(state == IdleState.WRITER_IDLE) {
+				 logger.info("[" + channel.remoteAddress() + "]"+channel+" 写空闲 ---"  + evt );
+			}else if(state == IdleState.ALL_IDLE){
+				logger.info("[" + channel.remoteAddress() + "]"+channel+" 读写空闲 ---"  + evt);
 			}
 		}
 		super.userEventTriggered(ctx, evt);

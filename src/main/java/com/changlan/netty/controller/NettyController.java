@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -61,7 +63,7 @@ public class NettyController extends BaseController{
 	@Autowired
 	ICommandRecordService recordService;
 	
-	public static Map<String,Integer> map = new HashMap<String,Integer>();
+	public static Map<String, Integer> map = new ConcurrentHashMap<String,Integer>();
 	
     private static final Logger logger = LoggerFactory.getLogger(NettyController.class);
     
@@ -166,7 +168,12 @@ public class NettyController extends BaseController{
 		if( map==null ) {
 			return true;
 		}
+		if(map.size()==0) {
+			return true;
+		}
+		
 		Integer recordId = map.get(registPackage); 
+		//Integer recordId = recordIds.get(0);
 		if(recordId==null ) {
 			return true ; 
 		}

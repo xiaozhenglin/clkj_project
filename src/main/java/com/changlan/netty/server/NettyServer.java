@@ -23,6 +23,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * descripiton:服务端
@@ -67,10 +69,12 @@ public class NettyServer extends Thread{
         bootstrap.group(bossGroup, workerGroup);
         //配置 Channel
         bootstrap.channel(NioServerSocketChannel.class);
+        bootstrap.handler(new LoggingHandler(LogLevel.DEBUG));
         bootstrap.childHandler(new ServerIniterHandler());
         //BACKLOG用于构造服务端套接字ServerSocket对象，
         // 标识当服务器请求处理线程全满时，用于临时存放已完成三次握手的请求的队列的最大长度
         bootstrap.option(ChannelOption.SO_BACKLOG, 2048);
+        bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         //是否启用心跳保活机制
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         try {

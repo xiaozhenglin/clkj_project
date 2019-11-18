@@ -196,7 +196,12 @@ public class AnalysisDataUtil {
 			//0769  6-10
 			String channelValue = backContent.substring(begin, end); 
 			//1897
-			String decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
+			String decimalConvert = "";
+			if(channelValue.equals("9999")) {
+				decimalConvert = "0";
+			}else {
+				decimalConvert = StringUtil.decimalConvert(channelValue, 16, binaryValue, null); 
+			}
 			//1897
 //			int value = new BigDecimal(decimalConvert).intValue(); 
 			//9.26

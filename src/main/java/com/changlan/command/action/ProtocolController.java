@@ -34,10 +34,10 @@ public class ProtocolController extends BaseController{
 
 	@RequestMapping("/save")
 	public ResponseEntity<Object>  save(TblCommandProtocolEntity entity) throws Exception {
-		Boolean existName = protocolService.existName(entity); 
-		if(existName) {
-			throw new MyDefineException(PoinErrorType.NAME_EXIST);
-		}
+		//Boolean existName = protocolService.existName(entity); 
+		//if(existName) {
+			//throw new MyDefineException(PoinErrorType.NAME_EXIST);
+		//}
 		TblCommandProtocolEntity update = protocolService.save(entity); 
 		if(update ==null) {
 			throw new MyDefineException(PoinErrorType.SAVE_EROOR);

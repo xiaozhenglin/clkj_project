@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
+import java.util.Vector;
 
 import javax.transaction.Transactional;
 
@@ -96,6 +97,8 @@ public class NettyServiceImpl implements INettyService{
  					byte[] bytes =  StringUtil.hexStringToBytes(message);
  					channel.writeAndFlush(buf.writeBytes(bytes)); 
  					sendSuccess =  true ; 
+ 				}else {
+ 					channel.flush();
  				}
  			}
  		}	
@@ -160,11 +163,16 @@ public class NettyServiceImpl implements INettyService{
 	public Integer saveReturnMessage(String registPackageOrIp, String receiveMessage) {
 		Integer saveRecordId ;
 		Map<String, Integer> registPackageAndRecord = NettyController.map; 
+		Iterator<String> iter = registPackageAndRecord.keySet().iterator();
+		  while(iter.hasNext()){
+			  registPackageOrIp = iter.next();
+		  }
 		try {
 	    	//
 			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackageOrIp) !=null) {
 		    	Map map = new HashMap();
 		    	Integer commandRecordId =registPackageAndRecord.get(registPackageOrIp) ; 
+		    	//Integer commandRecordId = commandRecordIds.get(0);
 		    	saveRecordId = commandRecordId;
 		    	map.put("commandRecordId", new ParamMatcher(commandRecordId));
 		     	List findByMoreFiled = crudService.findByMoreFiled(TblCommandRecordEntity.class, map, true);
@@ -180,7 +188,10 @@ public class NettyServiceImpl implements INettyService{
 		    		}
 		    	}
 		    	//清除防止死锁
-	    		NettyController.map.remove(registPackageOrIp);
+		    	Integer values = registPackageAndRecord.get(registPackageOrIp);
+		    	
+		    	NettyController.map.remove(registPackageOrIp);
+		    	
 	    		return saveRecordId;
 			}
 		} catch (Exception e) {
@@ -189,7 +200,10 @@ public class NettyServiceImpl implements INettyService{
 			//不管有没有保存成功都要移除限制，否则会死锁
 			if(!registPackageAndRecord.isEmpty() && registPackageAndRecord.get(registPackageOrIp) !=null ) {
 				//清除防止死锁
-				NettyController.map.remove(registPackageOrIp);
+				Integer values = registPackageAndRecord.get(registPackageOrIp);
+
+		    		NettyController.map.remove(registPackageOrIp);
+		    	
 			}
 		}
 		return null;

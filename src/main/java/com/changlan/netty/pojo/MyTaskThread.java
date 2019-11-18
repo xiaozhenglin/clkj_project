@@ -59,7 +59,7 @@ public class MyTaskThread extends Thread {
 				for(CommandDefaultDetail data : commandList) {
 					try {
 						//每个数据延时3秒按顺序开启定时任务 
-						Thread.sleep(9000);
+						Thread.sleep(1*1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -80,7 +80,7 @@ public class MyTaskThread extends Thread {
 							    //sleep(intervalTime*1000);
 								sendCommandDefault(commandDefault);							
 							}else {
-								//sleep(120*1000);
+								sleep(1*1000);
 								sendCommandDefault(commandDefault);
 							}
 						}
